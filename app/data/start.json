@@ -1,0 +1,149 @@
+{
+  "groups": {
+    "start": {
+      "id": "start",
+      "title": "Rettungsdienst",
+      "note": "",
+      "children": ["abcde", "status"],
+      "content": "",
+      "phrases": [],
+      "sets": {},
+      "default": "default"
+    },
+    "abcde": {
+      "id": "abcde",
+      "title": "ABCDE",
+      "note": "",
+      "children": ["a", "b"],
+      "content": "",
+      "phrases": [],
+      "sets": {},
+      "default": "default"
+    },
+    "a": {
+      "id": "a",
+      "title": "106048009|Respiratory finding|A",
+      "note": "",
+      "children": [],
+      "content": "",
+      "phrases": ["a_zustand", "a_gefaehrdung"],
+      "sets": { "abcde_a_instabil": "A instabil" },
+      "default": "default"
+    },
+    "b": {
+      "id": "b",
+      "title": "106048009|Respiratory finding|B",
+      "note": "",
+      "children": [],
+      "content": "",
+      "phrases": [
+        "b_atmung",
+        "b_exkursion",
+        "b_seitengleichheit",
+        "b_atemnebengeraeusche"
+      ],
+      "sets": {},
+      "default": "default"
+    },
+    "status": {
+      "id": "status",
+      "title": "Status",
+      "note": "",
+      "children": [],
+      "content": "",
+      "phrases": [],
+      "sets": {},
+      "default": "default"
+    }
+  },
+  "phrases": {
+    "a_zustand": {
+      "id": "a_zustand",
+      "title": "Zustand",
+      "note": "",
+      "default": "a_zustand_frei",
+      "textblocks": {
+        "a_zustand_frei": "248553004|No obstruction of airway|frei",
+        "a_zustand_zunge": "425227004|Obstruction of airway caused by tongue|durch Zunge verlegt",
+        "a_zustand_blut": "427480003|Obstruction of airway caused by blood|durch Blutung verlegt",
+        "a_zustand_verlegt": "248555006|Totally obstructed airway|Atemweg verlegt"
+      },
+      "suggestions": {},
+      "setRules": {},
+      "attributes": []
+    },
+    "a_gefaehrdung": {
+      "id": "a_gefaehrdung",
+      "title": "Gefährdung",
+      "note": "",
+      "default": "a_gefaehrdung_keine",
+      "textblocks": {
+        "a_gefaehrdung_keine": "1145305006|Able to clear airway effectively|nicht gefährdet",
+        "a_gefaehrdung_ineffektiv": "67750007|Ineffective airway clearing|Atemweg wird nicht effektiv freigehalten"
+      },
+      "suggestions": {
+        "a_zustand_zunge": "a_gefaehrdung_ineffektiv",
+        "a_zustand_blut": "a_gefaehrdung_ineffektiv",
+        "a_zustand_verlegt": "a_gefaehrdung_ineffektiv"
+      },
+      "setRules": {
+        "abcde_a_instabil": "a_gefaehrdung_ineffektiv"
+      },
+      "attributes": []
+    },
+    "b_atmung": {
+      "id": "b_atmung",
+      "title": "Atmung",
+      "note": "",
+      "default": "b_atmung_eupnoe",
+      "textblocks": {
+        "b_atmung_eupnoe": "20716004|Rspiratory rate normal|Eupnoe",
+        "b_atmung_apnoe": "1023001|Apnea|Apnoe",
+        "b_atmung_bradypnoe": "86684002|Bradypnea|Bradypnoe",
+        "b_atmung_tachypnoe": "271823003|Tachypnea|Tachypnoe",
+        "b_atmung_agonal": "430546009|Agonal respiration|Agonale Atmung",
+        "b_atmung_beatmet": "1303532003|On artificial ventilation|Agonal respiration|Beatmet"
+      },
+      "suggestions": {},
+      "setRules": {},
+      "attributes": []
+    },
+    "b_exkursion": {
+      "id": "b_exkursion",
+      "title": "Atemexkursion",
+      "note": "",
+      "default": "b_exkursion_gleich",
+      "textblocks": {
+        "b_exkursion_gleich": "248559000|Chest movement equal|Atemexkursion seitengleich",
+        "b_exkursion": "248563007|Hemithorax immobile|keine Atemexkursion"
+      },
+      "suggestions": {},
+      "setRules": {},
+      "attributes": []
+    },
+    "b_seitengleichheit": {
+      "id": "b_seitengleichheit",
+      "title": "Seitengleichheit",
+      "note": "",
+      "default": "b_seitengleichheit_gleich",
+      "textblocks": {
+        "b_seitengleichheit_gleich": "1145305006|Able to clear airway effectively|nicht gefährdet"
+      },
+      "suggestions": {},
+      "setRules": {},
+      "attributes": []
+    },
+    "b_atemnebengeraeusche": {
+      "id": "b_atemnebengeraeusche",
+      "title": "Giemen",
+      "note": "",
+      "default": "b_atemnebengeraeusche_keine",
+      "textblocks": {
+        "b_atemnebengeraeusche_keine": "248553004|No obstruction of airway|frei"
+      },
+      "suggestions": {},
+      "setRules": {},
+      "attributes": []
+    }
+  }
+}
