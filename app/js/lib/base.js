@@ -26,7 +26,7 @@ export const load = async (file, type) => {
 export const replace = (text, replace) => {
     let resultString = text;
     for (const [needle, replacement] of Object.entries(replace)) {
-        resultString = text.replaceAll(`\${${needle}}`, replacement);
+        resultString = resultString.replaceAll(`\${${needle}}`, replacement);
     }
     return resultString;
 };

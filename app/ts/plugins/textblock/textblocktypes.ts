@@ -1,153 +1,201 @@
-/**
- * Holds the descriptions of the items.
- */
-export type Stack = {
-    groups: { [key: string]: Group };
-    phrases: { [key: string]: Phrase };
+export type SnomedCoding = {
+    system: "http://snomed.info/sct";
+    code?: string;
+    expression?: string;
+    display?: string;
 };
 
-/**
- * Holds the state of the items.
- */
-export type StackState = {
-    groups: { [key: string]: GroupState };
-    phrases: { [key: string]: PhraseState };
+export type ItemKind = "normal" | "abnormal" | "intervention" | "neutral";
+
+export type TextDefinition =
+    | string
+    | {
+          text: string;
+          snomed?: string;
+      };
+
+export type ValueDefinition = {
+    text: string;
+    snomed?: string;
+    kind: ItemKind;
 };
 
-export type Item = {
-    /**
-     * Identifier.
-     */
-    id: string;
-
-    /**
-     * Describes the item.
-     *
-     * Is displayed if phrase / group is inactive to activate it.
-     */
+export type PhraseDefinition = {
     title: string;
-
-    /**
-     * A not that can be displayed.
-     */
-    note: string;
+    default: string | "" | null;
+    values: Record<string, ValueDefinition>;
+    suggestions?: Record<string, string>;
+    attributes?: Record<string, string>;
+    note?: string;
+    kind?: ItemKind;
 };
 
-export type ItemState = {
-    id: string;
-
-    /**
-     * Indicates if the item holds a value that should be used in the final
-     * result.
-     *
-     * If an item is "inactive" its title will be displayed for the user
-     * to activate the item.
-     * If a group is "inactive" its children / content will be hidden.
-     * If a group has status "default" its title will be used in the final
-     * output.
-     */
-    state: "default" | "inactive";
-
-    /**
-     * The value that will be used in the final result.
-     */
-    value: string;
-};
-
-export type Group = Item & {
-    /**
-     * IDs of the children (other groups) of this group.
-     *
-     * A group may either have children or hold phrases.
-     */
-    children: string[];
-
-    /**
-     * ID of content to be displayed.
-     */
+export type GroupDefinition = {
+    title: TextDefinition;
+    children?: string[];
+    phrases?: string[];
+    sets?: string[];
+    default?: boolean;
     content?: string;
-
-    /**
-     * IDs of phrases to be displayed.
-     *
-     * A group may either have children or hold phrases.
-     */
-    phrases: string[];
-
-    /**
-     * Sets.
-     *
-     * "id" -> "title"
-     */
-    sets: { [key: string]: string };
-
-    /**
-     * Default state.
-     */
-    default: "default" | "inactive";
+    note?: string;
+    kind?: ItemKind;
+    summary?: boolean;
+    reset?: boolean;
 };
 
-export type GroupState = ItemState & {
-    /**
-     * Holds a state for each set.
-     *
-     * "id" -> state (true: active, false: inactive)
-     */
-    sets: { [key: string]: boolean };
+export type SetDefinition = {
+    title: string;
+    values: Record<string, string | null>;
+    kind?: ItemKind;
 };
 
-export type Phrase = Item & {
-    /**
-     * ID of the default alternative that will be displayed if defaults are
-     * requested.
-     */
-    default: string;
-
-    /**
-     * Textblocks that can be selected for this phrase.
-     *
-     * "id" -> "content"
-     */
-    textblocks: { [key: string]: string };
-
-    /**
-     * Rules to respond to changes in other phrases with suggestions.
-     *
-     * e.g., textblock ID_XYZ is activated in another phrase so this phrase will
-     * suggest textblock ID_ABC if it was not modified by the user.
-     *
-     * "foreign_textblock_id" -> "id"
-     */
-    suggestions: { [key: string]: string };
-
-    /**
-     * Rules to respond to sets.
-     *
-     * e.g., set ID_XYZ is activated so this phrase will
-     * be set to textblock ID_ABC if it was not modified by the user.
-     *
-     * "set_id" -> "id"
-     */
-    setRules: { [key: string]: string };
-
-    /**
-     * TODO
-     */
-    attributes: { [key: string]: string };
+export type ChoiceEditor = {
+    type: "choice";
+    label?: string;
+    options: Record<string, ValueDefinition>;
+    default?: string;
 };
 
-export type PhraseState = Omit<ItemState, "state"> & {
-    /**
-     * Phrases can be in more states.
-     *
-     * "modified" indicates that a textblock was set by the user.
-     * "suggested" indicates that a textblock was suggested by another textblock.
-     * "set" indicates that a textblock was activated by a set.
-     */
-    state: ItemState["state"] | "modified" | "suggested" | "set" | "hidden";
+export type NumberEditor = {
+    type: "number";
+    label?: string;
+    prefix?: string;
+    suffix?: string;
+    min?: number;
+    max?: number;
+    step?: number;
+    default?: number;
+};
 
-    /**
-     * ID of the currently active textblock.
-     */
-    textblock: string;
+export type DurationUnit =
+    | "minute"
+    | "hour"
+    | "day"
+    | "week"
+    | "month"
+    | "year";
+
+export type DurationEditor = {
+    type: "duration";
+    label?: string;
+    prefix?: string;
+    units?: DurationUnit[];
+    defaultUnit?: DurationUnit;
+};
+
+export type DateEditor = {
+    type: "date";
+    label?: string;
+    prefix?: string;
+};
+
+export type TextEditor = {
+    type: "text";
+    label?: string;
+    prefix?: string;
+    placeholder?: string;
+};
+
+export type EditorDefinition =
+    | ChoiceEditor
+    | NumberEditor
+    | DurationEditor
+    | DateEditor
+    | TextEditor;
+
+export type PackageDefinition = {
+    version: 2;
+    imports?: string[];
+    groups: Record<string, GroupDefinition>;
+    phrases: Record<string, PhraseDefinition>;
+    sets?: Record<string, SetDefinition>;
+    editors?: Record<string, EditorDefinition>;
+};
+
+export type Definitions = {
+    groups: Record<string, GroupDefinition>;
+    phrases: Record<string, PhraseDefinition>;
+    sets: Record<string, SetDefinition>;
+    editors: Record<string, EditorDefinition>;
+};
+
+export type DurationValue = {
+    amount: number;
+    unit: DurationUnit;
+    anchor: string;
+};
+
+export type AttributeValue = string | number | DurationValue;
+
+export type PhraseOverride = {
+    included: boolean;
+    valueId: string | null;
+};
+
+export type DocumentState = {
+    activeSets: string[];
+    phraseOverrides: Record<string, PhraseOverride>;
+    groupOverrides: Record<string, boolean>;
+    attributes: Record<string, Record<string, AttributeValue>>;
+};
+
+export type PhraseSource = "default" | "set" | "suggestion" | "user";
+
+export type ResolvedPart =
+    | { type: "text"; text: string }
+    | {
+          type: "attribute";
+          id: string;
+          editorId: string;
+          text: string;
+          value?: AttributeValue;
+      };
+
+export type ResolvedPhrase = {
+    id: string;
+    title: string;
+    valueId: string | null;
+    text: string;
+    parts: ResolvedPart[];
+    visible: boolean;
+    included: boolean;
+    source: PhraseSource;
+    provenance: string[];
+    touched: boolean;
+    attributes: Record<string, AttributeValue>;
+    coding?: SnomedCoding;
+    kind: ItemKind;
+};
+
+export type ResolvedDocument = {
+    phrases: Record<string, ResolvedPhrase>;
+};
+
+export type StructuredItem = {
+    id: string;
+    valueId: string | null;
+    text: string;
+    kind: ItemKind;
+    source: PhraseSource;
+    provenance: string[];
+    attributes: Record<
+        string,
+        AttributeValue | (DurationValue & { resolvedStart: string })
+    >;
+    coding?: SnomedCoding;
+};
+
+export type StructuredDocument = {
+    version: 1;
+    root: string;
+    text: string;
+    items: StructuredItem[];
+    suggestions: Array<
+        Pick<StructuredItem, "id" | "valueId" | "text" | "kind">
+    >;
+    summaries: Array<{
+        groupId: string;
+        title: string;
+        items: Array<Pick<StructuredItem, "id" | "valueId" | "text" | "kind">>;
+    }>;
 };

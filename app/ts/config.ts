@@ -3,7 +3,6 @@ import * as config from "@lib/config.js";
 declare module "@lib/config.js" {
     interface ConfigSchema {
         dataURL: string;
-        phraseDelimiter: string;
     }
 }
 
@@ -15,7 +14,6 @@ export const configure = (): void => {
         dataURL: "./data",
         languageURL: "./language",
         pluginURL: "./plugins",
-        phraseDelimiter: ";",
     });
 
     config.configure("production", {
@@ -25,6 +23,5 @@ export const configure = (): void => {
         dataURL: "./data/",
         languageURL: "./language",
         pluginURL: "./plugins",
-        phraseDelimiter: ";",
     });
 };

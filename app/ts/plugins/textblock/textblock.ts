@@ -1,683 +1,565 @@
-import { deSCTIDText, getSCTIDFromText } from "./textblocklib.js";
-import type {
-    Stack,
-    StackState,
-    Item,
-    Group,
-    GroupState,
-    Phrase,
-    PhraseState,
-} from "./textblocktypes.js";
 import * as baselib from "@lib/base.js";
 import { getConfig } from "@lib/config.js";
-import * as rulehub from "../../rulehub.js";
-import * as textblockui from "./textblockui.js";
-import * as uilib from "@lib/ui.js";
+import {
+    clampNumber,
+    editorDefaultValue,
+    emptyDefinitions,
+    hasAttributeValue,
+    isDurationValue,
+} from "./textblocklib.js";
+import {
+    createDocumentState,
+    isGroupEnabled,
+    isPackage,
+    mergePackage,
+    renderGroupText,
+    resolveDocument,
+    structuredDocument,
+    validateDefinitions,
+} from "./textblockstate.js";
+import { renderModule } from "./textblockui.js";
+import type { OpenEditor } from "./textblockui.js";
+import type {
+    AttributeValue,
+    DocumentState,
+    DurationUnit,
+    DurationValue,
+    EditorDefinition,
+    PackageDefinition,
+    ResolvedDocument,
+    StructuredDocument,
+} from "./textblocktypes.js";
 
-export const display = async (
-    parentID: string,
-    params: Record<string, any>,
+type Module = {
+    parentId: string;
+    rootId: string;
+    openEditor: OpenEditor;
+    status: string;
+};
+
+const definitions = emptyDefinitions();
+const state: DocumentState = createDocumentState();
+const modules = new Map<string, Module>();
+const loadedPackages = new Set<string>();
+const packageRequests = new Map<string, Promise<PackageDefinition>>();
+let resolved: ResolvedDocument = { phrases: {} };
+
+const requestPackage = (id: string): Promise<PackageDefinition> => {
+    let request = packageRequests.get(id);
+    if (request !== undefined) return request;
+
+    request = (async (): Promise<PackageDefinition> => {
+        const data = await baselib.load(
+            `${getConfig("dataURL").replace(/\/$/, "")}/${id}.json`,
+            "json",
+        );
+        if (!isPackage(data)) {
+            throw new Error(`Data file "${id}.json" is not a version 2 package`);
+        }
+        return data;
+    })();
+    packageRequests.set(id, request);
+    return request;
+};
+
+const fetchPackage = async (
+    id: string,
+    trail: readonly string[] = [],
 ): Promise<void> => {
-    loadGroup(params.id, parentID, params.level ?? 1);
+    if (loadedPackages.has(id)) return;
+    if (trail.includes(id)) {
+        throw new Error(`Package import cycle: ${[...trail, id].join(" -> ")}`);
+    }
+
+    const data = await requestPackage(id);
+    for (const importedId of data.imports ?? []) {
+        await fetchPackage(importedId, [...trail, id]);
+    }
+
+    // Another recursive branch may have installed this package while we waited.
+    if (loadedPackages.has(id)) return;
+    mergePackage(definitions, data);
+    loadedPackages.add(id);
 };
 
-export const getValue = async (id: string): Promise<string> => {
-    return (await getGroupValue(id)) + "\n\n\n" + (await getGroupSCTIDs(id));
-};
-
-const stack: Stack = {
-    groups: {},
-    phrases: {},
-};
-
-const states: StackState = {
-    groups: {},
-    phrases: {},
-};
-
-const isItem = (item: Item): boolean => {
-    if (!("id" in item)) {
-        console.error(`"id" missing in item "${item["title"]}"`);
-        return false;
-    }
-
-    if (!(typeof item.id === "string")) {
-        console.error(`"id" is not a string in item "${item["id"]}"`);
-        return false;
-    }
-
-    if (!("title" in item)) {
-        console.error(`"title" missing in item "${item["id"]}"`);
-        return false;
-    }
-
-    if (!(typeof item.title === "string")) {
-        console.error(`"title" is not a string in item "${item["id"]}"`);
-        return false;
-    }
-
-    if (!("note" in item)) {
-        console.error(`"note" missing in item "${item["id"]}"`);
-        return false;
-    }
-
-    if (!(typeof item.note === "string")) {
-        console.error(`"note" is not a string in item "${item["id"]}"`);
-        return false;
-    }
-
-    return true;
-};
-
-const isGroup = (group: Group): boolean => {
-    if (!isItem(group)) {
-        return false;
-    }
-
-    if (!("children" in group)) {
-        console.error(`"children" missing in group "${group["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            Array.isArray(group.children) &&
-            group.children.every((item) => typeof item === "string")
-        )
-    ) {
-        console.error(
-            `"children" is not an array of strings in group "${group["id"]}"`,
-        );
-        return false;
-    }
-
-    if ("content" in group && !(typeof group.content === "string")) {
-        console.error(`"content" is not a string in group "${group["id"]}"`);
-        return false;
-    }
-
-    if (!("phrases" in group)) {
-        console.error(`"phrases" missing in group "${group["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            Array.isArray(group.phrases) &&
-            group.phrases.every((item) => typeof item === "string")
-        )
-    ) {
-        console.error(
-            `"phrases" is not an array of strings in group "${group["id"]}"`,
-        );
-        return false;
-    }
-
-    if (!("sets" in group)) {
-        console.error(`"sets" missing in group "${group["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            typeof group.sets === "object" &&
-            !Array.isArray(group.sets) &&
-            Object.values(group.sets).every(
-                (value) => typeof value === "string",
-            )
-        )
-    ) {
-        console.error(
-            `"sets" is not an dictionary of strings in group "${group["id"]}"`,
-        );
-        return false;
-    }
-
-    if (!("default" in group)) {
-        console.error(`"default" missing in group "${group["id"]}"`);
-        return false;
-    }
-
-    if (!["default", "inactive"].includes(group.default)) {
-        console.error(`"default" is not valid in group "${group["id"]}"`);
-        return false;
-    }
-
-    return true;
-};
-
-const isPhrase = (phrase: Phrase): boolean => {
-    if (!isItem(phrase)) {
-        return false;
-    }
-
-    if (!("default" in phrase)) {
-        console.error(`"default" missing in phrase "${phrase["id"]}"`);
-        return false;
-    }
-
-    if (!(typeof phrase.default === "string")) {
-        console.error(`"default" is not a string in phrase "${phrase["id"]}"`);
-        return false;
-    }
-
-    if (!("textblocks" in phrase)) {
-        console.error(`"textblocks" missing in phrase "${phrase["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            typeof phrase.textblocks === "object" &&
-            Object.values(phrase.textblocks).every(
-                (value) => typeof value === "string",
-            )
-        )
-    ) {
-        console.error(
-            `"textblocks" is not a dictionary of strings in phrase "${phrase["id"]}"`,
-        );
-        return false;
-    }
-
-    if (!("suggestions" in phrase)) {
-        console.error(`"suggestions" missing in phrase "${phrase["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            typeof phrase.suggestions === "object" &&
-            Object.values(phrase.suggestions).every(
-                (value) => typeof value === "string",
-            )
-        )
-    ) {
-        console.error(
-            `"suggestions" is not a dictionary of strings in phrase "${phrase["id"]}"`,
-        );
-        return false;
-    }
-
-    if (!("setRules" in phrase)) {
-        console.error(`"setRules" missing in phrase "${phrase["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            typeof phrase.setRules === "object" &&
-            Object.values(phrase.setRules).every(
-                (value) => typeof value === "string",
-            )
-        )
-    ) {
-        console.error(
-            `"setRules" is not a dictionary of strings in phrase "${phrase["id"]}"`,
-        );
-        return false;
-    }
-
-    if (!("attributes" in phrase)) {
-        console.error(`"attributes" missing in phrase "${phrase["id"]}"`);
-        return false;
-    }
-
-    if (
-        !(
-            typeof phrase.attributes === "object" &&
-            Object.values(phrase.attributes).every(
-                (value) => typeof value === "string",
-            )
-        )
-    ) {
-        console.error(
-            `"attributes" is not a dictionary of strings in phrase "${phrase["id"]}"`,
-        );
-        return false;
-    }
-
-    return true;
-};
-
-const isPackage = (stack: Stack): boolean => {
-    if (!("groups" in stack)) {
-        console.error(`no groups in stack ${stack["id"]}`);
-        return false;
-    }
-
-    if (!("phrases" in stack)) {
-        console.error(`no phrases in stack ${stack["id"]}`);
-        return false;
-    }
-
-    for (const id in stack.groups) {
-        if (!isGroup(stack.groups[id])) {
-            return false;
-        }
-    }
-
-    for (const id in stack.phrases) {
-        if (!isPhrase(stack.phrases[id])) {
-            return false;
-        }
-    }
-    return true;
-};
-
-const fetchPackage = async (id: string): Promise<void> => {
-    const data: any = await baselib.load(
-        `${getConfig("dataURL")}/${id}.json`,
-        "json",
-    );
-
-    if (!isPackage(data)) {
-        throw Error(`recieved data for id "${id}" was not a package`);
-    }
-
-    for (const id in data.groups) {
-        stack.groups[id] = data.groups[id];
-    }
-
-    for (const id in data.phrases) {
-        stack.phrases[id] = data.phrases[id];
-    }
-};
-
-const getGroup = async (id: string): Promise<Group> => {
-    if (!(id in stack.groups)) {
-        console.log(`group "${id}" is not in the stack -> need to fetch it`);
+const ensureGroup = async (
+    id: string,
+    trail: Set<string> = new Set(),
+): Promise<void> => {
+    if (!(id in definitions.groups)) {
         await fetchPackage(id);
     }
-
-    return stack.groups[id];
-};
-
-const getGroupState = (id: string): GroupState => {
-    if (!(id in states.groups)) {
-        states.groups[id] = {
-            id: id,
-            state: "default",
-            value: "",
-            sets: {},
-        };
+    const group = definitions.groups[id];
+    if (group === undefined) {
+        throw new Error(`Group "${id}" was not found`);
+    }
+    if (trail.has(id)) {
+        throw new Error(`Group cycle detected at "${id}"`);
     }
 
-    return states.groups[id];
-};
-
-const getPhrase = async (id: string): Promise<Phrase> => {
-    if (!(id in stack.phrases)) {
-        console.log(`phrase "${id}" is not in the stack -> need to fetch it`);
-        await fetchPackage(id);
+    const nextTrail = new Set(trail).add(id);
+    for (const child of group.children ?? []) {
+        await ensureGroup(child, nextTrail);
     }
-
-    return stack.phrases[id];
-};
-
-const getDefaultPhraseState = (
-    id: string,
-    state: PhraseState["state"] = "default",
-): PhraseState => {
-    return {
-        id: id,
-        state: state,
-        textblock: "",
-        value: "",
-    };
-};
-
-const getPhraseState = (id: string): PhraseState => {
-    if (!(id in states.phrases)) {
-        states.phrases[id] = getDefaultPhraseState(id);
-    }
-
-    return states.phrases[id];
-};
-
-const nextLevel = (level: number): 1 | 2 | 3 | 4 | 5 | 6 => {
-    if (level < 1) {
-        return 1;
-    } else if (level < 2) {
-        return 2;
-    } else if (level < 3) {
-        return 3;
-    } else if (level < 4) {
-        return 4;
-    } else if (level < 5) {
-        return 5;
-    } else {
-        return 6;
-    }
-};
-
-const toggleGroup = async (id: string): Promise<void> => {
-    const newState: GroupState = { ...getGroupState(id) };
-
-    if (newState.state === "default") {
-        newState.state = "inactive";
-    } else {
-        newState.state = "default";
-    }
-
-    await updateGroup(id, newState.state);
-};
-
-const toggleSet = async (groupID: string, setID: string): Promise<void> => {
-    const newState: GroupState = { ...getGroupState(groupID) };
-
-    if (newState.sets[setID]) {
-        newState.sets[setID] = false;
-        rulehub.deactivate("set", setID);
-    } else {
-        newState.sets[setID] = true;
-        rulehub.activate("set", setID);
-    }
-
-    await updateGroup(groupID, newState.state, newState.sets);
-};
-
-const updateGroup = async (
-    groupID: string,
-    newState: GroupState["state"],
-    sets: GroupState["sets"] = {},
-): Promise<void> => {
-    const state: GroupState = getGroupState(groupID);
-    const group: Group = await getGroup(groupID);
-
-    if (newState === "inactive") {
-        state.value = "";
-    } else if (newState === "default") {
-        state.value = deSCTIDText(group.title);
-    } else {
-        return;
-    }
-
-    state.state = newState;
-    textblockui.updateGroup(groupID, newState, sets);
-};
-
-const loadGroup = async (
-    id: string,
-    parentID: string,
-    level: 1 | 2 | 3 | 4 | 5 | 6,
-): Promise<void> => {
-    const group: Group = await getGroup(id);
-
-    textblockui.displayGroup(
-        id,
-        parentID,
-        level,
-        deSCTIDText(group.title),
-        group.sets,
-        (): void => {
-            toggleGroup(id);
-        },
-        (): void => {
-            resetGroup(id);
-        },
-        (setID: string): (() => void) => {
-            return () => {
-                toggleSet(id, setID);
-            };
-        },
-        group.content,
-    );
-
-    const setStates: GroupState["sets"] = {};
-
-    for (const setID in group.sets) {
-        setStates[setID] = false;
-    }
-
-    if (group.children.length > 0) {
-        for (const child of group.children) {
-            loadGroup(child, id, nextLevel(level));
-        }
-    } else if (group.phrases.length > 0) {
-        for (const phrase of group.phrases) {
-            loadPhrase(phrase, id);
+    for (const setId of group.sets ?? []) {
+        if (!(setId in definitions.sets)) {
+            await fetchPackage(setId);
         }
     }
-
-    updateGroup(id, group.default, setStates);
-};
-
-const resetGroup = async (id: string): Promise<void> => {
-    const group: Group = await getGroup(id);
-    const state: GroupState = getGroupState(id);
-
-    for (const setID in state.sets) {
-        state.sets[setID] = false;
-    }
-
-    await updateGroup(id, "default", { ...state.sets });
-
-    if (group.children.length > 0) {
-        for (const child of group.children) {
-            resetGroup(child);
+    for (const phraseId of group.phrases ?? []) {
+        if (!(phraseId in definitions.phrases)) {
+            await fetchPackage(phraseId);
         }
-    } else if (group.phrases.length > 0) {
-        for (const child of group.phrases) {
-            resetPhrase(child);
+        const phrase = definitions.phrases[phraseId];
+        if (phrase === undefined) {
+            throw new Error(`Phrase "${phraseId}" was not found`);
         }
-    }
-};
-
-const getGroupValue = async (id: string): Promise<string> => {
-    const group: Group = await getGroup(id);
-    const state: GroupState = getGroupState(id);
-    let value: string = "";
-
-    if (state.state === "inactive") {
-        return "";
-    }
-
-    if (group.children.length > 0) {
-        for (const child of group.children) {
-            const text: string = await getGroupValue(child);
-            value += `\n\n${text}`;
-        }
-    } else if (group.phrases.length > 0) {
-        value += ":";
-        for (const child of group.phrases) {
-            const text: string = await getPhraseValue(child);
-            value += ` ${text};`;
-        }
-    }
-
-    return `${state.value}${value}`;
-};
-
-const getGroupSCTIDs = async (id: string): Promise<string> => {
-    const group: Group = await getGroup(id);
-    const state: GroupState = getGroupState(id);
-    let sctids: string = "";
-
-    if (state.state === "inactive") {
-        return "";
-    }
-
-    if (group.children.length > 0) {
-        for (const child of group.children) {
-            const text: string = await getGroupSCTIDs(child);
-            sctids += `${text}`;
-        }
-    } else if (group.phrases.length > 0) {
-        sctids += ":";
-        for (const child of group.phrases) {
-            const text: string = await getPhraseSCTIDs(child);
-            sctids += ` ${text};`;
-        }
-    }
-
-    return `${getSCTIDFromText(group.title)}${sctids}`;
-};
-
-const updatePhrase = async (
-    phraseID: string,
-    newState: PhraseState["state"],
-    textblockID: string = "",
-    value: string = "",
-): Promise<void> => {
-    const state: PhraseState = getPhraseState(phraseID);
-    const phrase: Phrase = await getPhrase(phraseID);
-    let text: string = "";
-
-    if (
-        newState === "inactive" ||
-        (newState === "default" && phrase.default === "")
-    ) {
-        rulehub.deactivate("suggestion", state.textblock);
-        state.value = "";
-        state.textblock = "";
-        text = phrase.title;
-    } else if (newState === "default") {
-        rulehub.deactivate("suggestion", state.textblock);
-        rulehub.activate("suggestion", phrase.default);
-        state.value = deSCTIDText(phrase.textblocks[phrase.default]);
-        state.textblock = phrase.default;
-        text = deSCTIDText(phrase.textblocks[phrase.default]);
-    } else if (newState === "set" && state.state !== "modified") {
-        rulehub.deactivate("suggestion", state.textblock);
-        rulehub.activate("suggestion", textblockID);
-        state.value = deSCTIDText(phrase.textblocks[textblockID]);
-        state.textblock = textblockID;
-        text = deSCTIDText(phrase.textblocks[textblockID]);
-    } else if (newState === "suggested" && state.state !== "modified") {
-        rulehub.deactivate("suggestion", state.textblock);
-        rulehub.activate("suggestion", textblockID);
-        state.value = deSCTIDText(phrase.textblocks[textblockID]);
-        state.textblock = textblockID;
-        text = deSCTIDText(phrase.textblocks[textblockID]);
-    } else if (newState === "modified") {
-        rulehub.deactivate("suggestion", state.textblock);
-        rulehub.activate("suggestion", textblockID);
-        state.value =
-            value === "" ? deSCTIDText(phrase.textblocks[textblockID]) : value;
-        state.textblock = textblockID;
-        text =
-            value === "" ? deSCTIDText(phrase.textblocks[textblockID]) : value;
-    } else if (newState === "hidden") {
-        rulehub.deactivate("suggestion", state.textblock);
-        state.value = "";
-        state.textblock = "";
-        text = "";
-    } else {
-        return;
-    }
-
-    textblockui.updatePhrase(phraseID, newState, state.state, text);
-    state.state = newState;
-};
-
-const resetPhrase = async (id: string): Promise<void> => {
-    await updatePhrase(id, "default");
-};
-
-const getPhraseValue = async (id: string): Promise<string> => {
-    const state: PhraseState = getPhraseState(id);
-
-    return state.value;
-};
-
-const getPhraseSCTIDs = async (id: string): Promise<string> => {
-    const state: PhraseState = getPhraseState(id);
-    const phrase: Phrase = await getPhrase(id);
-    let sctids: string = "";
-
-    const parts: string[] = state.value.split(getConfig("phraseDelimiter"));
-
-    for (const part of parts) {
-        for (const id in phrase.textblocks) {
-            const sctid: string = getSCTIDFromText(phrase.textblocks[id]);
-            const text: string = deSCTIDText(phrase.textblocks[id]);
-
-            if (part.indexOf(text) >= 0) {
-                sctids += sctid;
-
-                for (const attributeID in phrase.attributes) {
-                    const attributeSCTID: string = getSCTIDFromText(
-                        phrase.attributes[attributeID],
-                    );
-                    const attributeText: string = deSCTIDText(
-                        phrase.attributes[attributeID],
-                    );
-
-                    if (part.indexOf(attributeText)) {
-                        sctids += attributeSCTID;
-                    }
-                }
+        for (const editorId of Object.values(phrase.attributes ?? {})) {
+            if (!(editorId in definitions.editors)) {
+                await fetchPackage(editorId);
             }
         }
     }
-    return sctids;
 };
 
-const onRule = async (
-    type: rulehub.RuleType,
-    phraseID: string,
-    textblockID: string,
-    signal: rulehub.Signal,
-): Promise<void> => {
-    if (signal === "activate") {
-        if (type === "set") {
-            updatePhrase(phraseID, "set", textblockID);
-        } else if (type === "suggestion") {
-            updatePhrase(phraseID, "suggested", textblockID);
-        } else if (type === "guide") {
-            updatePhrase(phraseID, "suggested", textblockID);
+const renderAll = (): void => {
+    resolved = resolveDocument(definitions, state);
+    for (const module of modules.values()) {
+        const parent = document.getElementById(module.parentId);
+        if (parent !== null) {
+            renderModule(
+                parent,
+                module.rootId,
+                definitions,
+                state,
+                resolved,
+                module.openEditor,
+                module.status,
+            );
+        }
+    }
+};
+
+const setOverride = (
+    phraseId: string,
+    valueId: string | null,
+    included: boolean,
+): void => {
+    state.phraseOverrides[phraseId] = { valueId, included };
+};
+
+const activatePhrase = (phraseId: string): void => {
+    const phrase = resolved.phrases[phraseId];
+    const values = Object.keys(definitions.phrases[phraseId].values);
+    setOverride(phraseId, phrase.valueId ?? values[0] ?? null, true);
+};
+
+const handlePhrase = (module: Module, phraseId: string): void => {
+    const phrase = resolved.phrases[phraseId];
+    const definition = definitions.phrases[phraseId];
+    const values = Object.keys(definition.values);
+    const firstAttribute = Object.keys(definition.attributes ?? {})[0];
+
+    if (!phrase.included && phrase.valueId !== null) {
+        if (
+            firstAttribute !== undefined &&
+            phrase.attributes[firstAttribute] === undefined
+        ) {
+            openAttribute(module, phraseId, firstAttribute);
+            return;
+        }
+        setOverride(phraseId, phrase.valueId, true);
+        module.openEditor = null;
+        return;
+    }
+
+    if (values.length <= 1) {
+        setOverride(phraseId, phrase.valueId ?? values[0] ?? null, !phrase.included);
+        if (!phrase.included && firstAttribute !== undefined) {
+            openAttribute(module, phraseId, firstAttribute);
+        } else {
+            module.openEditor = null;
+        }
+        return;
+    }
+
+    if (values.length === 2) {
+        const current = Math.max(0, values.indexOf(phrase.valueId ?? values[0]));
+        setOverride(phraseId, values[(current + 1) % values.length], true);
+        module.openEditor = null;
+        return;
+    }
+
+    module.openEditor = { type: "phrase", phraseId };
+};
+
+const updateAttribute = (
+    phraseId: string,
+    attributeId: string,
+    value: AttributeValue,
+): void => {
+    state.attributes[phraseId] ??= {};
+    state.attributes[phraseId][attributeId] = value;
+    activatePhrase(phraseId);
+};
+
+const openAttribute = (
+    module: Module,
+    phraseId: string,
+    attributeId: string,
+): void => {
+    const editorId = definitions.phrases[phraseId].attributes?.[attributeId];
+    const editor = definitions.editors[editorId ?? ""];
+    if (editor === undefined) return;
+
+    if (state.attributes[phraseId]?.[attributeId] === undefined) {
+        const initial = editorDefaultValue(editor);
+        if (initial !== undefined) {
+            updateAttribute(phraseId, attributeId, initial);
+        } else {
+            activatePhrase(phraseId);
         }
     } else {
-        if (type === "guide") {
-            updatePhrase(phraseID, "hidden");
-        } else {
-            updatePhrase(phraseID, "default");
+        activatePhrase(phraseId);
+    }
+    module.openEditor = { type: "attribute", phraseId, attributeId };
+};
+
+const defaultDuration = (
+    editor: Extract<EditorDefinition, { type: "duration" }>,
+): DurationValue => ({
+    amount: 1,
+    unit: editor.defaultUnit ?? editor.units?.[0] ?? "day",
+    anchor: new Date().toISOString(),
+});
+
+const currentDuration = (
+    phraseId: string,
+    attributeId: string,
+    editor: Extract<EditorDefinition, { type: "duration" }>,
+): DurationValue => {
+    const value = state.attributes[phraseId]?.[attributeId];
+    return isDurationValue(value) ? value : defaultDuration(editor);
+};
+
+const getEditor = (
+    phraseId: string,
+    attributeId: string,
+): EditorDefinition | undefined => {
+    const editorId = definitions.phrases[phraseId]?.attributes?.[attributeId];
+    return definitions.editors[editorId ?? ""];
+};
+
+const clearAttribute = (phraseId: string, attributeId: string): void => {
+    delete state.attributes[phraseId]?.[attributeId];
+    if (Object.keys(state.attributes[phraseId] ?? {}).length === 0) {
+        delete state.attributes[phraseId];
+    }
+    delete state.phraseOverrides[phraseId];
+};
+
+const closeEditor = (module: Module): void => {
+    const editor = module.openEditor;
+    if (editor?.type === "attribute") {
+        const value = state.attributes[editor.phraseId]?.[editor.attributeId];
+        if (!hasAttributeValue(value)) {
+            clearAttribute(editor.phraseId, editor.attributeId);
         }
+    }
+    module.openEditor = null;
+};
+
+const isTouchDevice = (): boolean =>
+    window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
+
+const focusOpenAttribute = (module: Module): void => {
+    const editor = module.openEditor;
+    if (isTouchDevice() || editor?.type !== "attribute") return;
+    const parent = document.getElementById(module.parentId);
+    const input = [...(parent?.querySelectorAll<HTMLInputElement>(
+        'input[data-input="attribute"]',
+    ) ?? [])].find(
+        (field) =>
+            field.dataset.phraseId === editor.phraseId &&
+            field.dataset.attributeId === editor.attributeId,
+    );
+    input?.focus();
+};
+
+const collectGroupContents = (
+    groupId: string,
+    phraseIds: Set<string>,
+    setIds: Set<string>,
+    groupIds: Set<string>,
+): void => {
+    if (groupIds.has(groupId)) return;
+    groupIds.add(groupId);
+    const group = definitions.groups[groupId];
+    for (const phraseId of group.phrases ?? []) phraseIds.add(phraseId);
+    for (const setId of group.sets ?? []) setIds.add(setId);
+    for (const child of group.children ?? []) {
+        collectGroupContents(child, phraseIds, setIds, groupIds);
     }
 };
 
-const loadPhrase = async (id: string, parentID: string): Promise<void> => {
-    const phrase: Phrase = await getPhrase(id);
-    const state: PhraseState = getDefaultPhraseState(id);
+const resetGroup = (groupId: string): void => {
+    const phraseIds = new Set<string>();
+    const setIds = new Set<string>();
+    const groupIds = new Set<string>();
+    collectGroupContents(groupId, phraseIds, setIds, groupIds);
 
-    textblockui.displayPhrase(id, parentID, () => {
-        textblockui.displayPhraseMenu(
-            id,
-            (id: string): string => {
-                return getPhraseState(id).value;
-            },
-            phrase.textblocks,
-            phrase.attributes,
-            () => {
-                updatePhrase(id, "inactive");
-                uilib.hideModal(`${id}__modal`);
-            },
-            (textblockID: string): (() => void) => {
-                return () => {
-                    updatePhrase(id, "modified", textblockID);
-                    uilib.hideModal(`${id}__modal`);
-                };
-            },
-            updatePhrase,
+    for (const phraseId of phraseIds) {
+        delete state.phraseOverrides[phraseId];
+        delete state.attributes[phraseId];
+    }
+    for (const id of groupIds) delete state.groupOverrides[id];
+    state.activeSets = state.activeSets.filter((id) => !setIds.has(id));
+};
+
+const copyToClipboard = async (text: string): Promise<void> => {
+    if (navigator.clipboard !== undefined && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.className = "clipboard-fallback";
+    document.body.append(textarea);
+    textarea.select();
+    const copied = document.execCommand("copy");
+    textarea.remove();
+    if (!copied) throw new Error("Clipboard access failed");
+};
+
+const requireData = (
+    button: HTMLButtonElement,
+    key: string,
+): string => {
+    const value = button.dataset[key];
+    if (value === undefined) throw new Error(`Missing action data "${key}"`);
+    return value;
+};
+
+const handleClick = async (module: Module, event: Event): Promise<void> => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest<HTMLButtonElement>("button[data-action]");
+    if (button === null) return;
+    event.preventDefault();
+
+    const action = requireData(button, "action");
+    module.status = "";
+
+    if (action === "phrase") {
+        handlePhrase(module, requireData(button, "phraseId"));
+    } else if (action === "choose-value") {
+        setOverride(
+            requireData(button, "phraseId"),
+            requireData(button, "valueId"),
+            true,
         );
-    });
-
-    updatePhrase(state.id, state.state, state.value, state.textblock);
-
-    for (const foreignPhraseID in phrase.setRules) {
-        rulehub.register("set", foreignPhraseID, {
-            phraseID: id,
-            textblockID: phrase.setRules[foreignPhraseID],
-            callback: onRule,
-        });
+        module.openEditor = null;
+    } else if (action === "exclude-phrase") {
+        const phraseId = requireData(button, "phraseId");
+        setOverride(phraseId, resolved.phrases[phraseId].valueId, false);
+        module.openEditor = null;
+    } else if (action === "reset-phrase") {
+        const phraseId = requireData(button, "phraseId");
+        delete state.phraseOverrides[phraseId];
+        delete state.attributes[phraseId];
+        module.openEditor = null;
+    } else if (action === "attribute") {
+        openAttribute(
+            module,
+            requireData(button, "phraseId"),
+            requireData(button, "attributeId"),
+        );
+    } else if (action === "choose-attribute") {
+        updateAttribute(
+            requireData(button, "phraseId"),
+            requireData(button, "attributeId"),
+            requireData(button, "value"),
+        );
+    } else if (action === "step-number") {
+        const phraseId = requireData(button, "phraseId");
+        const attributeId = requireData(button, "attributeId");
+        const editor = getEditor(phraseId, attributeId);
+        if (editor?.type === "number") {
+            const current = state.attributes[phraseId]?.[attributeId];
+            const base = typeof current === "number" ? current : (editor.default ?? 0);
+            updateAttribute(
+                phraseId,
+                attributeId,
+                clampNumber(
+                    base + Number(requireData(button, "delta")),
+                    editor.min,
+                    editor.max,
+                ),
+            );
+        }
+    } else if (action === "step-duration") {
+        const phraseId = requireData(button, "phraseId");
+        const attributeId = requireData(button, "attributeId");
+        const editor = getEditor(phraseId, attributeId);
+        if (editor?.type === "duration") {
+            const value = currentDuration(phraseId, attributeId, editor);
+            updateAttribute(phraseId, attributeId, {
+                ...value,
+                amount: Math.max(
+                    1,
+                    value.amount + Number(requireData(button, "delta")),
+                ),
+            });
+        }
+    } else if (action === "choose-duration-unit") {
+        const phraseId = requireData(button, "phraseId");
+        const attributeId = requireData(button, "attributeId");
+        const editor = getEditor(phraseId, attributeId);
+        if (editor?.type === "duration") {
+            const value = currentDuration(phraseId, attributeId, editor);
+            updateAttribute(phraseId, attributeId, {
+                ...value,
+                unit: requireData(button, "unit") as DurationUnit,
+            });
+        }
+    } else if (action === "clear-attribute") {
+        const phraseId = requireData(button, "phraseId");
+        const attributeId = requireData(button, "attributeId");
+        clearAttribute(phraseId, attributeId);
+        module.openEditor = null;
+    } else if (action === "toggle-set") {
+        const setId = requireData(button, "setId");
+        state.activeSets = state.activeSets.includes(setId)
+            ? state.activeSets.filter((id) => id !== setId)
+            : [...state.activeSets, setId];
+    } else if (action === "toggle-group") {
+        const groupId = requireData(button, "groupId");
+        state.groupOverrides[groupId] = !isGroupEnabled(
+            groupId,
+            definitions,
+            state,
+        );
+    } else if (action === "reset-group") {
+        resetGroup(requireData(button, "groupId"));
+        module.openEditor = null;
+    } else if (action === "close-editor") {
+        closeEditor(module);
+    } else if (action === "copy-text" || action === "copy-data") {
+        const rootId = requireData(button, "rootId");
+        resolved = resolveDocument(definitions, state);
+        const document = structuredDocument(rootId, definitions, state, resolved);
+        try {
+            await copyToClipboard(
+                action === "copy-text"
+                    ? document.text
+                    : JSON.stringify(document, null, 2),
+            );
+            module.status = action === "copy-text" ? "Text kopiert" : "Daten kopiert";
+        } catch (error) {
+            console.error(error);
+            module.status = "Kopieren nicht möglich";
+        }
     }
 
-    for (const foreignPhraseID in phrase.suggestions) {
-        rulehub.register("suggestion", foreignPhraseID, {
-            phraseID: id,
-            textblockID: phrase.suggestions[foreignPhraseID],
-            callback: onRule,
-        });
+    renderAll();
+    focusOpenAttribute(module);
+};
+
+const updateFromInput = (field: EventTarget | null): boolean => {
+    if (!(field instanceof HTMLInputElement) || field.dataset.input !== "attribute") {
+        return false;
     }
+    const phraseId = field.dataset.phraseId;
+    const attributeId = field.dataset.attributeId;
+    if (phraseId === undefined || attributeId === undefined) return false;
+    const editor = getEditor(phraseId, attributeId);
+    if (editor === undefined) return false;
+
+    if (field.value.trim() === "") {
+        delete state.attributes[phraseId]?.[attributeId];
+        return true;
+    }
+
+    if (editor.type === "number") {
+        const parsed = Number(field.value);
+        if (!Number.isNaN(parsed)) {
+            updateAttribute(
+                phraseId,
+                attributeId,
+                clampNumber(parsed, editor.min, editor.max),
+            );
+        } else {
+            return false;
+        }
+    } else if (editor.type === "duration") {
+        const parsed = Number(field.value);
+        if (!Number.isNaN(parsed)) {
+            const value = currentDuration(phraseId, attributeId, editor);
+            updateAttribute(phraseId, attributeId, {
+                ...value,
+                amount: Math.max(1, parsed),
+                unit: (field.dataset.durationUnit as DurationUnit) ?? value.unit,
+            });
+        } else {
+            return false;
+        }
+    } else {
+        updateAttribute(phraseId, attributeId, field.value);
+    }
+    return true;
+};
+
+const handleInput = (module: Module, event: Event): void => {
+    if (updateFromInput(event.target)) {
+        module.status = "";
+    }
+};
+
+const handleChange = (module: Module, event: Event): void => {
+    if (!updateFromInput(event.target)) return;
+    module.status = "";
+    renderAll();
+};
+
+export const display = async (
+    parentId: string,
+    params: Record<string, unknown>,
+): Promise<void> => {
+    const rootId = params.id;
+    if (typeof rootId !== "string" || rootId === "") {
+        throw new Error("The textblock module needs a group id");
+    }
+    const parent = document.getElementById(parentId);
+    if (parent === null) throw new Error(`Parent element "${parentId}" was not found`);
+
+    await ensureGroup(rootId);
+    validateDefinitions(definitions);
+
+    const module: Module = {
+        parentId,
+        rootId,
+        openEditor: null,
+        status: "",
+    };
+    modules.set(parentId, module);
+    parent.addEventListener("click", (event) => void handleClick(module, event));
+    parent.addEventListener("input", (event) => handleInput(module, event));
+    parent.addEventListener("change", (event) => handleChange(module, event));
+    renderAll();
+};
+
+export const getValue = async (id: string): Promise<string> => {
+    await ensureGroup(id);
+    resolved = resolveDocument(definitions, state);
+    return renderGroupText(id, definitions, state, resolved);
+};
+
+export const getStructuredValue = async (
+    id: string,
+): Promise<StructuredDocument> => {
+    await ensureGroup(id);
+    resolved = resolveDocument(definitions, state);
+    return structuredDocument(id, definitions, state, resolved);
 };

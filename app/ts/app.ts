@@ -1,58 +1,29 @@
 import * as config from "./config.js";
-import { initialiseConfig, getConfig } from "@lib/config.js";
-import { loadPlugin, Plugin } from "@lib/plugin.js";
-import * as uilib from "@lib/ui.js";
+import { initialiseConfig } from "@lib/config.js";
+import { loadPlugin } from "@lib/plugin.js";
 
-const run = async (): Promise<void> => {
-    console.log("Hello World!");
-    config.configure();
-
-    initialiseConfig();
-
-    console.log(getConfig("language"));
-
-    const textblock: Plugin = await loadPlugin("textblock");
-    if (textblock.display) {
-        textblock.display("Editor", { id: "start" });
-    }
-
-    const button: HTMLButtonElement = uilib.createButton({
-        label: "get",
-        onClick: async () => {
-            if (textblock.getValue) {
-                const text: string = await textblock.getValue("start");
-                console.log(text);
-            }
-        },
-    });
-    uilib.get("Editor__body").appendChild(button);
-
-    const cedis: Plugin = await loadPlugin("cedis");
+const showError = (error: unknown): void => {
+    console.error(error);
+    const parent = document.getElementById("Editor__body");
+    if (parent === null) return;
+    const message = document.createElement("p");
+    message.className = "error";
+    message.textContent =
+        error instanceof Error
+            ? error.message
+            : "Die Anwendung konnte nicht geladen werden.";
+    parent.replaceChildren(message);
 };
 
-/*
-const insertLineBreak = (event: Event): boolean => {
-    const selection: Selection|null = window.getSelection();
-    console.log('trying to break')
+const run = async (): Promise<void> => {
+    config.configure();
+    initialiseConfig();
 
-    if (!(event instanceof KeyboardEvent) ||  !selection || !(event.keyCode === 13)) {
-        return true;
+    const textblock = await loadPlugin("textblock");
+    if (textblock.display === undefined) {
+        throw new Error("Das Textbaustein-Modul konnte nicht geladen werden.");
     }
-    event.preventDefault();
+    await textblock.display("Editor__body", { id: "start" });
+};
 
-    const range: Range = selection.getRangeAt(0);
-    const br = document.createElement('br');
-    const textNode = document.createTextNode('\u00a0');
-
-    range.deleteContents();//required or not?
-    range.insertNode(br);
-    range.collapse(false);
-    range.insertNode(textNode);
-    range.selectNodeContents(textNode);
-
-    selection.removeAllRanges();
-    selection.addRange(range);
-    return false;
-}*/
-
-run();
+void run().catch(showError);

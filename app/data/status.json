@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "imports": ["orientation"],
+  "groups": {
+    "status": {
+      "title": "Status",
+      "children": ["orientation"]
+    }
+  },
+  "phrases": {}
+}

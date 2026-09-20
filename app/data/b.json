@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "sets": {
+    "pneumonia_example": {
+      "title": "Pneumonie (Beispiel)",
+      "kind": "abnormal",
+      "values": {
+        "b_breathing": "b_breathing_tachypnea",
+        "b_rhonchi": "b_rhonchi_present"
+      }
+    }
+  },
+  "groups": {
+    "b": {
+      "title": "B",
+      "phrases": ["b_breathing", "b_excursion", "b_wheezing", "b_rhonchi"],
+      "sets": ["pneumonia_example"]
+    }
+  },
+  "phrases": {
+    "b_breathing": {
+      "title": "Atmung",
+      "default": "b_breathing_eupnea",
+      "values": {
+        "b_breathing_eupnea": { "kind": "normal", "text": "20716004|Respiratory rate normal|Eupnoe" },
+        "b_breathing_apnea": { "kind": "abnormal", "text": "1023001|Apnea|Apnoe" },
+        "b_breathing_bradypnea": { "kind": "abnormal", "text": "86684002|Bradypnea|Bradypnoe" },
+        "b_breathing_tachypnea": { "kind": "abnormal", "text": "271823003|Tachypnea|Tachypnoe" },
+        "b_breathing_agonal": { "kind": "abnormal", "text": "430546009|Agonal respiration|agonale Atmung" },
+        "b_breathing_ventilated": { "kind": "intervention", "text": "1303532003|On artificial ventilation|beatmet" }
+      }
+    },
+    "b_excursion": {
+      "title": "Atemexkursion",
+      "default": "b_excursion_equal",
+      "values": {
+        "b_excursion_equal": { "kind": "normal", "text": "248559000|Chest movement equal|Atemexkursion seitengleich" },
+        "b_excursion_left_reduced": { "kind": "abnormal", "text": "Atemexkursion links vermindert" },
+        "b_excursion_right_reduced": { "kind": "abnormal", "text": "Atemexkursion rechts vermindert" }
+      }
+    },
+    "b_wheezing": {
+      "title": "Giemen",
+      "default": "b_wheezing_absent",
+      "values": {
+        "b_wheezing_absent": { "kind": "normal", "text": "kein Giemen" },
+        "b_wheezing_present": { "kind": "abnormal", "text": "56018004|Wheezing|Giemen" }
+      }
+    },
+    "b_rhonchi": {
+      "title": "Brummen",
+      "default": "b_rhonchi_absent",
+      "values": {
+        "b_rhonchi_absent": { "kind": "normal", "text": "kein Brummen" },
+        "b_rhonchi_present": { "kind": "abnormal", "text": "Brummen" }
+      }
+    }
+  }
+}

@@ -46,7 +46,7 @@ export const replace = (
     // replace all placeholders in `text`
     // a placeholder looks like `${PLACEHOLDER}`
     for (const [needle, replacement] of Object.entries(replace)) {
-        resultString = text.replaceAll(`\${${needle}}`, replacement);
+        resultString = resultString.replaceAll(`\${${needle}}`, replacement);
     }
     return resultString;
 };

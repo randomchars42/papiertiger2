@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "imports": ["a", "b"],
+  "groups": {
+    "abcde": {
+      "title": "ABCDE",
+      "children": ["a", "b"],
+      "summary": true,
+      "reset": true
+    }
+  },
+  "phrases": {}
+}

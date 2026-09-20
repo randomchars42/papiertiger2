@@ -1,10 +1,16 @@
-.PHONY: serve transpile
+.PHONY: serve build transpile check
 
 serve:
-	python3 -m http.server
+	python3 -m http.server --directory app
+
+build:
+	tsc -p ./app/ts/
 
 transpile:
 	tsc -p ./app/ts/ -w
+
+check:
+	tsc -p ./app/ts/ --noEmit
 
 tag_release_patch:
 	./tag_release.sh patch

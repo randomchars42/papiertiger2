@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "sets": {
+    "a_unstable": {
+      "title": "A instabil",
+      "kind": "abnormal",
+      "values": {
+        "a_state": "a_state_obstructed",
+        "a_risk": "a_risk_ineffective"
+      }
+    }
+  },
+  "groups": {
+    "a": {
+      "title": "A",
+      "phrases": ["a_state", "a_risk"],
+      "sets": ["a_unstable"]
+    }
+  },
+  "phrases": {
+    "a_state": {
+      "title": "Atemweg",
+      "default": "a_state_clear",
+      "values": {
+        "a_state_clear": { "kind": "normal", "text": "248553004|No obstruction of airway|Atemweg frei" },
+        "a_state_tongue": { "kind": "abnormal", "text": "425227004|Obstruction of airway caused by tongue|Atemweg durch Zunge verlegt" },
+        "a_state_blood": { "kind": "abnormal", "text": "427480003|Obstruction of airway caused by blood|Atemweg durch Blutung verlegt" },
+        "a_state_obstructed": { "kind": "abnormal", "text": "248555006|Totally obstructed airway|Atemweg vollständig verlegt" }
+      }
+    },
+    "a_risk": {
+      "title": "Atemweg nicht effektiv freigehalten",
+      "default": "a_risk_none",
+      "values": {
+        "a_risk_none": { "kind": "normal", "text": "1145305006|Able to clear airway effectively|Atemweg nicht gefährdet" },
+        "a_risk_ineffective": { "kind": "abnormal", "text": "67750007|Ineffective airway clearing|Atemweg wird nicht effektiv freigehalten" }
+      },
+      "suggestions": {
+        "a_state_tongue": "a_risk_ineffective",
+        "a_state_blood": "a_risk_ineffective",
+        "a_state_obstructed": "a_risk_ineffective"
+      }
+    }
+  }
+}

@@ -2,8 +2,12 @@ import { getConfig } from "./config.js";
 
 export type Plugin = {
     init?: () => Promise<void>;
-    display?: (parentID: string, params: Record<string, any>) => Promise<void>;
-    getValue?: (id: string) => Promise<any>;
+    display?: (
+        parentID: string,
+        params: Record<string, unknown>,
+    ) => Promise<void>;
+    getValue?: (id: string) => Promise<unknown>;
+    getStructuredValue?: (id: string) => Promise<unknown>;
 };
 
 export const loadPlugin = async (name: string): Promise<Plugin> => {
@@ -12,7 +16,7 @@ export const loadPlugin = async (name: string): Promise<Plugin> => {
     );
 
     if (plugin.init) {
-        plugin.init();
+        await plugin.init();
     }
 
     return plugin;
