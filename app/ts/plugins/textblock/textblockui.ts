@@ -1,5 +1,14 @@
-import { isDurationValue, parseValue } from "./textblocklib.js";
-import { isGroupEnabled, summarizeGroup } from "./textblockstate.js";
+import {
+    isDateTimeValue,
+    isDurationValue,
+    parseValue,
+} from "./textblocklib.js";
+import {
+    isGroupEnabled,
+    phraseKey,
+    scopeState,
+    summarizeGroup,
+} from "./textblockstate.js";
 import type {
     AttributeValue,
     Definitions,
@@ -11,8 +20,13 @@ import type {
 } from "./textblocktypes.js";
 
 export type OpenEditor =
-    | { type: "phrase"; phraseId: string }
-    | { type: "attribute"; phraseId: string; attributeId: string }
+    | { type: "phrase"; phraseId: string; instanceId?: string }
+    | {
+          type: "attribute";
+          phraseId: string;
+          attributeId: string;
+          instanceId?: string;
+      }
     | null;
 
 const element = <K extends keyof HTMLElementTagNameMap>(
@@ -21,12 +35,8 @@ const element = <K extends keyof HTMLElementTagNameMap>(
     text?: string,
 ): HTMLElementTagNameMap[K] => {
     const node = document.createElement(tag);
-    if (className !== undefined) {
-        node.className = className;
-    }
-    if (text !== undefined) {
-        node.textContent = text;
-    }
+    if (className !== undefined) node.className = className;
+    if (text !== undefined) node.textContent = text;
     return node;
 };
 
@@ -43,13 +53,45 @@ const actionButton = (
     return button;
 };
 
+const scopedData = (
+    data: Record<string, string>,
+    instanceId?: string,
+): Record<string, string> =>
+    instanceId === undefined ? data : { ...data, instanceId };
+
+const editorMatches = (
+    editor: OpenEditor,
+    type: "phrase" | "attribute",
+    phraseId: string,
+    instanceId?: string,
+): boolean =>
+    editor?.type === type &&
+    editor.phraseId === phraseId &&
+    editor.instanceId === instanceId;
+
+const instanceLabel = (
+    instanceId: string | undefined,
+    definitions: Definitions,
+    state: DocumentState,
+): string => {
+    if (instanceId === undefined) return "";
+    for (const [groupId, instanceIds] of Object.entries(state.groupInstances)) {
+        const index = instanceIds.indexOf(instanceId);
+        if (index >= 0) {
+            return `${parseValue(definitions.groups[groupId].title).text} ${index + 1}: `;
+        }
+    }
+    return "";
+};
+
 const renderPhraseEditor = (
     phraseId: string,
+    instanceId: string | undefined,
     definitions: Definitions,
     resolved: ResolvedPhrase,
 ): HTMLElement => {
     const editor = element("div", "inline-editor phrase-editor");
-    editor.dataset.editorFor = phraseId;
+    editor.dataset.editorFor = resolved.key;
     editor.setAttribute("role", "group");
     editor.setAttribute("aria-label", `${resolved.title} auswählen`);
 
@@ -60,7 +102,7 @@ const renderPhraseEditor = (
         const button = actionButton(
             parsed.text,
             "choose-value",
-            { phraseId, valueId },
+            scopedData({ phraseId, valueId }, instanceId),
             `choice choice--${parsed.kind ?? "neutral"}`,
         );
         button.setAttribute(
@@ -71,8 +113,16 @@ const renderPhraseEditor = (
     }
 
     editor.append(
-        actionButton("Nicht aufnehmen", "exclude-phrase", { phraseId }),
-        actionButton("Automatisch", "reset-phrase", { phraseId }),
+        actionButton(
+            "− Weglassen",
+            "exclude-phrase",
+            scopedData({ phraseId }, instanceId),
+        ),
+        actionButton(
+            "↺ Zurücksetzen",
+            "reset-phrase",
+            scopedData({ phraseId }, instanceId),
+        ),
         actionButton("Fertig", "close-editor", {}, "control control--primary"),
     );
     return editor;
@@ -82,13 +132,16 @@ const editorValue = (
     state: DocumentState,
     phraseId: string,
     attributeId: string,
-): AttributeValue | undefined => state.attributes[phraseId]?.[attributeId];
+    instanceId?: string,
+): AttributeValue | undefined =>
+    scopeState(state, instanceId).attributes[phraseId]?.[attributeId];
 
 const input = (
     type: string,
     phraseId: string,
     attributeId: string,
     value: string,
+    instanceId?: string,
 ): HTMLInputElement => {
     const field = element("input", "editor-input");
     field.type = type;
@@ -96,6 +149,7 @@ const input = (
     field.dataset.input = "attribute";
     field.dataset.phraseId = phraseId;
     field.dataset.attributeId = attributeId;
+    if (instanceId !== undefined) field.dataset.instanceId = instanceId;
     field.setAttribute("aria-label", attributeId);
     return field;
 };
@@ -105,28 +159,41 @@ const renderNumberEditor = (
     editor: Extract<EditorDefinition, { type: "number" }>,
     phraseId: string,
     attributeId: string,
+    instanceId: string | undefined,
     value?: AttributeValue,
 ): void => {
     const number = typeof value === "number" ? value : (editor.default ?? 0);
     node.append(
-        actionButton("−", "step-number", {
-            phraseId,
-            attributeId,
-            delta: String(-(editor.step ?? 1)),
-        }),
+        actionButton(
+            "−",
+            "step-number",
+            scopedData(
+                { phraseId, attributeId, delta: String(-(editor.step ?? 1)) },
+                instanceId,
+            ),
+        ),
     );
-    const field = input("number", phraseId, attributeId, String(number));
+    const field = input(
+        "number",
+        phraseId,
+        attributeId,
+        String(number),
+        instanceId,
+    );
     field.inputMode = "decimal";
     field.step = String(editor.step ?? 1);
     if (editor.min !== undefined) field.min = String(editor.min);
     if (editor.max !== undefined) field.max = String(editor.max);
     node.append(field);
     node.append(
-        actionButton("+", "step-number", {
-            phraseId,
-            attributeId,
-            delta: String(editor.step ?? 1),
-        }),
+        actionButton(
+            "+",
+            "step-number",
+            scopedData(
+                { phraseId, attributeId, delta: String(editor.step ?? 1) },
+                instanceId,
+            ),
+        ),
     );
 };
 
@@ -135,6 +202,7 @@ const renderDurationEditor = (
     editor: Extract<EditorDefinition, { type: "duration" }>,
     phraseId: string,
     attributeId: string,
+    instanceId: string | undefined,
     value?: AttributeValue,
 ): void => {
     const duration = isDurationValue(value)
@@ -145,17 +213,18 @@ const renderDurationEditor = (
               anchor: "",
           };
     node.append(
-        actionButton("−", "step-duration", {
-            phraseId,
-            attributeId,
-            delta: "-1",
-        }),
+        actionButton(
+            "−",
+            "step-duration",
+            scopedData({ phraseId, attributeId, delta: "-1" }, instanceId),
+        ),
     );
     const field = input(
         "number",
         phraseId,
         attributeId,
         String(duration.amount),
+        instanceId,
     );
     field.inputMode = "numeric";
     field.min = "1";
@@ -163,11 +232,11 @@ const renderDurationEditor = (
     field.dataset.durationUnit = duration.unit;
     node.append(field);
     node.append(
-        actionButton("+", "step-duration", {
-            phraseId,
-            attributeId,
-            delta: "1",
-        }),
+        actionButton(
+            "+",
+            "step-duration",
+            scopedData({ phraseId, attributeId, delta: "1" }, instanceId),
+        ),
     );
 
     const units: DurationUnit[] = editor.units ?? [
@@ -191,7 +260,7 @@ const renderDurationEditor = (
         const button = actionButton(
             unitLabels[unit],
             "choose-duration-unit",
-            { phraseId, attributeId, unit },
+            scopedData({ phraseId, attributeId, unit }, instanceId),
             "choice choice--neutral choice--small",
         );
         button.setAttribute("aria-pressed", String(duration.unit === unit));
@@ -203,14 +272,15 @@ const renderDurationEditor = (
 const renderAttributeEditor = (
     phraseId: string,
     attributeId: string,
+    instanceId: string | undefined,
     definitions: Definitions,
     state: DocumentState,
 ): HTMLElement => {
     const editorId = definitions.phrases[phraseId].attributes?.[attributeId];
     const definition = definitions.editors[editorId ?? ""];
-    const value = editorValue(state, phraseId, attributeId);
+    const value = editorValue(state, phraseId, attributeId, instanceId);
     const node = element("div", "inline-editor attribute-editor");
-    node.dataset.editorFor = `${phraseId}:${attributeId}`;
+    node.dataset.editorFor = phraseKey(phraseId, instanceId);
     node.setAttribute("role", "group");
     node.setAttribute("aria-label", definition.label ?? attributeId);
 
@@ -220,16 +290,33 @@ const renderAttributeEditor = (
             const button = actionButton(
                 parsed.text,
                 "choose-attribute",
-                { phraseId, attributeId, value: choice },
+                scopedData(
+                    { phraseId, attributeId, value: choice },
+                    instanceId,
+                ),
                 `choice choice--${parsed.kind ?? "neutral"}`,
             );
             button.setAttribute("aria-pressed", String(value === choice));
             node.append(button);
         }
     } else if (definition.type === "number") {
-        renderNumberEditor(node, definition, phraseId, attributeId, value);
+        renderNumberEditor(
+            node,
+            definition,
+            phraseId,
+            attributeId,
+            instanceId,
+            value,
+        );
     } else if (definition.type === "duration") {
-        renderDurationEditor(node, definition, phraseId, attributeId, value);
+        renderDurationEditor(
+            node,
+            definition,
+            phraseId,
+            attributeId,
+            instanceId,
+            value,
+        );
     } else if (definition.type === "date") {
         node.append(
             input(
@@ -237,6 +324,17 @@ const renderAttributeEditor = (
                 phraseId,
                 attributeId,
                 typeof value === "string" ? value : "",
+                instanceId,
+            ),
+        );
+    } else if (definition.type === "datetime") {
+        node.append(
+            input(
+                "datetime-local",
+                phraseId,
+                attributeId,
+                isDateTimeValue(value) ? value.local : "",
+                instanceId,
             ),
         );
     } else {
@@ -245,13 +343,18 @@ const renderAttributeEditor = (
             phraseId,
             attributeId,
             typeof value === "string" ? value : "",
+            instanceId,
         );
         field.placeholder = definition.placeholder ?? definition.label ?? "";
         node.append(field);
     }
 
     node.append(
-        actionButton("Leeren", "clear-attribute", { phraseId, attributeId }),
+        actionButton(
+            "Leeren",
+            "clear-attribute",
+            scopedData({ phraseId, attributeId }, instanceId),
+        ),
         actionButton("Fertig", "close-editor", {}, "control control--primary"),
     );
     return node;
@@ -260,15 +363,14 @@ const renderAttributeEditor = (
 const renderPhrase = (
     parent: HTMLElement,
     phraseId: string,
+    instanceId: string | undefined,
     definitions: Definitions,
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
 ): void => {
-    const phrase = resolved.phrases[phraseId];
-    if (!phrase.visible) {
-        return;
-    }
+    const phrase = resolved.phrases[phraseKey(phraseId, instanceId)];
+    if (phrase === undefined || !phrase.visible) return;
 
     const classes = ["phrase", `phrase--${phrase.kind}`];
     if (!phrase.included) classes.push("phrase--suggestion");
@@ -276,15 +378,16 @@ const renderPhrase = (
     if (phrase.source === "set") classes.push("phrase--set");
     const phraseNode = element("span", classes.join(" "));
     phraseNode.dataset.phraseId = phraseId;
+    if (instanceId !== undefined) phraseNode.dataset.instanceId = instanceId;
     phraseNode.title = definitions.phrases[phraseId].note ?? "";
 
     for (const part of phrase.parts) {
         if (part.type === "text") {
-            if (part.text === "") continue;
+            if (part.text.trim() === "") continue;
             const button = actionButton(
                 part.text,
                 "phrase",
-                { phraseId },
+                scopedData({ phraseId }, instanceId),
                 "phrase__part phrase__text",
             );
             button.setAttribute("aria-pressed", String(phrase.included));
@@ -293,7 +396,7 @@ const renderPhrase = (
             const button = actionButton(
                 part.text,
                 "attribute",
-                { phraseId, attributeId: part.id },
+                scopedData({ phraseId, attributeId: part.id }, instanceId),
                 "phrase__part phrase__attribute",
             );
             button.setAttribute("aria-label", `${part.id}: ${part.text}`);
@@ -303,16 +406,19 @@ const renderPhrase = (
     phraseNode.append(element("span", "phrase__delimiter", ";"));
     parent.append(phraseNode);
 
-    if (openEditor?.type === "phrase" && openEditor.phraseId === phraseId) {
-        parent.append(renderPhraseEditor(phraseId, definitions, phrase));
-    } else if (
-        openEditor?.type === "attribute" &&
-        openEditor.phraseId === phraseId
-    ) {
+    if (editorMatches(openEditor, "phrase", phraseId, instanceId)) {
+        parent.append(
+            renderPhraseEditor(phraseId, instanceId, definitions, phrase),
+        );
+    } else if (editorMatches(openEditor, "attribute", phraseId, instanceId)) {
+        const attributeEditor = openEditor as Exclude<OpenEditor, null> & {
+            type: "attribute";
+        };
         parent.append(
             renderAttributeEditor(
                 phraseId,
-                openEditor.attributeId,
+                attributeEditor.attributeId,
+                instanceId,
                 definitions,
                 state,
             ),
@@ -320,7 +426,7 @@ const renderPhrase = (
     }
 };
 
-const renderGroup = (
+const renderRepeatable = (
     parent: HTMLElement,
     groupId: string,
     level: number,
@@ -328,78 +434,142 @@ const renderGroup = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
+    collapseOverrides: Readonly<Record<string, boolean>>,
 ): void => {
     const group = definitions.groups[groupId];
-    const enabled = isGroupEnabled(groupId, definitions, state);
+    const container = element("div", "repeatable");
+    container.dataset.repeatableGroupId = groupId;
+    for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
+        renderGroup(
+            container,
+            groupId,
+            level,
+            definitions,
+            state,
+            resolved,
+            openEditor,
+            collapseOverrides,
+            instanceId,
+            index,
+        );
+    }
+    container.append(
+        actionButton(
+            group.repeatable?.add ?? `${parseValue(group.title).text} hinzufügen`,
+            "add-group-instance",
+            { groupId },
+            `control repeatable__add repeatable__add--${group.kind ?? "neutral"}`,
+        ),
+    );
+    parent.append(container);
+};
+
+function renderGroup(
+    parent: HTMLElement,
+    groupId: string,
+    level: number,
+    definitions: Definitions,
+    state: DocumentState,
+    resolved: ResolvedDocument,
+    openEditor: OpenEditor,
+    collapseOverrides: Readonly<Record<string, boolean>>,
+    instanceId?: string,
+    instanceIndex?: number,
+): void {
+    const group = definitions.groups[groupId];
+    const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const collapsible = group.collapsed !== undefined;
+    const collapsed =
+        collapseOverrides[phraseKey(groupId, instanceId)] ??
+        group.collapsed ??
+        false;
     const section = element(
         "section",
         [
             "group",
             `group--${group.kind ?? "neutral"}`,
+            instanceId === undefined ? "" : "group--instance",
             enabled ? "" : "group--inactive",
+            collapsed ? "group--collapsed" : "",
         ]
             .filter(Boolean)
             .join(" "),
     );
     section.dataset.groupId = groupId;
+    if (instanceId !== undefined) section.dataset.instanceId = instanceId;
 
     const header = element("header", "group__header");
     const heading = element(
         `h${Math.min(6, Math.max(1, level))}` as keyof HTMLElementTagNameMap,
         "group__heading",
     );
+    const baseTitle = parseValue(group.title).text;
+    const title =
+        instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
-        parseValue(group.title).text,
-        "toggle-group",
-        { groupId },
+        title,
+        collapsible ? "toggle-collapse" : "toggle-group",
+        scopedData({ groupId }, instanceId),
         "group__toggle",
     );
-    headingButton.setAttribute("aria-expanded", String(enabled));
+    headingButton.setAttribute(
+        "aria-expanded",
+        String(collapsible ? !collapsed : enabled),
+    );
     headingButton.title = group.note ?? "";
     heading.append(headingButton);
     header.append(heading);
 
+    const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
     for (const setId of group.sets ?? []) {
         const set = definitions.sets[setId];
         const button = actionButton(
             set.title,
             "toggle-set",
-            { setId },
+            scopedData({ setId }, instanceId),
             `set set--${set.kind ?? "neutral"}`,
         );
-        button.setAttribute(
-            "aria-pressed",
-            String(state.activeSets.includes(setId)),
-        );
+        button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
     }
-    if (group.reset === true) {
+    if (group.reset === true || instanceId !== undefined) {
         tools.append(
             actionButton(
-                "Zurücksetzen",
+                "↺ Zurücksetzen",
                 "reset-group",
-                { groupId },
+                scopedData({ groupId }, instanceId),
                 "control group__reset",
             ),
         );
     }
-    if (tools.childElementCount > 0) {
-        header.append(tools);
+    if (instanceId !== undefined) {
+        tools.append(
+            actionButton(
+                "Entfernen",
+                "remove-group-instance",
+                { groupId, instanceId },
+                "control control--danger",
+            ),
+        );
     }
+    if (tools.childElementCount > 0) header.append(tools);
     section.append(header);
 
-    if (enabled) {
-        const body = element("div", "group__body");
-        if (group.summary === true) {
+    if (enabled && !collapsed) {
+        const hasCollapsibleChildren = (group.children ?? []).some(
+            (childId) => definitions.groups[childId].collapsed !== undefined,
+        );
+        const body = element(
+            "div",
+            hasCollapsibleChildren
+                ? "group__body group__body--collapsible-children"
+                : "group__body",
+        );
+        if (group.summary === true && instanceId === undefined) {
             const summary = element("aside", "group__summary");
             summary.append(element("strong", "group__summary-label", "Auffällig:"));
-            const findings = summarizeGroup(
-                groupId,
-                definitions,
-                state,
-                resolved,
-            );
+            const findings = summarizeGroup(groupId, definitions, state, resolved);
             if (findings.length === 0) {
                 summary.append(element("span", "group__summary-empty", "–"));
             } else {
@@ -408,7 +578,11 @@ const renderGroup = (
                         element(
                             "span",
                             `group__summary-item phrase--${finding.kind}`,
-                            finding.text,
+                            `${instanceLabel(
+                                finding.instanceId,
+                                definitions,
+                                state,
+                            )}${finding.text}`,
                         ),
                     );
                 }
@@ -424,6 +598,7 @@ const renderGroup = (
                 renderPhrase(
                     phrases,
                     phraseId,
+                    instanceId,
                     definitions,
                     state,
                     resolved,
@@ -433,20 +608,38 @@ const renderGroup = (
             body.append(phrases);
         }
         for (const child of group.children ?? []) {
-            renderGroup(
-                body,
-                child,
-                level + 1,
-                definitions,
-                state,
-                resolved,
-                openEditor,
-            );
+            if (
+                definitions.groups[child].repeatable !== undefined &&
+                instanceId === undefined
+            ) {
+                renderRepeatable(
+                    body,
+                    child,
+                    level + 1,
+                    definitions,
+                    state,
+                    resolved,
+                    openEditor,
+                    collapseOverrides,
+                );
+            } else {
+                renderGroup(
+                    body,
+                    child,
+                    level + 1,
+                    definitions,
+                    state,
+                    resolved,
+                    openEditor,
+                    collapseOverrides,
+                    instanceId,
+                );
+            }
         }
         section.append(body);
     }
     parent.append(section);
-};
+}
 
 export const renderModule = (
     parent: HTMLElement,
@@ -455,23 +648,27 @@ export const renderModule = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
+    collapseOverrides: Readonly<Record<string, boolean>>,
     status: string,
+    controls = true,
 ): void => {
     parent.replaceChildren();
     parent.classList.add("textblock-module");
     parent.dataset.rootId = rootId;
 
-    const toolbar = element("div", "toolbar");
-    toolbar.append(
-        actionButton("Text kopieren", "copy-text", { rootId }),
-        actionButton("Daten kopieren", "copy-data", { rootId }),
-        actionButton("Zurücksetzen", "reset-group", { groupId: rootId }),
-    );
-    const live = element("span", "status", status);
-    live.setAttribute("role", "status");
-    live.setAttribute("aria-live", "polite");
-    toolbar.append(live);
-    parent.append(toolbar);
+    if (controls) {
+        const toolbar = element("div", "toolbar");
+        toolbar.append(
+            actionButton("Text kopieren", "copy-text", { rootId }),
+            actionButton("Daten kopieren", "copy-data", { rootId }),
+            actionButton("↺ Zurücksetzen", "reset-group", { groupId: rootId }),
+        );
+        const live = element("span", "status", status);
+        live.setAttribute("role", "status");
+        live.setAttribute("aria-live", "polite");
+        toolbar.append(live);
+        parent.append(toolbar);
+    }
 
     const documentNode = element("article", "document");
     renderGroup(
@@ -482,6 +679,7 @@ export const renderModule = (
         state,
         resolved,
         openEditor,
+        collapseOverrides,
     );
     parent.append(documentNode);
 };

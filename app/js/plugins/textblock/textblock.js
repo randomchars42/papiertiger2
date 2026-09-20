@@ -1,7 +1,7 @@
 import * as baselib from "@lib/base.js";
 import { getConfig } from "@lib/config.js";
-import { clampNumber, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, } from "./textblocklib.js";
-import { createDocumentState, isGroupEnabled, isPackage, mergePackage, renderGroupText, resolveDocument, structuredDocument, validateDefinitions, } from "./textblockstate.js";
+import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
+import { createDocumentState, createScopeState, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
 import { renderModule } from "./textblockui.js";
 const definitions = emptyDefinitions();
 const state = createDocumentState();
@@ -9,6 +9,7 @@ const modules = new Map();
 const loadedPackages = new Set();
 const packageRequests = new Map();
 let resolved = { phrases: {} };
+let instanceCounter = 0;
 const requestPackage = (id) => {
     let request = packageRequests.get(id);
     if (request !== undefined)
@@ -39,37 +40,65 @@ const fetchPackage = async (id, trail = []) => {
     loadedPackages.add(id);
 };
 const ensureGroup = async (id, trail = new Set()) => {
-    if (!(id in definitions.groups)) {
+    if (!(id in definitions.groups))
         await fetchPackage(id);
-    }
     const group = definitions.groups[id];
-    if (group === undefined) {
+    if (group === undefined)
         throw new Error(`Group "${id}" was not found`);
-    }
-    if (trail.has(id)) {
+    if (trail.has(id))
         throw new Error(`Group cycle detected at "${id}"`);
-    }
     const nextTrail = new Set(trail).add(id);
-    for (const child of group.children ?? []) {
+    for (const child of group.children ?? [])
         await ensureGroup(child, nextTrail);
-    }
     for (const setId of group.sets ?? []) {
-        if (!(setId in definitions.sets)) {
+        if (!(setId in definitions.sets))
             await fetchPackage(setId);
-        }
     }
     for (const phraseId of group.phrases ?? []) {
-        if (!(phraseId in definitions.phrases)) {
+        if (!(phraseId in definitions.phrases))
             await fetchPackage(phraseId);
-        }
         const phrase = definitions.phrases[phraseId];
         if (phrase === undefined) {
             throw new Error(`Phrase "${phraseId}" was not found`);
         }
         for (const editorId of Object.values(phrase.attributes ?? {})) {
-            if (!(editorId in definitions.editors)) {
+            if (!(editorId in definitions.editors))
                 await fetchPackage(editorId);
+        }
+    }
+};
+const nextInstanceId = (groupId) => {
+    instanceCounter += 1;
+    const suffix = typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${instanceCounter}`;
+    return `${groupId}-${suffix}`;
+};
+const addGroupInstance = (groupId) => {
+    const group = definitions.groups[groupId];
+    if (group?.repeatable === undefined) {
+        throw new Error(`Group "${groupId}" is not repeatable`);
+    }
+    const instanceId = nextInstanceId(groupId);
+    state.groupInstances[groupId] ??= [];
+    state.groupInstances[groupId].push(instanceId);
+    state.instanceStates[instanceId] = createScopeState();
+    return instanceId;
+};
+const initialiseRepeatables = (groupId) => {
+    const group = definitions.groups[groupId];
+    for (const child of group.children ?? []) {
+        const childGroup = definitions.groups[child];
+        if (childGroup.repeatable !== undefined) {
+            if (state.groupInstances[child] === undefined) {
+                state.groupInstances[child] = [];
+                for (let index = 0; index < (childGroup.repeatable.initial ?? 0); index += 1) {
+                    addGroupInstance(child);
+                }
             }
+        }
+        else {
+            initialiseRepeatables(child);
         }
     }
 };
@@ -77,105 +106,210 @@ const renderAll = () => {
     resolved = resolveDocument(definitions, state);
     for (const module of modules.values()) {
         const parent = document.getElementById(module.parentId);
-        if (parent !== null) {
-            renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, module.status);
-        }
+        if (parent === null)
+            continue;
+        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, module.collapseOverrides, module.status, module.controls);
     }
 };
-const setOverride = (phraseId, valueId, included) => {
-    state.phraseOverrides[phraseId] = { valueId, included };
+const scopeFor = (instanceId) => scopeState(state, instanceId);
+const currentPhrase = (phraseId, instanceId) => resolved.phrases[phraseKey(phraseId, instanceId)];
+const setOverride = (phraseId, valueId, included, instanceId) => {
+    scopeFor(instanceId).phraseOverrides[phraseId] = { valueId, included };
 };
-const activatePhrase = (phraseId) => {
-    const phrase = resolved.phrases[phraseId];
-    const values = Object.keys(definitions.phrases[phraseId].values);
-    setOverride(phraseId, phrase.valueId ?? values[0] ?? null, true);
+const requiredAttributes = (phraseId, valueId) => {
+    if (valueId === null)
+        return [];
+    const value = definitions.phrases[phraseId].values[valueId];
+    if (value === undefined)
+        return [];
+    return attributePlaceholders(parseValue(value).text)
+        .filter((placeholder) => placeholder.required)
+        .map((placeholder) => placeholder.id);
 };
-const handlePhrase = (module, phraseId) => {
-    const phrase = resolved.phrases[phraseId];
+const missingAttribute = (phraseId, valueId, instanceId) => {
+    const values = scopeFor(instanceId).attributes[phraseId] ?? {};
+    return requiredAttributes(phraseId, valueId).find((attributeId) => !hasAttributeValue(values[attributeId]));
+};
+const activatePhrase = (phraseId, instanceId) => {
+    const scope = scopeFor(instanceId);
+    const phrase = currentPhrase(phraseId, instanceId);
     const definition = definitions.phrases[phraseId];
     const values = Object.keys(definition.values);
-    const firstAttribute = Object.keys(definition.attributes ?? {})[0];
-    if (!phrase.included && phrase.valueId !== null) {
-        if (firstAttribute !== undefined &&
-            phrase.attributes[firstAttribute] === undefined) {
-            openAttribute(module, phraseId, firstAttribute);
-            return;
-        }
-        setOverride(phraseId, phrase.valueId, true);
-        module.openEditor = null;
-        return;
-    }
-    if (values.length <= 1) {
-        setOverride(phraseId, phrase.valueId ?? values[0] ?? null, !phrase.included);
-        if (!phrase.included && firstAttribute !== undefined) {
-            openAttribute(module, phraseId, firstAttribute);
-        }
-        else {
-            module.openEditor = null;
-        }
-        return;
-    }
-    if (values.length === 2) {
-        const current = Math.max(0, values.indexOf(phrase.valueId ?? values[0]));
-        setOverride(phraseId, values[(current + 1) % values.length], true);
-        module.openEditor = null;
-        return;
-    }
-    module.openEditor = { type: "phrase", phraseId };
+    const defaultValue = definition.default === "" || definition.default === null
+        ? undefined
+        : definition.default;
+    setOverride(phraseId, scope.phraseOverrides[phraseId]?.valueId ??
+        phrase?.valueId ??
+        defaultValue ??
+        values[0] ??
+        null, true, instanceId);
 };
-const updateAttribute = (phraseId, attributeId, value) => {
-    state.attributes[phraseId] ??= {};
-    state.attributes[phraseId][attributeId] = value;
-    activatePhrase(phraseId);
+const updateAttribute = (phraseId, attributeId, value, instanceId) => {
+    const scope = scopeFor(instanceId);
+    scope.attributes[phraseId] ??= {};
+    scope.attributes[phraseId][attributeId] = value;
+    activatePhrase(phraseId, instanceId);
 };
-const openAttribute = (module, phraseId, attributeId) => {
+const openAttribute = (module, phraseId, attributeId, instanceId) => {
     const editorId = definitions.phrases[phraseId].attributes?.[attributeId];
     const editor = definitions.editors[editorId ?? ""];
     if (editor === undefined)
         return;
-    if (state.attributes[phraseId]?.[attributeId] === undefined) {
+    const scope = scopeFor(instanceId);
+    if (scope.attributes[phraseId]?.[attributeId] === undefined) {
         const initial = editorDefaultValue(editor);
         if (initial !== undefined) {
-            updateAttribute(phraseId, attributeId, initial);
+            updateAttribute(phraseId, attributeId, initial, instanceId);
         }
         else {
-            activatePhrase(phraseId);
+            activatePhrase(phraseId, instanceId);
         }
     }
     else {
-        activatePhrase(phraseId);
+        activatePhrase(phraseId, instanceId);
     }
-    module.openEditor = { type: "attribute", phraseId, attributeId };
+    module.openEditor = {
+        type: "attribute",
+        phraseId,
+        attributeId,
+        ...(instanceId === undefined ? {} : { instanceId }),
+    };
+};
+const selectValue = (module, phraseId, valueId, instanceId) => {
+    setOverride(phraseId, valueId, true, instanceId);
+    const missing = missingAttribute(phraseId, valueId, instanceId);
+    if (missing !== undefined) {
+        openAttribute(module, phraseId, missing, instanceId);
+    }
+    else {
+        module.openEditor = null;
+    }
+};
+const handlePhrase = (module, phraseId, instanceId) => {
+    const phrase = currentPhrase(phraseId, instanceId);
+    const values = Object.keys(definitions.phrases[phraseId].values);
+    if (phrase === undefined)
+        return;
+    if (phrase.valueId === null) {
+        if (values.length === 1) {
+            selectValue(module, phraseId, values[0], instanceId);
+        }
+        else {
+            module.openEditor = {
+                type: "phrase",
+                phraseId,
+                ...(instanceId === undefined ? {} : { instanceId }),
+            };
+        }
+        return;
+    }
+    if (!phrase.included) {
+        selectValue(module, phraseId, phrase.valueId, instanceId);
+        return;
+    }
+    if (values.length <= 1) {
+        setOverride(phraseId, phrase.valueId, false, instanceId);
+        module.openEditor = null;
+        return;
+    }
+    if (values.length === 2) {
+        const current = Math.max(0, values.indexOf(phrase.valueId));
+        selectValue(module, phraseId, values[(current + 1) % values.length], instanceId);
+        return;
+    }
+    module.openEditor = {
+        type: "phrase",
+        phraseId,
+        ...(instanceId === undefined ? {} : { instanceId }),
+    };
 };
 const defaultDuration = (editor) => ({
     amount: 1,
     unit: editor.defaultUnit ?? editor.units?.[0] ?? "day",
     anchor: new Date().toISOString(),
 });
-const currentDuration = (phraseId, attributeId, editor) => {
-    const value = state.attributes[phraseId]?.[attributeId];
+const currentDuration = (phraseId, attributeId, editor, instanceId) => {
+    const value = scopeFor(instanceId).attributes[phraseId]?.[attributeId];
     return isDurationValue(value) ? value : defaultDuration(editor);
 };
 const getEditor = (phraseId, attributeId) => {
     const editorId = definitions.phrases[phraseId]?.attributes?.[attributeId];
     return definitions.editors[editorId ?? ""];
 };
-const clearAttribute = (phraseId, attributeId) => {
-    delete state.attributes[phraseId]?.[attributeId];
-    if (Object.keys(state.attributes[phraseId] ?? {}).length === 0) {
-        delete state.attributes[phraseId];
+const clearAttribute = (phraseId, attributeId, instanceId, deactivateIncompletePhrase = true) => {
+    const scope = scopeFor(instanceId);
+    delete scope.attributes[phraseId]?.[attributeId];
+    if (Object.keys(scope.attributes[phraseId] ?? {}).length === 0) {
+        delete scope.attributes[phraseId];
     }
-    delete state.phraseOverrides[phraseId];
+    if (deactivateIncompletePhrase)
+        delete scope.phraseOverrides[phraseId];
+};
+const selectedValueId = (phraseId, instanceId) => scopeFor(instanceId).phraseOverrides[phraseId]?.valueId ??
+    currentPhrase(phraseId, instanceId)?.valueId ??
+    null;
+const advanceRequiredAttribute = (module, phraseId, instanceId) => {
+    const missing = missingAttribute(phraseId, selectedValueId(phraseId, instanceId), instanceId);
+    if (missing === undefined) {
+        module.openEditor = null;
+    }
+    else {
+        openAttribute(module, phraseId, missing, instanceId);
+    }
+};
+const openFirstRequiredInGroup = (module, groupId, instanceId) => {
+    const group = definitions.groups[groupId];
+    for (const phraseId of group.phrases ?? []) {
+        const definition = definitions.phrases[phraseId];
+        const valueId = definition.default === "" || definition.default === null
+            ? null
+            : definition.default;
+        const missing = missingAttribute(phraseId, valueId, instanceId);
+        if (missing !== undefined) {
+            openAttribute(module, phraseId, missing, instanceId);
+            return true;
+        }
+    }
+    for (const childId of group.children ?? []) {
+        if (definitions.groups[childId].repeatable === undefined &&
+            openFirstRequiredInGroup(module, childId, instanceId)) {
+            return true;
+        }
+    }
+    return false;
 };
 const closeEditor = (module) => {
     const editor = module.openEditor;
-    if (editor?.type === "attribute") {
-        const value = state.attributes[editor.phraseId]?.[editor.attributeId];
-        if (!hasAttributeValue(value)) {
-            clearAttribute(editor.phraseId, editor.attributeId);
-        }
+    if (editor?.type !== "attribute") {
+        module.openEditor = null;
+        return;
     }
-    module.openEditor = null;
+    const scope = scopeFor(editor.instanceId);
+    const value = scope.attributes[editor.phraseId]?.[editor.attributeId];
+    if (!hasAttributeValue(value)) {
+        const required = requiredAttributes(editor.phraseId, selectedValueId(editor.phraseId, editor.instanceId)).includes(editor.attributeId);
+        clearAttribute(editor.phraseId, editor.attributeId, editor.instanceId, required);
+        if (required) {
+            module.openEditor = null;
+        }
+        else {
+            advanceRequiredAttribute(module, editor.phraseId, editor.instanceId);
+        }
+        return;
+    }
+    const phrase = currentPhrase(editor.phraseId, editor.instanceId);
+    const missing = missingAttribute(editor.phraseId, phrase?.valueId ?? null, editor.instanceId);
+    module.openEditor =
+        missing === undefined
+            ? null
+            : {
+                type: "attribute",
+                phraseId: editor.phraseId,
+                attributeId: missing,
+                ...(editor.instanceId === undefined
+                    ? {}
+                    : { instanceId: editor.instanceId }),
+            };
 };
 const isTouchDevice = () => window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
 const focusOpenAttribute = (module) => {
@@ -184,34 +318,40 @@ const focusOpenAttribute = (module) => {
         return;
     const parent = document.getElementById(module.parentId);
     const input = [...(parent?.querySelectorAll('input[data-input="attribute"]') ?? [])].find((field) => field.dataset.phraseId === editor.phraseId &&
-        field.dataset.attributeId === editor.attributeId);
+        field.dataset.attributeId === editor.attributeId &&
+        field.dataset.instanceId === editor.instanceId);
     input?.focus();
 };
-const collectGroupContents = (groupId, phraseIds, setIds, groupIds) => {
-    if (groupIds.has(groupId))
-        return;
-    groupIds.add(groupId);
-    const group = definitions.groups[groupId];
-    for (const phraseId of group.phrases ?? [])
-        phraseIds.add(phraseId);
-    for (const setId of group.sets ?? [])
-        setIds.add(setId);
-    for (const child of group.children ?? []) {
-        collectGroupContents(child, phraseIds, setIds, groupIds);
+const resetInstance = (instanceId) => {
+    if (state.instanceStates[instanceId] !== undefined) {
+        state.instanceStates[instanceId] = createScopeState();
     }
 };
-const resetGroup = (groupId) => {
-    const phraseIds = new Set();
-    const setIds = new Set();
-    const groupIds = new Set();
-    collectGroupContents(groupId, phraseIds, setIds, groupIds);
-    for (const phraseId of phraseIds) {
+const resetStaticGroup = (groupId) => {
+    const group = definitions.groups[groupId];
+    for (const phraseId of group.phrases ?? []) {
         delete state.phraseOverrides[phraseId];
         delete state.attributes[phraseId];
     }
-    for (const id of groupIds)
-        delete state.groupOverrides[id];
-    state.activeSets = state.activeSets.filter((id) => !setIds.has(id));
+    for (const setId of group.sets ?? []) {
+        state.activeSets = state.activeSets.filter((id) => id !== setId);
+    }
+    delete state.groupOverrides[groupId];
+    for (const child of group.children ?? []) {
+        const childGroup = definitions.groups[child];
+        if (childGroup.repeatable !== undefined) {
+            for (const instanceId of state.groupInstances[child] ?? []) {
+                delete state.instanceStates[instanceId];
+            }
+            state.groupInstances[child] = [];
+            for (let index = 0; index < (childGroup.repeatable.initial ?? 0); index += 1) {
+                addGroupInstance(child);
+            }
+        }
+        else {
+            resetStaticGroup(child);
+        }
+    }
 };
 const copyToClipboard = async (text) => {
     if (navigator.clipboard !== undefined && window.isSecureContext) {
@@ -235,48 +375,53 @@ const requireData = (button, key) => {
         throw new Error(`Missing action data "${key}"`);
     return value;
 };
+const instanceData = (button) => button.dataset.instanceId;
 const handleClick = async (module, event) => {
     const target = event.target;
     if (!(target instanceof Element))
         return;
     const button = target.closest("button[data-action]");
-    if (button === null)
+    const parent = document.getElementById(module.parentId);
+    if (button === null || parent === null || !parent.contains(button))
         return;
     event.preventDefault();
     const action = requireData(button, "action");
+    const instanceId = instanceData(button);
     module.status = "";
     if (action === "phrase") {
-        handlePhrase(module, requireData(button, "phraseId"));
+        handlePhrase(module, requireData(button, "phraseId"), instanceId);
     }
     else if (action === "choose-value") {
-        setOverride(requireData(button, "phraseId"), requireData(button, "valueId"), true);
-        module.openEditor = null;
+        selectValue(module, requireData(button, "phraseId"), requireData(button, "valueId"), instanceId);
     }
     else if (action === "exclude-phrase") {
         const phraseId = requireData(button, "phraseId");
-        setOverride(phraseId, resolved.phrases[phraseId].valueId, false);
+        setOverride(phraseId, currentPhrase(phraseId, instanceId)?.valueId ?? null, false, instanceId);
         module.openEditor = null;
     }
     else if (action === "reset-phrase") {
         const phraseId = requireData(button, "phraseId");
-        delete state.phraseOverrides[phraseId];
-        delete state.attributes[phraseId];
+        const scope = scopeFor(instanceId);
+        delete scope.phraseOverrides[phraseId];
+        delete scope.attributes[phraseId];
         module.openEditor = null;
     }
     else if (action === "attribute") {
-        openAttribute(module, requireData(button, "phraseId"), requireData(button, "attributeId"));
+        openAttribute(module, requireData(button, "phraseId"), requireData(button, "attributeId"), instanceId);
     }
     else if (action === "choose-attribute") {
-        updateAttribute(requireData(button, "phraseId"), requireData(button, "attributeId"), requireData(button, "value"));
+        const phraseId = requireData(button, "phraseId");
+        updateAttribute(phraseId, requireData(button, "attributeId"), requireData(button, "value"), instanceId);
+        advanceRequiredAttribute(module, phraseId, instanceId);
     }
     else if (action === "step-number") {
         const phraseId = requireData(button, "phraseId");
         const attributeId = requireData(button, "attributeId");
         const editor = getEditor(phraseId, attributeId);
         if (editor?.type === "number") {
-            const current = state.attributes[phraseId]?.[attributeId];
+            const current = scopeFor(instanceId).attributes[phraseId]?.[attributeId];
             const base = typeof current === "number" ? current : (editor.default ?? 0);
-            updateAttribute(phraseId, attributeId, clampNumber(base + Number(requireData(button, "delta")), editor.min, editor.max));
+            updateAttribute(phraseId, attributeId, clampNumber(base + Number(requireData(button, "delta")), editor.min, editor.max), instanceId);
         }
     }
     else if (action === "step-duration") {
@@ -284,11 +429,11 @@ const handleClick = async (module, event) => {
         const attributeId = requireData(button, "attributeId");
         const editor = getEditor(phraseId, attributeId);
         if (editor?.type === "duration") {
-            const value = currentDuration(phraseId, attributeId, editor);
+            const value = currentDuration(phraseId, attributeId, editor, instanceId);
             updateAttribute(phraseId, attributeId, {
                 ...value,
                 amount: Math.max(1, value.amount + Number(requireData(button, "delta"))),
-            });
+            }, instanceId);
         }
     }
     else if (action === "choose-duration-unit") {
@@ -296,31 +441,61 @@ const handleClick = async (module, event) => {
         const attributeId = requireData(button, "attributeId");
         const editor = getEditor(phraseId, attributeId);
         if (editor?.type === "duration") {
-            const value = currentDuration(phraseId, attributeId, editor);
-            updateAttribute(phraseId, attributeId, {
-                ...value,
-                unit: requireData(button, "unit"),
-            });
+            const value = currentDuration(phraseId, attributeId, editor, instanceId);
+            updateAttribute(phraseId, attributeId, { ...value, unit: requireData(button, "unit") }, instanceId);
         }
     }
     else if (action === "clear-attribute") {
         const phraseId = requireData(button, "phraseId");
         const attributeId = requireData(button, "attributeId");
-        clearAttribute(phraseId, attributeId);
-        module.openEditor = null;
+        const required = requiredAttributes(phraseId, selectedValueId(phraseId, instanceId)).includes(attributeId);
+        clearAttribute(phraseId, attributeId, instanceId, required);
+        if (required)
+            module.openEditor = null;
+        else
+            advanceRequiredAttribute(module, phraseId, instanceId);
     }
     else if (action === "toggle-set") {
         const setId = requireData(button, "setId");
-        state.activeSets = state.activeSets.includes(setId)
-            ? state.activeSets.filter((id) => id !== setId)
-            : [...state.activeSets, setId];
+        const scope = scopeFor(instanceId);
+        scope.activeSets = scope.activeSets.includes(setId)
+            ? scope.activeSets.filter((id) => id !== setId)
+            : [...scope.activeSets, setId];
     }
     else if (action === "toggle-group") {
         const groupId = requireData(button, "groupId");
-        state.groupOverrides[groupId] = !isGroupEnabled(groupId, definitions, state);
+        const scope = scopeFor(instanceId);
+        scope.groupOverrides[groupId] = !isGroupEnabled(groupId, definitions, state, instanceId);
+    }
+    else if (action === "toggle-collapse") {
+        const groupId = requireData(button, "groupId");
+        const key = phraseKey(groupId, instanceId);
+        const collapsed = module.collapseOverrides[key] ??
+            definitions.groups[groupId].collapsed ??
+            false;
+        module.collapseOverrides[key] = !collapsed;
+        module.openEditor = null;
     }
     else if (action === "reset-group") {
-        resetGroup(requireData(button, "groupId"));
+        const groupId = requireData(button, "groupId");
+        if (instanceId === undefined)
+            resetStaticGroup(groupId);
+        else
+            resetInstance(instanceId);
+        module.openEditor = null;
+    }
+    else if (action === "add-group-instance") {
+        const groupId = requireData(button, "groupId");
+        const addedId = addGroupInstance(groupId);
+        if (!openFirstRequiredInGroup(module, groupId, addedId)) {
+            module.openEditor = null;
+        }
+    }
+    else if (action === "remove-group-instance") {
+        const groupId = requireData(button, "groupId");
+        const removedId = requireData(button, "instanceId");
+        state.groupInstances[groupId] = (state.groupInstances[groupId] ?? []).filter((id) => id !== removedId);
+        delete state.instanceStates[removedId];
         module.openEditor = null;
     }
     else if (action === "close-editor") {
@@ -350,47 +525,44 @@ const updateFromInput = (field) => {
     }
     const phraseId = field.dataset.phraseId;
     const attributeId = field.dataset.attributeId;
+    const instanceId = field.dataset.instanceId;
     if (phraseId === undefined || attributeId === undefined)
         return false;
     const editor = getEditor(phraseId, attributeId);
     if (editor === undefined)
         return false;
     if (field.value.trim() === "") {
-        delete state.attributes[phraseId]?.[attributeId];
+        delete scopeFor(instanceId).attributes[phraseId]?.[attributeId];
         return true;
     }
     if (editor.type === "number") {
         const parsed = Number(field.value);
-        if (!Number.isNaN(parsed)) {
-            updateAttribute(phraseId, attributeId, clampNumber(parsed, editor.min, editor.max));
-        }
-        else {
+        if (Number.isNaN(parsed))
             return false;
-        }
+        updateAttribute(phraseId, attributeId, clampNumber(parsed, editor.min, editor.max), instanceId);
     }
     else if (editor.type === "duration") {
         const parsed = Number(field.value);
-        if (!Number.isNaN(parsed)) {
-            const value = currentDuration(phraseId, attributeId, editor);
-            updateAttribute(phraseId, attributeId, {
-                ...value,
-                amount: Math.max(1, parsed),
-                unit: field.dataset.durationUnit ?? value.unit,
-            });
-        }
-        else {
+        if (Number.isNaN(parsed))
             return false;
-        }
+        const value = currentDuration(phraseId, attributeId, editor, instanceId);
+        updateAttribute(phraseId, attributeId, {
+            ...value,
+            amount: Math.max(1, parsed),
+            unit: field.dataset.durationUnit ?? value.unit,
+        }, instanceId);
+    }
+    else if (editor.type === "datetime") {
+        updateAttribute(phraseId, attributeId, dateTimeValue(field.value), instanceId);
     }
     else {
-        updateAttribute(phraseId, attributeId, field.value);
+        updateAttribute(phraseId, attributeId, field.value, instanceId);
     }
     return true;
 };
 const handleInput = (module, event) => {
-    if (updateFromInput(event.target)) {
+    if (updateFromInput(event.target))
         module.status = "";
-    }
 };
 const handleChange = (module, event) => {
     if (!updateFromInput(event.target))
@@ -408,11 +580,14 @@ export const display = async (parentId, params) => {
         throw new Error(`Parent element "${parentId}" was not found`);
     await ensureGroup(rootId);
     validateDefinitions(definitions);
+    initialiseRepeatables(rootId);
     const module = {
         parentId,
         rootId,
         openEditor: null,
+        collapseOverrides: {},
         status: "",
+        controls: params.controls !== false,
     };
     modules.set(parentId, module);
     parent.addEventListener("click", (event) => void handleClick(module, event));
@@ -422,11 +597,16 @@ export const display = async (parentId, params) => {
 };
 export const getValue = async (id) => {
     await ensureGroup(id);
+    initialiseRepeatables(id);
     resolved = resolveDocument(definitions, state);
     return renderGroupText(id, definitions, state, resolved);
 };
 export const getStructuredValue = async (id) => {
     await ensureGroup(id);
+    initialiseRepeatables(id);
     resolved = resolveDocument(definitions, state);
     return structuredDocument(id, definitions, state, resolved);
+};
+export const dispose = (parentId) => {
+    modules.delete(parentId);
 };

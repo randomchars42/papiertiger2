@@ -1,0 +1,43 @@
+# A – Atemweg
+N: a
+I: gemeinsam
+
+E tubusgroesse: number label="Tubusgröße" prefix="ID " suffix=" mm" min=0 max=9 step=0.5
+E tubustiefe: number label="Tiefe" suffix=" cm" min=6 max=25 step=1
+E versuchsanzahl: number label="Versuche" min=1 step=1
+
+C verlegter_atemweg: Atemweg durch Zunge verlegt / Atemweg zugeschwollen / Atemweg durch Blutung verlegt / Atemweg vollständig verlegt
+C atemwegsproblem: verlegter_atemweg / Atemweg wird nicht effektiv freigehalten
+
+G @root: A
+  P: Zustand des Atemwegs => Atemweg frei @sct=248553004|n* / Atemweg durch Zunge verlegt @sct=425227004|a / Atemweg zugeschwollen|a / Atemweg durch Blutung verlegt @sct=427480003|a / Atemweg vollständig verlegt @sct=248555006|a
+  P<verlegter_atemweg>: Gefährdung des Atemwegs => Atemweg nicht gefährdet @sct=1145305006|n* / Atemweg wird nicht effektiv freigehalten @sct=67750007|a
+  P<Atemweg zugeschwollen>: Schwellung der Uvula|a
+  P<Atemweg zugeschwollen>: Schwellung der Zunge|a
+
+  P<atemwegsproblem>: Güdeltubus => Atemwegsschienung: Güdeltubus|i
+  P<Güdeltubus>: Ergebnis der Güdeltubus-Anlage => Schienung suffizient|i / Schienung nicht suffizient|a
+  P<atemwegsproblem>: Wendeltubus => Atemwegsschienung: Wendeltubus|i
+  P<Wendeltubus>: Ergebnis der Wendeltubus-Anlage => Schienung suffizient|i / Schienung nicht suffizient|a
+
+  P<atemwegsproblem>: Supraglottische Atemwegshilfe => supraglottische Atemwegshilfe: iGel|i / supraglottische Atemwegshilfe: Larynxmaske|i / supraglottische Atemwegshilfe: Larynxtubus|i
+  P<Supraglottische Atemwegshilfe>: Ergebnis der supraglottischen Atemwegshilfe => Schienung suffizient|i / Schienung nicht suffizient|a
+
+  P<atemwegsproblem>: Endotracheale Intubation => videolaryngoskopiegestützte endotracheale Intubation|i / konventionelle endotracheale Intubation|i
+  P<Endotracheale Intubation>: Tubusgröße => Tubusgröße: {:groesse=tubusgroesse*:}|-
+  P<Endotracheale Intubation>: Tiefe des Endotrachealtubus => Tiefe: Zahnreihe {:tiefe=tubustiefe*:}|-
+  P<Endotracheale Intubation>: Intubationsversuche => Versuche: {:anzahl=versuchsanzahl*:}|-
+  P<Endotracheale Intubation>: Bestätigung der Tubuslage => kapnographisch bestätigt|i / kapnometrisch bestätigt|i
+  P<Endotracheale Intubation>: Zahnstatus => Zahnstatus unverändert|n / Zahnstatus: {:freitext*:}|a
+  P<Endotracheale Intubation>: Ergänzung zur endotrachealen Intubation => {:freitext*:}|-
+
+  P<atemwegsproblem>: Chirurgischer Atemweg => chirurgischer Atemweg: chirurgisch|i / chirurgischer Atemweg: Quick-Trach|i
+  P<Chirurgischer Atemweg>: Tubusgröße des chirurgischen Atemwegs => Tubusgröße: {:groesse=tubusgroesse*:}|-
+  P<Chirurgischer Atemweg>: Bestätigung des chirurgischen Atemwegs => kapnographisch bestätigt|i / kapnometrisch bestätigt|i
+  P<Chirurgischer Atemweg>: Ergänzung zum chirurgischen Atemweg => {:freitext*:}|-
+
+  P: Weitere A-Auffälligkeit => {:freitext*:}|a
+
+  S: A instabil|a
+    Zustand des Atemwegs = Atemweg vollständig verlegt
+    Gefährdung des Atemwegs = Atemweg wird nicht effektiv freigehalten

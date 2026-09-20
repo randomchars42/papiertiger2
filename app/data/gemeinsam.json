@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "editors": {
+    "gemeinsam_eingabe_freitext": {
+      "type": "text",
+      "label": "Freitext",
+      "placeholder": "Ergänzung"
+    },
+    "gemeinsam_eingabe_seite": {
+      "type": "choice",
+      "options": {
+        "links": {
+          "kind": "neutral",
+          "text": "links"
+        },
+        "rechts": {
+          "kind": "neutral",
+          "text": "rechts"
+        }
+      },
+      "label": "Seite"
+    },
+    "gemeinsam_eingabe_ereigniszeitpunkt": {
+      "type": "datetime",
+      "label": "Datum und Zeit",
+      "default": "now"
+    },
+    "gemeinsam_eingabe_schweregrad": {
+      "type": "choice",
+      "options": {
+        "leicht": {
+          "kind": "abnormal",
+          "text": "leicht"
+        },
+        "mittel": {
+          "kind": "abnormal",
+          "text": "mittel"
+        },
+        "schwer": {
+          "kind": "abnormal",
+          "text": "schwer"
+        }
+      },
+      "label": "Schweregrad"
+    }
+  },
+  "groups": {},
+  "phrases": {}
+}

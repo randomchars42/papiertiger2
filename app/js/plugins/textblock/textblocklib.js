@@ -6,6 +6,12 @@ const durationLabels = {
     month: ["Monat", "Monaten"],
     year: ["Jahr", "Jahren"],
 };
+export const attributePlaceholders = (text) => [...text.matchAll(/\{:\s*([a-zA-Z0-9_-]+)\s*(\*)?\s*:\}/g)].map((match) => ({
+    id: match[1],
+    required: match[2] === "*",
+    start: match.index,
+    end: match.index + match[0].length,
+}));
 export const emptyDefinitions = () => ({
     groups: {},
     phrases: {},
@@ -69,7 +75,20 @@ export const editorDefaultValue = (editor) => {
             anchor: new Date().toISOString(),
         };
     }
+    if (editor.type === "datetime" && editor.default === "now") {
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60_000;
+        return dateTimeValue(new Date(now.valueOf() - offset).toISOString().slice(0, 16));
+    }
     return undefined;
+};
+export const dateTimeValue = (local) => {
+    const parsed = new Date(local);
+    return {
+        local,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        instant: Number.isNaN(parsed.valueOf()) ? "" : parsed.toISOString(),
+    };
 };
 export const formatAttribute = (editor, value) => {
     const prefix = "prefix" in editor ? (editor.prefix ?? "") : "";
@@ -101,14 +120,36 @@ export const formatAttribute = (editor, value) => {
             : new Intl.DateTimeFormat("de-DE").format(parsed);
         return `${prefix}${date}`;
     }
+    if (editor.type === "datetime") {
+        if (!isDateTimeValue(value) || value.instant === "") {
+            return `${prefix}${editor.label ?? "…"}`;
+        }
+        const parsed = new Date(value.instant);
+        const dateTime = new Intl.DateTimeFormat("de-DE", {
+            dateStyle: "short",
+            timeStyle: "short",
+        }).format(parsed);
+        return `${prefix}${dateTime}`;
+    }
     const text = typeof value === "string" ? value : "";
     return `${prefix}${text || editor.placeholder || editor.label || "…"}`;
 };
 export const isDurationValue = (value) => typeof value === "object" &&
     value !== null &&
+    "amount" in value &&
+    "unit" in value &&
+    "anchor" in value &&
     typeof value.amount === "number" &&
     typeof value.unit === "string" &&
     typeof value.anchor === "string";
+export const isDateTimeValue = (value) => typeof value === "object" &&
+    value !== null &&
+    "local" in value &&
+    "timeZone" in value &&
+    "instant" in value &&
+    typeof value.local === "string" &&
+    typeof value.timeZone === "string" &&
+    typeof value.instant === "string";
 export const hasAttributeValue = (value) => {
     if (value === undefined)
         return false;
@@ -116,7 +157,9 @@ export const hasAttributeValue = (value) => {
         return value.trim() !== "";
     if (typeof value === "number")
         return Number.isFinite(value);
-    return isDurationValue(value) && value.amount > 0;
+    if (isDurationValue(value))
+        return value.amount > 0;
+    return isDateTimeValue(value) && value.local !== "" && value.instant !== "";
 };
 export const clampNumber = (value, min, max) => Math.min(max ?? Infinity, Math.max(min ?? -Infinity, value));
 export const resolvedStart = (value) => {

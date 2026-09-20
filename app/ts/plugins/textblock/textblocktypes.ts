@@ -24,10 +24,16 @@ export type PhraseDefinition = {
     title: string;
     default: string | "" | null;
     values: Record<string, ValueDefinition>;
-    suggestions?: Record<string, string>;
+    suggestions?: Record<string, string | null>;
     attributes?: Record<string, string>;
     note?: string;
     kind?: ItemKind;
+};
+
+export type RepeatableDefinition = {
+    initial?: number;
+    add: string;
+    empty?: string;
 };
 
 export type GroupDefinition = {
@@ -41,6 +47,8 @@ export type GroupDefinition = {
     kind?: ItemKind;
     summary?: boolean;
     reset?: boolean;
+    collapsed?: boolean;
+    repeatable?: RepeatableDefinition;
 };
 
 export type SetDefinition = {
@@ -89,6 +97,13 @@ export type DateEditor = {
     prefix?: string;
 };
 
+export type DateTimeEditor = {
+    type: "datetime";
+    label?: string;
+    prefix?: string;
+    default?: "now";
+};
+
 export type TextEditor = {
     type: "text";
     label?: string;
@@ -101,6 +116,7 @@ export type EditorDefinition =
     | NumberEditor
     | DurationEditor
     | DateEditor
+    | DateTimeEditor
     | TextEditor;
 
 export type PackageDefinition = {
@@ -125,18 +141,29 @@ export type DurationValue = {
     anchor: string;
 };
 
-export type AttributeValue = string | number | DurationValue;
+export type DateTimeValue = {
+    local: string;
+    timeZone: string;
+    instant: string;
+};
+
+export type AttributeValue = string | number | DurationValue | DateTimeValue;
 
 export type PhraseOverride = {
     included: boolean;
     valueId: string | null;
 };
 
-export type DocumentState = {
+export type ScopeState = {
     activeSets: string[];
     phraseOverrides: Record<string, PhraseOverride>;
     groupOverrides: Record<string, boolean>;
     attributes: Record<string, Record<string, AttributeValue>>;
+};
+
+export type DocumentState = ScopeState & {
+    groupInstances: Record<string, string[]>;
+    instanceStates: Record<string, ScopeState>;
 };
 
 export type PhraseSource = "default" | "set" | "suggestion" | "user";
@@ -148,11 +175,14 @@ export type ResolvedPart =
           id: string;
           editorId: string;
           text: string;
+          required: boolean;
           value?: AttributeValue;
       };
 
 export type ResolvedPhrase = {
+    key: string;
     id: string;
+    instanceId?: string;
     title: string;
     valueId: string | null;
     text: string;
@@ -173,6 +203,7 @@ export type ResolvedDocument = {
 
 export type StructuredItem = {
     id: string;
+    instanceId?: string;
     valueId: string | null;
     text: string;
     kind: ItemKind;
@@ -185,17 +216,20 @@ export type StructuredItem = {
     coding?: SnomedCoding;
 };
 
+export type StructuredSummaryItem = Pick<
+    StructuredItem,
+    "id" | "instanceId" | "valueId" | "text" | "kind"
+>;
+
 export type StructuredDocument = {
     version: 1;
     root: string;
     text: string;
     items: StructuredItem[];
-    suggestions: Array<
-        Pick<StructuredItem, "id" | "valueId" | "text" | "kind">
-    >;
+    suggestions: StructuredSummaryItem[];
     summaries: Array<{
         groupId: string;
         title: string;
-        items: Array<Pick<StructuredItem, "id" | "valueId" | "text" | "kind">>;
+        items: StructuredSummaryItem[];
     }>;
 };

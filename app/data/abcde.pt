@@ -1,0 +1,6 @@
+# ABCDE-Zusammenstellung
+N: abcde
+I: x, a, b
+
+G @root @summary @reset: ABCDE
+  U: x, a, b

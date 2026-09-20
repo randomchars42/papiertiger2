@@ -1,0 +1,13 @@
+# Auf der Seite auswählbare Dokumente
+T: dokumente
+
+D*: Rettungsdienst
+  B: textblock ankunft controls=false
+  B: textblock anamnese controls=false
+  B: textblock abcde controls=false
+  B: textblock status controls=false
+
+D: Erstbefund
+  B: textblock ankunft controls=false
+  B: textblock abcde controls=false
+  B: textblock status controls=false

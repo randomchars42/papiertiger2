@@ -1,0 +1,34 @@
+# Ankunft
+N: ankunft
+I: gemeinsam
+
+G @root @reset: Ankunft
+  G @collapsed: Auffindeort
+    P: Auffindeort => auf der Fahrbahn|- / auf öffentlichen Flächen|- / im RTW|- / in der Wohnstätte|- / auf dem Bett|- / auf dem Boden|-
+    P: Sonstiger Auffindeort => {:freitext*:}|-
+
+  G @collapsed: Umstände
+    P: öffnet die Tür|-
+    P: Position => stehend|- / sitzend|- / liegend|-
+    P: Weitere Umstände => {:freitext*:}|-
+
+  G @collapsed: Anwesende
+    P: Partnerin|-
+    P: Partner|-
+    P: Mutter|-
+    P: Vater|-
+    P: Tochter|-
+    P: Sohn|-
+    P: Enkelin|-
+    P: Enkel|-
+    P: Zugehörige|-
+    P: Zugehöriger|-
+    P: Weitere anwesende Person => {:freitext*:}|-
+
+  G @collapsed: Weitere Kräfte
+    P: Rettungsdienst|-
+    P: Ersthelfer|-
+    P: Krankenpflegekraft|-
+    P: Ärztin|-
+    P: Arzt|-
+    P: Weitere Kraft => {:freitext*:}|-

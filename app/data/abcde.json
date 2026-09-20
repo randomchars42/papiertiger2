@@ -1,10 +1,18 @@
 {
   "version": 2,
-  "imports": ["a", "b"],
+  "imports": [
+    "x",
+    "a",
+    "b"
+  ],
   "groups": {
     "abcde": {
       "title": "ABCDE",
-      "children": ["a", "b"],
+      "children": [
+        "x",
+        "a",
+        "b"
+      ],
       "summary": true,
       "reset": true
     }

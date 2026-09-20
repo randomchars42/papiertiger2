@@ -1,0 +1,96 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "orientierung": {
+      "title": "Orientierung",
+      "kind": "normal",
+      "phrases": [
+        "orientierung_eintrag_orientierung_zur_zeit",
+        "orientierung_eintrag_orientierung_zum_ort",
+        "orientierung_eintrag_orientierung_zur_person",
+        "orientierung_eintrag_orientierung_zur_situation",
+        "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung"
+      ],
+      "default": false
+    }
+  },
+  "phrases": {
+    "orientierung_eintrag_orientierung_zur_zeit": {
+      "title": "Orientierung zur Zeit",
+      "kind": "neutral",
+      "default": "orientierung_eintrag_orientierung_zur_zeit_wert_zur_zeit_orientiert",
+      "values": {
+        "orientierung_eintrag_orientierung_zur_zeit_wert_zur_zeit_orientiert": {
+          "kind": "normal",
+          "text": "zur Zeit orientiert"
+        },
+        "orientierung_eintrag_orientierung_zur_zeit_wert_zur_zeit_nicht_orientiert": {
+          "kind": "abnormal",
+          "text": "zur Zeit nicht orientiert"
+        }
+      }
+    },
+    "orientierung_eintrag_orientierung_zum_ort": {
+      "title": "Orientierung zum Ort",
+      "kind": "neutral",
+      "default": "orientierung_eintrag_orientierung_zum_ort_wert_zum_ort_orientiert",
+      "values": {
+        "orientierung_eintrag_orientierung_zum_ort_wert_zum_ort_orientiert": {
+          "kind": "normal",
+          "text": "zum Ort orientiert"
+        },
+        "orientierung_eintrag_orientierung_zum_ort_wert_zum_ort_nicht_orientiert": {
+          "kind": "abnormal",
+          "text": "zum Ort nicht orientiert"
+        }
+      }
+    },
+    "orientierung_eintrag_orientierung_zur_person": {
+      "title": "Orientierung zur Person",
+      "kind": "neutral",
+      "default": "orientierung_eintrag_orientierung_zur_person_wert_zur_person_orientiert",
+      "values": {
+        "orientierung_eintrag_orientierung_zur_person_wert_zur_person_orientiert": {
+          "kind": "normal",
+          "text": "zur Person orientiert"
+        },
+        "orientierung_eintrag_orientierung_zur_person_wert_zur_person_nicht_orientiert": {
+          "kind": "abnormal",
+          "text": "zur Person nicht orientiert"
+        }
+      }
+    },
+    "orientierung_eintrag_orientierung_zur_situation": {
+      "title": "Orientierung zur Situation",
+      "kind": "neutral",
+      "default": "orientierung_eintrag_orientierung_zur_situation_wert_zur_situation_orientiert",
+      "values": {
+        "orientierung_eintrag_orientierung_zur_situation_wert_zur_situation_orientiert": {
+          "kind": "normal",
+          "text": "zur Situation orientiert"
+        },
+        "orientierung_eintrag_orientierung_zur_situation_wert_zur_situation_nicht_orientiert": {
+          "kind": "abnormal",
+          "text": "zur Situation nicht orientiert"
+        }
+      }
+    },
+    "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung": {
+      "title": "Weitere Auffälligkeit der Orientierung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

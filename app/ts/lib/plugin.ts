@@ -8,16 +8,22 @@ export type Plugin = {
     ) => Promise<void>;
     getValue?: (id: string) => Promise<unknown>;
     getStructuredValue?: (id: string) => Promise<unknown>;
+    dispose?: (parentID: string) => void;
 };
 
+const plugins = new Map<string, Promise<Plugin>>();
+
 export const loadPlugin = async (name: string): Promise<Plugin> => {
-    const plugin: Plugin = await import(
-        `../${getConfig("pluginURL")}/${name}/${name}.js`
-    );
-
-    if (plugin.init) {
-        await plugin.init();
+    let request = plugins.get(name);
+    if (request === undefined) {
+        request = (async (): Promise<Plugin> => {
+            const plugin: Plugin = await import(
+                `../${getConfig("pluginURL")}/${name}/${name}.js`
+            );
+            if (plugin.init) await plugin.init();
+            return plugin;
+        })();
+        plugins.set(name, request);
     }
-
-    return plugin;
+    return request;
 };

@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "imports": ["orientation"],
+  "imports": [
+    "orientierung"
+  ],
   "groups": {
     "status": {
       "title": "Status",
-      "children": ["orientation"]
+      "children": [
+        "orientierung"
+      ]
     }
   },
   "phrases": {}

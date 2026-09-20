@@ -1,0 +1,11 @@
+# Anamnese
+N: anamnese
+I: gemeinsam
+
+E seit: duration label="Zeitangabe" prefix=" seit " units=minute,hour,day,week,month,year default=day
+E nrs: number label="NRS" prefix="NRS " min=0 max=10 step=1
+
+G @root: Anamnese
+  P: Bauchschmerz => Bauchschmerz{:beginn=seit*:}|a
+  P: Schmerzstärke => Schmerzstärke {:wert=nrs*:}|a
+  P: Weitere Anamnese => {:freitext*:}|-

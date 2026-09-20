@@ -170,3 +170,6 @@ export const getStructuredValue = async (id) => {
     const { catalog } = await requestData();
     return structuredSelection(catalog, selectedEntry(catalog, stateFor(id)));
 };
+export const dispose = (parentId) => {
+    modules.delete(parentId);
+};

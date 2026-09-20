@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "imports": [
+    "ankunft",
+    "anamnese",
+    "abcde",
+    "status"
+  ],
+  "groups": {
+    "rettungsdienst": {
+      "title": "Rettungsdienst",
+      "children": [
+        "ankunft",
+        "anamnese",
+        "abcde",
+        "status"
+      ]
+    }
+  },
+  "phrases": {}
+}

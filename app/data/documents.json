@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "default": "rettungsdienst",
+  "documents": {
+    "rettungsdienst": {
+      "title": "Rettungsdienst",
+      "blocks": [
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "ankunft",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "anamnese",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "abcde",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "status",
+            "controls": false
+          }
+        }
+      ]
+    },
+    "erstbefund": {
+      "title": "Erstbefund",
+      "blocks": [
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "ankunft",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "abcde",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "status",
+            "controls": false
+          }
+        }
+      ]
+    }
+  }
+}

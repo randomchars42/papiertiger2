@@ -1,0 +1,32 @@
+# B – Atmung
+N: b
+I: gemeinsam
+
+E atemfrequenz: number label="Atemfrequenz" suffix=" / min" min=0 max=100 step=1
+E seite: choice label="Seite" => links|- / rechts|- / bilateral|-
+E lokalisation: choice label="Lokalisation" => ubiquitär|- / basal|- / über dem Oberfeld|- / über dem Mittelfeld|- / über dem Unterfeld|-
+E charakter: choice label="Charakter" => von zentral fortgeleitete|- / feinblasige|- / knisternde|- / grobblasige|-
+
+C pneumothorax: Atemexkursion links vermindert / Atemexkursion rechts vermindert / Atemgeräusch {:seite=seite*:} {:lokalisation:} abgeschwächt / Thorax instabil
+
+G @root: B
+  P: Atmung => Eupnoe @sct=20716004|n* / Apnoe @sct=1023001|a / Bradypnoe @sct=86684002|a / Tachypnoe @sct=271823003|a / agonale Atmung @sct=430546009|a / beatmet @sct=1303532003|i
+  P: Atemfrequenz => Atemfrequenz {:wert=atemfrequenz*:}|-
+  P: Zyanose => keine Zyanose|n* / Lippenzyanose|a / akrale Zyanose|a / generalisierte Zyanose|a
+  P: Atemexkursion => Atemexkursion seitengleich @sct=248559000|n* / Atemexkursion links vermindert|a / Atemexkursion rechts vermindert|a
+  P: Stabilität => Thorax stabil|n* / Thorax instabil|a
+  P: Atemgeräusch => Atemgeräusch seitengleich|n* / Atemgeräusch {:seite=seite*:} {:lokalisation:} abgeschwächt|a
+  P<pneumothorax>: Punktion => Entlastungspunktion|i
+  P<Entlastungspunktion>: Effekt der Punktion => es entweicht Luft|i
+  P<pneumothorax>: Thorakostomie => Thorakostomie|i
+  P<Thorakostomie>: Effekt der Thorakostomie => es entweicht Luft|i / es entleert sich Blut|i / es entleert sich Flüssigkeit|i
+  P<pneumothorax>: Anlage einer Thoraxdrainage => Anlage einer Thoraxdrainage nach Bülow|i / Anlage einer Thoraxdrainage in Seldinger-Technik|i
+  P<Anlage einer Thoraxdrainage>: Effekt der Drainagenanlage => es entweicht Luft|i / es entleert sich Blut|i / es entleert sich Flüssigkeit|i
+  P: Rasselgeräusche => keine Rasselgeräusche|n* / {:charakter:} Rasselgeräusche {:seite=seite*:} {:lokalisation*:}|a
+  P: Giemen => kein Giemen|n* / Giemen @sct=56018004|a
+  P: Brummen => kein Brummen|n* / Brummen|a
+  P: Weitere B-Auffälligkeit => {:freitext*:}|a
+
+  S: Pneumonie (Beispiel)|a
+    Atmung = Tachypnoe
+    Brummen = Brummen

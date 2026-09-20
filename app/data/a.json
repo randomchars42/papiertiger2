@@ -1,44 +1,500 @@
 {
   "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "a_eingabe_tubusgroesse": {
+      "type": "number",
+      "label": "Tubusgröße",
+      "prefix": "ID ",
+      "suffix": " mm",
+      "min": 0,
+      "max": 9,
+      "step": 0.5
+    },
+    "a_eingabe_tubustiefe": {
+      "type": "number",
+      "label": "Tiefe",
+      "suffix": " cm",
+      "min": 6,
+      "max": 25,
+      "step": 1
+    },
+    "a_eingabe_versuchsanzahl": {
+      "type": "number",
+      "label": "Versuche",
+      "min": 1,
+      "step": 1
+    }
+  },
   "sets": {
-    "a_unstable": {
+    "a_vorgabe_a_instabil": {
       "title": "A instabil",
-      "kind": "abnormal",
       "values": {
-        "a_state": "a_state_obstructed",
-        "a_risk": "a_risk_ineffective"
-      }
+        "a_eintrag_zustand_des_atemwegs": "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
+        "a_eintrag_gefaehrdung_des_atemwegs": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+      },
+      "kind": "abnormal"
     }
   },
   "groups": {
     "a": {
       "title": "A",
-      "phrases": ["a_state", "a_risk"],
-      "sets": ["a_unstable"]
+      "phrases": [
+        "a_eintrag_zustand_des_atemwegs",
+        "a_eintrag_gefaehrdung_des_atemwegs",
+        "a_eintrag_schwellung_der_uvula",
+        "a_eintrag_schwellung_der_zunge",
+        "a_eintrag_guedeltubus",
+        "a_eintrag_ergebnis_der_guedeltubus_anlage",
+        "a_eintrag_wendeltubus",
+        "a_eintrag_ergebnis_der_wendeltubus_anlage",
+        "a_eintrag_supraglottische_atemwegshilfe",
+        "a_eintrag_ergebnis_der_supraglottischen_atemwegshilfe",
+        "a_eintrag_endotracheale_intubation",
+        "a_eintrag_tubusgroesse",
+        "a_eintrag_tiefe_des_endotrachealtubus",
+        "a_eintrag_intubationsversuche",
+        "a_eintrag_bestaetigung_der_tubuslage",
+        "a_eintrag_zahnstatus",
+        "a_eintrag_ergaenzung_zur_endotrachealen_intubation",
+        "a_eintrag_chirurgischer_atemweg",
+        "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs",
+        "a_eintrag_bestaetigung_des_chirurgischen_atemwegs",
+        "a_eintrag_ergaenzung_zum_chirurgischen_atemweg",
+        "a_eintrag_weitere_a_auffaelligkeit"
+      ],
+      "sets": [
+        "a_vorgabe_a_instabil"
+      ]
     }
   },
   "phrases": {
-    "a_state": {
-      "title": "Atemweg",
-      "default": "a_state_clear",
+    "a_eintrag_zustand_des_atemwegs": {
+      "title": "Zustand des Atemwegs",
+      "kind": "neutral",
+      "default": "a_eintrag_zustand_des_atemwegs_wert_atemweg_frei",
       "values": {
-        "a_state_clear": { "kind": "normal", "text": "248553004|No obstruction of airway|Atemweg frei" },
-        "a_state_tongue": { "kind": "abnormal", "text": "425227004|Obstruction of airway caused by tongue|Atemweg durch Zunge verlegt" },
-        "a_state_blood": { "kind": "abnormal", "text": "427480003|Obstruction of airway caused by blood|Atemweg durch Blutung verlegt" },
-        "a_state_obstructed": { "kind": "abnormal", "text": "248555006|Totally obstructed airway|Atemweg vollständig verlegt" }
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_frei": {
+          "kind": "normal",
+          "text": "Atemweg frei",
+          "snomed": "248553004"
+        },
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": {
+          "kind": "abnormal",
+          "text": "Atemweg durch Zunge verlegt",
+          "snomed": "425227004"
+        },
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": {
+          "kind": "abnormal",
+          "text": "Atemweg zugeschwollen"
+        },
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": {
+          "kind": "abnormal",
+          "text": "Atemweg durch Blutung verlegt",
+          "snomed": "427480003"
+        },
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": {
+          "kind": "abnormal",
+          "text": "Atemweg vollständig verlegt",
+          "snomed": "248555006"
+        }
       }
     },
-    "a_risk": {
-      "title": "Atemweg nicht effektiv freigehalten",
-      "default": "a_risk_none",
+    "a_eintrag_gefaehrdung_des_atemwegs": {
+      "title": "Gefährdung des Atemwegs",
+      "kind": "neutral",
+      "default": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_nicht_gefaehrdet",
       "values": {
-        "a_risk_none": { "kind": "normal", "text": "1145305006|Able to clear airway effectively|Atemweg nicht gefährdet" },
-        "a_risk_ineffective": { "kind": "abnormal", "text": "67750007|Ineffective airway clearing|Atemweg wird nicht effektiv freigehalten" }
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_nicht_gefaehrdet": {
+          "kind": "normal",
+          "text": "Atemweg nicht gefährdet",
+          "snomed": "1145305006"
+        },
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": {
+          "kind": "abnormal",
+          "text": "Atemweg wird nicht effektiv freigehalten",
+          "snomed": "67750007"
+        }
       },
       "suggestions": {
-        "a_state_tongue": "a_risk_ineffective",
-        "a_state_blood": "a_risk_ineffective",
-        "a_state_obstructed": "a_risk_ineffective"
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+      }
+    },
+    "a_eintrag_schwellung_der_uvula": {
+      "title": "Schwellung der Uvula",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "a_eintrag_schwellung_der_uvula_wert_schwellung_der_uvula": {
+          "kind": "abnormal",
+          "text": "Schwellung der Uvula"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_schwellung_der_uvula_wert_schwellung_der_uvula"
+      }
+    },
+    "a_eintrag_schwellung_der_zunge": {
+      "title": "Schwellung der Zunge",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "a_eintrag_schwellung_der_zunge_wert_schwellung_der_zunge": {
+          "kind": "abnormal",
+          "text": "Schwellung der Zunge"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_schwellung_der_zunge_wert_schwellung_der_zunge"
+      }
+    },
+    "a_eintrag_guedeltubus": {
+      "title": "Güdeltubus",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus": {
+          "kind": "intervention",
+          "text": "Atemwegsschienung: Güdeltubus"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus"
+      }
+    },
+    "a_eintrag_ergebnis_der_guedeltubus_anlage": {
+      "title": "Ergebnis der Güdeltubus-Anlage",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_ergebnis_der_guedeltubus_anlage_wert_schienung_suffizient": {
+          "kind": "intervention",
+          "text": "Schienung suffizient"
+        },
+        "a_eintrag_ergebnis_der_guedeltubus_anlage_wert_schienung_nicht_suffizient": {
+          "kind": "abnormal",
+          "text": "Schienung nicht suffizient"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus": null
+      }
+    },
+    "a_eintrag_wendeltubus": {
+      "title": "Wendeltubus",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus": {
+          "kind": "intervention",
+          "text": "Atemwegsschienung: Wendeltubus"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus"
+      }
+    },
+    "a_eintrag_ergebnis_der_wendeltubus_anlage": {
+      "title": "Ergebnis der Wendeltubus-Anlage",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_ergebnis_der_wendeltubus_anlage_wert_schienung_suffizient": {
+          "kind": "intervention",
+          "text": "Schienung suffizient"
+        },
+        "a_eintrag_ergebnis_der_wendeltubus_anlage_wert_schienung_nicht_suffizient": {
+          "kind": "abnormal",
+          "text": "Schienung nicht suffizient"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus": null
+      }
+    },
+    "a_eintrag_supraglottische_atemwegshilfe": {
+      "title": "Supraglottische Atemwegshilfe",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_igel": {
+          "kind": "intervention",
+          "text": "supraglottische Atemwegshilfe: iGel"
+        },
+        "a_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxmaske": {
+          "kind": "intervention",
+          "text": "supraglottische Atemwegshilfe: Larynxmaske"
+        },
+        "a_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxtubus": {
+          "kind": "intervention",
+          "text": "supraglottische Atemwegshilfe: Larynxtubus"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": null,
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
+      }
+    },
+    "a_eintrag_ergebnis_der_supraglottischen_atemwegshilfe": {
+      "title": "Ergebnis der supraglottischen Atemwegshilfe",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_ergebnis_der_supraglottischen_atemwegshilfe_wert_schienung_suffizient": {
+          "kind": "intervention",
+          "text": "Schienung suffizient"
+        },
+        "a_eintrag_ergebnis_der_supraglottischen_atemwegshilfe_wert_schienung_nicht_suffizient": {
+          "kind": "abnormal",
+          "text": "Schienung nicht suffizient"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_igel": null,
+        "a_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxmaske": null,
+        "a_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxtubus": null
+      }
+    },
+    "a_eintrag_endotracheale_intubation": {
+      "title": "Endotracheale Intubation",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": {
+          "kind": "intervention",
+          "text": "videolaryngoskopiegestützte endotracheale Intubation"
+        },
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": {
+          "kind": "intervention",
+          "text": "konventionelle endotracheale Intubation"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": null,
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
+      }
+    },
+    "a_eintrag_tubusgroesse": {
+      "title": "Tubusgröße",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_tubusgroesse_wert_tubusgroesse": {
+          "kind": "neutral",
+          "text": "Tubusgröße: {:groesse*:}"
+        }
+      },
+      "attributes": {
+        "groesse": "a_eingabe_tubusgroesse"
+      },
+      "suggestions": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": "a_eintrag_tubusgroesse_wert_tubusgroesse",
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": "a_eintrag_tubusgroesse_wert_tubusgroesse"
+      }
+    },
+    "a_eintrag_tiefe_des_endotrachealtubus": {
+      "title": "Tiefe des Endotrachealtubus",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_tiefe_des_endotrachealtubus_wert_tiefe_zahnreihe": {
+          "kind": "neutral",
+          "text": "Tiefe: Zahnreihe {:tiefe*:}"
+        }
+      },
+      "attributes": {
+        "tiefe": "a_eingabe_tubustiefe"
+      },
+      "suggestions": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": "a_eintrag_tiefe_des_endotrachealtubus_wert_tiefe_zahnreihe",
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": "a_eintrag_tiefe_des_endotrachealtubus_wert_tiefe_zahnreihe"
+      }
+    },
+    "a_eintrag_intubationsversuche": {
+      "title": "Intubationsversuche",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_intubationsversuche_wert_versuche": {
+          "kind": "neutral",
+          "text": "Versuche: {:anzahl*:}"
+        }
+      },
+      "attributes": {
+        "anzahl": "a_eingabe_versuchsanzahl"
+      },
+      "suggestions": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": "a_eintrag_intubationsversuche_wert_versuche",
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": "a_eintrag_intubationsversuche_wert_versuche"
+      }
+    },
+    "a_eintrag_bestaetigung_der_tubuslage": {
+      "title": "Bestätigung der Tubuslage",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_bestaetigung_der_tubuslage_wert_kapnographisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "kapnographisch bestätigt"
+        },
+        "a_eintrag_bestaetigung_der_tubuslage_wert_kapnometrisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "kapnometrisch bestätigt"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": null,
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": null
+      }
+    },
+    "a_eintrag_zahnstatus": {
+      "title": "Zahnstatus",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_zahnstatus_wert_zahnstatus_unveraendert": {
+          "kind": "normal",
+          "text": "Zahnstatus unverändert"
+        },
+        "a_eintrag_zahnstatus_wert_zahnstatus": {
+          "kind": "abnormal",
+          "text": "Zahnstatus: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "suggestions": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": null,
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": null
+      }
+    },
+    "a_eintrag_ergaenzung_zur_endotrachealen_intubation": {
+      "title": "Ergänzung zur endotrachealen Intubation",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_ergaenzung_zur_endotrachealen_intubation_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "suggestions": {
+        "a_eintrag_endotracheale_intubation_wert_videolaryngoskopiegestuetzte_endotracheale_intubation": "a_eintrag_ergaenzung_zur_endotrachealen_intubation_wert_value",
+        "a_eintrag_endotracheale_intubation_wert_konventionelle_endotracheale_intubation": "a_eintrag_ergaenzung_zur_endotrachealen_intubation_wert_value"
+      }
+    },
+    "a_eintrag_chirurgischer_atemweg": {
+      "title": "Chirurgischer Atemweg",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch": {
+          "kind": "intervention",
+          "text": "chirurgischer Atemweg: chirurgisch"
+        },
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach": {
+          "kind": "intervention",
+          "text": "chirurgischer Atemweg: Quick-Trach"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": null,
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": null,
+        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
+      }
+    },
+    "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs": {
+      "title": "Tubusgröße des chirurgischen Atemwegs",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs_wert_tubusgroesse": {
+          "kind": "neutral",
+          "text": "Tubusgröße: {:groesse*:}"
+        }
+      },
+      "attributes": {
+        "groesse": "a_eingabe_tubusgroesse"
+      },
+      "suggestions": {
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch": "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs_wert_tubusgroesse",
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach": "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs_wert_tubusgroesse"
+      }
+    },
+    "a_eintrag_bestaetigung_des_chirurgischen_atemwegs": {
+      "title": "Bestätigung des chirurgischen Atemwegs",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "a_eintrag_bestaetigung_des_chirurgischen_atemwegs_wert_kapnographisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "kapnographisch bestätigt"
+        },
+        "a_eintrag_bestaetigung_des_chirurgischen_atemwegs_wert_kapnometrisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "kapnometrisch bestätigt"
+        }
+      },
+      "suggestions": {
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch": null,
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach": null
+      }
+    },
+    "a_eintrag_ergaenzung_zum_chirurgischen_atemweg": {
+      "title": "Ergänzung zum chirurgischen Atemweg",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "a_eintrag_ergaenzung_zum_chirurgischen_atemweg_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "suggestions": {
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch": "a_eintrag_ergaenzung_zum_chirurgischen_atemweg_wert_value",
+        "a_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach": "a_eintrag_ergaenzung_zum_chirurgischen_atemweg_wert_value"
+      }
+    },
+    "a_eintrag_weitere_a_auffaelligkeit": {
+      "title": "Weitere A-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "a_eintrag_weitere_a_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
       }
     }
   }

@@ -1,0 +1,7 @@
+# Gemeinsam verwendete Editoren
+N: gemeinsam
+
+E freitext: text label="Freitext" placeholder="Ergänzung"
+E seite: choice label="Seite" => links|- / rechts|-
+E ereigniszeitpunkt: datetime label="Datum und Zeit" default=now
+E schweregrad: choice label="Schweregrad" => leicht|a / mittel|a / schwer|a

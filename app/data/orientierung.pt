@@ -1,0 +1,10 @@
+# Orientierung
+N: orientierung
+I: gemeinsam
+
+G @root @inactive: Orientierung|n
+  P: Orientierung zur Zeit => zur Zeit orientiert|n* / zur Zeit nicht orientiert|a
+  P: Orientierung zum Ort => zum Ort orientiert|n* / zum Ort nicht orientiert|a
+  P: Orientierung zur Person => zur Person orientiert|n* / zur Person nicht orientiert|a
+  P: Orientierung zur Situation => zur Situation orientiert|n* / zur Situation nicht orientiert|a
+  P: Weitere Auffälligkeit der Orientierung => {:freitext*:}|a
