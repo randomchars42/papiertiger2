@@ -1,0 +1,2033 @@
+{
+  "system": "urn:oid:1.2.276.0.76.5.439",
+  "version": "3.0",
+  "language": "de-DE",
+  "originalDate": "2015-04",
+  "translationDate": "2016-02",
+  "license": "German translation: CC BY-SA 4.0; English original: CC BY-ND 2.5 CA",
+  "sources": [
+    {
+      "label": "Validierte deutsche Übersetzung (Brammen et al., Supplement 3)",
+      "url": "https://links.lww.com/EJEM/A156"
+    },
+    {
+      "label": "HL7 Deutschland Terminologie-Snapshot, OID 1.2.276.0.76.11.61",
+      "url": "https://wiki.hl7.de/index.php?title=1.2.276.0.76.11.61%2Fstatic-2016-02-21T000000"
+    }
+  ],
+  "categories": [
+    {
+      "code": "CV",
+      "label": "Kardiovaskulär",
+      "tags": [
+        "Herz",
+        "Kreislauf",
+        "Gefäß",
+        "Thorax",
+        "Brust",
+        "Durchblutung",
+        "Puls"
+      ]
+    },
+    {
+      "code": "HNE",
+      "label": "HNO (Ohren)",
+      "tags": [
+        "Ohr",
+        "Hören",
+        "Gehör",
+        "HNO"
+      ]
+    },
+    {
+      "code": "HNM",
+      "label": "HNO (Mund, Rachen, Hals)",
+      "tags": [
+        "Mund",
+        "Rachen",
+        "Hals",
+        "Gesicht",
+        "Zahn",
+        "Schlucken",
+        "HNO"
+      ]
+    },
+    {
+      "code": "HNN",
+      "label": "HNO (Nase)",
+      "tags": [
+        "Nase",
+        "Schnupfen",
+        "obere Atemwege",
+        "HNO"
+      ]
+    },
+    {
+      "code": "EV",
+      "label": "Umweltbedingt",
+      "tags": [
+        "Umwelt",
+        "Kälte",
+        "Chemikalie",
+        "Strom",
+        "Wasser",
+        "Inhalation"
+      ]
+    },
+    {
+      "code": "GI",
+      "label": "Gastrointestinal",
+      "tags": [
+        "Bauch",
+        "Magen",
+        "Darm",
+        "Verdauung",
+        "Erbrechen",
+        "Stuhl",
+        "Rektum"
+      ]
+    },
+    {
+      "code": "GU",
+      "label": "Urogenital",
+      "tags": [
+        "Niere",
+        "Harn",
+        "Urin",
+        "Genital",
+        "Flanke",
+        "Urologie"
+      ]
+    },
+    {
+      "code": "MH",
+      "label": "Psychische Verfassung",
+      "tags": [
+        "Psychisch",
+        "Psychiatrie",
+        "Suizid",
+        "Angst",
+        "Verhalten",
+        "Krise"
+      ]
+    },
+    {
+      "code": "NC",
+      "label": "Neurologisch",
+      "tags": [
+        "Neurologie",
+        "Gehirn",
+        "Kopf",
+        "Bewusstsein",
+        "Schlaganfall",
+        "Nerv"
+      ]
+    },
+    {
+      "code": "OGY",
+      "label": "Geburtshilfe/Gynäkologie",
+      "tags": [
+        "Gynäkologie",
+        "Frauenheilkunde",
+        "Geburtshilfe",
+        "Schwangerschaft",
+        "Vagina",
+        "Menstruation"
+      ]
+    },
+    {
+      "code": "EC",
+      "label": "Augenheilkunde",
+      "tags": [
+        "Auge",
+        "Sehen",
+        "Augenheilkunde",
+        "Ophthalmologie"
+      ]
+    },
+    {
+      "code": "OC",
+      "label": "Orthopädisch/Unfallchirurgisch",
+      "tags": [
+        "Orthopädie",
+        "Unfallchirurgie",
+        "Knochen",
+        "Gelenk",
+        "Arm",
+        "Bein",
+        "Rücken"
+      ]
+    },
+    {
+      "code": "RC",
+      "label": "Respiratorisch",
+      "tags": [
+        "Lunge",
+        "Atmung",
+        "Luft",
+        "Atemweg",
+        "Allergie",
+        "Husten"
+      ]
+    },
+    {
+      "code": "SK",
+      "label": "Haut",
+      "tags": [
+        "Haut",
+        "Wunde",
+        "Stich",
+        "Biss",
+        "Verbrennung",
+        "Schwellung"
+      ]
+    },
+    {
+      "code": "SA",
+      "label": "Substanzmissbrauch",
+      "tags": [
+        "Drogen",
+        "Alkohol",
+        "Medikament",
+        "Gift",
+        "Sucht",
+        "Intoxikation",
+        "Entzug"
+      ]
+    },
+    {
+      "code": "TR",
+      "label": "Trauma",
+      "tags": [
+        "Trauma",
+        "Unfall",
+        "Gewalt",
+        "Brustkorb",
+        "Bauch",
+        "Verletzung"
+      ]
+    },
+    {
+      "code": "MC",
+      "label": "Allgemeine und sonstige Beschwerden",
+      "tags": [
+        "Allgemein",
+        "Sonstiges",
+        "Labor",
+        "Behandlung",
+        "Nachsorge",
+        "Kind",
+        "Fieber",
+        "Blutzucker"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "code": "001",
+      "category": "CV",
+      "label": "Herzstillstand (nicht traumatisch)",
+      "english": "Cardiac arrest (non-traumatic)",
+      "tags": [
+        "Reanimation",
+        "Kreislaufstillstand",
+        "Asystolie",
+        "CPR"
+      ]
+    },
+    {
+      "code": "002",
+      "category": "CV",
+      "label": "Herzstillstand (traumatisch)",
+      "english": "Cardiac arrest (traumatic)",
+      "tags": [
+        "Reanimation",
+        "Unfall",
+        "Polytrauma"
+      ]
+    },
+    {
+      "code": "003",
+      "category": "CV",
+      "label": "Brustschmerz (kardial)",
+      "english": "Chest pain—cardiac features",
+      "tags": [
+        "Herzinfarkt",
+        "Angina pectoris",
+        "Thoraxschmerz",
+        "ACS"
+      ]
+    },
+    {
+      "code": "004",
+      "category": "CV",
+      "label": "Brustschmerz (nicht kardial)",
+      "english": "Chest pain—non-cardiac features",
+      "tags": [
+        "Thoraxschmerz",
+        "Brustschmerzen",
+        "Rippe",
+        "muskulär"
+      ]
+    },
+    {
+      "code": "005",
+      "category": "CV",
+      "label": "Palpitationen/unregelmäßiger Herzschlag",
+      "english": "Palpitations/irregular heart beat",
+      "tags": [
+        "Herzrasen",
+        "Herzstolpern",
+        "Arrhythmie",
+        "Tachykardie"
+      ]
+    },
+    {
+      "code": "006",
+      "category": "CV",
+      "label": "Hypertonie",
+      "english": "Hypertension",
+      "tags": [
+        "Bluthochdruck",
+        "hoher Blutdruck"
+      ]
+    },
+    {
+      "code": "007",
+      "category": "CV",
+      "label": "Allgemeine Schwäche",
+      "english": "General weakness",
+      "tags": [
+        "Kraftlosigkeit",
+        "Müdigkeit",
+        "Erschöpfung",
+        "AZ-Minderung"
+      ]
+    },
+    {
+      "code": "008",
+      "category": "CV",
+      "label": "Synkope/Präsynkope",
+      "english": "Syncope/pre-syncope",
+      "tags": [
+        "Ohnmacht",
+        "Kollaps",
+        "Bewusstlosigkeit",
+        "Kreislaufkollaps"
+      ]
+    },
+    {
+      "code": "009",
+      "category": "CV",
+      "label": "Ödem, generalisiert",
+      "english": "Edema, generalized",
+      "tags": [
+        "Wassereinlagerung",
+        "Anasarka"
+      ]
+    },
+    {
+      "code": "010",
+      "category": "CV",
+      "label": "Beinschwellung/Ödem",
+      "english": "Leg swelling/edema",
+      "tags": [
+        "dickes Bein",
+        "Beinödem",
+        "Thrombose",
+        "TVT"
+      ]
+    },
+    {
+      "code": "011",
+      "category": "CV",
+      "label": "Kühle, pulslose Extremität",
+      "english": "Cool pulseless limb",
+      "tags": [
+        "Ischämie",
+        "Durchblutungsstörung",
+        "Arterienverschluss"
+      ]
+    },
+    {
+      "code": "012",
+      "category": "CV",
+      "label": "Eine Extremität gerötet, überwärmt",
+      "english": "Unilateral reddened hot limb",
+      "tags": [
+        "heißes Bein",
+        "Erysipel",
+        "Thrombose",
+        "Phlebitis"
+      ]
+    },
+    {
+      "code": "051",
+      "category": "HNE",
+      "label": "Ohrenschmerzen",
+      "english": "Earache",
+      "tags": [
+        "Ohrweh",
+        "Otalgie"
+      ]
+    },
+    {
+      "code": "052",
+      "category": "HNE",
+      "label": "Fremdkörper im Ohr",
+      "english": "Foreign body, ear",
+      "tags": [
+        "Gegenstand im Ohr"
+      ]
+    },
+    {
+      "code": "053",
+      "category": "HNE",
+      "label": "Hörverlust",
+      "english": "Loss of hearing",
+      "tags": [
+        "Schwerhörigkeit",
+        "Taubheit"
+      ]
+    },
+    {
+      "code": "054",
+      "category": "HNE",
+      "label": "Tinnitus",
+      "english": "Tinnitus",
+      "tags": [
+        "Ohrgeräusch",
+        "Ohrensausen"
+      ]
+    },
+    {
+      "code": "055",
+      "category": "HNE",
+      "label": "Ausfluss aus dem Ohr",
+      "english": "Discharge, ear",
+      "tags": [
+        "Otorrhoe",
+        "Eiter",
+        "Sekret"
+      ]
+    },
+    {
+      "code": "056",
+      "category": "HNE",
+      "label": "Ohrverletzung",
+      "english": "Ear injury",
+      "tags": [
+        "Trauma Ohr"
+      ]
+    },
+    {
+      "code": "101",
+      "category": "HNM",
+      "label": "Zahn-/Zahnfleischprobleme",
+      "english": "Dental/gum problem",
+      "tags": [
+        "Zahnschmerz",
+        "Zahnfleisch",
+        "Gingiva"
+      ]
+    },
+    {
+      "code": "102",
+      "category": "HNM",
+      "label": "Trauma Gesicht",
+      "english": "Facial trauma",
+      "tags": [
+        "Gesichtsverletzung",
+        "Kiefer",
+        "Trauma"
+      ]
+    },
+    {
+      "code": "103",
+      "category": "HNM",
+      "label": "Halsschmerzen (wunder Rachen)",
+      "english": "Sore throat",
+      "tags": [
+        "Halsweh",
+        "Rachenentzündung",
+        "Pharyngitis"
+      ]
+    },
+    {
+      "code": "104",
+      "category": "HNM",
+      "label": "Halsschwellung/-schmerzen",
+      "english": "Neck swelling/pain",
+      "tags": [
+        "Halsweh",
+        "Lymphknoten",
+        "Schwellung"
+      ]
+    },
+    {
+      "code": "105",
+      "category": "HNM",
+      "label": "Trauma Hals",
+      "english": "Neck trauma",
+      "tags": [
+        "Halsverletzung"
+      ]
+    },
+    {
+      "code": "106",
+      "category": "HNM",
+      "label": "Schluckbeschwerden/Dysphagie",
+      "english": "Difficulty swallowing/dysphagia",
+      "tags": [
+        "Schluckstörung",
+        "Odynophagie"
+      ]
+    },
+    {
+      "code": "107",
+      "category": "HNM",
+      "label": "Schmerzen im Gesicht (nicht traumatisch, nicht dental)",
+      "english": "Facial pain (non-traumatic/non-dental)",
+      "tags": [
+        "Gesichtsschmerz",
+        "Trigeminusneuralgie"
+      ]
+    },
+    {
+      "code": "151",
+      "category": "HNN",
+      "label": "Nasenbluten",
+      "english": "Epistaxis",
+      "tags": [
+        "Epistaxis"
+      ]
+    },
+    {
+      "code": "152",
+      "category": "HNN",
+      "label": "Verstopfte Nase/Heuschnupfen",
+      "english": "Nasal congestion/hay",
+      "tags": [
+        "Rhinitis",
+        "Allergie",
+        "Schnupfen"
+      ]
+    },
+    {
+      "code": "153",
+      "category": "HNN",
+      "label": "Fremdkörper in der Nase",
+      "english": "Foreign body, nose",
+      "tags": [
+        "Gegenstand in Nase"
+      ]
+    },
+    {
+      "code": "154",
+      "category": "HNN",
+      "label": "Beschwerden eines Infektes der oberen Luftwege",
+      "english": "URTI complaints",
+      "tags": [
+        "Erkältung",
+        "Infekt",
+        "URTI"
+      ]
+    },
+    {
+      "code": "155",
+      "category": "HNN",
+      "label": "Trauma Nase",
+      "english": "Nasal trauma",
+      "tags": [
+        "Nasenverletzung",
+        "Nasenbeinfraktur"
+      ]
+    },
+    {
+      "code": "201",
+      "category": "EV",
+      "label": "Erfrierung/Kälteverletzung",
+      "english": "Frostbite/cold injury",
+      "tags": [
+        "Frostbeule",
+        "Frostbite"
+      ]
+    },
+    {
+      "code": "202",
+      "category": "EV",
+      "label": "Schädliche Inhalation",
+      "english": "Noxious inhalation",
+      "tags": [
+        "Rauchgas",
+        "Kohlenmonoxid",
+        "CO-Vergiftung"
+      ]
+    },
+    {
+      "code": "203",
+      "category": "EV",
+      "label": "Stromunfall",
+      "english": "Electrical injury",
+      "tags": [
+        "Elektroschock",
+        "Stromschlag"
+      ]
+    },
+    {
+      "code": "204",
+      "category": "EV",
+      "label": "Exposition gegenüber Chemikalien",
+      "english": "Chemical exposure",
+      "tags": [
+        "Verätzung",
+        "Gefahrstoff",
+        "Gift"
+      ]
+    },
+    {
+      "code": "205",
+      "category": "EV",
+      "label": "Unterkühlung",
+      "english": "Hypothermia",
+      "tags": [
+        "Hypothermie",
+        "Frieren"
+      ]
+    },
+    {
+      "code": "206",
+      "category": "EV",
+      "label": "Beinahe-Ertrinken",
+      "english": "Near drowning",
+      "tags": [
+        "Ertrinken",
+        "Aspiration"
+      ]
+    },
+    {
+      "code": "251",
+      "category": "GI",
+      "label": "Bauchschmerzen",
+      "english": "Abdominal pain",
+      "tags": [
+        "akutes Abdomen",
+        "Magenschmerz",
+        "Darm",
+        "Kolik"
+      ]
+    },
+    {
+      "code": "252",
+      "category": "GI",
+      "label": "Appetitlosigkeit",
+      "english": "Anorexia",
+      "tags": [
+        "Anorexie",
+        "kein Appetit"
+      ]
+    },
+    {
+      "code": "253",
+      "category": "GI",
+      "label": "Verstopfung",
+      "english": "Constipation",
+      "tags": [
+        "Obstipation",
+        "kein Stuhl"
+      ]
+    },
+    {
+      "code": "254",
+      "category": "GI",
+      "label": "Durchfall",
+      "english": "Diarrhea",
+      "tags": [
+        "Diarrhoe",
+        "flüssiger Stuhl"
+      ]
+    },
+    {
+      "code": "255",
+      "category": "GI",
+      "label": "Fremdkörper im Rektum",
+      "english": "Foreign body in rectum",
+      "tags": [
+        "Gegenstand im Enddarm"
+      ]
+    },
+    {
+      "code": "256",
+      "category": "GI",
+      "label": "Leistenschmerzen/-schwellung",
+      "english": "Groin pain/mass",
+      "tags": [
+        "Leiste",
+        "Hernie",
+        "Leistenbruch"
+      ]
+    },
+    {
+      "code": "257",
+      "category": "GI",
+      "label": "Übelkeit und/oder Erbrechen",
+      "english": "Nausea and/or vomiting",
+      "tags": [
+        "Nausea",
+        "Emesis",
+        "Gastroenteritis"
+      ]
+    },
+    {
+      "code": "258",
+      "category": "GI",
+      "label": "Rektale/perineale Schmerzen",
+      "english": "Rectal/perineal pain",
+      "tags": [
+        "After",
+        "Damm",
+        "Anus"
+      ]
+    },
+    {
+      "code": "259",
+      "category": "GI",
+      "label": "Bluterbrechen",
+      "english": "Vomiting blood",
+      "tags": [
+        "Hämatemesis",
+        "blutig erbrechen"
+      ]
+    },
+    {
+      "code": "260",
+      "category": "GI",
+      "label": "Peranaler Blutabgang/Teerstuhl",
+      "english": "Blood per anus/melena",
+      "tags": [
+        "Hämatochezie",
+        "Meläna",
+        "Blut im Stuhl"
+      ]
+    },
+    {
+      "code": "261",
+      "category": "GI",
+      "label": "Ikterus",
+      "english": "Jaundice",
+      "tags": [
+        "Gelbsucht",
+        "Bilirubin"
+      ]
+    },
+    {
+      "code": "262",
+      "category": "GI",
+      "label": "Schluckauf",
+      "english": "Hiccoughs",
+      "tags": [
+        "Singultus"
+      ]
+    },
+    {
+      "code": "263",
+      "category": "GI",
+      "label": "Abdominelle Raumforderung/gespanntes Abdomen",
+      "english": "Abdominal mass/distention",
+      "tags": [
+        "aufgeblähter Bauch",
+        "Distension",
+        "Tumor"
+      ]
+    },
+    {
+      "code": "264",
+      "category": "GI",
+      "label": "Trauma anal/rektal",
+      "english": "Anal/rectal trauma",
+      "tags": [
+        "Afterverletzung",
+        "Rektumverletzung"
+      ]
+    },
+    {
+      "code": "265",
+      "category": "GI",
+      "label": "Fremdkörper oral/ösophageal",
+      "english": "Oral/esophageal foreign body",
+      "tags": [
+        "verschluckt",
+        "Speisebolus",
+        "steckt fest"
+      ]
+    },
+    {
+      "code": "266",
+      "category": "GI",
+      "label": "Trinkstörung des Neugeborenen",
+      "english": "Feeding difficulties in newborn",
+      "tags": [
+        "trinkt nicht",
+        "Säugling",
+        "Baby"
+      ]
+    },
+    {
+      "code": "267",
+      "category": "GI",
+      "label": "Neugeborenenikterus",
+      "english": "Neonatal jaundice",
+      "tags": [
+        "Gelbsucht",
+        "Neugeborenes"
+      ]
+    },
+    {
+      "code": "301",
+      "category": "GU",
+      "label": "Flankenschmerz",
+      "english": "Flank pain",
+      "tags": [
+        "Niere",
+        "Nierenkolik",
+        "Seitenschmerz"
+      ]
+    },
+    {
+      "code": "302",
+      "category": "GU",
+      "label": "Hämaturie",
+      "english": "Hematuria",
+      "tags": [
+        "Blut im Urin"
+      ]
+    },
+    {
+      "code": "303",
+      "category": "GU",
+      "label": "Genitaler Ausfluss/Läsion",
+      "english": "Genital discharge/lesion",
+      "tags": [
+        "Geschlechtskrankheit",
+        "STI",
+        "Genitalinfektion"
+      ]
+    },
+    {
+      "code": "304",
+      "category": "GU",
+      "label": "Penisschwellung",
+      "english": "Penile swelling",
+      "tags": [
+        "Penis",
+        "Vorhaut"
+      ]
+    },
+    {
+      "code": "305",
+      "category": "GU",
+      "label": "Skrotale Schmerzen und/oder Schwellung",
+      "english": "Scrotal pain and/or swelling",
+      "tags": [
+        "Hoden",
+        "Hodenschmerz",
+        "Skrotum"
+      ]
+    },
+    {
+      "code": "306",
+      "category": "GU",
+      "label": "Harnverhalt",
+      "english": "Urinary retention",
+      "tags": [
+        "kann nicht wasserlassen",
+        "Blase voll"
+      ]
+    },
+    {
+      "code": "307",
+      "category": "GU",
+      "label": "Beschwerden eines Harnwegsinfektes",
+      "english": "UTI complaints",
+      "tags": [
+        "HWI",
+        "Blasenentzündung",
+        "Zystitis",
+        "Dysurie",
+        "Brennen beim Wasserlassen"
+      ]
+    },
+    {
+      "code": "308",
+      "category": "GU",
+      "label": "Oligurie",
+      "english": "Oliguria",
+      "tags": [
+        "wenig Urin",
+        "Nierenversagen"
+      ]
+    },
+    {
+      "code": "309",
+      "category": "GU",
+      "label": "Polyurie",
+      "english": "Polyuria",
+      "tags": [
+        "viel Urin",
+        "häufiges Wasserlassen"
+      ]
+    },
+    {
+      "code": "310",
+      "category": "GU",
+      "label": "Trauma genital",
+      "english": "Genital trauma",
+      "tags": [
+        "Genitalverletzung"
+      ]
+    },
+    {
+      "code": "351",
+      "category": "MH",
+      "label": "Depression/Suizidalität/absichtliche Selbstschädigung",
+      "english": "Depression/suicidal/deliberate self-harm",
+      "tags": [
+        "Selbstverletzung",
+        "Suizid",
+        "Selbsttötung"
+      ]
+    },
+    {
+      "code": "352",
+      "category": "MH",
+      "label": "Angst/situationsbezogene Krise",
+      "english": "Anxiety/situational crisis",
+      "tags": [
+        "Panikattacke",
+        "psychische Krise"
+      ]
+    },
+    {
+      "code": "353",
+      "category": "MH",
+      "label": "Halluzinationen/Wahnvorstellungen",
+      "english": "Hallucinations/delusions",
+      "tags": [
+        "Psychose",
+        "Stimmen hören"
+      ]
+    },
+    {
+      "code": "354",
+      "category": "MH",
+      "label": "Schlafstörung",
+      "english": "Insomnia",
+      "tags": [
+        "Insomnie",
+        "kann nicht schlafen"
+      ]
+    },
+    {
+      "code": "355",
+      "category": "MH",
+      "label": "Gewalttätiges Verhalten/Fremdgefährdung",
+      "english": "Violent/homicidal behaviour",
+      "tags": [
+        "Aggression",
+        "aggressiv",
+        "homicidal"
+      ]
+    },
+    {
+      "code": "356",
+      "category": "MH",
+      "label": "Soziales Problem",
+      "english": "Social problem",
+      "tags": [
+        "Obdachlosigkeit",
+        "Pflegeproblem",
+        "Versorgungsproblem"
+      ]
+    },
+    {
+      "code": "358",
+      "category": "MH",
+      "label": "Sonderbares Verhalten",
+      "english": "Bizarre behaviour",
+      "tags": [
+        "bizarr",
+        "auffälliges Verhalten"
+      ]
+    },
+    {
+      "code": "359",
+      "category": "MH",
+      "label": "Sorge um das Wohlergehen des Patienten",
+      "english": "Concern for patient’s welfare",
+      "tags": [
+        "Kindeswohl",
+        "Misshandlung",
+        "Vernachlässigung"
+      ]
+    },
+    {
+      "code": "360",
+      "category": "MH",
+      "label": "Kindliche Verhaltensauffälligkeit",
+      "english": "Pediatric disruptive behaviour",
+      "tags": [
+        "Kind aggressiv",
+        "Verhaltensproblem"
+      ]
+    },
+    {
+      "code": "401",
+      "category": "NC",
+      "label": "Veränderter Bewusstseinszustand",
+      "english": "Altered level of consciousness",
+      "tags": [
+        "Bewusstlosigkeit",
+        "Somnolenz",
+        "Koma"
+      ]
+    },
+    {
+      "code": "402",
+      "category": "NC",
+      "label": "Verwirrtheit",
+      "english": "Confusion",
+      "tags": [
+        "desorientiert",
+        "Delir",
+        "Demenz"
+      ]
+    },
+    {
+      "code": "403",
+      "category": "NC",
+      "label": "Schwindel",
+      "english": "Vertigo",
+      "tags": [
+        "Vertigo",
+        "Drehschwindel",
+        "Benommenheit"
+      ]
+    },
+    {
+      "code": "404",
+      "category": "NC",
+      "label": "Kopfschmerz",
+      "english": "Headache",
+      "tags": [
+        "Migräne",
+        "Cephalgie"
+      ]
+    },
+    {
+      "code": "405",
+      "category": "NC",
+      "label": "Krampfanfall",
+      "english": "Seizure",
+      "tags": [
+        "Epilepsie",
+        "Anfall",
+        "Konvulsion"
+      ]
+    },
+    {
+      "code": "406",
+      "category": "NC",
+      "label": "Gangstörung/Ataxie",
+      "english": "Gait disturbance/ataxia",
+      "tags": [
+        "unsicherer Gang",
+        "Gleichgewicht",
+        "Ataxie"
+      ]
+    },
+    {
+      "code": "407",
+      "category": "NC",
+      "label": "Kopfverletzung",
+      "english": "Head injury",
+      "tags": [
+        "SHT",
+        "Schädel-Hirn-Trauma"
+      ]
+    },
+    {
+      "code": "408",
+      "category": "NC",
+      "label": "Zittern",
+      "english": "Tremor",
+      "tags": [
+        "Tremor",
+        "Schütteln"
+      ]
+    },
+    {
+      "code": "409",
+      "category": "NC",
+      "label": "Schwäche in den Extremitäten/Symptome eines Schlaganfalls oder TIA",
+      "english": "Extremity weakness/symptoms of CVA or TIA",
+      "tags": [
+        "Stroke",
+        "Schlaganfall",
+        "Lähmung",
+        "Parese",
+        "TIA",
+        "FAST"
+      ]
+    },
+    {
+      "code": "410",
+      "category": "NC",
+      "label": "Sensibilitätsstörung/Parästhesie",
+      "english": "Sensory loss/paresthesia",
+      "tags": [
+        "Taubheit",
+        "Kribbeln",
+        "Hypästhesie"
+      ]
+    },
+    {
+      "code": "411",
+      "category": "NC",
+      "label": "Schlaffes Kind",
+      "english": "Floppy child",
+      "tags": [
+        "hypotones Kind",
+        "Säugling"
+      ]
+    },
+    {
+      "code": "451",
+      "category": "OGY",
+      "label": "Menstruationsbeschwerden",
+      "english": "Menstrual problems",
+      "tags": [
+        "Periode",
+        "Regelblutung",
+        "Dysmenorrhoe"
+      ]
+    },
+    {
+      "code": "452",
+      "category": "OGY",
+      "label": "Fremdkörper in der Vagina",
+      "english": "Foreign body, vagina",
+      "tags": [
+        "Gegenstand in Vagina"
+      ]
+    },
+    {
+      "code": "453",
+      "category": "OGY",
+      "label": "Vaginaler Ausfluss",
+      "english": "Vaginal discharge",
+      "tags": [
+        "Fluor vaginalis",
+        "Genitalinfektion"
+      ]
+    },
+    {
+      "code": "454",
+      "category": "OGY",
+      "label": "Sexueller Übergriff",
+      "english": "Sexual assault",
+      "tags": [
+        "Vergewaltigung",
+        "Missbrauch"
+      ]
+    },
+    {
+      "code": "455",
+      "category": "OGY",
+      "label": "Vaginale Blutung",
+      "english": "Vaginal bleed",
+      "tags": [
+        "gynäkologische Blutung",
+        "Blutung Scheide"
+      ]
+    },
+    {
+      "code": "456",
+      "category": "OGY",
+      "label": "Schamlippenschwellung",
+      "english": "Labial swelling",
+      "tags": [
+        "Vulva",
+        "Labien"
+      ]
+    },
+    {
+      "code": "457",
+      "category": "OGY",
+      "label": "Schwangerschaftsprobleme ≤ 20. SSW",
+      "english": "Pregnancy issues, <20 weeks",
+      "tags": [
+        "Frühschwangerschaft",
+        "Fehlgeburt",
+        "Eileiterschwangerschaft"
+      ]
+    },
+    {
+      "code": "458",
+      "category": "OGY",
+      "label": "Schwangerschaftsprobleme > 20. SSW",
+      "english": "Pregnancy issues, >20 weeks",
+      "tags": [
+        "Spätschwangerschaft",
+        "Wehen",
+        "Geburt",
+        "Entbindung"
+      ]
+    },
+    {
+      "code": "460",
+      "category": "OGY",
+      "label": "Vaginale Schmerzen/Schmerzen beim Geschlechtsverkehr",
+      "english": "Vaginal pain/dyspareunia",
+      "tags": [
+        "Dyspareunie",
+        "Schmerzen beim Sex"
+      ]
+    },
+    {
+      "code": "502",
+      "category": "EC",
+      "label": "Exposition des Auges gegenüber Chemikalien",
+      "english": "Chemical exposure, eye",
+      "tags": [
+        "Verätzung Auge",
+        "Chemikalie im Auge"
+      ]
+    },
+    {
+      "code": "503",
+      "category": "EC",
+      "label": "Fremdkörper im Auge",
+      "english": "Foreign body, eye",
+      "tags": [
+        "Gegenstand im Auge"
+      ]
+    },
+    {
+      "code": "504",
+      "category": "EC",
+      "label": "Sehstörung",
+      "english": "Visual disturbance",
+      "tags": [
+        "verschwommen sehen",
+        "Blindheit",
+        "Sehverlust"
+      ]
+    },
+    {
+      "code": "505",
+      "category": "EC",
+      "label": "Augenschmerzen",
+      "english": "Eye pain",
+      "tags": [
+        "Okulärer Schmerz"
+      ]
+    },
+    {
+      "code": "506",
+      "category": "EC",
+      "label": "Rote Augen, Ausfluss aus dem Auge",
+      "english": "Red eye/discharge from eye",
+      "tags": [
+        "Konjunktivitis",
+        "Bindehautentzündung"
+      ]
+    },
+    {
+      "code": "507",
+      "category": "EC",
+      "label": "Lichtscheu",
+      "english": "Photophobia",
+      "tags": [
+        "Photophobie"
+      ]
+    },
+    {
+      "code": "508",
+      "category": "EC",
+      "label": "Doppelbilder",
+      "english": "Diplopia",
+      "tags": [
+        "Diplopie"
+      ]
+    },
+    {
+      "code": "509",
+      "category": "EC",
+      "label": "Periorbitale Schwellung",
+      "english": "Periorbital swelling",
+      "tags": [
+        "Lid",
+        "Augenschwellung"
+      ]
+    },
+    {
+      "code": "510",
+      "category": "EC",
+      "label": "Trauma Auge",
+      "english": "Eye trauma",
+      "tags": [
+        "Augenverletzung"
+      ]
+    },
+    {
+      "code": "511",
+      "category": "EC",
+      "label": "Kontrolluntersuchung der Augen",
+      "english": "Re-check eye",
+      "tags": [
+        "Augenkontrolle",
+        "Wiedervorstellung"
+      ]
+    },
+    {
+      "code": "551",
+      "category": "OC",
+      "label": "Rückenschmerzen",
+      "english": "Back pain",
+      "tags": [
+        "Lumbago",
+        "Kreuzschmerz",
+        "Bandscheibe"
+      ]
+    },
+    {
+      "code": "552",
+      "category": "OC",
+      "label": "Traumatische Rücken-/Wirbelsäulenverletzung",
+      "english": "Traumatic back/spine injury",
+      "tags": [
+        "Wirbelsäule",
+        "Rückenunfall"
+      ]
+    },
+    {
+      "code": "553",
+      "category": "OC",
+      "label": "Amputation",
+      "english": "Amputation",
+      "tags": [
+        "abgetrennte Gliedmaße"
+      ]
+    },
+    {
+      "code": "554",
+      "category": "OC",
+      "label": "Schmerzen obere Extremität",
+      "english": "Upper extremity pain",
+      "tags": [
+        "Arm",
+        "Schulter",
+        "Hand",
+        "Ellenbogen"
+      ]
+    },
+    {
+      "code": "555",
+      "category": "OC",
+      "label": "Schmerzen untere Extremität",
+      "english": "Lower extremity pain",
+      "tags": [
+        "Bein",
+        "Hüfte",
+        "Knie",
+        "Fuß"
+      ]
+    },
+    {
+      "code": "556",
+      "category": "OC",
+      "label": "Verletzung obere Extremität",
+      "english": "Upper extremity injury",
+      "tags": [
+        "Armverletzung",
+        "Schulter",
+        "Hand",
+        "Ellenbogen"
+      ]
+    },
+    {
+      "code": "557",
+      "category": "OC",
+      "label": "Verletzung untere Extremität",
+      "english": "Lower extremity injury",
+      "tags": [
+        "Beinverletzung",
+        "Hüfte",
+        "Knie",
+        "Fuß"
+      ]
+    },
+    {
+      "code": "558",
+      "category": "OC",
+      "label": "Gelenkschwellung",
+      "english": "Joint(s) swelling",
+      "tags": [
+        "Gelenkerguss",
+        "Arthritis"
+      ]
+    },
+    {
+      "code": "559",
+      "category": "OC",
+      "label": "Kindliche Gangstörung/Schmerzen beim Gehen",
+      "english": "Pediatric gait disorder/painful walk",
+      "tags": [
+        "Kind hinkt",
+        "Lahmheit"
+      ]
+    },
+    {
+      "code": "651",
+      "category": "RC",
+      "label": "Luftnot",
+      "english": "Shortness of breath",
+      "tags": [
+        "Dyspnoe",
+        "Atemnot",
+        "Kurzatmigkeit"
+      ]
+    },
+    {
+      "code": "652",
+      "category": "RC",
+      "label": "Atemstillstand",
+      "english": "Respiratory arrest",
+      "tags": [
+        "Reanimation",
+        "Apnoe"
+      ]
+    },
+    {
+      "code": "653",
+      "category": "RC",
+      "label": "Husten/Verschleimung",
+      "english": "Cough/congestion",
+      "tags": [
+        "Bronchitis",
+        "Schleim",
+        "Erkältung"
+      ]
+    },
+    {
+      "code": "654",
+      "category": "RC",
+      "label": "Hyperventilation",
+      "english": "Hyperventilation",
+      "tags": [
+        "schnelle Atmung",
+        "Panik"
+      ]
+    },
+    {
+      "code": "655",
+      "category": "RC",
+      "label": "Bluthusten",
+      "english": "Hemoptysis",
+      "tags": [
+        "Hämoptyse",
+        "Blut husten"
+      ]
+    },
+    {
+      "code": "656",
+      "category": "RC",
+      "label": "Fremdkörper in den Atemwegen",
+      "english": "Respiratory foreign body",
+      "tags": [
+        "Aspiration",
+        "verschluckt"
+      ]
+    },
+    {
+      "code": "657",
+      "category": "RC",
+      "label": "Allergische Reaktion",
+      "english": "Allergic reaction",
+      "tags": [
+        "Anaphylaxie",
+        "Allergie",
+        "Schock"
+      ]
+    },
+    {
+      "code": "658",
+      "category": "RC",
+      "label": "Stridor",
+      "english": "Stridor",
+      "tags": [
+        "pfeifende Einatmung",
+        "Pseudokrupp"
+      ]
+    },
+    {
+      "code": "659",
+      "category": "RC",
+      "label": "Giemen ohne weitere Beschwerden",
+      "english": "Wheezing—no other complaints",
+      "tags": [
+        "Wheezing",
+        "Asthma",
+        "pfeifende Atmung"
+      ]
+    },
+    {
+      "code": "660",
+      "category": "RC",
+      "label": "Apnoeanfälle bei Säuglingen",
+      "english": "Apneic spells in infants",
+      "tags": [
+        "Atemaussetzer",
+        "ALTE",
+        "BRUE",
+        "Säugling"
+      ]
+    },
+    {
+      "code": "661",
+      "category": "RC",
+      "label": "Grippeähnliche Erkrankung",
+      "english": "Flu-like illness",
+      "tags": [
+        "Influenza",
+        "Grippe"
+      ]
+    },
+    {
+      "code": "701",
+      "category": "SK",
+      "label": "Biss",
+      "english": "Bite",
+      "tags": [
+        "Tierbiss",
+        "Hundebiss",
+        "Katzenbiss",
+        "Menschenbiss"
+      ]
+    },
+    {
+      "code": "702",
+      "category": "SK",
+      "label": "Insektenstich",
+      "english": "Sting",
+      "tags": [
+        "Wespenstich",
+        "Bienenstich",
+        "Mücke"
+      ]
+    },
+    {
+      "code": "703",
+      "category": "SK",
+      "label": "Abschürfung",
+      "english": "Abrasion",
+      "tags": [
+        "Schürfwunde"
+      ]
+    },
+    {
+      "code": "704",
+      "category": "SK",
+      "label": "Riss-/Quetsch-/Schnitt-/Stichwunde",
+      "english": "Laceration/puncture",
+      "tags": [
+        "Platzwunde",
+        "Schnittwunde",
+        "Stichwunde",
+        "Quetschwunde",
+        "Lazeration"
+      ]
+    },
+    {
+      "code": "705",
+      "category": "SK",
+      "label": "Verbrennung",
+      "english": "Burn",
+      "tags": [
+        "Verbrühung",
+        "Brandwunde"
+      ]
+    },
+    {
+      "code": "706",
+      "category": "SK",
+      "label": "Kontakt mit Blut oder Körperflüssigkeiten",
+      "english": "Blood and body fluid exposure",
+      "tags": [
+        "Nadelstich",
+        "HIV",
+        "Hepatitis",
+        "Körperflüssigkeit"
+      ]
+    },
+    {
+      "code": "707",
+      "category": "SK",
+      "label": "Juckreiz",
+      "english": "Pruritus",
+      "tags": [
+        "Pruritus"
+      ]
+    },
+    {
+      "code": "708",
+      "category": "SK",
+      "label": "Hautausschlag",
+      "english": "Rash",
+      "tags": [
+        "Exanthem",
+        "Urtikaria",
+        "Nesselsucht"
+      ]
+    },
+    {
+      "code": "709",
+      "category": "SK",
+      "label": "Lokalisierte Schwellung/Rötung",
+      "english": "Localized swelling/redness",
+      "tags": [
+        "Abszess",
+        "Entzündung",
+        "Rötung"
+      ]
+    },
+    {
+      "code": "710",
+      "category": "SK",
+      "label": "Wundkontrolle",
+      "english": "Wound check",
+      "tags": [
+        "Wundheilung",
+        "Wundkontrolle"
+      ]
+    },
+    {
+      "code": "711",
+      "category": "SK",
+      "label": "Sonstige Hautprobleme",
+      "english": "Other skin conditions",
+      "tags": [
+        "Dermatologie",
+        "Hautproblem"
+      ]
+    },
+    {
+      "code": "712",
+      "category": "SK",
+      "label": "Schwellung/Beule/Schwiele",
+      "english": "Lumps, bumps, calluses",
+      "tags": [
+        "Knoten",
+        "Beule",
+        "Hornhaut",
+        "Schwiele"
+      ]
+    },
+    {
+      "code": "713",
+      "category": "SK",
+      "label": "Rötung/Spannungsgefühl in der Brust",
+      "english": "Redness/tenderness, breast",
+      "tags": [
+        "Brust",
+        "Mastitis"
+      ]
+    },
+    {
+      "code": "714",
+      "category": "SK",
+      "label": "Ausschluss eines Parasitenbefalls",
+      "english": "Rule out infestation",
+      "tags": [
+        "Läuse",
+        "Krätze",
+        "Milben",
+        "Parasiten"
+      ]
+    },
+    {
+      "code": "715",
+      "category": "SK",
+      "label": "Zyanose",
+      "english": "Cyanosis",
+      "tags": [
+        "blau",
+        "Sauerstoffmangel"
+      ]
+    },
+    {
+      "code": "716",
+      "category": "SK",
+      "label": "Spontane Hauteinblutungen",
+      "english": "Spontaneous bruising",
+      "tags": [
+        "Hämatom",
+        "blaue Flecken",
+        "Petechien"
+      ]
+    },
+    {
+      "code": "717",
+      "category": "SK",
+      "label": "Fremdkörper in der Haut",
+      "english": "Foreign body, skin",
+      "tags": [
+        "Splitter",
+        "Gegenstand in Haut"
+      ]
+    },
+    {
+      "code": "718",
+      "category": "SK",
+      "label": "Nagelprobleme",
+      "english": "Nail problem",
+      "tags": [
+        "eingewachsener Nagel"
+      ]
+    },
+    {
+      "code": "751",
+      "category": "SA",
+      "label": "Substanzmissbrauch/Intoxikation",
+      "english": "Substance misuse/intoxication",
+      "tags": [
+        "Drogen",
+        "Alkohol",
+        "Vergiftung",
+        "Rausch"
+      ]
+    },
+    {
+      "code": "752",
+      "category": "SA",
+      "label": "Einnahme einer Überdosierung",
+      "english": "Overdose ingestion",
+      "tags": [
+        "Tabletten",
+        "Überdosis",
+        "Vergiftung"
+      ]
+    },
+    {
+      "code": "753",
+      "category": "SA",
+      "label": "Substanzentzug",
+      "english": "Substance withdrawal",
+      "tags": [
+        "Alkoholentzug",
+        "Drogenentzug"
+      ]
+    },
+    {
+      "code": "801",
+      "category": "TR",
+      "label": "Schweres Trauma - penetrierend",
+      "english": "Major trauma—penetrating",
+      "tags": [
+        "Polytrauma",
+        "Stichverletzung",
+        "Schussverletzung"
+      ]
+    },
+    {
+      "code": "802",
+      "category": "TR",
+      "label": "Schweres Trauma - stumpf",
+      "english": "Major trauma—blunt",
+      "tags": [
+        "Polytrauma",
+        "Verkehrsunfall",
+        "Sturz"
+      ]
+    },
+    {
+      "code": "803",
+      "category": "TR",
+      "label": "Isoliertes Thoraxtrauma - penetrierend",
+      "english": "Isolated chest trauma—penetrating",
+      "tags": [
+        "Brustkorb",
+        "Thorax",
+        "Stichverletzung",
+        "Schussverletzung"
+      ]
+    },
+    {
+      "code": "804",
+      "category": "TR",
+      "label": "Isoliertes Thoraxtrauma - stumpf",
+      "english": "Isolated chest trauma—blunt",
+      "tags": [
+        "Brustkorb",
+        "Thorax",
+        "Unfall"
+      ]
+    },
+    {
+      "code": "805",
+      "category": "TR",
+      "label": "Isoliertes Abdominaltrauma - penetrierend",
+      "english": "Isolated abdominal trauma—penetrating",
+      "tags": [
+        "Bauch",
+        "Stichverletzung",
+        "Schussverletzung"
+      ]
+    },
+    {
+      "code": "806",
+      "category": "TR",
+      "label": "Isoliertes Abdominaltrauma - stumpf",
+      "english": "Isolated abdominal trauma—blunt",
+      "tags": [
+        "Bauch",
+        "Unfall"
+      ]
+    },
+    {
+      "code": "851",
+      "category": "MC",
+      "label": "Exposition gegenüber einer übertragbaren Krankheit",
+      "english": "Exposure to communicable disease",
+      "tags": [
+        "Infektionskontakt",
+        "Ansteckung",
+        "Exposition"
+      ]
+    },
+    {
+      "code": "852",
+      "category": "MC",
+      "label": "Fieber",
+      "english": "Fever",
+      "tags": [
+        "Temperatur",
+        "Infekt"
+      ]
+    },
+    {
+      "code": "853",
+      "category": "MC",
+      "label": "Hyperglykämie",
+      "english": "Hyperglycemia",
+      "tags": [
+        "hoher Blutzucker",
+        "Diabetes",
+        "Entgleisung"
+      ]
+    },
+    {
+      "code": "854",
+      "category": "MC",
+      "label": "Hypoglykämie",
+      "english": "Hypoglycemia",
+      "tags": [
+        "niedriger Blutzucker",
+        "Diabetes",
+        "Unterzuckerung"
+      ]
+    },
+    {
+      "code": "855",
+      "category": "MC",
+      "label": "Direkte Überweisung/Weiterleitung",
+      "english": "Direct referral for consultation",
+      "tags": [
+        "Facharzt",
+        "Konsil"
+      ]
+    },
+    {
+      "code": "856",
+      "category": "MC",
+      "label": "Verbandswechsel",
+      "english": "Dressing change",
+      "tags": [
+        "Verband",
+        "Wunde"
+      ]
+    },
+    {
+      "code": "857",
+      "category": "MC",
+      "label": "Entfernung von Klammern/Nähten",
+      "english": "Removal staples/sutures",
+      "tags": [
+        "Fäden ziehen",
+        "Nahtentfernung"
+      ]
+    },
+    {
+      "code": "858",
+      "category": "MC",
+      "label": "Gipskontrolle",
+      "english": "Cast check",
+      "tags": [
+        "Gips",
+        "Schiene"
+      ]
+    },
+    {
+      "code": "859",
+      "category": "MC",
+      "label": "Bildgebung/Blutuntersuchung",
+      "english": "Imaging test/blood test",
+      "tags": [
+        "Röntgen",
+        "CT",
+        "MRT",
+        "Blutabnahme",
+        "Labor"
+      ]
+    },
+    {
+      "code": "860",
+      "category": "MC",
+      "label": "Problem mit Medizinprodukt",
+      "english": "Medical device problem",
+      "tags": [
+        "Katheter",
+        "Sonde",
+        "Port",
+        "Drainage",
+        "Schrittmacher"
+      ]
+    },
+    {
+      "code": "861",
+      "category": "MC",
+      "label": "Verschreibung/Bedarf an Medikamenten",
+      "english": "Prescription/medication request",
+      "tags": [
+        "Rezept",
+        "Medikamente"
+      ]
+    },
+    {
+      "code": "862",
+      "category": "MC",
+      "label": "Entfernung Ring",
+      "english": "Ring removal",
+      "tags": [
+        "Ring steckt fest",
+        "Finger"
+      ]
+    },
+    {
+      "code": "863",
+      "category": "MC",
+      "label": "Auffällige Ergebnisse Labor/Bildgebung",
+      "english": "Abnormal lab/imaging results",
+      "tags": [
+        "pathologischer Befund",
+        "Laborwert"
+      ]
+    },
+    {
+      "code": "864",
+      "category": "MC",
+      "label": "Blässe/Anämie",
+      "english": "Pallor/anemia",
+      "tags": [
+        "Blutarmut",
+        "bleich",
+        "Hämoglobin",
+        "Hb"
+      ]
+    },
+    {
+      "code": "865",
+      "category": "MC",
+      "label": "Postoperative Komplikationen",
+      "english": "Post-operative complications",
+      "tags": [
+        "nach Operation",
+        "OP",
+        "Wundproblem"
+      ]
+    },
+    {
+      "code": "866",
+      "category": "MC",
+      "label": "Geringfügige unspezifische Beschwerden",
+      "english": "Minor complaints NOS",
+      "tags": [
+        "Bagatelle",
+        "unspezifisch"
+      ]
+    },
+    {
+      "code": "867",
+      "category": "MC",
+      "label": "Unstillbares Schreien",
+      "english": "Inconsolable crying",
+      "tags": [
+        "Baby schreit",
+        "Kind schreit"
+      ]
+    },
+    {
+      "code": "868",
+      "category": "MC",
+      "label": "Angeborene Probleme bei Kindern",
+      "english": "Congenital problem in children",
+      "tags": [
+        "Fehlbildung",
+        "Kind"
+      ]
+    },
+    {
+      "code": "869",
+      "category": "MC",
+      "label": "Neugeborenes",
+      "english": "Newly born",
+      "tags": [
+        "Geburt",
+        "Baby",
+        "Säugling"
+      ]
+    },
+    {
+      "code": "870",
+      "category": "MC",
+      "label": "Intravenöse Therapie",
+      "english": "IV therapy",
+      "tags": [
+        "Infusion",
+        "Antibiotika"
+      ]
+    },
+    {
+      "code": "998",
+      "category": "MC",
+      "label": "Patient aufgenommen und vor Ersteinschätzung wieder gegangen",
+      "english": "Patient registered and left prior to triage",
+      "tags": [
+        "gegangen",
+        "vor Triage gegangen",
+        "LWBS"
+      ]
+    },
+    {
+      "code": "999",
+      "category": "MC",
+      "label": "Unbekannt",
+      "english": "Unknown",
+      "tags": [
+        "unklar",
+        "nicht bekannt",
+        "keine Angabe"
+      ]
+    }
+  ]
+}

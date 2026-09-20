@@ -22,5 +22,10 @@ const run = async () => {
         throw new Error("Das Textbaustein-Modul konnte nicht geladen werden.");
     }
     await textblock.display("Editor__body", { id: "start" });
+    const cedis = await loadPlugin("cedis");
+    if (cedis.display === undefined) {
+        throw new Error("Das CEDIS-PCL-Modul konnte nicht geladen werden.");
+    }
+    await cedis.display("Cedis__body", { id: "cedis" });
 };
 void run().catch(showError);
