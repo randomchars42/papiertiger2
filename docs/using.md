@@ -65,6 +65,11 @@ Auf Geräten mit Maus und Tastatur wird ein neu geöffnetes Text- oder Zahlenfel
 fokussiert. Auf Touchgeräten bleibt es zunächst unfokussiert, damit die
 Bildschirmtastatur nicht ungefragt das Layout verschiebt.
 
+In einem einzeiligen Text-, Zahlen-, Datums- oder Zeitfeld übernimmt **Enter**
+den aktuellen Wert und schließt den Editor. Dies entspricht **Fertig**; bei
+sequenziellen Pflichtangaben kann dadurch direkt der nächste Editor geöffnet
+werden.
+
 **Leeren** entfernt den Attributwert. Wird ein erforderliches Feld geleert oder
 leer mit **Fertig** abgeschlossen, bleibt die unvollständige Phrase außerhalb
 der Ausgabe.

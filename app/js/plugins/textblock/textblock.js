@@ -794,6 +794,24 @@ const handleChange = (module, event) => {
     module.status = "";
     renderAll();
 };
+const handleKeydown = (module, event) => {
+    const target = event.target;
+    if (event.key !== "Enter" ||
+        event.isComposing ||
+        !(target instanceof HTMLInputElement) ||
+        target.dataset.input !== "attribute") {
+        return;
+    }
+    if (!updateFromInput(target))
+        return;
+    const finish = target
+        .closest(".inline-editor")
+        ?.querySelector('button[data-action="close-editor"]');
+    if (finish === undefined || finish === null)
+        return;
+    event.preventDefault();
+    finish.click();
+};
 export const display = async (parentId, params) => {
     const rootId = params.id;
     if (typeof rootId !== "string" || rootId === "") {
@@ -824,6 +842,7 @@ export const display = async (parentId, params) => {
     parent.addEventListener("click", (event) => void handleClick(module, event));
     parent.addEventListener("input", (event) => handleInput(module, event));
     parent.addEventListener("change", (event) => handleChange(module, event));
+    parent.addEventListener("keydown", (event) => handleKeydown(module, event));
     renderAll();
     if (openNextPrompt(module))
         renderAll();

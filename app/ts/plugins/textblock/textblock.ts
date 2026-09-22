@@ -1116,6 +1116,25 @@ const handleChange = (module: Module, event: Event): void => {
     renderAll();
 };
 
+const handleKeydown = (module: Module, event: KeyboardEvent): void => {
+    const target = event.target;
+    if (
+        event.key !== "Enter" ||
+        event.isComposing ||
+        !(target instanceof HTMLInputElement) ||
+        target.dataset.input !== "attribute"
+    ) {
+        return;
+    }
+    if (!updateFromInput(target)) return;
+    const finish = target
+        .closest<HTMLElement>(".inline-editor")
+        ?.querySelector<HTMLButtonElement>('button[data-action="close-editor"]');
+    if (finish === undefined || finish === null) return;
+    event.preventDefault();
+    finish.click();
+};
+
 export const display = async (
     parentId: string,
     params: Record<string, unknown>,
@@ -1149,6 +1168,7 @@ export const display = async (
     parent.addEventListener("click", (event) => void handleClick(module, event));
     parent.addEventListener("input", (event) => handleInput(module, event));
     parent.addEventListener("change", (event) => handleChange(module, event));
+    parent.addEventListener("keydown", (event) => handleKeydown(module, event));
     renderAll();
     if (openNextPrompt(module)) renderAll();
 };
