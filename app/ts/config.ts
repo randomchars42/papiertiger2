@@ -3,6 +3,7 @@ import * as config from "@lib/config.js";
 declare module "@lib/config.js" {
     interface ConfigSchema {
         dataURL: string;
+        autoCollapseSeconds: number;
     }
 }
 
@@ -12,6 +13,7 @@ export const configure = (): void => {
         logLevel: "debug",
         baseURL: "./",
         dataURL: "./data",
+        autoCollapseSeconds: 0,
         languageURL: "./language",
         pluginURL: "./plugins",
     });
@@ -21,6 +23,7 @@ export const configure = (): void => {
         logLevel: "error",
         baseURL: "./",
         dataURL: "./data/",
+        autoCollapseSeconds: 0,
         languageURL: "./language",
         pluginURL: "./plugins",
     });

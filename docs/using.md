@@ -74,6 +74,15 @@ werden.
 leer mit **Fertig** abgeschlossen, bleibt die unvollständige Phrase außerhalb
 der Ausgabe.
 
+## Automatisches Einklappen konfigurieren
+
+`autoCollapseSeconds` in `app/ts/config.ts` aktiviert das automatische
+Einklappen für alle Gruppen. `0` lässt diese globale Option aus; positive Werte
+geben die Wartezeit in Sekunden an. Ein gleichnamiger URL-Parameter
+überschreibt die lokale Umgebungskonfiguration, beispielsweise
+`?autoCollapseSeconds=4`. Explizit mit `@autocollapse` markierte Gruppen
+behalten bei ausgeschalteter globaler Option ihr eigenes Verhalten.
+
 ## Vorschläge und Vorgaben
 
 Eine Auswahl kann weitere Einträge sichtbar machen. Diese Vorschläge sind

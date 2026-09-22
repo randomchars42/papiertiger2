@@ -51,6 +51,7 @@ type Module = {
     suggestionHighlights: Map<string, number>;
     suggestionsReady: boolean;
     autoCollapseTimers: Map<string, number>;
+    autoCollapseAllDelay: number | null;
 };
 
 type ScoreResultSelection = {
@@ -69,7 +70,7 @@ const packageRequests = new Map<string, Promise<PackageDefinition>>();
 let resolved: ResolvedDocument = { phrases: {} };
 let instanceCounter = 0;
 const suggestionHighlightDuration = 1_600;
-const autoCollapseDelay = 1_800;
+const annotatedAutoCollapseDelay = 1_800;
 const autoCollapseCompletionActions = new Set([
     "phrase",
     "choose-value",
@@ -707,6 +708,16 @@ const requireData = (button: HTMLButtonElement, key: string): string => {
 const instanceData = (button: HTMLButtonElement): string | undefined =>
     button.dataset.instanceId;
 
+const configuredAutoCollapseDelay = (): number | null => {
+    const seconds = getConfig("autoCollapseSeconds");
+    if (!Number.isFinite(seconds) || seconds < 0) {
+        throw new Error(
+            'Die Konfiguration "autoCollapseSeconds" muss eine nicht negative Zahl sein.',
+        );
+    }
+    return seconds === 0 ? null : seconds * 1_000;
+};
+
 type AutoCollapseContext = {
     groupId: string;
     instanceId?: string;
@@ -748,13 +759,18 @@ const clearAutoCollapseTimers = (module: Module, instanceId?: string): void => {
 };
 
 const autoCollapseContext = (
+    module: Module,
     button: HTMLButtonElement,
     parent: HTMLElement,
 ): AutoCollapseContext | null => {
     let node = button.closest<HTMLElement>(".group[data-group-id]");
     while (node !== null && parent.contains(node)) {
         const groupId = node.dataset.groupId;
-        if (groupId !== undefined && definitions.groups[groupId]?.autoCollapse) {
+        if (
+            groupId !== undefined &&
+            (module.autoCollapseAllDelay !== null ||
+                definitions.groups[groupId]?.autoCollapse === true)
+        ) {
             return {
                 groupId,
                 ...(node.dataset.instanceId === undefined
@@ -777,6 +793,12 @@ const scheduleAutoCollapse = (
     cancelAutoCollapse(module, groupId, instanceId);
     if (editorIsInsideGroup(module, groupId, instanceId)) return;
     const key = phraseKey(groupId, instanceId);
+    const delay =
+        module.autoCollapseAllDelay ??
+        (definitions.groups[groupId].autoCollapse === true
+            ? annotatedAutoCollapseDelay
+            : null);
+    if (delay === null) return;
     const timer = window.setTimeout(() => {
         module.autoCollapseTimers.delete(key);
         if (editorIsInsideGroup(module, groupId, instanceId)) return;
@@ -788,7 +810,7 @@ const scheduleAutoCollapse = (
         }
         module.collapseOverrides[key] = true;
         renderAll();
-    }, autoCollapseDelay);
+    }, delay);
     module.autoCollapseTimers.set(key, timer);
 };
 
@@ -802,7 +824,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
 
     const action = requireData(button, "action");
     const instanceId = instanceData(button);
-    const collapseContext = autoCollapseContext(button, parent);
+    const collapseContext = autoCollapseContext(module, button, parent);
     if (collapseContext !== null) {
         cancelAutoCollapse(
             module,
@@ -1161,6 +1183,7 @@ export const display = async (
         suggestionHighlights: new Map(),
         suggestionsReady: false,
         autoCollapseTimers: new Map(),
+        autoCollapseAllDelay: configuredAutoCollapseDelay(),
     };
     const previous = modules.get(parentId);
     if (previous !== undefined) clearAutoCollapseTimers(previous);

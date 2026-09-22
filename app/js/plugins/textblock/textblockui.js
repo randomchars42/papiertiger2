@@ -227,10 +227,9 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
     const included = groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId);
-    const collapsible = group.collapsed !== undefined;
-    const collapsed = collapseOverrides[phraseKey(groupId, instanceId)] ??
-        group.collapsed ??
-        false;
+    const collapseKey = phraseKey(groupId, instanceId);
+    const collapsible = group.collapsed !== undefined || collapseOverrides[collapseKey] !== undefined;
+    const collapsed = collapseOverrides[collapseKey] ?? group.collapsed ?? false;
     const section = element("section", [
         "group",
         `group--${group.kind ?? "neutral"}`,

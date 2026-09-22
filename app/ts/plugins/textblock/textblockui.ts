@@ -523,11 +523,11 @@ function renderGroup(
         resolved,
         instanceId,
     );
-    const collapsible = group.collapsed !== undefined;
+    const collapseKey = phraseKey(groupId, instanceId);
+    const collapsible =
+        group.collapsed !== undefined || collapseOverrides[collapseKey] !== undefined;
     const collapsed =
-        collapseOverrides[phraseKey(groupId, instanceId)] ??
-        group.collapsed ??
-        false;
+        collapseOverrides[collapseKey] ?? group.collapsed ?? false;
     const section = element(
         "section",
         [

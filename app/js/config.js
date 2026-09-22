@@ -5,6 +5,7 @@ export const configure = () => {
         logLevel: "debug",
         baseURL: "./",
         dataURL: "./data",
+        autoCollapseSeconds: 0,
         languageURL: "./language",
         pluginURL: "./plugins",
     });
@@ -13,6 +14,7 @@ export const configure = () => {
         logLevel: "error",
         baseURL: "./",
         dataURL: "./data/",
+        autoCollapseSeconds: 0,
         languageURL: "./language",
         pluginURL: "./plugins",
     });

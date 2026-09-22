@@ -23,6 +23,12 @@ app/ts/ -> tsc -> app/js/
 Zur Laufzeit ist die Anwendung statisch und frameworkfrei. Alle Pakete werden
 über `fetch` geladen; es gibt keine Server-API und keine externe Bibliothek.
 
+Die Laufzeitkonfiguration wird in `app/ts/config.ts` je Umgebung gesetzt. Beim
+Start übernimmt `initialiseConfig()` gleichnamige URL-Parameter mit passendem
+Grundtyp als letzte Konfigurationsschicht. So kann beispielsweise
+`autoCollapseSeconds` lokal vorbelegt und für einen konkreten Aufruf per URL
+überschrieben werden.
+
 ## Komponenten
 
 ```text
