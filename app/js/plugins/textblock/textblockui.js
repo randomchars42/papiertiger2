@@ -1,5 +1,6 @@
 import { isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { groupHasIncludedPhrase, groupItems, includedPhrasesInGroup, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
+import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
 const element = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className !== undefined)
@@ -36,16 +37,75 @@ const instanceLabel = (instanceId, definitions, state) => {
     }
     return "";
 };
-const renderPhraseEditor = (phraseId, instanceId, definitions, resolved) => {
+const normaliseSearch = (value) => value
+    .toLocaleLowerCase("de-DE")
+    .replaceAll("ß", "ss")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+const CATALOG_RESULT_LIMIT = 24;
+export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, query = "") => {
     const editor = element("div", "inline-editor phrase-editor");
     editor.dataset.editorFor = resolved.key;
     editor.setAttribute("role", "group");
     editor.setAttribute("aria-label", `${resolved.title} auswählen`);
-    for (const [valueId, value] of Object.entries(definitions.phrases[phraseId].values)) {
+    const phrase = definitions.phrases[phraseId];
+    const catalog = phrase.catalog === undefined
+        ? undefined
+        : definitions.catalogs[phrase.catalog];
+    if (catalog !== undefined) {
+        editor.classList.add("symptom-picker");
+        const search = element("input", "editor-input symptom-picker__search");
+        search.type = "search";
+        search.value = query;
+        search.autocomplete = "off";
+        search.spellcheck = false;
+        search.placeholder = "Symptom suchen …";
+        search.dataset.input = "catalog-search";
+        search.dataset.phraseId = phraseId;
+        if (instanceId !== undefined)
+            search.dataset.instanceId = instanceId;
+        search.setAttribute("aria-label", `${resolved.title} suchen`);
+        const lens = element("select", "symptom-picker__lens");
+        lens.dataset.input = "symptom-lens";
+        lens.setAttribute("aria-label", "Symptomlinse auswählen");
+        for (const definition of symptomLenses()) {
+            const option = element("option", undefined, definition.label);
+            option.value = definition.id;
+            lens.append(option);
+        }
+        lens.value = getSymptomLens();
+        editor.append(search, lens);
+    }
+    const normalisedQuery = normaliseSearch(query);
+    const tokens = normalisedQuery === "" ? [] : normalisedQuery.split(" ");
+    const candidates = Object.entries(phrase.values).filter(([, value]) => {
+        if (value.freeText === true)
+            return false;
+        if (catalog === undefined)
+            return true;
+        if (tokens.length === 0) {
+            return value.lenses?.includes(getSymptomLens()) === true;
+        }
+        const searchable = value.search ?? normaliseSearch(parseValue(value).text);
+        return tokens.every((token) => searchable.includes(token));
+    });
+    const visible = catalog === undefined
+        ? candidates
+        : candidates.slice(0, CATALOG_RESULT_LIMIT);
+    for (const [valueId, value] of visible) {
         const parsed = parseValue(value);
         const button = actionButton(parsed.text, "choose-value", scopedData({ phraseId, valueId }, instanceId), `choice choice--${parsed.kind ?? "neutral"}`);
         button.setAttribute("aria-pressed", String(resolved.included && resolved.valueId === valueId));
         editor.append(button);
+    }
+    if (catalog !== undefined && candidates.length > visible.length) {
+        editor.append(element("span", "status symptom-picker__status", `${visible.length} von ${candidates.length} · Suche verfeinern`));
+    }
+    const freeText = Object.entries(phrase.values).find(([, value]) => value.freeText === true);
+    if (catalog !== undefined && normalisedQuery !== "" && freeText !== undefined) {
+        editor.append(actionButton(`„${query.trim()}“ als Freitext`, "choose-freetext", scopedData({ phraseId, valueId: freeText[0], value: query.trim() }, instanceId), "choice choice--abnormal"));
     }
     editor.append(actionButton("− Weglassen", "exclude-phrase", scopedData({ phraseId }, instanceId)), actionButton("↺ Zurücksetzen", "reset-phrase", scopedData({ phraseId }, instanceId)), actionButton("Fertig", "close-editor", {}, "control control--primary"));
     return editor;
@@ -152,7 +212,7 @@ const renderAttributeEditor = (phraseId, attributeId, instanceId, definitions, s
     node.append(actionButton("Leeren", "clear-attribute", scopedData({ phraseId, attributeId }, instanceId)), actionButton("Fertig", "close-editor", {}, "control control--primary"));
     return node;
 };
-const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions) => {
+const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries) => {
     const phrase = resolved.phrases[phraseKey(phraseId, instanceId)];
     if (phrase === undefined || !phrase.visible)
         return;
@@ -195,19 +255,19 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
     phraseNode.append(element("span", "phrase__delimiter", ";"));
     parent.append(phraseNode);
     if (editorMatches(openEditor, "phrase", phraseId, instanceId)) {
-        parent.append(renderPhraseEditor(phraseId, instanceId, definitions, phrase));
+        parent.append(renderPhraseEditor(phraseId, instanceId, definitions, phrase, pickerQueries[phrase.key] ?? ""));
     }
     else if (editorMatches(openEditor, "attribute", phraseId, instanceId)) {
         const attributeEditor = openEditor;
         parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
-const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed) => {
+const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries) => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
     container.dataset.repeatableGroupId = groupId;
     for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
-        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, instanceId, index);
+        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries, instanceId, index);
     }
     const title = parseValue(group.title).text;
     const addLabel = group.repeatable?.add ?? `${title} hinzufügen`;
@@ -220,7 +280,7 @@ const renderRepeatable = (parent, groupId, level, definitions, state, resolved, 
     container.append(addButton);
     parent.append(container);
 };
-function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, instanceId, instanceIndex) {
+function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries, instanceId, instanceIndex) {
     const group = definitions.groups[groupId];
     if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
         return;
@@ -322,7 +382,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
                     left.index - right.index);
             });
             for (const { id } of orderedPhraseIds) {
-                renderPhrase(phrases, id, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions);
+                renderPhrase(phrases, id, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries);
             }
             body.append(phrases);
             phraseIds = [];
@@ -336,10 +396,10 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             const child = item.id;
             if (definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined) {
-                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed);
+                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries);
             }
             else {
-                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, instanceId);
+                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries, instanceId);
             }
         }
         renderPhrases();
@@ -352,7 +412,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             const body = element("div", "group__body group__body--included-only");
             const phrases = element("div", "phrases");
             for (const phrase of includedPhrases) {
-                renderPhrase(phrases, phrase.id, phrase.instanceId, definitions, state, resolved, openEditor, highlightedSuggestions);
+                renderPhrase(phrases, phrase.id, phrase.instanceId, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries);
             }
             body.append(phrases);
             section.append(body);
@@ -365,7 +425,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     }
     parent.append(section);
 }
-export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, status, controls = true) => {
+export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, status, controls = true, pickerQueries = {}) => {
     parent.replaceChildren();
     parent.classList.add("textblock-module");
     parent.dataset.rootId = rootId;
@@ -379,6 +439,6 @@ export const renderModule = (parent, rootId, definitions, state, resolved, openE
         parent.append(toolbar);
     }
     const documentNode = element("article", "document");
-    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed);
+    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries);
     parent.append(documentNode);
 };

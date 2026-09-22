@@ -25,9 +25,10 @@ import {
     structuredDocument,
     validateDefinitions,
 } from "./textblockstate.js";
-import { renderModule } from "./textblockui.js";
+import { renderModule, renderPhraseEditor } from "./textblockui.js";
 import type { OpenEditor } from "./textblockui.js";
 import type { PluginMessage } from "@lib/plugin.js";
+import { setSymptomLens } from "@lib/symptomlens.js";
 import type {
     AttributeValue,
     DocumentState,
@@ -53,6 +54,7 @@ type Module = {
     autoCollapseTimers: Map<string, number>;
     autoCollapseActive: Set<string>;
     autoCollapseAllDelay: number | null;
+    pickerQueries: Record<string, string>;
 };
 
 type ScoreResultSelection = {
@@ -75,6 +77,7 @@ const annotatedAutoCollapseDelay = 1_800;
 const autoCollapseCompletionActions = new Set([
     "phrase",
     "choose-value",
+    "choose-freetext",
     "exclude-phrase",
     "reset-phrase",
     "choose-attribute",
@@ -228,8 +231,43 @@ const renderAll = (): void => {
             module.autoCollapseAllDelay !== null,
             module.status,
             module.controls,
+            module.pickerQueries,
         );
     }
+    const suggestions = new Map<
+        string,
+        { code: string; sources: string[]; relations: string[] }
+    >();
+    for (const phrase of Object.values(resolved.phrases)) {
+        if (!phrase.included || phrase.valueId === null) continue;
+        const value = definitions.phrases[phrase.id]?.values[phrase.valueId];
+        for (const mapping of value?.cedis ?? []) {
+            const current = suggestions.get(mapping.code) ?? {
+                code: mapping.code,
+                sources: [],
+                relations: [],
+            };
+            if (!current.sources.includes(phrase.text)) {
+                current.sources.push(phrase.text);
+            }
+            if (!current.relations.includes(mapping.relation)) {
+                current.relations.push(mapping.relation);
+            }
+            suggestions.set(mapping.code, current);
+        }
+    }
+    const source = [...modules.values()]
+        .map((module) => document.getElementById(module.parentId))
+        .find((parent): parent is HTMLElement => parent !== null);
+    source?.dispatchEvent(
+        new CustomEvent("papiertiger:plugin-message", {
+            bubbles: true,
+            detail: {
+                type: "cedis-suggestions",
+                payload: { id: "cedis", suggestions: [...suggestions.values()] },
+            },
+        }),
+    );
 };
 
 const scopeFor = (instanceId?: string): ScopeState => scopeState(state, instanceId);
@@ -427,6 +465,7 @@ const selectValue = (
     } else {
         module.openEditor = null;
     }
+    delete module.pickerQueries[phraseKey(phraseId, instanceId)];
 };
 
 const handlePhrase = (
@@ -583,6 +622,7 @@ const closeEditor = (module: Module): void => {
     const editor = module.openEditor;
     if (editor?.type === "phrase") {
         completePrompt(editor.phraseId, editor.instanceId);
+        delete module.pickerQueries[phraseKey(editor.phraseId, editor.instanceId)];
         module.openEditor = null;
         return;
     }
@@ -865,6 +905,17 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
             requireData(button, "valueId"),
             instanceId,
         );
+    } else if (action === "choose-freetext") {
+        const phraseId = requireData(button, "phraseId");
+        const valueId = requireData(button, "valueId");
+        const attributeId = requiredAttributes(phraseId, valueId)[0];
+        if (attributeId === undefined) return;
+        const scope = scopeFor(instanceId);
+        scope.attributes[phraseId] = {
+            ...(scope.attributes[phraseId] ?? {}),
+            [attributeId]: requireData(button, "value"),
+        };
+        selectValue(module, phraseId, valueId, instanceId);
     } else if (action === "exclude-phrase") {
         const phraseId = requireData(button, "phraseId");
         setOverride(
@@ -874,6 +925,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
             instanceId,
         );
         completePrompt(phraseId, instanceId);
+        delete module.pickerQueries[phraseKey(phraseId, instanceId)];
         module.openEditor = null;
     } else if (action === "reset-phrase") {
         const phraseId = requireData(button, "phraseId");
@@ -882,6 +934,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         delete scope.attributes[phraseId];
         delete scope.acceptedProvenance[phraseId];
         resetPrompt(phraseId, instanceId);
+        delete module.pickerQueries[phraseKey(phraseId, instanceId)];
         module.openEditor = null;
     } else if (action === "attribute") {
         const phraseId = requireData(button, "phraseId");
@@ -1175,11 +1228,52 @@ const updateFromInput = (field: EventTarget | null): boolean => {
 
 const handleInput = (module: Module, event: Event): void => {
     cancelAutoCollapseForTarget(module, event.target);
+    const target = event.target;
+    if (
+        target instanceof HTMLInputElement &&
+        target.dataset.input === "catalog-search"
+    ) {
+        const phraseId = target.dataset.phraseId;
+        const instanceId = target.dataset.instanceId;
+        if (phraseId === undefined) return;
+        const key = phraseKey(phraseId, instanceId);
+        module.pickerQueries[key] = target.value;
+        const phrase = currentPhrase(phraseId, instanceId);
+        const previous = target.closest<HTMLElement>(".phrase-editor");
+        if (phrase === undefined || previous === null) return;
+        previous.replaceWith(
+            renderPhraseEditor(
+                phraseId,
+                instanceId,
+                definitions,
+                phrase,
+                target.value,
+            ),
+        );
+        const parent = document.getElementById(module.parentId);
+        const next = [...(parent?.querySelectorAll<HTMLInputElement>(
+            'input[data-input="catalog-search"]',
+        ) ?? [])].find(
+            (input) =>
+                input.dataset.phraseId === phraseId &&
+                input.dataset.instanceId === instanceId,
+        );
+        next?.focus();
+        next?.setSelectionRange(next.value.length, next.value.length);
+        return;
+    }
     if (updateFromInput(event.target)) module.status = "";
 };
 
 const handleChange = (module: Module, event: Event): void => {
     cancelAutoCollapseForTarget(module, event.target);
+    if (
+        event.target instanceof HTMLSelectElement &&
+        event.target.dataset.input === "symptom-lens"
+    ) {
+        setSymptomLens(event.target.value);
+        return;
+    }
     if (!updateFromInput(event.target)) return;
     module.status = "";
     renderAll();
@@ -1233,6 +1327,7 @@ export const display = async (
         autoCollapseTimers: new Map(),
         autoCollapseActive: new Set(),
         autoCollapseAllDelay: configuredAutoCollapseDelay(),
+        pickerQueries: {},
     };
     const previous = modules.get(parentId);
     if (previous !== undefined) clearAutoCollapseTimers(previous);
@@ -1342,3 +1437,5 @@ export const receive = (message: PluginMessage): void => {
 export const dispose = (parentId: string): void => {
     modules.delete(parentId);
 };
+
+document.addEventListener("papiertiger:symptom-lens-change", renderAll);

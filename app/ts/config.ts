@@ -4,6 +4,7 @@ declare module "@lib/config.js" {
     interface ConfigSchema {
         dataURL: string;
         autoCollapseSeconds: number;
+        symptomLens: string;
     }
 }
 
@@ -14,6 +15,7 @@ export const configure = (): void => {
         baseURL: "./",
         dataURL: "./data",
         autoCollapseSeconds: 0,
+        symptomLens: "rettungsdienst",
         languageURL: "./language",
         pluginURL: "./plugins",
     });
@@ -24,6 +26,7 @@ export const configure = (): void => {
         baseURL: "./",
         dataURL: "./data/",
         autoCollapseSeconds: 0,
+        symptomLens: "rettungsdienst",
         languageURL: "./language",
         pluginURL: "./plugins",
     });

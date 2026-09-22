@@ -6,6 +6,7 @@ export const configure = () => {
         baseURL: "./",
         dataURL: "./data",
         autoCollapseSeconds: 0,
+        symptomLens: "rettungsdienst",
         languageURL: "./language",
         pluginURL: "./plugins",
     });
@@ -15,6 +16,7 @@ export const configure = () => {
         baseURL: "./",
         dataURL: "./data/",
         autoCollapseSeconds: 0,
+        symptomLens: "rettungsdienst",
         languageURL: "./language",
         pluginURL: "./plugins",
     });

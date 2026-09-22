@@ -2,6 +2,7 @@ import * as config from "./config.js";
 import * as baselib from "@lib/base.js";
 import { getConfig, initialiseConfig } from "@lib/config.js";
 import { loadPlugin } from "@lib/plugin.js";
+import { getSymptomLens, initialiseSymptomLenses, setSymptomLens, symptomLenses, } from "@lib/symptomlens.js";
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const validateDocuments = (value) => {
     if (!isRecord(value) ||
@@ -93,6 +94,7 @@ const showError = (error) => {
 const run = async () => {
     config.configure();
     initialiseConfig();
+    await initialiseSymptomLenses();
     const catalog = validateDocuments(await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/documents.json`, "json"));
     const host = document.getElementById("Editor__body");
     if (host === null)
@@ -108,6 +110,16 @@ const run = async () => {
         select.append(option);
     }
     label.append(select);
+    const lensLabel = element("label", "document-shell__label", "Linse");
+    const lensSelect = element("select", "document-shell__select");
+    lensSelect.setAttribute("aria-label", "Symptomlinse auswählen");
+    for (const lens of symptomLenses()) {
+        const option = element("option", undefined, lens.label);
+        option.value = lens.id;
+        lensSelect.append(option);
+    }
+    lensSelect.value = getSymptomLens();
+    lensLabel.append(lensSelect);
     const copyText = button("Dokument kopieren", "copy-text");
     const copyData = button("Daten kopieren", "copy-data");
     const toolButtons = new Map();
@@ -125,7 +137,7 @@ const run = async () => {
     const status = element("span", "status");
     status.setAttribute("role", "status");
     status.setAttribute("aria-live", "polite");
-    toolbar.prepend(label, copyText, copyData);
+    toolbar.prepend(label, lensLabel, copyText, copyData);
     toolbar.append(status);
     const body = element("div", "document-shell__body");
     const toolSurface = element("aside", "tool-surface");
@@ -268,6 +280,12 @@ const run = async () => {
     }));
     select.addEventListener("change", () => {
         void renderDocument(select.value).catch(showError);
+    });
+    lensSelect.addEventListener("change", () => {
+        setSymptomLens(lensSelect.value);
+    });
+    document.addEventListener("papiertiger:symptom-lens-change", () => {
+        lensSelect.value = getSymptomLens();
     });
     toolbar.addEventListener("click", (event) => {
         const target = event.target;

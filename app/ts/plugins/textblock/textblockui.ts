@@ -13,6 +13,7 @@ import {
     scopeState,
     summarizeGroup,
 } from "./textblockstate.js";
+import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
 import type {
     AttributeValue,
     Definitions,
@@ -101,20 +102,75 @@ const instanceLabel = (
     return "";
 };
 
-const renderPhraseEditor = (
+const normaliseSearch = (value: string): string =>
+    value
+        .toLocaleLowerCase("de-DE")
+        .replaceAll("ß", "ss")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+
+const CATALOG_RESULT_LIMIT = 24;
+
+export const renderPhraseEditor = (
     phraseId: string,
     instanceId: string | undefined,
     definitions: Definitions,
     resolved: ResolvedPhrase,
+    query = "",
 ): HTMLElement => {
     const editor = element("div", "inline-editor phrase-editor");
     editor.dataset.editorFor = resolved.key;
     editor.setAttribute("role", "group");
     editor.setAttribute("aria-label", `${resolved.title} auswählen`);
 
-    for (const [valueId, value] of Object.entries(
-        definitions.phrases[phraseId].values,
-    )) {
+    const phrase = definitions.phrases[phraseId];
+    const catalog =
+        phrase.catalog === undefined
+            ? undefined
+            : definitions.catalogs[phrase.catalog];
+    if (catalog !== undefined) {
+        editor.classList.add("symptom-picker");
+        const search = element("input", "editor-input symptom-picker__search");
+        search.type = "search";
+        search.value = query;
+        search.autocomplete = "off";
+        search.spellcheck = false;
+        search.placeholder = "Symptom suchen …";
+        search.dataset.input = "catalog-search";
+        search.dataset.phraseId = phraseId;
+        if (instanceId !== undefined) search.dataset.instanceId = instanceId;
+        search.setAttribute("aria-label", `${resolved.title} suchen`);
+
+        const lens = element("select", "symptom-picker__lens");
+        lens.dataset.input = "symptom-lens";
+        lens.setAttribute("aria-label", "Symptomlinse auswählen");
+        for (const definition of symptomLenses()) {
+            const option = element("option", undefined, definition.label);
+            option.value = definition.id;
+            lens.append(option);
+        }
+        lens.value = getSymptomLens();
+        editor.append(search, lens);
+    }
+
+    const normalisedQuery = normaliseSearch(query);
+    const tokens = normalisedQuery === "" ? [] : normalisedQuery.split(" ");
+    const candidates = Object.entries(phrase.values).filter(([, value]) => {
+        if (value.freeText === true) return false;
+        if (catalog === undefined) return true;
+        if (tokens.length === 0) {
+            return value.lenses?.includes(getSymptomLens()) === true;
+        }
+        const searchable = value.search ?? normaliseSearch(parseValue(value).text);
+        return tokens.every((token) => searchable.includes(token));
+    });
+    const visible =
+        catalog === undefined
+            ? candidates
+            : candidates.slice(0, CATALOG_RESULT_LIMIT);
+    for (const [valueId, value] of visible) {
         const parsed = parseValue(value);
         const button = actionButton(
             parsed.text,
@@ -127,6 +183,32 @@ const renderPhraseEditor = (
             String(resolved.included && resolved.valueId === valueId),
         );
         editor.append(button);
+    }
+
+    if (catalog !== undefined && candidates.length > visible.length) {
+        editor.append(
+            element(
+                "span",
+                "status symptom-picker__status",
+                `${visible.length} von ${candidates.length} · Suche verfeinern`,
+            ),
+        );
+    }
+    const freeText = Object.entries(phrase.values).find(
+        ([, value]) => value.freeText === true,
+    );
+    if (catalog !== undefined && normalisedQuery !== "" && freeText !== undefined) {
+        editor.append(
+            actionButton(
+                `„${query.trim()}“ als Freitext`,
+                "choose-freetext",
+                scopedData(
+                    { phraseId, valueId: freeText[0], value: query.trim() },
+                    instanceId,
+                ),
+                "choice choice--abnormal",
+            ),
+        );
     }
 
     editor.append(
@@ -386,6 +468,7 @@ const renderPhrase = (
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
+    pickerQueries: Readonly<Record<string, string>>,
 ): void => {
     const phrase = resolved.phrases[phraseKey(phraseId, instanceId)];
     if (phrase === undefined || !phrase.visible) return;
@@ -435,7 +518,13 @@ const renderPhrase = (
 
     if (editorMatches(openEditor, "phrase", phraseId, instanceId)) {
         parent.append(
-            renderPhraseEditor(phraseId, instanceId, definitions, phrase),
+            renderPhraseEditor(
+                phraseId,
+                instanceId,
+                definitions,
+                phrase,
+                pickerQueries[phrase.key] ?? "",
+            ),
         );
     } else if (editorMatches(openEditor, "attribute", phraseId, instanceId)) {
         const attributeEditor = openEditor as Exclude<OpenEditor, null> & {
@@ -464,6 +553,7 @@ const renderRepeatable = (
     highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
     showIncludedWhenCollapsed: boolean,
+    pickerQueries: Readonly<Record<string, string>>,
 ): void => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
@@ -480,6 +570,7 @@ const renderRepeatable = (
             highlightedSuggestions,
             collapseOverrides,
             showIncludedWhenCollapsed,
+            pickerQueries,
             instanceId,
             index,
         );
@@ -512,6 +603,7 @@ function renderGroup(
     highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
     showIncludedWhenCollapsed: boolean,
+    pickerQueries: Readonly<Record<string, string>>,
     instanceId?: string,
     instanceIndex?: number,
 ): void {
@@ -703,6 +795,7 @@ function renderGroup(
                     resolved,
                     openEditor,
                     highlightedSuggestions,
+                    pickerQueries,
                 );
             }
             body.append(phrases);
@@ -730,6 +823,7 @@ function renderGroup(
                     highlightedSuggestions,
                     collapseOverrides,
                     showIncludedWhenCollapsed,
+                    pickerQueries,
                 );
             } else {
                 renderGroup(
@@ -743,6 +837,7 @@ function renderGroup(
                     highlightedSuggestions,
                     collapseOverrides,
                     showIncludedWhenCollapsed,
+                    pickerQueries,
                     instanceId,
                 );
             }
@@ -773,6 +868,7 @@ function renderGroup(
                     resolved,
                     openEditor,
                     highlightedSuggestions,
+                    pickerQueries,
                 );
             }
             body.append(phrases);
@@ -799,6 +895,7 @@ export const renderModule = (
     showIncludedWhenCollapsed: boolean,
     status: string,
     controls = true,
+    pickerQueries: Readonly<Record<string, string>> = {},
 ): void => {
     parent.replaceChildren();
     parent.classList.add("textblock-module");
@@ -830,6 +927,7 @@ export const renderModule = (
         highlightedSuggestions,
         collapseOverrides,
         showIncludedWhenCollapsed,
+        pickerQueries,
     );
     parent.append(documentNode);
 };
