@@ -85,9 +85,11 @@ behalten bei ausgeschalteter globaler Option ihr eigenes Verhalten. Automatisch
 eingeklappte Gruppen zeigen ihre aktiven Einträge weiterhin in einer reduzierten
 Ansicht; nur noch nicht aufgenommene Auswahlmöglichkeiten werden verborgen. Jede
 weitere Bedienung innerhalb der Gruppe oder einer Untergruppe setzt deren
-laufende Fristen zurück. Solange ein Inline-Editor geöffnet ist, bleiben die
-betroffenen Gruppe und ihre automatisch einklappenden Obergruppen offen; nach
-**Fertig** oder **Enter** beginnt die jeweilige Frist neu.
+bereits laufende Fristen zurück, startet aber nicht allein durch die
+Verschachtelung neue Fristen für sämtliche Obergruppen. Solange ein
+Inline-Editor geöffnet ist, bleiben die betroffene Gruppe und ihre bereits
+herunterzählenden Obergruppen offen; nach **Fertig** oder **Enter** beginnt die
+jeweilige Frist neu.
 
 ## Vorschläge und Vorgaben
 

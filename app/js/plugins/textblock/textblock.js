@@ -523,6 +523,16 @@ const clearAutoCollapseTimers = (module, instanceId) => {
         window.clearTimeout(timer);
         module.autoCollapseTimers.delete(key);
     }
+    if (instanceId === undefined) {
+        module.autoCollapseActive.clear();
+    }
+    else {
+        for (const key of module.autoCollapseActive) {
+            if (key.startsWith(`${instanceId}:`)) {
+                module.autoCollapseActive.delete(key);
+            }
+        }
+    }
 };
 const autoCollapseContexts = (module, target, parent) => {
     const contexts = [];
@@ -570,8 +580,10 @@ const scheduleAutoCollapse = (module, groupId, instanceId) => {
             return;
         if (instanceId !== undefined &&
             state.instanceStates[instanceId] === undefined) {
+            module.autoCollapseActive.delete(key);
             return;
         }
+        module.autoCollapseActive.delete(key);
         module.collapseOverrides[key] = true;
         renderAll();
     }, delay);
@@ -763,8 +775,22 @@ const handleClick = async (module, event) => {
     renderAll();
     if (openNextPrompt(module))
         renderAll();
-    if (autoCollapseCompletionActions.has(action)) {
+    const primaryCollapseContext = collapseContexts[0];
+    if (primaryCollapseContext !== undefined &&
+        autoCollapseCompletionActions.has(action)) {
+        module.autoCollapseActive.add(phraseKey(primaryCollapseContext.groupId, primaryCollapseContext.instanceId));
+    }
+    if (action === "toggle-collapse" && primaryCollapseContext !== undefined) {
+        const primaryKey = phraseKey(primaryCollapseContext.groupId, primaryCollapseContext.instanceId);
+        if (module.collapseOverrides[primaryKey] === true) {
+            module.autoCollapseActive.delete(primaryKey);
+        }
+    }
+    if (action !== "open-score") {
         for (const context of collapseContexts) {
+            if (!module.autoCollapseActive.has(phraseKey(context.groupId, context.instanceId))) {
+                continue;
+            }
             scheduleAutoCollapse(module, context.groupId, context.instanceId);
         }
     }
@@ -864,6 +890,7 @@ export const display = async (parentId, params) => {
         suggestionHighlights: new Map(),
         suggestionsReady: false,
         autoCollapseTimers: new Map(),
+        autoCollapseActive: new Set(),
         autoCollapseAllDelay: configuredAutoCollapseDelay(),
     };
     const previous = modules.get(parentId);
