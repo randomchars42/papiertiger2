@@ -524,23 +524,34 @@ const clearAutoCollapseTimers = (module, instanceId) => {
         module.autoCollapseTimers.delete(key);
     }
 };
-const autoCollapseContext = (module, button, parent) => {
-    let node = button.closest(".group[data-group-id]");
+const autoCollapseContexts = (module, target, parent) => {
+    const contexts = [];
+    let node = target.closest(".group[data-group-id]");
     while (node !== null && parent.contains(node)) {
         const groupId = node.dataset.groupId;
         if (groupId !== undefined &&
             (module.autoCollapseAllDelay !== null ||
                 definitions.groups[groupId]?.autoCollapse === true)) {
-            return {
+            contexts.push({
                 groupId,
                 ...(node.dataset.instanceId === undefined
                     ? {}
                     : { instanceId: node.dataset.instanceId }),
-            };
+            });
         }
         node = node.parentElement?.closest(".group[data-group-id]") ?? null;
     }
-    return null;
+    return contexts;
+};
+const cancelAutoCollapseForTarget = (module, target) => {
+    if (!(target instanceof Element))
+        return;
+    const parent = document.getElementById(module.parentId);
+    if (parent === null || !parent.contains(target))
+        return;
+    for (const context of autoCollapseContexts(module, target, parent)) {
+        cancelAutoCollapse(module, context.groupId, context.instanceId);
+    }
 };
 const scheduleAutoCollapse = (module, groupId, instanceId) => {
     cancelAutoCollapse(module, groupId, instanceId);
@@ -577,9 +588,9 @@ const handleClick = async (module, event) => {
     event.preventDefault();
     const action = requireData(button, "action");
     const instanceId = instanceData(button);
-    const collapseContext = autoCollapseContext(module, button, parent);
-    if (collapseContext !== null) {
-        cancelAutoCollapse(module, collapseContext.groupId, collapseContext.instanceId);
+    const collapseContexts = autoCollapseContexts(module, button, parent);
+    for (const context of collapseContexts) {
+        cancelAutoCollapse(module, context.groupId, context.instanceId);
     }
     module.status = "";
     if (action === "phrase") {
@@ -752,9 +763,10 @@ const handleClick = async (module, event) => {
     renderAll();
     if (openNextPrompt(module))
         renderAll();
-    if (collapseContext !== null &&
-        autoCollapseCompletionActions.has(action)) {
-        scheduleAutoCollapse(module, collapseContext.groupId, collapseContext.instanceId);
+    if (autoCollapseCompletionActions.has(action)) {
+        for (const context of collapseContexts) {
+            scheduleAutoCollapse(module, context.groupId, context.instanceId);
+        }
     }
     focusOpenAttribute(module);
 };
@@ -800,10 +812,12 @@ const updateFromInput = (field) => {
     return true;
 };
 const handleInput = (module, event) => {
+    cancelAutoCollapseForTarget(module, event.target);
     if (updateFromInput(event.target))
         module.status = "";
 };
 const handleChange = (module, event) => {
+    cancelAutoCollapseForTarget(module, event.target);
     if (!updateFromInput(event.target))
         return;
     module.status = "";
@@ -811,6 +825,7 @@ const handleChange = (module, event) => {
 };
 const handleKeydown = (module, event) => {
     const target = event.target;
+    cancelAutoCollapseForTarget(module, target);
     if (event.key !== "Enter" ||
         event.isComposing ||
         !(target instanceof HTMLInputElement) ||

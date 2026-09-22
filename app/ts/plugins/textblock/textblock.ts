@@ -759,12 +759,13 @@ const clearAutoCollapseTimers = (module: Module, instanceId?: string): void => {
     }
 };
 
-const autoCollapseContext = (
+const autoCollapseContexts = (
     module: Module,
-    button: HTMLButtonElement,
+    target: Element,
     parent: HTMLElement,
-): AutoCollapseContext | null => {
-    let node = button.closest<HTMLElement>(".group[data-group-id]");
+): AutoCollapseContext[] => {
+    const contexts: AutoCollapseContext[] = [];
+    let node = target.closest<HTMLElement>(".group[data-group-id]");
     while (node !== null && parent.contains(node)) {
         const groupId = node.dataset.groupId;
         if (
@@ -772,18 +773,30 @@ const autoCollapseContext = (
             (module.autoCollapseAllDelay !== null ||
                 definitions.groups[groupId]?.autoCollapse === true)
         ) {
-            return {
+            contexts.push({
                 groupId,
                 ...(node.dataset.instanceId === undefined
                     ? {}
                     : { instanceId: node.dataset.instanceId }),
-            };
+            });
         }
         node = node.parentElement?.closest<HTMLElement>(
             ".group[data-group-id]",
         ) ?? null;
     }
-    return null;
+    return contexts;
+};
+
+const cancelAutoCollapseForTarget = (
+    module: Module,
+    target: EventTarget | null,
+): void => {
+    if (!(target instanceof Element)) return;
+    const parent = document.getElementById(module.parentId);
+    if (parent === null || !parent.contains(target)) return;
+    for (const context of autoCollapseContexts(module, target, parent)) {
+        cancelAutoCollapse(module, context.groupId, context.instanceId);
+    }
 };
 
 const scheduleAutoCollapse = (
@@ -825,13 +838,9 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
 
     const action = requireData(button, "action");
     const instanceId = instanceData(button);
-    const collapseContext = autoCollapseContext(module, button, parent);
-    if (collapseContext !== null) {
-        cancelAutoCollapse(
-            module,
-            collapseContext.groupId,
-            collapseContext.instanceId,
-        );
+    const collapseContexts = autoCollapseContexts(module, button, parent);
+    for (const context of collapseContexts) {
+        cancelAutoCollapse(module, context.groupId, context.instanceId);
     }
     module.status = "";
 
@@ -1064,15 +1073,10 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
 
     renderAll();
     if (openNextPrompt(module)) renderAll();
-    if (
-        collapseContext !== null &&
-        autoCollapseCompletionActions.has(action)
-    ) {
-        scheduleAutoCollapse(
-            module,
-            collapseContext.groupId,
-            collapseContext.instanceId,
-        );
+    if (autoCollapseCompletionActions.has(action)) {
+        for (const context of collapseContexts) {
+            scheduleAutoCollapse(module, context.groupId, context.instanceId);
+        }
     }
     focusOpenAttribute(module);
 };
@@ -1130,10 +1134,12 @@ const updateFromInput = (field: EventTarget | null): boolean => {
 };
 
 const handleInput = (module: Module, event: Event): void => {
+    cancelAutoCollapseForTarget(module, event.target);
     if (updateFromInput(event.target)) module.status = "";
 };
 
 const handleChange = (module: Module, event: Event): void => {
+    cancelAutoCollapseForTarget(module, event.target);
     if (!updateFromInput(event.target)) return;
     module.status = "";
     renderAll();
@@ -1141,6 +1147,7 @@ const handleChange = (module: Module, event: Event): void => {
 
 const handleKeydown = (module: Module, event: KeyboardEvent): void => {
     const target = event.target;
+    cancelAutoCollapseForTarget(module, target);
     if (
         event.key !== "Enter" ||
         event.isComposing ||

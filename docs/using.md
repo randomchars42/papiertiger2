@@ -83,7 +83,11 @@ geben die Wartezeit in Sekunden an. Ein gleichnamiger URL-Parameter
 `?autoCollapseSeconds=4`. Explizit mit `@autocollapse` markierte Gruppen
 behalten bei ausgeschalteter globaler Option ihr eigenes Verhalten. Automatisch
 eingeklappte Gruppen zeigen ihre aktiven Einträge weiterhin in einer reduzierten
-Ansicht; nur noch nicht aufgenommene Auswahlmöglichkeiten werden verborgen.
+Ansicht; nur noch nicht aufgenommene Auswahlmöglichkeiten werden verborgen. Jede
+weitere Bedienung innerhalb der Gruppe oder einer Untergruppe setzt deren
+laufende Fristen zurück. Solange ein Inline-Editor geöffnet ist, bleiben die
+betroffenen Gruppe und ihre automatisch einklappenden Obergruppen offen; nach
+**Fertig** oder **Enter** beginnt die jeweilige Frist neu.
 
 ## Vorschläge und Vorgaben
 
