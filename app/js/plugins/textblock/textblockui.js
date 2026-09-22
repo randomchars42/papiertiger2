@@ -202,12 +202,12 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
         parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
-const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides) => {
+const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed) => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
     container.dataset.repeatableGroupId = groupId;
     for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
-        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, instanceId, index);
+        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, instanceId, index);
     }
     const title = parseValue(group.title).text;
     const addLabel = group.repeatable?.add ?? `${title} hinzufügen`;
@@ -220,7 +220,7 @@ const renderRepeatable = (parent, groupId, level, definitions, state, resolved, 
     container.append(addButton);
     parent.append(container);
 };
-function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, instanceId, instanceIndex) {
+function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, instanceId, instanceIndex) {
     const group = definitions.groups[groupId];
     if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
         return;
@@ -336,16 +336,17 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             const child = item.id;
             if (definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined) {
-                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides);
+                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed);
             }
             else {
-                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, instanceId);
+                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, instanceId);
             }
         }
         renderPhrases();
         section.append(body);
     }
-    else if (enabled && group.autoCollapse === true) {
+    else if (enabled &&
+        (group.autoCollapse === true || showIncludedWhenCollapsed)) {
         const includedPhrases = includedPhrasesInGroup(groupId, definitions, state, resolved, instanceId);
         if (includedPhrases.length > 0) {
             const body = element("div", "group__body group__body--included-only");
@@ -364,7 +365,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     }
     parent.append(section);
 }
-export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, status, controls = true) => {
+export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, status, controls = true) => {
     parent.replaceChildren();
     parent.classList.add("textblock-module");
     parent.dataset.rootId = rootId;
@@ -378,6 +379,6 @@ export const renderModule = (parent, rootId, definitions, state, resolved, openE
         parent.append(toolbar);
     }
     const documentNode = element("article", "document");
-    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides);
+    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed);
     parent.append(documentNode);
 };

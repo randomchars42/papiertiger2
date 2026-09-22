@@ -144,7 +144,7 @@ const renderAll = () => {
                 module.suggestionHighlights.delete(key);
             }
         }
-        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.suggestionHighlights.keys()), module.collapseOverrides, module.status, module.controls);
+        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.suggestionHighlights.keys()), module.collapseOverrides, module.autoCollapseAllDelay !== null, module.status, module.controls);
     }
 };
 const scopeFor = (instanceId) => scopeState(state, instanceId);

@@ -81,7 +81,9 @@ Einklappen für alle Gruppen. `0` lässt diese globale Option aus; positive Wert
 geben die Wartezeit in Sekunden an. Ein gleichnamiger URL-Parameter
 überschreibt die lokale Umgebungskonfiguration, beispielsweise
 `?autoCollapseSeconds=4`. Explizit mit `@autocollapse` markierte Gruppen
-behalten bei ausgeschalteter globaler Option ihr eigenes Verhalten.
+behalten bei ausgeschalteter globaler Option ihr eigenes Verhalten. Automatisch
+eingeklappte Gruppen zeigen ihre aktiven Einträge weiterhin in einer reduzierten
+Ansicht; nur noch nicht aufgenommene Auswahlmöglichkeiten werden verborgen.
 
 ## Vorschläge und Vorgaben
 

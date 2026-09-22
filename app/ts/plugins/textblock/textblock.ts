@@ -224,6 +224,7 @@ const renderAll = (): void => {
             module.openEditor,
             new Set(module.suggestionHighlights.keys()),
             module.collapseOverrides,
+            module.autoCollapseAllDelay !== null,
             module.status,
             module.controls,
         );

@@ -463,6 +463,7 @@ const renderRepeatable = (
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
+    showIncludedWhenCollapsed: boolean,
 ): void => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
@@ -478,6 +479,7 @@ const renderRepeatable = (
             openEditor,
             highlightedSuggestions,
             collapseOverrides,
+            showIncludedWhenCollapsed,
             instanceId,
             index,
         );
@@ -509,6 +511,7 @@ function renderGroup(
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
+    showIncludedWhenCollapsed: boolean,
     instanceId?: string,
     instanceIndex?: number,
 ): void {
@@ -726,6 +729,7 @@ function renderGroup(
                     openEditor,
                     highlightedSuggestions,
                     collapseOverrides,
+                    showIncludedWhenCollapsed,
                 );
             } else {
                 renderGroup(
@@ -738,13 +742,17 @@ function renderGroup(
                     openEditor,
                     highlightedSuggestions,
                     collapseOverrides,
+                    showIncludedWhenCollapsed,
                     instanceId,
                 );
             }
         }
         renderPhrases();
         section.append(body);
-    } else if (enabled && group.autoCollapse === true) {
+    } else if (
+        enabled &&
+        (group.autoCollapse === true || showIncludedWhenCollapsed)
+    ) {
         const includedPhrases = includedPhrasesInGroup(
             groupId,
             definitions,
@@ -788,6 +796,7 @@ export const renderModule = (
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
+    showIncludedWhenCollapsed: boolean,
     status: string,
     controls = true,
 ): void => {
@@ -820,6 +829,7 @@ export const renderModule = (
         openEditor,
         highlightedSuggestions,
         collapseOverrides,
+        showIncludedWhenCollapsed,
     );
     parent.append(documentNode);
 };
