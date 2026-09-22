@@ -1,0 +1,863 @@
+# Kuratierter Katalog für Leitsymptome und Vorstellungsanlässe.
+# Die Reihenfolge entspricht der vermuteten Nutzungshäufigkeit und bestimmt
+# zugleich die Reihenfolge innerhalb der gefilterten Linsen.
+N: symptome
+I: gemeinsam
+
+L rettungsdienst: Rettungsdienst
+L kernteam: Kernteam
+L trauma_orthopaedie: Trauma & Orthopädie
+L allgemeinchirurgie: Allgemeinchirurgie
+L thorax_gefaesschirurgie: Thorax- & Gefäßchirurgie
+L neurochirurgie: Neurochirurgie
+L hno: HNO
+L auge: Auge
+L gynaekologie_geburtshilfe: Gynäkologie / Geburtshilfe
+L paediatrie: Pädiatrie
+L psychiatrie: Psychiatrie
+L wiedervorstellung_kontrolle: Wiedervorstellung & Kontrolle
+
+V atemnot: Atemnot|a
+  @sct=267036007[Dyspnoea]
+  @alias=Luftnot; Dyspnoe; Kurzatmigkeit
+  @cedis=651[Luftnot] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V brustschmerz: Brustschmerz|a
+  @sct=29857009[Chest pain]
+  @alias=Thoraxschmerz; Brustenge
+  @cedis=003[Brustschmerz (kardial)] related; 004[Brustschmerz (nicht kardial)] related
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V bauchschmerz: Bauchschmerz|a
+  @sct=21522001[Abdominal pain]
+  @alias=Abdominalschmerz; akutes Abdomen
+  @cedis=251[Bauchschmerzen] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe; paediatrie
+
+V schwaeche: Schwäche|a
+  @sct=13791008[Asthenia]
+  @alias=allgemeine Schwäche; Kraftlosigkeit; Abgeschlagenheit; AZ-Minderung
+  @cedis=007[Allgemeine Schwäche] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V fieber: Fieber|a
+  @sct=386661006[Fever]
+  @alias=erhöhte Temperatur; febril
+  @cedis=852[Fieber] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; paediatrie
+
+V kopfschmerz: Kopfschmerz|a
+  @sct=25064002[Headache]
+  @alias=Cephalgie; Migräne
+  @cedis=404[Kopfschmerz] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+
+V schwindel: Schwindel|a
+  @sct=404640003[Dizziness]
+  @alias=Drehschwindel; Vertigo; Benommenheit
+  @cedis=403[Schwindel] equivalent
+  @lens=rettungsdienst; kernteam; hno
+
+V uebelkeit: Übelkeit|a
+  @sct=422587007[Nausea]
+  @alias=Nausea
+  @cedis=257[Übelkeit und/oder Erbrechen] related
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe; paediatrie
+
+V erbrechen: Erbrechen|a
+  @sct=422400008[Vomiting]
+  @alias=Emesis
+  @cedis=257[Übelkeit und/oder Erbrechen] related
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe; paediatrie
+
+V synkope: Synkope|a
+  @sct=271594007[Syncope]
+  @alias=Präsynkope; Ohnmacht; Kollaps; Kreislaufkollaps
+  @cedis=008[Synkope/Präsynkope] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V husten: Husten|a
+  @sct=49727002[Cough]
+  @alias=Verschleimung; produktiver Husten
+  @cedis=653[Husten/Verschleimung] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V rueckenschmerz: Rückenschmerz|a
+  @alias=Rückenschmerzen; Kreuzschmerz; Lumbago
+  @cedis=551[Rückenschmerzen] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; neurochirurgie
+
+V herzklopfen: Herzklopfen|a
+  @sct=80313002[Palpitations]
+  @alias=Herzrasen; Herzstolpern; Palpitationen
+  @cedis=005[Palpitationen/unregelmäßiger Herzschlag] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V durchfall: Durchfall|a
+  @alias=Diarrhoe
+  @cedis=254[Durchfall] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V verstopfung: Verstopfung|a
+  @alias=Obstipation
+  @cedis=253[Verstopfung] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V krampfanfall: Krampfanfall|a
+  @sct=91175000[Seizure]
+  @alias=epileptischer Anfall; Konvulsion
+  @cedis=405[Krampfanfall] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+
+V bewusstseinsstoerung: Bewusstseinsstörung|a
+  @alias=Bewusstseinstrübung; Somnolenz; Sopor; Koma
+  @cedis=401[Veränderter Bewusstseinszustand] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+
+V verwirrtheit: Verwirrtheit|a
+  @alias=Desorientierung; Delir
+  @cedis=402[Verwirrtheit] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+
+V extremitaetenschwaeche: Extremitätenschwäche|a
+  @alias=Parese; Lähmung; FAST-positiv; Schlaganfallsymptom
+  @cedis=409[Schwäche in den Extremitäten/Symptome eines Schlaganfalls oder TIA] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie
+
+V sensibilitaetsstoerung: Sensibilitätsstörung|a
+  @alias=Parästhesie; Taubheit; Kribbeln; Hypästhesie
+  @cedis=410[Sensibilitätsstörung/Parästhesie] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie
+
+V flanken_schmerz: Flankenschmerz|a
+  @alias=Nierenschmerz
+  @cedis=301[Flankenschmerz] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie
+
+V algurie: Algurie|a
+  @alias=Dysurie; Schmerzen beim Wasserlassen; Harnwegsinfekt
+  @cedis=307[Beschwerden eines Harnwegsinfektes] related
+  @lens=kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe; paediatrie
+
+V pollakisurie: Pollakisurie|a
+  @alias=häufiges Wasserlassen; Harndrang
+  @cedis=307[Beschwerden eines Harnwegsinfektes] related
+  @lens=kernteam; gynaekologie_geburtshilfe
+
+V harnverhalt: Harnverhalt|a
+  @alias=Ischurie
+  @cedis=306[Harnverhalt] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie
+
+V haematurie: Hämaturie|a
+  @alias=Blut im Urin
+  @cedis=302[Hämaturie] equivalent
+  @lens=kernteam; allgemeinchirurgie
+
+V beinschwellung: Beinschwellung|a
+  @alias=Beinödem; dickes Bein
+  @cedis=010[Beinschwellung/Ödem] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V generalisiertes_oedem: Generalisiertes Ödem|a
+  @alias=Anasarka; Wassereinlagerung
+  @cedis=009[Ödem, generalisiert] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V hypertonie: Hypertonie|a
+  @alias=Bluthochdruck; hoher Blutdruck
+  @cedis=006[Hypertonie] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V hypoglykaemie: Hypoglykämie|a
+  @alias=Unterzuckerung; niedriger Blutzucker
+  @cedis=854[Hypoglykämie] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V hyperglykaemie: Hyperglykämie|a
+  @alias=Überzuckerung; hoher Blutzucker
+  @cedis=853[Hyperglykämie] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V allergische_reaktion: Allergische Reaktion|a
+  @alias=Allergie; Anaphylaxie; Nesselsucht
+  @cedis=657[Allergische Reaktion] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V hautausschlag: Hautausschlag|a
+  @alias=Exanthem; Ausschlag
+  @cedis=708[Hautausschlag] equivalent
+  @lens=kernteam; paediatrie
+
+V juckreiz: Juckreiz|a
+  @alias=Pruritus
+  @cedis=707[Juckreiz] equivalent
+  @lens=kernteam; paediatrie
+
+V halsschmerz: Halsschmerz|a
+  @alias=wunder Rachen; Pharyngitis
+  @cedis=103[Halsschmerzen (wunder Rachen)] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V infekt_obere_luftwege: Infekt der oberen Luftwege|a
+  @alias=Erkältung; Schnupfen; grippaler Infekt
+  @cedis=154[Beschwerden eines Infektes der oberen Luftwege] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V grippeaehnliche_erkrankung: Grippeähnliche Erkrankung|a
+  @alias=Influenza; Gliederschmerzen; grippal
+  @cedis=661[Grippeähnliche Erkrankung] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V nackenschmerz_schwellung: Halsschwellung oder Nackenschmerz|a
+  @alias=Halsschwellung; Nackenschmerz
+  @cedis=104[Halsschwellung/-schmerzen] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V schluckbeschwerden: Schluckbeschwerden|a
+  @alias=Dysphagie; Schluckstörung
+  @cedis=106[Schluckbeschwerden/Dysphagie] equivalent
+  @lens=rettungsdienst; kernteam; hno; paediatrie
+
+V ohrenschmerz: Ohrenschmerz|a
+  @alias=Otalgie
+  @cedis=051[Ohrenschmerzen] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V nasenbluten: Nasenbluten|a
+  @alias=Epistaxis
+  @cedis=151[Nasenbluten] equivalent
+  @lens=rettungsdienst; kernteam; hno; paediatrie
+
+V augenschmerz: Augenschmerz|a
+  @alias=Okulärer Schmerz
+  @cedis=505[Augenschmerzen] equivalent
+  @lens=kernteam; auge; paediatrie
+
+V sehstoerung: Sehstörung|a
+  @alias=Sehverlust; verschwommenes Sehen
+  @cedis=504[Sehstörung] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie; auge; paediatrie
+
+V rotes_auge: Rotes Auge|a
+  @alias=Augenrötung; Augenausfluss
+  @cedis=506[Rote Augen, Ausfluss aus dem Auge] equivalent
+  @lens=kernteam; auge; paediatrie
+
+V rueckenverletzung: Rücken- oder Wirbelsäulenverletzung|a
+  @alias=Wirbelsäulentrauma; Rückenunfall
+  @cedis=552[Traumatische Rücken-/Wirbelsäulenverletzung] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; neurochirurgie
+
+V kopfverletzung: Kopfverletzung|a
+  @alias=Schädel-Hirn-Trauma; SHT
+  @cedis=407[Kopfverletzung] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; neurochirurgie; paediatrie
+
+V schulter_arm_schmerz: Schulter- oder Armschmerz|a
+  @alias=Schulterschmerz; Armschmerz; Schmerz obere Extremität
+  @cedis=554[Schmerzen obere Extremität] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+
+V bein_hueft_knieschmerz: Bein-, Hüft- oder Knieschmerz|a
+  @alias=Beinschmerz; Hüftschmerz; Knieschmerz; Schmerz untere Extremität
+  @cedis=555[Schmerzen untere Extremität] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+
+V gelenkschwellung: Gelenkschwellung|a
+  @alias=Gelenkschmerz; Arthritis; Erguss
+  @cedis=558[Gelenkschwellung] related
+  @lens=kernteam; trauma_orthopaedie; paediatrie
+
+V verletzung_obere_extremitaet: Verletzung der oberen Extremität|a
+  @alias=Armverletzung; Schulterverletzung; Handverletzung
+  @cedis=556[Verletzung obere Extremität] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; paediatrie
+
+V verletzung_untere_extremitaet: Verletzung der unteren Extremität|a
+  @alias=Beinverletzung; Hüftverletzung; Knieverletzung; Fußverletzung
+  @cedis=557[Verletzung untere Extremität] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; paediatrie
+
+V wunde: Wunde|a
+  @alias=Risswunde; Quetschwunde; Schnittwunde; Stichwunde
+  @cedis=704[Riss-/Quetsch-/Schnitt-/Stichwunde] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; allgemeinchirurgie; paediatrie
+
+V abschuerfung: Abschürfung|a
+  @alias=Schürfwunde
+  @cedis=703[Abschürfung] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; paediatrie
+
+V verbrennung: Verbrennung|a
+  @alias=Verbrühung; thermische Verletzung
+  @cedis=705[Verbrennung] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie; paediatrie
+
+V bissverletzung: Bissverletzung|a
+  @alias=Tierbiss; Menschenbiss
+  @cedis=701[Biss] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; allgemeinchirurgie; paediatrie
+
+V insektenstich: Insektenstich|a
+  @alias=Stichreaktion
+  @cedis=702[Insektenstich] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V schwere_verletzung: Schwere Verletzung|a
+  @alias=Polytrauma; schweres Trauma
+  @cedis=801[Schweres Trauma - penetrierend] related; 802[Schweres Trauma - stumpf] related
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie
+
+V thoraxverletzung: Thoraxverletzung|a
+  @alias=Thoraxtrauma; Brustkorbverletzung
+  @cedis=803[Isoliertes Thoraxtrauma - penetrierend] related; 804[Isoliertes Thoraxtrauma - stumpf] related
+  @lens=rettungsdienst; trauma_orthopaedie; thorax_gefaesschirurgie
+
+V bauchverletzung: Bauchverletzung|a
+  @alias=Abdominaltrauma
+  @cedis=805[Isoliertes Abdominaltrauma - penetrierend] related; 806[Isoliertes Abdominaltrauma - stumpf] related
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie
+
+V anal_rektalverletzung: Anale oder rektale Verletzung|a
+  @alias=Analtrauma; Rektaltrauma
+  @cedis=264[Trauma anal/rektal] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie
+
+V genitalverletzung: Genitalverletzung|a
+  @alias=Genitaltrauma
+  @cedis=310[Trauma genital] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie; gynaekologie_geburtshilfe
+
+V herzstillstand: Herzstillstand|a
+  @alias=Reanimation; Kreislaufstillstand
+  @cedis=001[Herzstillstand (nicht traumatisch)] related; 002[Herzstillstand (traumatisch)] related
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; thorax_gefaesschirurgie; paediatrie
+
+V atemstillstand: Atemstillstand|a
+  @alias=Apnoe; Reanimation
+  @cedis=652[Atemstillstand] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V bluthusten: Bluthusten|a
+  @alias=Hämoptyse
+  @cedis=655[Bluthusten] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V hyperventilation: Hyperventilation|a
+  @alias=schnelle Atmung; Panikatmung
+  @cedis=654[Hyperventilation] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+
+V stridor: Stridor|a
+  @alias=pfeifende Einatmung; inspiratorischer Stridor
+  @cedis=658[Stridor] equivalent
+  @lens=rettungsdienst; kernteam; hno; paediatrie
+
+V giemen: Giemen|a
+  @alias=exspiratorisches Giemen; Wheezing
+  @cedis=659[Giemen ohne weitere Beschwerden] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V fremdkoerper_atemwege: Fremdkörper in den Atemwegen|a
+  @alias=Aspiration; Verschlucken
+  @cedis=656[Fremdkörper in den Atemwegen] equivalent
+  @lens=rettungsdienst; kernteam; hno; thorax_gefaesschirurgie; paediatrie
+
+V kalte_pulslose_extremitaet: Kühle, pulslose Extremität|a
+  @alias=akuter Gefäßverschluss; Ischämie
+  @cedis=011[Kühle, pulslose Extremität] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; thorax_gefaesschirurgie
+
+V geroetete_ueberwaermte_extremitaet: Gerötete, überwärmte Extremität|a
+  @alias=Thrombose; Phlebitis; Erysipel
+  @cedis=012[Eine Extremität gerötet, überwärmt] equivalent
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie; thorax_gefaesschirurgie
+
+V gangstoerung: Gangstörung|a
+  @alias=Ataxie; unsicherer Gang
+  @cedis=406[Gangstörung/Ataxie] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+
+V zittern: Zittern|a
+  @alias=Tremor; Schütteln
+  @cedis=408[Zittern] equivalent
+  @lens=kernteam; neurochirurgie; psychiatrie
+
+V depression_suizidalitaet: Depression oder Suizidalität|a
+  @alias=Selbstschädigung; Suizidgedanken; depressive Krise
+  @cedis=351[Depression/Suizidalität/absichtliche Selbstschädigung] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+
+V angst_krise: Angst oder akute Krise|a
+  @alias=Panikattacke; Belastungsreaktion
+  @cedis=352[Angst/situationsbezogene Krise] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+
+V halluzination_wahn: Halluzination oder Wahn|a
+  @alias=Psychose; Stimmenhören; paranoides Erleben
+  @cedis=353[Halluzinationen/Wahnvorstellungen] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie
+
+V fremdgefaehrdung: Fremdgefährdung|a
+  @alias=gewalttätiges Verhalten; Aggression
+  @cedis=355[Gewalttätiges Verhalten/Fremdgefährdung] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie
+
+V intoxikation: Intoxikation|a
+  @alias=Substanzmissbrauch; Vergiftung; Drogenintoxikation
+  @cedis=751[Substanzmissbrauch/Intoxikation] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+
+V ueberdosierung: Überdosierung|a
+  @alias=Medikamentenüberdosierung; Tabletteneinnahme
+  @cedis=752[Einnahme einer Überdosierung] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+
+V substanzentzug: Substanzentzug|a
+  @alias=Alkoholentzug; Drogenentzug
+  @cedis=753[Substanzentzug] equivalent
+  @lens=rettungsdienst; kernteam; psychiatrie
+
+V vaginale_blutung: Vaginale Blutung|a
+  @alias=Blutung vaginal; Zwischenblutung
+  @cedis=455[Vaginale Blutung] equivalent
+  @lens=rettungsdienst; kernteam; gynaekologie_geburtshilfe
+
+V schwangerschaftsproblem_frueh: Schwangerschaftsproblem bis 20. SSW|a
+  @alias=Frühschwangerschaft; Blutung in der Schwangerschaft
+  @cedis=457[Schwangerschaftsprobleme ≤ 20. SSW] equivalent
+  @lens=rettungsdienst; kernteam; gynaekologie_geburtshilfe
+
+V schwangerschaftsproblem_spaet: Schwangerschaftsproblem nach 20. SSW|a
+  @alias=Spätschwangerschaft; Wehen; Fruchtwasserabgang
+  @cedis=458[Schwangerschaftsprobleme > 20. SSW] equivalent
+  @lens=rettungsdienst; kernteam; gynaekologie_geburtshilfe
+
+V menstruationsbeschwerden: Menstruationsbeschwerden|a
+  @alias=Regelschmerz; Dysmenorrhoe
+  @cedis=451[Menstruationsbeschwerden] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe
+
+V vaginaler_ausfluss: Vaginaler Ausfluss|a
+  @alias=Fluor vaginalis
+  @cedis=453[Vaginaler Ausfluss] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe
+
+V vaginale_schmerzen: Vaginale Schmerzen|a
+  @alias=Dyspareunie; Schmerzen beim Geschlechtsverkehr
+  @cedis=460[Vaginale Schmerzen/Schmerzen beim Geschlechtsverkehr] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe
+
+V sexueller_uebergriff: Sexueller Übergriff|a
+  @alias=sexualisierte Gewalt
+  @cedis=454[Sexueller Übergriff] equivalent
+  @lens=rettungsdienst; kernteam; gynaekologie_geburtshilfe; paediatrie; psychiatrie
+
+V skrotalschmerz: Skrotalschmerz oder -schwellung|a
+  @alias=Hodenschmerz; Hodenschwellung
+  @cedis=305[Skrotale Schmerzen und/oder Schwellung] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; paediatrie
+
+V penis_schwellung: Penisschwellung|a
+  @alias=Paraphimose; Phimose
+  @cedis=304[Penisschwellung] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V genitaler_ausfluss_laesion: Genitaler Ausfluss oder Läsion|a
+  @alias=Genitalläsion; urethraler Ausfluss
+  @cedis=303[Genitaler Ausfluss/Läsion] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe
+
+V appetitlosigkeit: Appetitlosigkeit|a
+  @alias=Inappetenz
+  @cedis=252[Appetitlosigkeit] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V bluterbrechen: Bluterbrechen|a
+  @alias=Hämatemesis
+  @cedis=259[Bluterbrechen] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie
+
+V rektale_blutung: Rektale Blutung oder Teerstuhl|a
+  @alias=Blut im Stuhl; Hämatochezie; Meläna
+  @cedis=260[Peranaler Blutabgang/Teerstuhl] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie
+
+V ikterus: Ikterus|a
+  @alias=Gelbsucht
+  @cedis=261[Ikterus] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V leistenbeschwerden: Leistenschmerz oder -schwellung|a
+  @alias=Leistenhernie; Leistenbruch
+  @cedis=256[Leistenschmerzen/-schwellung] equivalent
+  @lens=kernteam; allgemeinchirurgie; trauma_orthopaedie; paediatrie
+
+V abdominelle_raumforderung: Abdominelle Raumforderung oder gespanntes Abdomen|a
+  @alias=Abwehrspannung; geblähter Bauch
+  @cedis=263[Abdominelle Raumforderung/gespanntes Abdomen] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; paediatrie
+
+V zahnproblem: Zahn- oder Zahnfleischproblem|a
+  @alias=Zahnschmerz; Zahnfleischblutung
+  @cedis=101[Zahn-/Zahnfleischprobleme] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V gesichtsschmerz: Gesichtsschmerz|a
+  @alias=Trigeminusschmerz; nicht dentaler Gesichtsschmerz
+  @cedis=107[Schmerzen im Gesicht (nicht traumatisch, nicht dental)] equivalent
+  @lens=kernteam; hno; neurochirurgie
+
+V gesichtsverletzung: Gesichtsverletzung|a
+  @alias=Gesichtstrauma
+  @cedis=102[Trauma Gesicht] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; neurochirurgie; hno; paediatrie
+
+V halsverletzung: Halsverletzung|a
+  @alias=Halstrauma
+  @cedis=105[Trauma Hals] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; thorax_gefaesschirurgie; hno
+
+V hoerverlust: Hörverlust|a
+  @alias=Taubheit; Hörminderung
+  @cedis=053[Hörverlust] equivalent
+  @lens=kernteam; hno; neurochirurgie; paediatrie
+
+V tinnitus: Tinnitus|a
+  @alias=Ohrgeräusch; Ohrensausen
+  @cedis=054[Tinnitus] equivalent
+  @lens=kernteam; hno
+
+V ohrausfluss: Ausfluss aus dem Ohr|a
+  @alias=Otorrhoe
+  @cedis=055[Ausfluss aus dem Ohr] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V ohrverletzung: Ohrverletzung|a
+  @alias=Ohrtrauma
+  @cedis=056[Ohrverletzung] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; hno; paediatrie
+
+V verstopfte_nase: Verstopfte Nase oder Heuschnupfen|a
+  @alias=Rhinitis; nasale Obstruktion; Allergie
+  @cedis=152[Verstopfte Nase/Heuschnupfen] equivalent
+  @lens=kernteam; hno; paediatrie
+
+V nasenverletzung: Nasenverletzung|a
+  @alias=Nasentrauma; Nasenbeinfraktur
+  @cedis=155[Trauma Nase] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; hno; paediatrie
+
+V doppelbilder: Doppelbilder|a
+  @alias=Diplopie
+  @cedis=508[Doppelbilder] equivalent
+  @lens=rettungsdienst; kernteam; neurochirurgie; auge
+
+V lichtscheu: Lichtscheu|a
+  @alias=Photophobie
+  @cedis=507[Lichtscheu] equivalent
+  @lens=kernteam; neurochirurgie; auge; paediatrie
+
+V periorbitale_schwellung: Periorbitale Schwellung|a
+  @alias=Schwellung um das Auge
+  @cedis=509[Periorbitale Schwellung] equivalent
+  @lens=kernteam; auge; paediatrie
+
+V augenverletzung: Augenverletzung|a
+  @alias=Augentrauma
+  @cedis=510[Trauma Auge] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; neurochirurgie; auge; paediatrie
+
+V chemikalie_im_auge: Chemikalienexposition am Auge|a
+  @alias=Verätzung des Auges; Chemikalie im Auge
+  @cedis=502[Exposition des Auges gegenüber Chemikalien] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; auge
+
+V fremdkoerper_im_auge: Fremdkörper im Auge|a
+  @alias=Fremdkörpergefühl; Metallspan im Auge
+  @cedis=503[Fremdkörper im Auge] equivalent
+  @lens=kernteam; trauma_orthopaedie; auge
+
+V lokale_schwellung_roetung: Lokalisierte Schwellung oder Rötung|a
+  @alias=lokale Entzündung; Abszess; Phlegmone
+  @cedis=709[Lokalisierte Schwellung/Rötung] equivalent
+  @lens=kernteam; allgemeinchirurgie; trauma_orthopaedie; paediatrie
+
+V spontane_hauteinblutung: Spontane Hauteinblutung|a
+  @alias=Hämatom; Purpura; Petechien
+  @cedis=716[Spontane Hauteinblutungen] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V zyanose: Zyanose|a
+  @alias=Blauverfärbung; Lippenzyanose
+  @cedis=715[Zyanose] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V stromunfall: Stromunfall|a
+  @alias=Elektrounfall; Stromschlag
+  @cedis=203[Stromunfall] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; paediatrie
+
+V schaedliche_inhalation: Schädliche Inhalation|a
+  @alias=Rauchgasinhalation; Gasexposition
+  @cedis=202[Schädliche Inhalation] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V chemikalienexposition: Chemikalienexposition|a
+  @alias=Verätzung; Gefahrstoffkontakt
+  @cedis=204[Exposition gegenüber Chemikalien] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie; paediatrie
+
+V unterkuehlung: Unterkühlung|a
+  @alias=Hypothermie
+  @cedis=205[Unterkühlung] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V kaelteverletzung: Kälteverletzung|a
+  @alias=Erfrierung
+  @cedis=201[Erfrierung/Kälteverletzung] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; paediatrie
+
+V beinahe_ertrinken: Beinahe-Ertrinken|a
+  @alias=Ertrinkungsunfall; Submersion
+  @cedis=206[Beinahe-Ertrinken] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie; paediatrie
+
+V postoperative_komplikation: Postoperative Komplikation|a
+  @alias=Komplikation nach Operation; Wundheilungsstörung
+  @cedis=865[Postoperative Komplikationen] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie; hno; auge; gynaekologie_geburtshilfe; paediatrie
+
+V medizinprodukt_problem: Problem mit einem Medizinprodukt|a
+  @alias=Katheterproblem; Sondenproblem; Drainagenproblem
+  @cedis=860[Problem mit Medizinprodukt] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie; hno; auge; gynaekologie_geburtshilfe; paediatrie; wiedervorstellung_kontrolle
+
+V auffaellige_befunde: Auffällige Labor- oder Bildgebungsbefunde|a
+  @alias=auffälliger Laborwert; auffällige Bildgebung; Befundkontrolle
+  @cedis=863[Auffällige Ergebnisse Labor/Bildgebung] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie; hno; auge; gynaekologie_geburtshilfe; paediatrie; wiedervorstellung_kontrolle
+
+V anaemie_blaesse: Blässe oder Anämie|a
+  @alias=Blutarmut; niedriger Hämoglobinwert
+  @cedis=864[Blässe/Anämie] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; paediatrie
+
+V unspezifische_beschwerden: Unspezifische Beschwerden|a
+  @alias=unklare Beschwerden; allgemeines Unwohlsein
+  @cedis=866[Geringfügige unspezifische Beschwerden] related
+  @lens=kernteam; paediatrie
+
+V unstillbares_schreien: Unstillbares Schreien|a
+  @alias=schreiender Säugling; exzessives Schreien
+  @cedis=867[Unstillbares Schreien] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V schlaffes_kind: Schlaffes Kind|a
+  @alias=hypotones Kind; floppy infant
+  @cedis=411[Schlaffes Kind] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V apnoe_saeugling: Apnoe beim Säugling|a
+  @alias=Atemaussetzer; ALTE; BRUE
+  @cedis=660[Apnoeanfälle bei Säuglingen] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie
+
+V neugeborenen_trinkstoerung: Trinkstörung des Neugeborenen|a
+  @alias=Trinkschwäche; schlechte Nahrungsaufnahme
+  @cedis=266[Trinkstörung des Neugeborenen] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe; paediatrie
+
+V neugeborenenikterus: Neugeborenenikterus|a
+  @alias=Gelbsucht beim Neugeborenen
+  @cedis=267[Neugeborenenikterus] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe; paediatrie
+
+V angeborenes_problem: Angeborenes Problem beim Kind|a
+  @alias=kongenitale Fehlbildung; angeborene Erkrankung
+  @cedis=868[Angeborene Probleme bei Kindern] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe; paediatrie
+
+V neugeborenes: Vorstellung eines Neugeborenen|a
+  @alias=Neugeborenenvorstellung
+  @cedis=869[Neugeborenes] equivalent
+  @lens=kernteam; gynaekologie_geburtshilfe; paediatrie
+
+V kindliche_gangstoerung: Kindliche Gangstörung oder Schmerzen beim Gehen|a
+  @alias=Kind hinkt; Lahmheit
+  @cedis=559[Kindliche Gangstörung/Schmerzen beim Gehen] equivalent
+  @lens=kernteam; trauma_orthopaedie; paediatrie
+
+V kindliche_verhaltensauffaelligkeit: Kindliche Verhaltensauffälligkeit|a
+  @alias=Verhaltensproblem beim Kind
+  @cedis=360[Kindliche Verhaltensauffälligkeit] equivalent
+  @lens=kernteam; paediatrie; psychiatrie
+
+V schlafstoerung: Schlafstörung|a
+  @alias=Insomnie; Schlaflosigkeit
+  @cedis=354[Schlafstörung] equivalent
+  @lens=kernteam; paediatrie; psychiatrie
+
+V auffaelliges_verhalten: Auffälliges Verhalten|a
+  @alias=sonderbares Verhalten; Wesensveränderung
+  @cedis=358[Sonderbares Verhalten] equivalent
+  @lens=rettungsdienst; kernteam; paediatrie; psychiatrie
+
+V soziales_problem: Soziales Problem|a
+  @alias=Wohnungslosigkeit; Versorgungskrise; häusliche Krise
+  @cedis=356[Soziales Problem] equivalent
+  @lens=kernteam; paediatrie; psychiatrie
+
+V sorge_wohlergehen: Sorge um das Wohlergehen|a
+  @alias=Fürsorgeproblem; Selbstvernachlässigung; Kindeswohl
+  @cedis=359[Sorge um das Wohlergehen des Patienten] equivalent
+  @lens=kernteam; paediatrie; psychiatrie
+
+V verbandswechsel: Verbandswechsel|-
+  @alias=Wundverband; Verbandkontrolle
+  @cedis=856[Verbandswechsel] equivalent
+  @lens=trauma_orthopaedie; allgemeinchirurgie; wiedervorstellung_kontrolle
+
+V naht_klammerentfernung: Entfernung von Klammern oder Nähten|-
+  @alias=Fadenzug; Klammerentfernung; Nahtentfernung
+  @cedis=857[Entfernung von Klammern/Nähten] equivalent
+  @lens=trauma_orthopaedie; allgemeinchirurgie; wiedervorstellung_kontrolle
+
+V gipskontrolle: Gipskontrolle|-
+  @alias=Gipsproblem; Cast-Kontrolle
+  @cedis=858[Gipskontrolle] equivalent
+  @lens=trauma_orthopaedie; wiedervorstellung_kontrolle
+
+V bildgebung_laborkontrolle: Bildgebung oder Laborkontrolle|-
+  @alias=Bildgebung; Blutuntersuchung; Laborkontrolle; Röntgenkontrolle
+  @cedis=859[Bildgebung/Blutuntersuchung] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie; hno; auge; gynaekologie_geburtshilfe; paediatrie; wiedervorstellung_kontrolle
+
+V wundkontrolle: Wundkontrolle|-
+  @alias=Wiedervorstellung Wunde; Wundheilungskontrolle
+  @cedis=710[Wundkontrolle] equivalent
+  @lens=trauma_orthopaedie; allgemeinchirurgie; wiedervorstellung_kontrolle
+
+V augenkontrolle: Augenkontrolle|-
+  @alias=Kontrolluntersuchung Auge; Wiedervorstellung Auge
+  @cedis=511[Kontrolluntersuchung der Augen] equivalent
+  @lens=auge; wiedervorstellung_kontrolle
+
+V medikamentenbedarf: Medikamentenbedarf oder Verschreibung|-
+  @alias=Rezept; Medikation; Medikament fehlt
+  @cedis=861[Verschreibung/Bedarf an Medikamenten] equivalent
+  @lens=kernteam; psychiatrie; paediatrie; wiedervorstellung_kontrolle
+
+V direkte_weiterleitung: Direkte Weiterleitung oder Überweisung|-
+  @alias=Zuweisung; direkte Überweisung
+  @cedis=855[Direkte Überweisung/Weiterleitung] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie; hno; auge; gynaekologie_geburtshilfe; paediatrie; psychiatrie; wiedervorstellung_kontrolle
+
+V vor_erster_einschaetzung_gegangen: Vor Ersteinschätzung gegangen|-
+  @alias=vor Triage gegangen; nicht mehr anwesend
+  @cedis=998[Patient aufgenommen und vor Ersteinschätzung wieder gegangen] equivalent
+  @lens=wiedervorstellung_kontrolle
+
+V intravenoese_therapie: Intravenöse Therapie|-
+  @alias=Infusion; intravenöse Medikation
+  @cedis=870[Intravenöse Therapie] equivalent
+  @lens=kernteam; paediatrie; wiedervorstellung_kontrolle
+
+V kontakt_infektionskrankheit: Kontakt mit übertragbarer Krankheit|a
+  @alias=Infektionskontakt; Exposition; Ansteckung
+  @cedis=851[Exposition gegenüber einer übertragbaren Krankheit] equivalent
+  @lens=kernteam; paediatrie; wiedervorstellung_kontrolle
+
+V kontakt_blut_koerperfluessigkeit: Kontakt mit Blut oder Körperflüssigkeiten|a
+  @alias=Nadelstichverletzung; Blutkontakt
+  @cedis=706[Kontakt mit Blut oder Körperflüssigkeiten] equivalent
+  @lens=kernteam; allgemeinchirurgie; trauma_orthopaedie; wiedervorstellung_kontrolle
+
+V fremdkoerper_ohr: Fremdkörper im Ohr|a
+  @cedis=052[Fremdkörper im Ohr] equivalent
+  @lens=hno; paediatrie
+
+V fremdkoerper_nase: Fremdkörper in der Nase|a
+  @cedis=153[Fremdkörper in der Nase] equivalent
+  @lens=hno; paediatrie
+
+V fremdkoerper_rektum: Fremdkörper im Rektum|a
+  @cedis=255[Fremdkörper im Rektum] equivalent
+  @lens=allgemeinchirurgie; psychiatrie
+
+V fremdkoerper_speiseroehre: Fremdkörper oral oder ösophageal|a
+  @alias=verschluckter Fremdkörper; Fremdkörper in Speiseröhre
+  @cedis=265[Fremdkörper oral/ösophageal] equivalent
+  @lens=rettungsdienst; kernteam; allgemeinchirurgie; hno; paediatrie
+
+V fremdkoerper_vagina: Fremdkörper in der Vagina|a
+  @cedis=452[Fremdkörper in der Vagina] equivalent
+  @lens=gynaekologie_geburtshilfe; paediatrie
+
+V fremdkoerper_haut: Fremdkörper in der Haut|a
+  @alias=Splitter; eingedrungener Fremdkörper
+  @cedis=717[Fremdkörper in der Haut] equivalent
+  @lens=trauma_orthopaedie; allgemeinchirurgie; paediatrie
+
+V amputation: Amputation|a
+  @alias=abgetrennte Gliedmaße
+  @cedis=553[Amputation] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie
+
+V nagelproblem: Nagelproblem|a
+  @alias=eingewachsener Nagel; Nagelverletzung
+  @cedis=718[Nagelprobleme] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie
+
+V parasitenverdacht: Parasitenverdacht|a
+  @alias=Läuse; Krätze; Milben
+  @cedis=714[Ausschluss eines Parasitenbefalls] related
+  @lens=kernteam; paediatrie; wiedervorstellung_kontrolle
+
+V brust_roetung_spannung: Rötung oder Spannungsgefühl der Brust|a
+  @alias=Mastitis; Brustentzündung
+  @cedis=713[Rötung/Spannungsgefühl in der Brust] equivalent
+  @lens=kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe
+
+V schamlippenschwellung: Schamlippenschwellung|a
+  @cedis=456[Schamlippenschwellung] equivalent
+  @lens=gynaekologie_geburtshilfe
+
+V oligurie: Oligurie|a
+  @alias=verminderte Urinmenge
+  @cedis=308[Oligurie] equivalent
+  @lens=rettungsdienst; kernteam
+
+V polyurie: Polyurie|a
+  @alias=vermehrte Urinmenge
+  @cedis=309[Polyurie] equivalent
+  @lens=kernteam
+
+V rektal_perinealer_schmerz: Rektaler oder perinealer Schmerz|a
+  @alias=Analschmerz; Dammschmerz
+  @cedis=258[Rektale/perineale Schmerzen] equivalent
+  @lens=kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe
+
+V schluckauf: Schluckauf|a
+  @alias=Singultus
+  @cedis=262[Schluckauf] equivalent
+  @lens=kernteam
+
+V sonstiges_hautproblem: Sonstiges Hautproblem|a
+  @cedis=711[Sonstige Hautprobleme] equivalent
+  @lens=kernteam; allgemeinchirurgie; paediatrie
+
+V schwellung_beule_schwiele: Schwellung, Beule oder Schwiele|a
+  @cedis=712[Schwellung/Beule/Schwiele] equivalent
+  @lens=kernteam; trauma_orthopaedie; allgemeinchirurgie; paediatrie
+
+V ring_entfernung: Entfernung eines Rings|-
+  @alias=Ring klemmt; Ringschnitt
+  @cedis=862[Entfernung Ring] equivalent
+  @lens=rettungsdienst; trauma_orthopaedie; allgemeinchirurgie; wiedervorstellung_kontrolle
+
+V freitext: {:freitext=gemeinsam.freitext*:}|a
+  @freetext
+  @cedis=999[Unbekannt] related

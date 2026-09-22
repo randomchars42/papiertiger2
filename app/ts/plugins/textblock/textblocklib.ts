@@ -43,6 +43,7 @@ export const emptyDefinitions = (): Definitions => ({
     phrases: {},
     sets: {},
     editors: {},
+    catalogs: {},
 });
 
 export const parseValue = (

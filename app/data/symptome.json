@@ -1,0 +1,3710 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "catalogs": {
+    "symptome": {
+      "lenses": [
+        {
+          "id": "rettungsdienst",
+          "label": "Rettungsdienst"
+        },
+        {
+          "id": "kernteam",
+          "label": "Kernteam"
+        },
+        {
+          "id": "trauma_orthopaedie",
+          "label": "Trauma & Orthopädie"
+        },
+        {
+          "id": "allgemeinchirurgie",
+          "label": "Allgemeinchirurgie"
+        },
+        {
+          "id": "thorax_gefaesschirurgie",
+          "label": "Thorax- & Gefäßchirurgie"
+        },
+        {
+          "id": "neurochirurgie",
+          "label": "Neurochirurgie"
+        },
+        {
+          "id": "hno",
+          "label": "HNO"
+        },
+        {
+          "id": "auge",
+          "label": "Auge"
+        },
+        {
+          "id": "gynaekologie_geburtshilfe",
+          "label": "Gynäkologie / Geburtshilfe"
+        },
+        {
+          "id": "paediatrie",
+          "label": "Pädiatrie"
+        },
+        {
+          "id": "psychiatrie",
+          "label": "Psychiatrie"
+        },
+        {
+          "id": "wiedervorstellung_kontrolle",
+          "label": "Wiedervorstellung & Kontrolle"
+        }
+      ],
+      "values": {
+        "symptome_wert_atemnot": {
+          "kind": "abnormal",
+          "text": "Atemnot",
+          "aliases": [
+            "Luftnot",
+            "Dyspnoe",
+            "Kurzatmigkeit"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "atemnot luftnot dyspnoe kurzatmigkeit",
+          "snomed": "267036007",
+          "snomedDisplay": "Dyspnoea",
+          "cedis": [
+            {
+              "code": "651",
+              "display": "Luftnot",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_brustschmerz": {
+          "kind": "abnormal",
+          "text": "Brustschmerz",
+          "aliases": [
+            "Thoraxschmerz",
+            "Brustenge"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "brustschmerz thoraxschmerz brustenge",
+          "snomed": "29857009",
+          "snomedDisplay": "Chest pain",
+          "cedis": [
+            {
+              "code": "003",
+              "display": "Brustschmerz (kardial)",
+              "relation": "related"
+            },
+            {
+              "code": "004",
+              "display": "Brustschmerz (nicht kardial)",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_bauchschmerz": {
+          "kind": "abnormal",
+          "text": "Bauchschmerz",
+          "aliases": [
+            "Abdominalschmerz",
+            "akutes Abdomen"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "bauchschmerz abdominalschmerz akutes abdomen",
+          "snomed": "21522001",
+          "snomedDisplay": "Abdominal pain",
+          "cedis": [
+            {
+              "code": "251",
+              "display": "Bauchschmerzen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schwaeche": {
+          "kind": "abnormal",
+          "text": "Schwäche",
+          "aliases": [
+            "allgemeine Schwäche",
+            "Kraftlosigkeit",
+            "Abgeschlagenheit",
+            "AZ-Minderung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "schwaeche allgemeine schwaeche kraftlosigkeit abgeschlagenheit az minderung",
+          "snomed": "13791008",
+          "snomedDisplay": "Asthenia",
+          "cedis": [
+            {
+              "code": "007",
+              "display": "Allgemeine Schwäche",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fieber": {
+          "kind": "abnormal",
+          "text": "Fieber",
+          "aliases": [
+            "erhöhte Temperatur",
+            "febril"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "fieber erhoehte temperatur febril",
+          "snomed": "386661006",
+          "snomedDisplay": "Fever",
+          "cedis": [
+            {
+              "code": "852",
+              "display": "Fieber",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kopfschmerz": {
+          "kind": "abnormal",
+          "text": "Kopfschmerz",
+          "aliases": [
+            "Cephalgie",
+            "Migräne"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie",
+            "paediatrie"
+          ],
+          "search": "kopfschmerz cephalgie migraene",
+          "snomed": "25064002",
+          "snomedDisplay": "Headache",
+          "cedis": [
+            {
+              "code": "404",
+              "display": "Kopfschmerz",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schwindel": {
+          "kind": "abnormal",
+          "text": "Schwindel",
+          "aliases": [
+            "Drehschwindel",
+            "Vertigo",
+            "Benommenheit"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "hno"
+          ],
+          "search": "schwindel drehschwindel vertigo benommenheit",
+          "snomed": "404640003",
+          "snomedDisplay": "Dizziness",
+          "cedis": [
+            {
+              "code": "403",
+              "display": "Schwindel",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_uebelkeit": {
+          "kind": "abnormal",
+          "text": "Übelkeit",
+          "aliases": [
+            "Nausea"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "uebelkeit nausea",
+          "snomed": "422587007",
+          "snomedDisplay": "Nausea",
+          "cedis": [
+            {
+              "code": "257",
+              "display": "Übelkeit und/oder Erbrechen",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_erbrechen": {
+          "kind": "abnormal",
+          "text": "Erbrechen",
+          "aliases": [
+            "Emesis"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "erbrechen emesis",
+          "snomed": "422400008",
+          "snomedDisplay": "Vomiting",
+          "cedis": [
+            {
+              "code": "257",
+              "display": "Übelkeit und/oder Erbrechen",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_synkope": {
+          "kind": "abnormal",
+          "text": "Synkope",
+          "aliases": [
+            "Präsynkope",
+            "Ohnmacht",
+            "Kollaps",
+            "Kreislaufkollaps"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "synkope praesynkope ohnmacht kollaps kreislaufkollaps",
+          "snomed": "271594007",
+          "snomedDisplay": "Syncope",
+          "cedis": [
+            {
+              "code": "008",
+              "display": "Synkope/Präsynkope",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_husten": {
+          "kind": "abnormal",
+          "text": "Husten",
+          "aliases": [
+            "Verschleimung",
+            "produktiver Husten"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "husten verschleimung produktiver husten",
+          "snomed": "49727002",
+          "snomedDisplay": "Cough",
+          "cedis": [
+            {
+              "code": "653",
+              "display": "Husten/Verschleimung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_rueckenschmerz": {
+          "kind": "abnormal",
+          "text": "Rückenschmerz",
+          "aliases": [
+            "Rückenschmerzen",
+            "Kreuzschmerz",
+            "Lumbago"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "neurochirurgie"
+          ],
+          "search": "rueckenschmerz rueckenschmerzen kreuzschmerz lumbago",
+          "cedis": [
+            {
+              "code": "551",
+              "display": "Rückenschmerzen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_herzklopfen": {
+          "kind": "abnormal",
+          "text": "Herzklopfen",
+          "aliases": [
+            "Herzrasen",
+            "Herzstolpern",
+            "Palpitationen"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "herzklopfen herzrasen herzstolpern palpitationen",
+          "snomed": "80313002",
+          "snomedDisplay": "Palpitations",
+          "cedis": [
+            {
+              "code": "005",
+              "display": "Palpitationen/unregelmäßiger Herzschlag",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_durchfall": {
+          "kind": "abnormal",
+          "text": "Durchfall",
+          "aliases": [
+            "Diarrhoe"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "durchfall diarrhoe",
+          "cedis": [
+            {
+              "code": "254",
+              "display": "Durchfall",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_verstopfung": {
+          "kind": "abnormal",
+          "text": "Verstopfung",
+          "aliases": [
+            "Obstipation"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "verstopfung obstipation",
+          "cedis": [
+            {
+              "code": "253",
+              "display": "Verstopfung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_krampfanfall": {
+          "kind": "abnormal",
+          "text": "Krampfanfall",
+          "aliases": [
+            "epileptischer Anfall",
+            "Konvulsion"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie",
+            "paediatrie"
+          ],
+          "search": "krampfanfall epileptischer anfall konvulsion",
+          "snomed": "91175000",
+          "snomedDisplay": "Seizure",
+          "cedis": [
+            {
+              "code": "405",
+              "display": "Krampfanfall",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_bewusstseinsstoerung": {
+          "kind": "abnormal",
+          "text": "Bewusstseinsstörung",
+          "aliases": [
+            "Bewusstseinstrübung",
+            "Somnolenz",
+            "Sopor",
+            "Koma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie",
+            "paediatrie"
+          ],
+          "search": "bewusstseinsstoerung bewusstseinstruebung somnolenz sopor koma",
+          "cedis": [
+            {
+              "code": "401",
+              "display": "Veränderter Bewusstseinszustand",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_verwirrtheit": {
+          "kind": "abnormal",
+          "text": "Verwirrtheit",
+          "aliases": [
+            "Desorientierung",
+            "Delir"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie",
+            "paediatrie"
+          ],
+          "search": "verwirrtheit desorientierung delir",
+          "cedis": [
+            {
+              "code": "402",
+              "display": "Verwirrtheit",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_extremitaetenschwaeche": {
+          "kind": "abnormal",
+          "text": "Extremitätenschwäche",
+          "aliases": [
+            "Parese",
+            "Lähmung",
+            "FAST-positiv",
+            "Schlaganfallsymptom"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie"
+          ],
+          "search": "extremitaetenschwaeche parese laehmung fast positiv schlaganfallsymptom",
+          "cedis": [
+            {
+              "code": "409",
+              "display": "Schwäche in den Extremitäten/Symptome eines Schlaganfalls oder TIA",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_sensibilitaetsstoerung": {
+          "kind": "abnormal",
+          "text": "Sensibilitätsstörung",
+          "aliases": [
+            "Parästhesie",
+            "Taubheit",
+            "Kribbeln",
+            "Hypästhesie"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie"
+          ],
+          "search": "sensibilitaetsstoerung paraesthesie taubheit kribbeln hypaesthesie",
+          "cedis": [
+            {
+              "code": "410",
+              "display": "Sensibilitätsstörung/Parästhesie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_flanken_schmerz": {
+          "kind": "abnormal",
+          "text": "Flankenschmerz",
+          "aliases": [
+            "Nierenschmerz"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie"
+          ],
+          "search": "flankenschmerz nierenschmerz",
+          "cedis": [
+            {
+              "code": "301",
+              "display": "Flankenschmerz",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_algurie": {
+          "kind": "abnormal",
+          "text": "Algurie",
+          "aliases": [
+            "Dysurie",
+            "Schmerzen beim Wasserlassen",
+            "Harnwegsinfekt"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "algurie dysurie schmerzen beim wasserlassen harnwegsinfekt",
+          "cedis": [
+            {
+              "code": "307",
+              "display": "Beschwerden eines Harnwegsinfektes",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_pollakisurie": {
+          "kind": "abnormal",
+          "text": "Pollakisurie",
+          "aliases": [
+            "häufiges Wasserlassen",
+            "Harndrang"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "pollakisurie haeufiges wasserlassen harndrang",
+          "cedis": [
+            {
+              "code": "307",
+              "display": "Beschwerden eines Harnwegsinfektes",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_harnverhalt": {
+          "kind": "abnormal",
+          "text": "Harnverhalt",
+          "aliases": [
+            "Ischurie"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie"
+          ],
+          "search": "harnverhalt ischurie",
+          "cedis": [
+            {
+              "code": "306",
+              "display": "Harnverhalt",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_haematurie": {
+          "kind": "abnormal",
+          "text": "Hämaturie",
+          "aliases": [
+            "Blut im Urin"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie"
+          ],
+          "search": "haematurie blut im urin",
+          "cedis": [
+            {
+              "code": "302",
+              "display": "Hämaturie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_beinschwellung": {
+          "kind": "abnormal",
+          "text": "Beinschwellung",
+          "aliases": [
+            "Beinödem",
+            "dickes Bein"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "beinschwellung beinoedem dickes bein",
+          "cedis": [
+            {
+              "code": "010",
+              "display": "Beinschwellung/Ödem",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_generalisiertes_oedem": {
+          "kind": "abnormal",
+          "text": "Generalisiertes Ödem",
+          "aliases": [
+            "Anasarka",
+            "Wassereinlagerung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "generalisiertes oedem anasarka wassereinlagerung",
+          "cedis": [
+            {
+              "code": "009",
+              "display": "Ödem, generalisiert",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hypertonie": {
+          "kind": "abnormal",
+          "text": "Hypertonie",
+          "aliases": [
+            "Bluthochdruck",
+            "hoher Blutdruck"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "hypertonie bluthochdruck hoher blutdruck",
+          "cedis": [
+            {
+              "code": "006",
+              "display": "Hypertonie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hypoglykaemie": {
+          "kind": "abnormal",
+          "text": "Hypoglykämie",
+          "aliases": [
+            "Unterzuckerung",
+            "niedriger Blutzucker"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "hypoglykaemie unterzuckerung niedriger blutzucker",
+          "cedis": [
+            {
+              "code": "854",
+              "display": "Hypoglykämie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hyperglykaemie": {
+          "kind": "abnormal",
+          "text": "Hyperglykämie",
+          "aliases": [
+            "Überzuckerung",
+            "hoher Blutzucker"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "hyperglykaemie ueberzuckerung hoher blutzucker",
+          "cedis": [
+            {
+              "code": "853",
+              "display": "Hyperglykämie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "Allergische Reaktion",
+          "aliases": [
+            "Allergie",
+            "Anaphylaxie",
+            "Nesselsucht"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "allergische reaktion allergie anaphylaxie nesselsucht",
+          "cedis": [
+            {
+              "code": "657",
+              "display": "Allergische Reaktion",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hautausschlag": {
+          "kind": "abnormal",
+          "text": "Hautausschlag",
+          "aliases": [
+            "Exanthem",
+            "Ausschlag"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "hautausschlag exanthem ausschlag",
+          "cedis": [
+            {
+              "code": "708",
+              "display": "Hautausschlag",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_juckreiz": {
+          "kind": "abnormal",
+          "text": "Juckreiz",
+          "aliases": [
+            "Pruritus"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "juckreiz pruritus",
+          "cedis": [
+            {
+              "code": "707",
+              "display": "Juckreiz",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_halsschmerz": {
+          "kind": "abnormal",
+          "text": "Halsschmerz",
+          "aliases": [
+            "wunder Rachen",
+            "Pharyngitis"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "halsschmerz wunder rachen pharyngitis",
+          "cedis": [
+            {
+              "code": "103",
+              "display": "Halsschmerzen (wunder Rachen)",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_infekt_obere_luftwege": {
+          "kind": "abnormal",
+          "text": "Infekt der oberen Luftwege",
+          "aliases": [
+            "Erkältung",
+            "Schnupfen",
+            "grippaler Infekt"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "infekt der oberen luftwege erkaeltung schnupfen grippaler infekt",
+          "cedis": [
+            {
+              "code": "154",
+              "display": "Beschwerden eines Infektes der oberen Luftwege",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_grippeaehnliche_erkrankung": {
+          "kind": "abnormal",
+          "text": "Grippeähnliche Erkrankung",
+          "aliases": [
+            "Influenza",
+            "Gliederschmerzen",
+            "grippal"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "grippeaehnliche erkrankung influenza gliederschmerzen grippal",
+          "cedis": [
+            {
+              "code": "661",
+              "display": "Grippeähnliche Erkrankung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_nackenschmerz_schwellung": {
+          "kind": "abnormal",
+          "text": "Halsschwellung oder Nackenschmerz",
+          "aliases": [
+            "Halsschwellung",
+            "Nackenschmerz"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "halsschwellung oder nackenschmerz halsschwellung nackenschmerz",
+          "cedis": [
+            {
+              "code": "104",
+              "display": "Halsschwellung/-schmerzen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schluckbeschwerden": {
+          "kind": "abnormal",
+          "text": "Schluckbeschwerden",
+          "aliases": [
+            "Dysphagie",
+            "Schluckstörung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "schluckbeschwerden dysphagie schluckstoerung",
+          "cedis": [
+            {
+              "code": "106",
+              "display": "Schluckbeschwerden/Dysphagie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_ohrenschmerz": {
+          "kind": "abnormal",
+          "text": "Ohrenschmerz",
+          "aliases": [
+            "Otalgie"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "ohrenschmerz otalgie",
+          "cedis": [
+            {
+              "code": "051",
+              "display": "Ohrenschmerzen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_nasenbluten": {
+          "kind": "abnormal",
+          "text": "Nasenbluten",
+          "aliases": [
+            "Epistaxis"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "nasenbluten epistaxis",
+          "cedis": [
+            {
+              "code": "151",
+              "display": "Nasenbluten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_augenschmerz": {
+          "kind": "abnormal",
+          "text": "Augenschmerz",
+          "aliases": [
+            "Okulärer Schmerz"
+          ],
+          "lenses": [
+            "kernteam",
+            "auge",
+            "paediatrie"
+          ],
+          "search": "augenschmerz okulaerer schmerz",
+          "cedis": [
+            {
+              "code": "505",
+              "display": "Augenschmerzen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_sehstoerung": {
+          "kind": "abnormal",
+          "text": "Sehstörung",
+          "aliases": [
+            "Sehverlust",
+            "verschwommenes Sehen"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie",
+            "auge",
+            "paediatrie"
+          ],
+          "search": "sehstoerung sehverlust verschwommenes sehen",
+          "cedis": [
+            {
+              "code": "504",
+              "display": "Sehstörung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_rotes_auge": {
+          "kind": "abnormal",
+          "text": "Rotes Auge",
+          "aliases": [
+            "Augenrötung",
+            "Augenausfluss"
+          ],
+          "lenses": [
+            "kernteam",
+            "auge",
+            "paediatrie"
+          ],
+          "search": "rotes auge augenroetung augenausfluss",
+          "cedis": [
+            {
+              "code": "506",
+              "display": "Rote Augen, Ausfluss aus dem Auge",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_rueckenverletzung": {
+          "kind": "abnormal",
+          "text": "Rücken- oder Wirbelsäulenverletzung",
+          "aliases": [
+            "Wirbelsäulentrauma",
+            "Rückenunfall"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "neurochirurgie"
+          ],
+          "search": "ruecken oder wirbelsaeulenverletzung wirbelsaeulentrauma rueckenunfall",
+          "cedis": [
+            {
+              "code": "552",
+              "display": "Traumatische Rücken-/Wirbelsäulenverletzung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kopfverletzung": {
+          "kind": "abnormal",
+          "text": "Kopfverletzung",
+          "aliases": [
+            "Schädel-Hirn-Trauma",
+            "SHT"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "neurochirurgie",
+            "paediatrie"
+          ],
+          "search": "kopfverletzung schaedel hirn trauma sht",
+          "cedis": [
+            {
+              "code": "407",
+              "display": "Kopfverletzung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schulter_arm_schmerz": {
+          "kind": "abnormal",
+          "text": "Schulter- oder Armschmerz",
+          "aliases": [
+            "Schulterschmerz",
+            "Armschmerz",
+            "Schmerz obere Extremität"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "search": "schulter oder armschmerz schulterschmerz armschmerz schmerz obere extremitaet",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_bein_hueft_knieschmerz": {
+          "kind": "abnormal",
+          "text": "Bein-, Hüft- oder Knieschmerz",
+          "aliases": [
+            "Beinschmerz",
+            "Hüftschmerz",
+            "Knieschmerz",
+            "Schmerz untere Extremität"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "search": "bein hueft oder knieschmerz beinschmerz hueftschmerz knieschmerz schmerz untere extremitaet",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_gelenkschwellung": {
+          "kind": "abnormal",
+          "text": "Gelenkschwellung",
+          "aliases": [
+            "Gelenkschmerz",
+            "Arthritis",
+            "Erguss"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "gelenkschwellung gelenkschmerz arthritis erguss",
+          "cedis": [
+            {
+              "code": "558",
+              "display": "Gelenkschwellung",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_verletzung_obere_extremitaet": {
+          "kind": "abnormal",
+          "text": "Verletzung der oberen Extremität",
+          "aliases": [
+            "Armverletzung",
+            "Schulterverletzung",
+            "Handverletzung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "verletzung der oberen extremitaet armverletzung schulterverletzung handverletzung",
+          "cedis": [
+            {
+              "code": "556",
+              "display": "Verletzung obere Extremität",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_verletzung_untere_extremitaet": {
+          "kind": "abnormal",
+          "text": "Verletzung der unteren Extremität",
+          "aliases": [
+            "Beinverletzung",
+            "Hüftverletzung",
+            "Knieverletzung",
+            "Fußverletzung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "verletzung der unteren extremitaet beinverletzung hueftverletzung knieverletzung fussverletzung",
+          "cedis": [
+            {
+              "code": "557",
+              "display": "Verletzung untere Extremität",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_wunde": {
+          "kind": "abnormal",
+          "text": "Wunde",
+          "aliases": [
+            "Risswunde",
+            "Quetschwunde",
+            "Schnittwunde",
+            "Stichwunde"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "wunde risswunde quetschwunde schnittwunde stichwunde",
+          "cedis": [
+            {
+              "code": "704",
+              "display": "Riss-/Quetsch-/Schnitt-/Stichwunde",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_abschuerfung": {
+          "kind": "abnormal",
+          "text": "Abschürfung",
+          "aliases": [
+            "Schürfwunde"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "abschuerfung schuerfwunde",
+          "cedis": [
+            {
+              "code": "703",
+              "display": "Abschürfung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_verbrennung": {
+          "kind": "abnormal",
+          "text": "Verbrennung",
+          "aliases": [
+            "Verbrühung",
+            "thermische Verletzung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "verbrennung verbruehung thermische verletzung",
+          "cedis": [
+            {
+              "code": "705",
+              "display": "Verbrennung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_bissverletzung": {
+          "kind": "abnormal",
+          "text": "Bissverletzung",
+          "aliases": [
+            "Tierbiss",
+            "Menschenbiss"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "bissverletzung tierbiss menschenbiss",
+          "cedis": [
+            {
+              "code": "701",
+              "display": "Biss",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_insektenstich": {
+          "kind": "abnormal",
+          "text": "Insektenstich",
+          "aliases": [
+            "Stichreaktion"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "insektenstich stichreaktion",
+          "cedis": [
+            {
+              "code": "702",
+              "display": "Insektenstich",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schwere_verletzung": {
+          "kind": "abnormal",
+          "text": "Schwere Verletzung",
+          "aliases": [
+            "Polytrauma",
+            "schweres Trauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "thorax_gefaesschirurgie",
+            "neurochirurgie"
+          ],
+          "search": "schwere verletzung polytrauma schweres trauma",
+          "cedis": [
+            {
+              "code": "801",
+              "display": "Schweres Trauma - penetrierend",
+              "relation": "related"
+            },
+            {
+              "code": "802",
+              "display": "Schweres Trauma - stumpf",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_thoraxverletzung": {
+          "kind": "abnormal",
+          "text": "Thoraxverletzung",
+          "aliases": [
+            "Thoraxtrauma",
+            "Brustkorbverletzung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "thoraxverletzung thoraxtrauma brustkorbverletzung",
+          "cedis": [
+            {
+              "code": "803",
+              "display": "Isoliertes Thoraxtrauma - penetrierend",
+              "relation": "related"
+            },
+            {
+              "code": "804",
+              "display": "Isoliertes Thoraxtrauma - stumpf",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_bauchverletzung": {
+          "kind": "abnormal",
+          "text": "Bauchverletzung",
+          "aliases": [
+            "Abdominaltrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie"
+          ],
+          "search": "bauchverletzung abdominaltrauma",
+          "cedis": [
+            {
+              "code": "805",
+              "display": "Isoliertes Abdominaltrauma - penetrierend",
+              "relation": "related"
+            },
+            {
+              "code": "806",
+              "display": "Isoliertes Abdominaltrauma - stumpf",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_anal_rektalverletzung": {
+          "kind": "abnormal",
+          "text": "Anale oder rektale Verletzung",
+          "aliases": [
+            "Analtrauma",
+            "Rektaltrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie"
+          ],
+          "search": "anale oder rektale verletzung analtrauma rektaltrauma",
+          "cedis": [
+            {
+              "code": "264",
+              "display": "Trauma anal/rektal",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_genitalverletzung": {
+          "kind": "abnormal",
+          "text": "Genitalverletzung",
+          "aliases": [
+            "Genitaltrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "genitalverletzung genitaltrauma",
+          "cedis": [
+            {
+              "code": "310",
+              "display": "Trauma genital",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_herzstillstand": {
+          "kind": "abnormal",
+          "text": "Herzstillstand",
+          "aliases": [
+            "Reanimation",
+            "Kreislaufstillstand"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "herzstillstand reanimation kreislaufstillstand",
+          "cedis": [
+            {
+              "code": "001",
+              "display": "Herzstillstand (nicht traumatisch)",
+              "relation": "related"
+            },
+            {
+              "code": "002",
+              "display": "Herzstillstand (traumatisch)",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_atemstillstand": {
+          "kind": "abnormal",
+          "text": "Atemstillstand",
+          "aliases": [
+            "Apnoe",
+            "Reanimation"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "atemstillstand apnoe reanimation",
+          "cedis": [
+            {
+              "code": "652",
+              "display": "Atemstillstand",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_bluthusten": {
+          "kind": "abnormal",
+          "text": "Bluthusten",
+          "aliases": [
+            "Hämoptyse"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "bluthusten haemoptyse",
+          "cedis": [
+            {
+              "code": "655",
+              "display": "Bluthusten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hyperventilation": {
+          "kind": "abnormal",
+          "text": "Hyperventilation",
+          "aliases": [
+            "schnelle Atmung",
+            "Panikatmung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie",
+            "paediatrie"
+          ],
+          "search": "hyperventilation schnelle atmung panikatmung",
+          "cedis": [
+            {
+              "code": "654",
+              "display": "Hyperventilation",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_stridor": {
+          "kind": "abnormal",
+          "text": "Stridor",
+          "aliases": [
+            "pfeifende Einatmung",
+            "inspiratorischer Stridor"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "stridor pfeifende einatmung inspiratorischer stridor",
+          "cedis": [
+            {
+              "code": "658",
+              "display": "Stridor",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_giemen": {
+          "kind": "abnormal",
+          "text": "Giemen",
+          "aliases": [
+            "exspiratorisches Giemen",
+            "Wheezing"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "giemen exspiratorisches giemen wheezing",
+          "cedis": [
+            {
+              "code": "659",
+              "display": "Giemen ohne weitere Beschwerden",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_atemwege": {
+          "kind": "abnormal",
+          "text": "Fremdkörper in den Atemwegen",
+          "aliases": [
+            "Aspiration",
+            "Verschlucken"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "hno",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "fremdkoerper in den atemwegen aspiration verschlucken",
+          "cedis": [
+            {
+              "code": "656",
+              "display": "Fremdkörper in den Atemwegen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kalte_pulslose_extremitaet": {
+          "kind": "abnormal",
+          "text": "Kühle, pulslose Extremität",
+          "aliases": [
+            "akuter Gefäßverschluss",
+            "Ischämie"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "kuehle pulslose extremitaet akuter gefaessverschluss ischaemie",
+          "cedis": [
+            {
+              "code": "011",
+              "display": "Kühle, pulslose Extremität",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_geroetete_ueberwaermte_extremitaet": {
+          "kind": "abnormal",
+          "text": "Gerötete, überwärmte Extremität",
+          "aliases": [
+            "Thrombose",
+            "Phlebitis",
+            "Erysipel"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie",
+            "thorax_gefaesschirurgie"
+          ],
+          "search": "geroetete ueberwaermte extremitaet thrombose phlebitis erysipel",
+          "cedis": [
+            {
+              "code": "012",
+              "display": "Eine Extremität gerötet, überwärmt",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_gangstoerung": {
+          "kind": "abnormal",
+          "text": "Gangstörung",
+          "aliases": [
+            "Ataxie",
+            "unsicherer Gang"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie",
+            "paediatrie"
+          ],
+          "search": "gangstoerung ataxie unsicherer gang",
+          "cedis": [
+            {
+              "code": "406",
+              "display": "Gangstörung/Ataxie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_zittern": {
+          "kind": "abnormal",
+          "text": "Zittern",
+          "aliases": [
+            "Tremor",
+            "Schütteln"
+          ],
+          "lenses": [
+            "kernteam",
+            "neurochirurgie",
+            "psychiatrie"
+          ],
+          "search": "zittern tremor schuetteln",
+          "cedis": [
+            {
+              "code": "408",
+              "display": "Zittern",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_depression_suizidalitaet": {
+          "kind": "abnormal",
+          "text": "Depression oder Suizidalität",
+          "aliases": [
+            "Selbstschädigung",
+            "Suizidgedanken",
+            "depressive Krise"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie",
+            "paediatrie"
+          ],
+          "search": "depression oder suizidalitaet selbstschaedigung suizidgedanken depressive krise",
+          "cedis": [
+            {
+              "code": "351",
+              "display": "Depression/Suizidalität/absichtliche Selbstschädigung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_angst_krise": {
+          "kind": "abnormal",
+          "text": "Angst oder akute Krise",
+          "aliases": [
+            "Panikattacke",
+            "Belastungsreaktion"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie",
+            "paediatrie"
+          ],
+          "search": "angst oder akute krise panikattacke belastungsreaktion",
+          "cedis": [
+            {
+              "code": "352",
+              "display": "Angst/situationsbezogene Krise",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_halluzination_wahn": {
+          "kind": "abnormal",
+          "text": "Halluzination oder Wahn",
+          "aliases": [
+            "Psychose",
+            "Stimmenhören",
+            "paranoides Erleben"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie"
+          ],
+          "search": "halluzination oder wahn psychose stimmenhoeren paranoides erleben",
+          "cedis": [
+            {
+              "code": "353",
+              "display": "Halluzinationen/Wahnvorstellungen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdgefaehrdung": {
+          "kind": "abnormal",
+          "text": "Fremdgefährdung",
+          "aliases": [
+            "gewalttätiges Verhalten",
+            "Aggression"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie"
+          ],
+          "search": "fremdgefaehrdung gewalttaetiges verhalten aggression",
+          "cedis": [
+            {
+              "code": "355",
+              "display": "Gewalttätiges Verhalten/Fremdgefährdung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_intoxikation": {
+          "kind": "abnormal",
+          "text": "Intoxikation",
+          "aliases": [
+            "Substanzmissbrauch",
+            "Vergiftung",
+            "Drogenintoxikation"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie",
+            "paediatrie"
+          ],
+          "search": "intoxikation substanzmissbrauch vergiftung drogenintoxikation",
+          "cedis": [
+            {
+              "code": "751",
+              "display": "Substanzmissbrauch/Intoxikation",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_ueberdosierung": {
+          "kind": "abnormal",
+          "text": "Überdosierung",
+          "aliases": [
+            "Medikamentenüberdosierung",
+            "Tabletteneinnahme"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie",
+            "paediatrie"
+          ],
+          "search": "ueberdosierung medikamentenueberdosierung tabletteneinnahme",
+          "cedis": [
+            {
+              "code": "752",
+              "display": "Einnahme einer Überdosierung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_substanzentzug": {
+          "kind": "abnormal",
+          "text": "Substanzentzug",
+          "aliases": [
+            "Alkoholentzug",
+            "Drogenentzug"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "psychiatrie"
+          ],
+          "search": "substanzentzug alkoholentzug drogenentzug",
+          "cedis": [
+            {
+              "code": "753",
+              "display": "Substanzentzug",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_vaginale_blutung": {
+          "kind": "abnormal",
+          "text": "Vaginale Blutung",
+          "aliases": [
+            "Blutung vaginal",
+            "Zwischenblutung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "vaginale blutung blutung vaginal zwischenblutung",
+          "cedis": [
+            {
+              "code": "455",
+              "display": "Vaginale Blutung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schwangerschaftsproblem_frueh": {
+          "kind": "abnormal",
+          "text": "Schwangerschaftsproblem bis 20. SSW",
+          "aliases": [
+            "Frühschwangerschaft",
+            "Blutung in der Schwangerschaft"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "schwangerschaftsproblem bis 20 ssw fruehschwangerschaft blutung in der schwangerschaft",
+          "cedis": [
+            {
+              "code": "457",
+              "display": "Schwangerschaftsprobleme ≤ 20. SSW",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schwangerschaftsproblem_spaet": {
+          "kind": "abnormal",
+          "text": "Schwangerschaftsproblem nach 20. SSW",
+          "aliases": [
+            "Spätschwangerschaft",
+            "Wehen",
+            "Fruchtwasserabgang"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "schwangerschaftsproblem nach 20 ssw spaetschwangerschaft wehen fruchtwasserabgang",
+          "cedis": [
+            {
+              "code": "458",
+              "display": "Schwangerschaftsprobleme > 20. SSW",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_menstruationsbeschwerden": {
+          "kind": "abnormal",
+          "text": "Menstruationsbeschwerden",
+          "aliases": [
+            "Regelschmerz",
+            "Dysmenorrhoe"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "menstruationsbeschwerden regelschmerz dysmenorrhoe",
+          "cedis": [
+            {
+              "code": "451",
+              "display": "Menstruationsbeschwerden",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_vaginaler_ausfluss": {
+          "kind": "abnormal",
+          "text": "Vaginaler Ausfluss",
+          "aliases": [
+            "Fluor vaginalis"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "vaginaler ausfluss fluor vaginalis",
+          "cedis": [
+            {
+              "code": "453",
+              "display": "Vaginaler Ausfluss",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_vaginale_schmerzen": {
+          "kind": "abnormal",
+          "text": "Vaginale Schmerzen",
+          "aliases": [
+            "Dyspareunie",
+            "Schmerzen beim Geschlechtsverkehr"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "vaginale schmerzen dyspareunie schmerzen beim geschlechtsverkehr",
+          "cedis": [
+            {
+              "code": "460",
+              "display": "Vaginale Schmerzen/Schmerzen beim Geschlechtsverkehr",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_sexueller_uebergriff": {
+          "kind": "abnormal",
+          "text": "Sexueller Übergriff",
+          "aliases": [
+            "sexualisierte Gewalt"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "gynaekologie_geburtshilfe",
+            "paediatrie",
+            "psychiatrie"
+          ],
+          "search": "sexueller uebergriff sexualisierte gewalt",
+          "cedis": [
+            {
+              "code": "454",
+              "display": "Sexueller Übergriff",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_skrotalschmerz": {
+          "kind": "abnormal",
+          "text": "Skrotalschmerz oder -schwellung",
+          "aliases": [
+            "Hodenschmerz",
+            "Hodenschwellung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "skrotalschmerz oder schwellung hodenschmerz hodenschwellung",
+          "cedis": [
+            {
+              "code": "305",
+              "display": "Skrotale Schmerzen und/oder Schwellung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_penis_schwellung": {
+          "kind": "abnormal",
+          "text": "Penisschwellung",
+          "aliases": [
+            "Paraphimose",
+            "Phimose"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "penisschwellung paraphimose phimose",
+          "cedis": [
+            {
+              "code": "304",
+              "display": "Penisschwellung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_genitaler_ausfluss_laesion": {
+          "kind": "abnormal",
+          "text": "Genitaler Ausfluss oder Läsion",
+          "aliases": [
+            "Genitalläsion",
+            "urethraler Ausfluss"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "genitaler ausfluss oder laesion genitallaesion urethraler ausfluss",
+          "cedis": [
+            {
+              "code": "303",
+              "display": "Genitaler Ausfluss/Läsion",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_appetitlosigkeit": {
+          "kind": "abnormal",
+          "text": "Appetitlosigkeit",
+          "aliases": [
+            "Inappetenz"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "appetitlosigkeit inappetenz",
+          "cedis": [
+            {
+              "code": "252",
+              "display": "Appetitlosigkeit",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_bluterbrechen": {
+          "kind": "abnormal",
+          "text": "Bluterbrechen",
+          "aliases": [
+            "Hämatemesis"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie"
+          ],
+          "search": "bluterbrechen haematemesis",
+          "cedis": [
+            {
+              "code": "259",
+              "display": "Bluterbrechen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_rektale_blutung": {
+          "kind": "abnormal",
+          "text": "Rektale Blutung oder Teerstuhl",
+          "aliases": [
+            "Blut im Stuhl",
+            "Hämatochezie",
+            "Meläna"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie"
+          ],
+          "search": "rektale blutung oder teerstuhl blut im stuhl haematochezie melaena",
+          "cedis": [
+            {
+              "code": "260",
+              "display": "Peranaler Blutabgang/Teerstuhl",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_ikterus": {
+          "kind": "abnormal",
+          "text": "Ikterus",
+          "aliases": [
+            "Gelbsucht"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "ikterus gelbsucht",
+          "cedis": [
+            {
+              "code": "261",
+              "display": "Ikterus",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_leistenbeschwerden": {
+          "kind": "abnormal",
+          "text": "Leistenschmerz oder -schwellung",
+          "aliases": [
+            "Leistenhernie",
+            "Leistenbruch"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "leistenschmerz oder schwellung leistenhernie leistenbruch",
+          "cedis": [
+            {
+              "code": "256",
+              "display": "Leistenschmerzen/-schwellung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_abdominelle_raumforderung": {
+          "kind": "abnormal",
+          "text": "Abdominelle Raumforderung oder gespanntes Abdomen",
+          "aliases": [
+            "Abwehrspannung",
+            "geblähter Bauch"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "abdominelle raumforderung oder gespanntes abdomen abwehrspannung geblaehter bauch",
+          "cedis": [
+            {
+              "code": "263",
+              "display": "Abdominelle Raumforderung/gespanntes Abdomen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_zahnproblem": {
+          "kind": "abnormal",
+          "text": "Zahn- oder Zahnfleischproblem",
+          "aliases": [
+            "Zahnschmerz",
+            "Zahnfleischblutung"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "zahn oder zahnfleischproblem zahnschmerz zahnfleischblutung",
+          "cedis": [
+            {
+              "code": "101",
+              "display": "Zahn-/Zahnfleischprobleme",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_gesichtsschmerz": {
+          "kind": "abnormal",
+          "text": "Gesichtsschmerz",
+          "aliases": [
+            "Trigeminusschmerz",
+            "nicht dentaler Gesichtsschmerz"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "neurochirurgie"
+          ],
+          "search": "gesichtsschmerz trigeminusschmerz nicht dentaler gesichtsschmerz",
+          "cedis": [
+            {
+              "code": "107",
+              "display": "Schmerzen im Gesicht (nicht traumatisch, nicht dental)",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_gesichtsverletzung": {
+          "kind": "abnormal",
+          "text": "Gesichtsverletzung",
+          "aliases": [
+            "Gesichtstrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "neurochirurgie",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "gesichtsverletzung gesichtstrauma",
+          "cedis": [
+            {
+              "code": "102",
+              "display": "Trauma Gesicht",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_halsverletzung": {
+          "kind": "abnormal",
+          "text": "Halsverletzung",
+          "aliases": [
+            "Halstrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "thorax_gefaesschirurgie",
+            "hno"
+          ],
+          "search": "halsverletzung halstrauma",
+          "cedis": [
+            {
+              "code": "105",
+              "display": "Trauma Hals",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hoerverlust": {
+          "kind": "abnormal",
+          "text": "Hörverlust",
+          "aliases": [
+            "Taubheit",
+            "Hörminderung"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "neurochirurgie",
+            "paediatrie"
+          ],
+          "search": "hoerverlust taubheit hoerminderung",
+          "cedis": [
+            {
+              "code": "053",
+              "display": "Hörverlust",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_tinnitus": {
+          "kind": "abnormal",
+          "text": "Tinnitus",
+          "aliases": [
+            "Ohrgeräusch",
+            "Ohrensausen"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno"
+          ],
+          "search": "tinnitus ohrgeraeusch ohrensausen",
+          "cedis": [
+            {
+              "code": "054",
+              "display": "Tinnitus",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_ohrausfluss": {
+          "kind": "abnormal",
+          "text": "Ausfluss aus dem Ohr",
+          "aliases": [
+            "Otorrhoe"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "ausfluss aus dem ohr otorrhoe",
+          "cedis": [
+            {
+              "code": "055",
+              "display": "Ausfluss aus dem Ohr",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_ohrverletzung": {
+          "kind": "abnormal",
+          "text": "Ohrverletzung",
+          "aliases": [
+            "Ohrtrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "ohrverletzung ohrtrauma",
+          "cedis": [
+            {
+              "code": "056",
+              "display": "Ohrverletzung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_verstopfte_nase": {
+          "kind": "abnormal",
+          "text": "Verstopfte Nase oder Heuschnupfen",
+          "aliases": [
+            "Rhinitis",
+            "nasale Obstruktion",
+            "Allergie"
+          ],
+          "lenses": [
+            "kernteam",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "verstopfte nase oder heuschnupfen rhinitis nasale obstruktion allergie",
+          "cedis": [
+            {
+              "code": "152",
+              "display": "Verstopfte Nase/Heuschnupfen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_nasenverletzung": {
+          "kind": "abnormal",
+          "text": "Nasenverletzung",
+          "aliases": [
+            "Nasentrauma",
+            "Nasenbeinfraktur"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "nasenverletzung nasentrauma nasenbeinfraktur",
+          "cedis": [
+            {
+              "code": "155",
+              "display": "Trauma Nase",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_doppelbilder": {
+          "kind": "abnormal",
+          "text": "Doppelbilder",
+          "aliases": [
+            "Diplopie"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "neurochirurgie",
+            "auge"
+          ],
+          "search": "doppelbilder diplopie",
+          "cedis": [
+            {
+              "code": "508",
+              "display": "Doppelbilder",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_lichtscheu": {
+          "kind": "abnormal",
+          "text": "Lichtscheu",
+          "aliases": [
+            "Photophobie"
+          ],
+          "lenses": [
+            "kernteam",
+            "neurochirurgie",
+            "auge",
+            "paediatrie"
+          ],
+          "search": "lichtscheu photophobie",
+          "cedis": [
+            {
+              "code": "507",
+              "display": "Lichtscheu",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_periorbitale_schwellung": {
+          "kind": "abnormal",
+          "text": "Periorbitale Schwellung",
+          "aliases": [
+            "Schwellung um das Auge"
+          ],
+          "lenses": [
+            "kernteam",
+            "auge",
+            "paediatrie"
+          ],
+          "search": "periorbitale schwellung schwellung um das auge",
+          "cedis": [
+            {
+              "code": "509",
+              "display": "Periorbitale Schwellung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_augenverletzung": {
+          "kind": "abnormal",
+          "text": "Augenverletzung",
+          "aliases": [
+            "Augentrauma"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "neurochirurgie",
+            "auge",
+            "paediatrie"
+          ],
+          "search": "augenverletzung augentrauma",
+          "cedis": [
+            {
+              "code": "510",
+              "display": "Trauma Auge",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_chemikalie_im_auge": {
+          "kind": "abnormal",
+          "text": "Chemikalienexposition am Auge",
+          "aliases": [
+            "Verätzung des Auges",
+            "Chemikalie im Auge"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "auge"
+          ],
+          "search": "chemikalienexposition am auge veraetzung des auges chemikalie im auge",
+          "cedis": [
+            {
+              "code": "502",
+              "display": "Exposition des Auges gegenüber Chemikalien",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_im_auge": {
+          "kind": "abnormal",
+          "text": "Fremdkörper im Auge",
+          "aliases": [
+            "Fremdkörpergefühl",
+            "Metallspan im Auge"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "auge"
+          ],
+          "search": "fremdkoerper im auge fremdkoerpergefuehl metallspan im auge",
+          "cedis": [
+            {
+              "code": "503",
+              "display": "Fremdkörper im Auge",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_lokale_schwellung_roetung": {
+          "kind": "abnormal",
+          "text": "Lokalisierte Schwellung oder Rötung",
+          "aliases": [
+            "lokale Entzündung",
+            "Abszess",
+            "Phlegmone"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "lokalisierte schwellung oder roetung lokale entzuendung abszess phlegmone",
+          "cedis": [
+            {
+              "code": "709",
+              "display": "Lokalisierte Schwellung/Rötung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_spontane_hauteinblutung": {
+          "kind": "abnormal",
+          "text": "Spontane Hauteinblutung",
+          "aliases": [
+            "Hämatom",
+            "Purpura",
+            "Petechien"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "spontane hauteinblutung haematom purpura petechien",
+          "cedis": [
+            {
+              "code": "716",
+              "display": "Spontane Hauteinblutungen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_zyanose": {
+          "kind": "abnormal",
+          "text": "Zyanose",
+          "aliases": [
+            "Blauverfärbung",
+            "Lippenzyanose"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "zyanose blauverfaerbung lippenzyanose",
+          "cedis": [
+            {
+              "code": "715",
+              "display": "Zyanose",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_stromunfall": {
+          "kind": "abnormal",
+          "text": "Stromunfall",
+          "aliases": [
+            "Elektrounfall",
+            "Stromschlag"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "stromunfall elektrounfall stromschlag",
+          "cedis": [
+            {
+              "code": "203",
+              "display": "Stromunfall",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schaedliche_inhalation": {
+          "kind": "abnormal",
+          "text": "Schädliche Inhalation",
+          "aliases": [
+            "Rauchgasinhalation",
+            "Gasexposition"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "schaedliche inhalation rauchgasinhalation gasexposition",
+          "cedis": [
+            {
+              "code": "202",
+              "display": "Schädliche Inhalation",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_chemikalienexposition": {
+          "kind": "abnormal",
+          "text": "Chemikalienexposition",
+          "aliases": [
+            "Verätzung",
+            "Gefahrstoffkontakt"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "chemikalienexposition veraetzung gefahrstoffkontakt",
+          "cedis": [
+            {
+              "code": "204",
+              "display": "Exposition gegenüber Chemikalien",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_unterkuehlung": {
+          "kind": "abnormal",
+          "text": "Unterkühlung",
+          "aliases": [
+            "Hypothermie"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "unterkuehlung hypothermie",
+          "cedis": [
+            {
+              "code": "205",
+              "display": "Unterkühlung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kaelteverletzung": {
+          "kind": "abnormal",
+          "text": "Kälteverletzung",
+          "aliases": [
+            "Erfrierung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "kaelteverletzung erfrierung",
+          "cedis": [
+            {
+              "code": "201",
+              "display": "Erfrierung/Kälteverletzung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_beinahe_ertrinken": {
+          "kind": "abnormal",
+          "text": "Beinahe-Ertrinken",
+          "aliases": [
+            "Ertrinkungsunfall",
+            "Submersion"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie",
+            "paediatrie"
+          ],
+          "search": "beinahe ertrinken ertrinkungsunfall submersion",
+          "cedis": [
+            {
+              "code": "206",
+              "display": "Beinahe-Ertrinken",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_postoperative_komplikation": {
+          "kind": "abnormal",
+          "text": "Postoperative Komplikation",
+          "aliases": [
+            "Komplikation nach Operation",
+            "Wundheilungsstörung"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "thorax_gefaesschirurgie",
+            "neurochirurgie",
+            "hno",
+            "auge",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "postoperative komplikation komplikation nach operation wundheilungsstoerung",
+          "cedis": [
+            {
+              "code": "865",
+              "display": "Postoperative Komplikationen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_medizinprodukt_problem": {
+          "kind": "abnormal",
+          "text": "Problem mit einem Medizinprodukt",
+          "aliases": [
+            "Katheterproblem",
+            "Sondenproblem",
+            "Drainagenproblem"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "thorax_gefaesschirurgie",
+            "neurochirurgie",
+            "hno",
+            "auge",
+            "gynaekologie_geburtshilfe",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "problem mit einem medizinprodukt katheterproblem sondenproblem drainagenproblem",
+          "cedis": [
+            {
+              "code": "860",
+              "display": "Problem mit Medizinprodukt",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_auffaellige_befunde": {
+          "kind": "abnormal",
+          "text": "Auffällige Labor- oder Bildgebungsbefunde",
+          "aliases": [
+            "auffälliger Laborwert",
+            "auffällige Bildgebung",
+            "Befundkontrolle"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "thorax_gefaesschirurgie",
+            "neurochirurgie",
+            "hno",
+            "auge",
+            "gynaekologie_geburtshilfe",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "auffaellige labor oder bildgebungsbefunde auffaelliger laborwert auffaellige bildgebung befundkontrolle",
+          "cedis": [
+            {
+              "code": "863",
+              "display": "Auffällige Ergebnisse Labor/Bildgebung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_anaemie_blaesse": {
+          "kind": "abnormal",
+          "text": "Blässe oder Anämie",
+          "aliases": [
+            "Blutarmut",
+            "niedriger Hämoglobinwert"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "blaesse oder anaemie blutarmut niedriger haemoglobinwert",
+          "cedis": [
+            {
+              "code": "864",
+              "display": "Blässe/Anämie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_unspezifische_beschwerden": {
+          "kind": "abnormal",
+          "text": "Unspezifische Beschwerden",
+          "aliases": [
+            "unklare Beschwerden",
+            "allgemeines Unwohlsein"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "unspezifische beschwerden unklare beschwerden allgemeines unwohlsein",
+          "cedis": [
+            {
+              "code": "866",
+              "display": "Geringfügige unspezifische Beschwerden",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_unstillbares_schreien": {
+          "kind": "abnormal",
+          "text": "Unstillbares Schreien",
+          "aliases": [
+            "schreiender Säugling",
+            "exzessives Schreien"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "unstillbares schreien schreiender saeugling exzessives schreien",
+          "cedis": [
+            {
+              "code": "867",
+              "display": "Unstillbares Schreien",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schlaffes_kind": {
+          "kind": "abnormal",
+          "text": "Schlaffes Kind",
+          "aliases": [
+            "hypotones Kind",
+            "floppy infant"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "schlaffes kind hypotones kind floppy infant",
+          "cedis": [
+            {
+              "code": "411",
+              "display": "Schlaffes Kind",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_apnoe_saeugling": {
+          "kind": "abnormal",
+          "text": "Apnoe beim Säugling",
+          "aliases": [
+            "Atemaussetzer",
+            "ALTE",
+            "BRUE"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie"
+          ],
+          "search": "apnoe beim saeugling atemaussetzer alte brue",
+          "cedis": [
+            {
+              "code": "660",
+              "display": "Apnoeanfälle bei Säuglingen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_neugeborenen_trinkstoerung": {
+          "kind": "abnormal",
+          "text": "Trinkstörung des Neugeborenen",
+          "aliases": [
+            "Trinkschwäche",
+            "schlechte Nahrungsaufnahme"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "trinkstoerung des neugeborenen trinkschwaeche schlechte nahrungsaufnahme",
+          "cedis": [
+            {
+              "code": "266",
+              "display": "Trinkstörung des Neugeborenen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_neugeborenenikterus": {
+          "kind": "abnormal",
+          "text": "Neugeborenenikterus",
+          "aliases": [
+            "Gelbsucht beim Neugeborenen"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "neugeborenenikterus gelbsucht beim neugeborenen",
+          "cedis": [
+            {
+              "code": "267",
+              "display": "Neugeborenenikterus",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_angeborenes_problem": {
+          "kind": "abnormal",
+          "text": "Angeborenes Problem beim Kind",
+          "aliases": [
+            "kongenitale Fehlbildung",
+            "angeborene Erkrankung"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "angeborenes problem beim kind kongenitale fehlbildung angeborene erkrankung",
+          "cedis": [
+            {
+              "code": "868",
+              "display": "Angeborene Probleme bei Kindern",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_neugeborenes": {
+          "kind": "abnormal",
+          "text": "Vorstellung eines Neugeborenen",
+          "aliases": [
+            "Neugeborenenvorstellung"
+          ],
+          "lenses": [
+            "kernteam",
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "vorstellung eines neugeborenen neugeborenenvorstellung",
+          "cedis": [
+            {
+              "code": "869",
+              "display": "Neugeborenes",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kindliche_gangstoerung": {
+          "kind": "abnormal",
+          "text": "Kindliche Gangstörung oder Schmerzen beim Gehen",
+          "aliases": [
+            "Kind hinkt",
+            "Lahmheit"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "paediatrie"
+          ],
+          "search": "kindliche gangstoerung oder schmerzen beim gehen kind hinkt lahmheit",
+          "cedis": [
+            {
+              "code": "559",
+              "display": "Kindliche Gangstörung/Schmerzen beim Gehen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kindliche_verhaltensauffaelligkeit": {
+          "kind": "abnormal",
+          "text": "Kindliche Verhaltensauffälligkeit",
+          "aliases": [
+            "Verhaltensproblem beim Kind"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "psychiatrie"
+          ],
+          "search": "kindliche verhaltensauffaelligkeit verhaltensproblem beim kind",
+          "cedis": [
+            {
+              "code": "360",
+              "display": "Kindliche Verhaltensauffälligkeit",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schlafstoerung": {
+          "kind": "abnormal",
+          "text": "Schlafstörung",
+          "aliases": [
+            "Insomnie",
+            "Schlaflosigkeit"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "psychiatrie"
+          ],
+          "search": "schlafstoerung insomnie schlaflosigkeit",
+          "cedis": [
+            {
+              "code": "354",
+              "display": "Schlafstörung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_auffaelliges_verhalten": {
+          "kind": "abnormal",
+          "text": "Auffälliges Verhalten",
+          "aliases": [
+            "sonderbares Verhalten",
+            "Wesensveränderung"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "paediatrie",
+            "psychiatrie"
+          ],
+          "search": "auffaelliges verhalten sonderbares verhalten wesensveraenderung",
+          "cedis": [
+            {
+              "code": "358",
+              "display": "Sonderbares Verhalten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_soziales_problem": {
+          "kind": "abnormal",
+          "text": "Soziales Problem",
+          "aliases": [
+            "Wohnungslosigkeit",
+            "Versorgungskrise",
+            "häusliche Krise"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "psychiatrie"
+          ],
+          "search": "soziales problem wohnungslosigkeit versorgungskrise haeusliche krise",
+          "cedis": [
+            {
+              "code": "356",
+              "display": "Soziales Problem",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_sorge_wohlergehen": {
+          "kind": "abnormal",
+          "text": "Sorge um das Wohlergehen",
+          "aliases": [
+            "Fürsorgeproblem",
+            "Selbstvernachlässigung",
+            "Kindeswohl"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "psychiatrie"
+          ],
+          "search": "sorge um das wohlergehen fuersorgeproblem selbstvernachlaessigung kindeswohl",
+          "cedis": [
+            {
+              "code": "359",
+              "display": "Sorge um das Wohlergehen des Patienten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_verbandswechsel": {
+          "kind": "neutral",
+          "text": "Verbandswechsel",
+          "aliases": [
+            "Wundverband",
+            "Verbandkontrolle"
+          ],
+          "lenses": [
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "verbandswechsel wundverband verbandkontrolle",
+          "cedis": [
+            {
+              "code": "856",
+              "display": "Verbandswechsel",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_naht_klammerentfernung": {
+          "kind": "neutral",
+          "text": "Entfernung von Klammern oder Nähten",
+          "aliases": [
+            "Fadenzug",
+            "Klammerentfernung",
+            "Nahtentfernung"
+          ],
+          "lenses": [
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "entfernung von klammern oder naehten fadenzug klammerentfernung nahtentfernung",
+          "cedis": [
+            {
+              "code": "857",
+              "display": "Entfernung von Klammern/Nähten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_gipskontrolle": {
+          "kind": "neutral",
+          "text": "Gipskontrolle",
+          "aliases": [
+            "Gipsproblem",
+            "Cast-Kontrolle"
+          ],
+          "lenses": [
+            "trauma_orthopaedie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "gipskontrolle gipsproblem cast kontrolle",
+          "cedis": [
+            {
+              "code": "858",
+              "display": "Gipskontrolle",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_bildgebung_laborkontrolle": {
+          "kind": "neutral",
+          "text": "Bildgebung oder Laborkontrolle",
+          "aliases": [
+            "Bildgebung",
+            "Blutuntersuchung",
+            "Laborkontrolle",
+            "Röntgenkontrolle"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "thorax_gefaesschirurgie",
+            "neurochirurgie",
+            "hno",
+            "auge",
+            "gynaekologie_geburtshilfe",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "bildgebung oder laborkontrolle bildgebung blutuntersuchung laborkontrolle roentgenkontrolle",
+          "cedis": [
+            {
+              "code": "859",
+              "display": "Bildgebung/Blutuntersuchung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_wundkontrolle": {
+          "kind": "neutral",
+          "text": "Wundkontrolle",
+          "aliases": [
+            "Wiedervorstellung Wunde",
+            "Wundheilungskontrolle"
+          ],
+          "lenses": [
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "wundkontrolle wiedervorstellung wunde wundheilungskontrolle",
+          "cedis": [
+            {
+              "code": "710",
+              "display": "Wundkontrolle",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_augenkontrolle": {
+          "kind": "neutral",
+          "text": "Augenkontrolle",
+          "aliases": [
+            "Kontrolluntersuchung Auge",
+            "Wiedervorstellung Auge"
+          ],
+          "lenses": [
+            "auge",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "augenkontrolle kontrolluntersuchung auge wiedervorstellung auge",
+          "cedis": [
+            {
+              "code": "511",
+              "display": "Kontrolluntersuchung der Augen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_medikamentenbedarf": {
+          "kind": "neutral",
+          "text": "Medikamentenbedarf oder Verschreibung",
+          "aliases": [
+            "Rezept",
+            "Medikation",
+            "Medikament fehlt"
+          ],
+          "lenses": [
+            "kernteam",
+            "psychiatrie",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "medikamentenbedarf oder verschreibung rezept medikation medikament fehlt",
+          "cedis": [
+            {
+              "code": "861",
+              "display": "Verschreibung/Bedarf an Medikamenten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_direkte_weiterleitung": {
+          "kind": "neutral",
+          "text": "Direkte Weiterleitung oder Überweisung",
+          "aliases": [
+            "Zuweisung",
+            "direkte Überweisung"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "thorax_gefaesschirurgie",
+            "neurochirurgie",
+            "hno",
+            "auge",
+            "gynaekologie_geburtshilfe",
+            "paediatrie",
+            "psychiatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "direkte weiterleitung oder ueberweisung zuweisung direkte ueberweisung",
+          "cedis": [
+            {
+              "code": "855",
+              "display": "Direkte Überweisung/Weiterleitung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_vor_erster_einschaetzung_gegangen": {
+          "kind": "neutral",
+          "text": "Vor Ersteinschätzung gegangen",
+          "aliases": [
+            "vor Triage gegangen",
+            "nicht mehr anwesend"
+          ],
+          "lenses": [
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "vor ersteinschaetzung gegangen vor triage gegangen nicht mehr anwesend",
+          "cedis": [
+            {
+              "code": "998",
+              "display": "Patient aufgenommen und vor Ersteinschätzung wieder gegangen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_intravenoese_therapie": {
+          "kind": "neutral",
+          "text": "Intravenöse Therapie",
+          "aliases": [
+            "Infusion",
+            "intravenöse Medikation"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "intravenoese therapie infusion intravenoese medikation",
+          "cedis": [
+            {
+              "code": "870",
+              "display": "Intravenöse Therapie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kontakt_infektionskrankheit": {
+          "kind": "abnormal",
+          "text": "Kontakt mit übertragbarer Krankheit",
+          "aliases": [
+            "Infektionskontakt",
+            "Exposition",
+            "Ansteckung"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "kontakt mit uebertragbarer krankheit infektionskontakt exposition ansteckung",
+          "cedis": [
+            {
+              "code": "851",
+              "display": "Exposition gegenüber einer übertragbaren Krankheit",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_kontakt_blut_koerperfluessigkeit": {
+          "kind": "abnormal",
+          "text": "Kontakt mit Blut oder Körperflüssigkeiten",
+          "aliases": [
+            "Nadelstichverletzung",
+            "Blutkontakt"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "trauma_orthopaedie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "kontakt mit blut oder koerperfluessigkeiten nadelstichverletzung blutkontakt",
+          "cedis": [
+            {
+              "code": "706",
+              "display": "Kontakt mit Blut oder Körperflüssigkeiten",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_ohr": {
+          "kind": "abnormal",
+          "text": "Fremdkörper im Ohr",
+          "aliases": [],
+          "lenses": [
+            "hno",
+            "paediatrie"
+          ],
+          "search": "fremdkoerper im ohr",
+          "cedis": [
+            {
+              "code": "052",
+              "display": "Fremdkörper im Ohr",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_nase": {
+          "kind": "abnormal",
+          "text": "Fremdkörper in der Nase",
+          "aliases": [],
+          "lenses": [
+            "hno",
+            "paediatrie"
+          ],
+          "search": "fremdkoerper in der nase",
+          "cedis": [
+            {
+              "code": "153",
+              "display": "Fremdkörper in der Nase",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_rektum": {
+          "kind": "abnormal",
+          "text": "Fremdkörper im Rektum",
+          "aliases": [],
+          "lenses": [
+            "allgemeinchirurgie",
+            "psychiatrie"
+          ],
+          "search": "fremdkoerper im rektum",
+          "cedis": [
+            {
+              "code": "255",
+              "display": "Fremdkörper im Rektum",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_speiseroehre": {
+          "kind": "abnormal",
+          "text": "Fremdkörper oral oder ösophageal",
+          "aliases": [
+            "verschluckter Fremdkörper",
+            "Fremdkörper in Speiseröhre"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "allgemeinchirurgie",
+            "hno",
+            "paediatrie"
+          ],
+          "search": "fremdkoerper oral oder oesophageal verschluckter fremdkoerper fremdkoerper in speiseroehre",
+          "cedis": [
+            {
+              "code": "265",
+              "display": "Fremdkörper oral/ösophageal",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_vagina": {
+          "kind": "abnormal",
+          "text": "Fremdkörper in der Vagina",
+          "aliases": [],
+          "lenses": [
+            "gynaekologie_geburtshilfe",
+            "paediatrie"
+          ],
+          "search": "fremdkoerper in der vagina",
+          "cedis": [
+            {
+              "code": "452",
+              "display": "Fremdkörper in der Vagina",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_fremdkoerper_haut": {
+          "kind": "abnormal",
+          "text": "Fremdkörper in der Haut",
+          "aliases": [
+            "Splitter",
+            "eingedrungener Fremdkörper"
+          ],
+          "lenses": [
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "fremdkoerper in der haut splitter eingedrungener fremdkoerper",
+          "cedis": [
+            {
+              "code": "717",
+              "display": "Fremdkörper in der Haut",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_amputation": {
+          "kind": "abnormal",
+          "text": "Amputation",
+          "aliases": [
+            "abgetrennte Gliedmaße"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie"
+          ],
+          "search": "amputation abgetrennte gliedmasse",
+          "cedis": [
+            {
+              "code": "553",
+              "display": "Amputation",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_nagelproblem": {
+          "kind": "abnormal",
+          "text": "Nagelproblem",
+          "aliases": [
+            "eingewachsener Nagel",
+            "Nagelverletzung"
+          ],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie"
+          ],
+          "search": "nagelproblem eingewachsener nagel nagelverletzung",
+          "cedis": [
+            {
+              "code": "718",
+              "display": "Nagelprobleme",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_parasitenverdacht": {
+          "kind": "abnormal",
+          "text": "Parasitenverdacht",
+          "aliases": [
+            "Läuse",
+            "Krätze",
+            "Milben"
+          ],
+          "lenses": [
+            "kernteam",
+            "paediatrie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "parasitenverdacht laeuse kraetze milben",
+          "cedis": [
+            {
+              "code": "714",
+              "display": "Ausschluss eines Parasitenbefalls",
+              "relation": "related"
+            }
+          ]
+        },
+        "symptome_wert_brust_roetung_spannung": {
+          "kind": "abnormal",
+          "text": "Rötung oder Spannungsgefühl der Brust",
+          "aliases": [
+            "Mastitis",
+            "Brustentzündung"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "roetung oder spannungsgefuehl der brust mastitis brustentzuendung",
+          "cedis": [
+            {
+              "code": "713",
+              "display": "Rötung/Spannungsgefühl in der Brust",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schamlippenschwellung": {
+          "kind": "abnormal",
+          "text": "Schamlippenschwellung",
+          "aliases": [],
+          "lenses": [
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "schamlippenschwellung",
+          "cedis": [
+            {
+              "code": "456",
+              "display": "Schamlippenschwellung",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_oligurie": {
+          "kind": "abnormal",
+          "text": "Oligurie",
+          "aliases": [
+            "verminderte Urinmenge"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam"
+          ],
+          "search": "oligurie verminderte urinmenge",
+          "cedis": [
+            {
+              "code": "308",
+              "display": "Oligurie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_polyurie": {
+          "kind": "abnormal",
+          "text": "Polyurie",
+          "aliases": [
+            "vermehrte Urinmenge"
+          ],
+          "lenses": [
+            "kernteam"
+          ],
+          "search": "polyurie vermehrte urinmenge",
+          "cedis": [
+            {
+              "code": "309",
+              "display": "Polyurie",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_rektal_perinealer_schmerz": {
+          "kind": "abnormal",
+          "text": "Rektaler oder perinealer Schmerz",
+          "aliases": [
+            "Analschmerz",
+            "Dammschmerz"
+          ],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "gynaekologie_geburtshilfe"
+          ],
+          "search": "rektaler oder perinealer schmerz analschmerz dammschmerz",
+          "cedis": [
+            {
+              "code": "258",
+              "display": "Rektale/perineale Schmerzen",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schluckauf": {
+          "kind": "abnormal",
+          "text": "Schluckauf",
+          "aliases": [
+            "Singultus"
+          ],
+          "lenses": [
+            "kernteam"
+          ],
+          "search": "schluckauf singultus",
+          "cedis": [
+            {
+              "code": "262",
+              "display": "Schluckauf",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_sonstiges_hautproblem": {
+          "kind": "abnormal",
+          "text": "Sonstiges Hautproblem",
+          "aliases": [],
+          "lenses": [
+            "kernteam",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "sonstiges hautproblem",
+          "cedis": [
+            {
+              "code": "711",
+              "display": "Sonstige Hautprobleme",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_schwellung_beule_schwiele": {
+          "kind": "abnormal",
+          "text": "Schwellung, Beule oder Schwiele",
+          "aliases": [],
+          "lenses": [
+            "kernteam",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "paediatrie"
+          ],
+          "search": "schwellung beule oder schwiele",
+          "cedis": [
+            {
+              "code": "712",
+              "display": "Schwellung/Beule/Schwiele",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_ring_entfernung": {
+          "kind": "neutral",
+          "text": "Entfernung eines Rings",
+          "aliases": [
+            "Ring klemmt",
+            "Ringschnitt"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "trauma_orthopaedie",
+            "allgemeinchirurgie",
+            "wiedervorstellung_kontrolle"
+          ],
+          "search": "entfernung eines rings ring klemmt ringschnitt",
+          "cedis": [
+            {
+              "code": "862",
+              "display": "Entfernung Ring",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_freitext": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}",
+          "aliases": [],
+          "lenses": [],
+          "search": "freitext gemeinsam freitext",
+          "cedis": [
+            {
+              "code": "999",
+              "display": "Unbekannt",
+              "relation": "related"
+            }
+          ],
+          "freeText": true
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  },
+  "groups": {},
+  "phrases": {}
+}

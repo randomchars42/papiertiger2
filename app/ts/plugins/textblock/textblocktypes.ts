@@ -7,6 +7,12 @@ export type SnomedCoding = {
 
 export type ItemKind = "normal" | "abnormal" | "intervention" | "neutral";
 
+export type CedisMapping = {
+    code: string;
+    display: string;
+    relation: "equivalent" | "related" | "broader" | "narrower";
+};
+
 export type TextDefinition =
     | string
     | {
@@ -21,6 +27,22 @@ export type ValueDefinition = {
     snomedDisplay?: string;
     kind: ItemKind;
     points?: number;
+    aliases?: string[];
+    search?: string;
+    lenses?: string[];
+    cedis?: CedisMapping[];
+    freeText?: boolean;
+};
+
+export type LensDefinition = {
+    id: string;
+    label: string;
+};
+
+export type ValueCatalogDefinition = {
+    lenses: LensDefinition[];
+    values: Record<string, ValueDefinition>;
+    attributes?: Record<string, string>;
 };
 
 export type ConditionDefinition = {
@@ -38,6 +60,7 @@ export type PhraseDefinition = {
     attributes?: Record<string, string>;
     note?: string;
     kind?: ItemKind;
+    catalog?: string;
 };
 
 export type RepeatableDefinition = {
@@ -172,6 +195,7 @@ export type PackageDefinition = {
     phrases: Record<string, PhraseDefinition>;
     sets?: Record<string, SetDefinition>;
     editors?: Record<string, EditorDefinition>;
+    catalogs?: Record<string, ValueCatalogDefinition>;
 };
 
 export type Definitions = {
@@ -179,6 +203,7 @@ export type Definitions = {
     phrases: Record<string, PhraseDefinition>;
     sets: Record<string, SetDefinition>;
     editors: Record<string, EditorDefinition>;
+    catalogs: Record<string, ValueCatalogDefinition>;
 };
 
 export type DurationValue = {

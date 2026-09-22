@@ -17,6 +17,7 @@ export const emptyDefinitions = () => ({
     phrases: {},
     sets: {},
     editors: {},
+    catalogs: {},
 });
 export const parseValue = (value) => {
     if (typeof value !== "string") {

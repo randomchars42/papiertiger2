@@ -98,6 +98,38 @@ G @root @summary @reset: ABCDE
 angegebenen Reihenfolge ein. Definitionen werden nicht kopiert oder
 überschrieben; doppelte IDs und Importzyklen sind Fehler.
 
+## Einen großen Auswahlkatalog pflegen
+
+Ein großer, durchsuchbarer Auswahlvorrat wird als Wertkatalog im selben
+`.pt`-Format gepflegt. Ein Wert bleibt dabei mit seinen Suchbegriffen,
+Kodierungen und fachlichen Zuordnungen zusammen:
+
+```pt
+L neurologie: Neurologie
+
+V schwindel: Schwindel|a
+  @sct=404640003[Dizziness]
+  @alias=Drehschwindel; Vertigo; Benommenheit
+  @cedis=403[Schwindel] equivalent
+  @lens=neurologie
+```
+
+Die Quellreihenfolge dient als einfache Rangfolge. Ist eine Häufigkeit
+hinreichend bekannt, stehen häufige Werte zuerst; eine zusätzliche numerische
+Gewichtung ist nicht erforderlich. Linsen bestimmen nur die kompakte
+Vorauswahl. Werte ohne passende Linse bleiben über ihre Bezeichnung und
+Aliase auffindbar.
+
+CEDIS-Code, CEDIS-Originalbezeichnung und Beziehung werden direkt am Wert
+geführt. Der Compiler gleicht alle drei Angaben mit dem gebündelten Katalog ab
+und verlangt für den Symptomkatalog mindestens eine Zuordnung zu jedem
+enthaltenen CEDIS-PCL-Code. Zusätzliche Werte sind ausdrücklich zulässig.
+
+Der Symptomkatalog bleibt zunächst in einer Datei, damit Reihenfolge und
+Zuordnungen gemeinsam prüfbar sind. Eine spätere Aufteilung muss die globale
+Reihenfolge ausdrücklich erhalten; die Datei wird daher nicht vorzeitig nach
+Fachgebiet oder CEDIS-Kapitel zerlegt.
+
 ## Dokumente zusammenstellen
 
 `documents.pt` bestimmt die auf der Seite auswählbaren Dokumente und deren

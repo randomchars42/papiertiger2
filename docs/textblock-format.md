@@ -24,8 +24,68 @@ I: gemeinsam, weiteres_paket
 ```
 
 Importe werden rekursiv vor dem aktuellen Paket geladen. Sie stellen Gruppen,
-Phrasen, Editoren und Vorgaben bereit. Zyklen, fehlende Pakete und doppelte IDs
-sind Fehler.
+Phrasen, Editoren, Wertkataloge und Vorgaben bereit. Zyklen, fehlende Pakete und
+doppelte IDs sind Fehler.
+
+## Wertkataloge und Linsen
+
+Ein Paket kann einen wiederverwendbaren Wertkatalog mit stabilen, expliziten
+Eintrags-IDs enthalten. Die Quellreihenfolge ist zugleich die bevorzugte
+Anzeigereihenfolge. Linsen filtern nur die initial sichtbaren Werte; eine Suche
+durchsucht immer den vollständigen Katalog.
+
+```pt
+N: symptome
+I: gemeinsam
+
+L rettungsdienst: Rettungsdienst
+L kernteam: Kernteam
+
+V schwindel: Schwindel|a
+  @sct=404640003[Dizziness]
+  @alias=Drehschwindel; Vertigo; Benommenheit
+  @cedis=403[Schwindel] equivalent
+  @lens=rettungsdienst; kernteam
+
+V freitext: {:freitext=gemeinsam.freitext*:}|a
+  @freetext
+  @cedis=999[Unbekannt] related
+```
+
+| Direktive | Bedeutung |
+|---|---|
+| `L id: Text` | definiert eine Linse mit sichtbarer Bezeichnung |
+| `V id: Text|Art` | definiert einen stabil benannten Katalogwert |
+| `@sct=` | optionale SNOMED-CT-Kodierung wie bei Phrasenwerten |
+| `@alias=` | mit Semikolon getrennte Suchbegriffe |
+| `@cedis=` | CEDIS-Code, Originalbezeichnung und Beziehung |
+| `@lens=` | mit Semikolon getrennte Linsen-IDs |
+| `@freetext` | markiert genau einen Freitextwert des Katalogs |
+
+CEDIS-Beziehungen sind `equivalent`, `related`, `broader` oder `narrower`.
+Code und Bezeichnung werden beim Kompilieren gegen `cedis.json` geprüft. Die
+Zuordnung erzeugt nur Vorschläge für das CEDIS-Plug-in; sie wählt keinen
+PCL-Eintrag automatisch aus.
+
+Eine Phrase übernimmt den Katalog mit `@values(...)`:
+
+```pt
+I: symptome
+
+G @root: SAMPLER
+  P: Symptom* => @values(symptome)
+```
+
+Bedingungen können einen Katalogwert stabil über `paket.wert` referenzieren:
+
+```pt
+C schmerz: symptome.brustschmerz / symptome.bauchschmerz
+P<!symptome.fieber>: kein Fieber|n
+```
+
+Der Compiler fügt die Katalogwerte in die Laufzeitphrase ein. Auswahl,
+Wiederholung, Bedingungen und Ausgabe verwenden danach das normale
+Textblock-Zustandsmodell.
 
 ## Gruppen
 

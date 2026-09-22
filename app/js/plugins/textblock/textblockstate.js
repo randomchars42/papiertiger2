@@ -32,6 +32,7 @@ export const isPackage = (value) => {
         return false;
     return (isRecord(value.groups) &&
         isRecord(value.phrases) &&
+        (value.catalogs === undefined || isRecord(value.catalogs)) &&
         (value.imports === undefined ||
             (Array.isArray(value.imports) &&
                 value.imports.every((id) => typeof id === "string" && id !== ""))));
@@ -45,13 +46,46 @@ const mergeRecord = (target, source, kind) => {
 };
 export const mergePackage = (definitions, packageDefinition) => {
     mergeRecord(definitions.groups, packageDefinition.groups, "group");
-    mergeRecord(definitions.phrases, packageDefinition.phrases, "phrase");
     mergeRecord(definitions.sets, packageDefinition.sets ?? {}, "set");
     mergeRecord(definitions.editors, packageDefinition.editors ?? {}, "editor");
+    mergeRecord(definitions.catalogs, packageDefinition.catalogs ?? {}, "catalog");
+    for (const [id, phrase] of Object.entries(packageDefinition.phrases)) {
+        if (id in definitions.phrases)
+            throw new Error(`Duplicate phrase id "${id}"`);
+        if (phrase.catalog === undefined) {
+            definitions.phrases[id] = phrase;
+            continue;
+        }
+        const catalog = definitions.catalogs[phrase.catalog];
+        if (catalog === undefined) {
+            throw new Error(`Unknown value catalog "${phrase.catalog}"`);
+        }
+        definitions.phrases[id] = {
+            ...phrase,
+            values: { ...catalog.values, ...phrase.values },
+            attributes: {
+                ...(catalog.attributes ?? {}),
+                ...(phrase.attributes ?? {}),
+            },
+        };
+    }
 };
 export const validateDefinitions = (definitions) => {
     const valueOwners = new Map();
     const itemKinds = new Set(["normal", "abnormal", "intervention", "neutral"]);
+    for (const [catalogId, catalog] of Object.entries(definitions.catalogs)) {
+        const lensIds = new Set(catalog.lenses.map((lens) => lens.id));
+        if (catalog.lenses.some((lens) => lens.id === "" || lens.label === "") ||
+            lensIds.size !== catalog.lenses.length) {
+            throw new Error(`Invalid lenses in catalog "${catalogId}"`);
+        }
+        for (const [valueId, value] of Object.entries(catalog.values)) {
+            if (!Array.isArray(value.lenses) ||
+                value.lenses.some((lens) => !lensIds.has(lens))) {
+                throw new Error(`Invalid lenses in catalog value "${valueId}"`);
+            }
+        }
+    }
     for (const [id, phrase] of Object.entries(definitions.phrases)) {
         if (typeof phrase.title !== "string" || !isRecord(phrase.values)) {
             throw new Error(`Invalid phrase "${id}"`);

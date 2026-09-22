@@ -25,6 +25,7 @@ PLACEHOLDER = re.compile(
     r"\{:\s*([a-zA-Z0-9_-]+)(?:=([a-zA-Z0-9_.-]+))?(\*)?\s*:\}"
 )
 DURATION_UNITS = {"minute", "hour", "day", "week", "month", "year"}
+CEDIS_RELATIONS = {"equivalent", "related", "broader", "narrower"}
 
 
 class CompileError(Exception):
@@ -243,6 +244,79 @@ def parse_value(value: str, path: Path, line: int) -> dict[str, Any]:
     }
 
 
+def parse_catalog_metadata(
+    source: dict[str, Any],
+    definition: dict[str, Any],
+    text: str,
+    line: int,
+) -> None:
+    if text == "@freetext":
+        if definition["free_text"]:
+            fail(source, line, "duplicate @freetext")
+        definition["free_text"] = True
+        return
+    match = re.fullmatch(r"@([a-z]+)\s*=\s*([\s\S]+)", text)
+    if match is None:
+        fail(source, line, f"invalid catalog metadata '{text}'")
+    name, body = match.groups()
+    if name == "sct":
+        if definition["snomed"] is not None:
+            fail(source, line, "duplicate @sct")
+        coding = re.fullmatch(r"([^\s\[\]]+)\[([^\[\]\r\n]+)\]", body.strip())
+        if coding is None:
+            fail(
+                source,
+                line,
+                "SNOMED coding must use @sct=<code-or-expression>[<human-readable term>]",
+            )
+        definition["snomed"] = coding.group(1)
+        definition["snomed_display"] = coding.group(2).strip()
+        return
+    if name in {"alias", "lens"}:
+        key = "aliases" if name == "alias" else "lenses"
+        if definition[key]:
+            fail(source, line, f"duplicate @{name}")
+        entries = [entry.strip() for entry in body.split(";") if entry.strip()]
+        if not entries:
+            fail(source, line, f"@{name} needs at least one entry")
+        if name == "lens" and any(
+            re.fullmatch(r"[a-z][a-z0-9_]*", entry) is None for entry in entries
+        ):
+            fail(source, line, "@lens entries must be lowercase identifiers")
+        definition[key] = entries
+        return
+    if name == "cedis":
+        if definition["cedis"]:
+            fail(source, line, "duplicate @cedis")
+        mappings: list[dict[str, str]] = []
+        for entry in (part.strip() for part in body.split(";")):
+            if not entry:
+                continue
+            mapping = re.fullmatch(
+                r"(\d{3})\[([^\[\]\r\n]+)\]\s+(equivalent|related|broader|narrower)",
+                entry,
+            )
+            if mapping is None:
+                fail(
+                    source,
+                    line,
+                    "@cedis entries need <code>[<display>] <relation>",
+                )
+            code, display, relation = mapping.groups()
+            if relation not in CEDIS_RELATIONS:
+                fail(source, line, f"unknown CEDIS relation '{relation}'")
+            mappings.append(
+                {"code": code, "display": display.strip(), "relation": relation}
+            )
+        if not mappings:
+            fail(source, line, "@cedis needs at least one mapping")
+        if len({mapping["code"] for mapping in mappings}) != len(mappings):
+            fail(source, line, "@cedis contains a duplicate code")
+        definition["cedis"] = mappings
+        return
+    fail(source, line, f"unknown catalog metadata '@{name}'")
+
+
 def nearest_group(source: dict[str, Any], stack: list[dict[str, Any]], indent: int, line: int) -> dict[str, Any]:
     while stack and stack[-1]["indent"] >= indent:
         stack.pop()
@@ -261,14 +335,27 @@ def parse_source(path: Path) -> dict[str, Any]:
         "groups": [],
         "phrases": [],
         "sets": [],
+        "lenses": [],
+        "catalog_values": [],
     }
     group_stack: list[dict[str, Any]] = []
     current_set: dict[str, Any] | None = None
+    current_catalog_value: dict[str, Any] | None = None
 
     for line_number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         indent, text = indentation(raw, path, line_number)
         if not text or text.startswith("#"):
             continue
+
+        if (
+            current_catalog_value is not None
+            and indent > current_catalog_value["indent"]
+            and text.startswith("@")
+        ):
+            parse_catalog_metadata(source, current_catalog_value, text, line_number)
+            continue
+        if current_catalog_value is not None and indent <= current_catalog_value["indent"]:
+            current_catalog_value = None
 
         if current_set is not None and indent > current_set["indent"] and not re.match(
             r"^(?:N|I|E|C|G(?:<[^>]+>)?|U|P(?:<[^>]+>)?|S)\s*[: ]", text
@@ -304,6 +391,47 @@ def parse_source(path: Path) -> dict[str, Any]:
                 if imported in source["imports"]:
                     fail(source, line_number, f"duplicate import '{imported}'")
                 source["imports"].append(imported)
+            continue
+
+        if text.startswith("L "):
+            if indent:
+                fail(source, line_number, "L must not be indented")
+            identifier, label = split_directive(text[2:], path, line_number)
+            if not re.fullmatch(r"[a-z][a-z0-9_]*", identifier):
+                fail(source, line_number, f"invalid lens id '{identifier}'")
+            if not label:
+                fail(source, line_number, "lens label cannot be empty")
+            if any(lens["id"] == identifier for lens in source["lenses"]):
+                fail(source, line_number, f"duplicate lens '{identifier}'")
+            source["lenses"].append(
+                {"line": line_number, "id": identifier, "label": label}
+            )
+            continue
+
+        if text.startswith("V "):
+            if indent:
+                fail(source, line_number, "V must not be indented")
+            identifier, body = split_directive(text[2:], path, line_number)
+            if not re.fullmatch(r"[a-z][a-z0-9_]*", identifier):
+                fail(source, line_number, f"invalid catalog value id '{identifier}'")
+            if any(value["name"] == identifier for value in source["catalog_values"]):
+                fail(source, line_number, f"duplicate catalog value '{identifier}'")
+            value = parse_value(body, path, line_number)
+            if value["default"]:
+                fail(source, line_number, "catalog values cannot be defaults")
+            value.update(
+                {
+                    "indent": indent,
+                    "name": identifier,
+                    "aliases": [],
+                    "cedis": [],
+                    "lenses": [],
+                    "free_text": False,
+                }
+            )
+            source["catalog_values"].append(value)
+            current_catalog_value = value
+            current_set = None
             continue
 
         if text.startswith("E "):
@@ -427,10 +555,22 @@ def parse_source(path: Path) -> dict[str, Any]:
                     title = title[:-1].rstrip()
                     if not title:
                         fail(source, line_number, "prompt phrase needs a title before '*'")
-                values = [
-                    parse_value(candidate, path, line_number)
-                    for candidate in split_top_level(arrow[1], " / ")
-                ]
+                values = []
+                catalog: str | None = None
+                for candidate in split_top_level(arrow[1], " / "):
+                    catalog_match = re.fullmatch(
+                        r"@values\(([a-z][a-z0-9_]*)\)", candidate
+                    )
+                    if catalog_match is None:
+                        values.append(parse_value(candidate, path, line_number))
+                        continue
+                    if catalog is not None:
+                        fail(source, line_number, "a phrase may use only one value catalog")
+                    catalog = catalog_match.group(1)
+                    if catalog != source["namespace"] and catalog not in source["imports"]:
+                        fail(source, line_number, f"value catalog '{catalog}' is not imported")
+                if not values and catalog is None:
+                    fail(source, line_number, "a phrase needs at least one value")
             phrase = {
                 "line": line_number,
                 "title": title,
@@ -438,6 +578,7 @@ def parse_source(path: Path) -> dict[str, Any]:
                 "prompt": prompt,
                 "conditions": conditions,
                 "values": values,
+                "catalog": catalog if len(arrow) == 2 else None,
                 "group": parent,
             }
             source["phrases"].append(phrase)
@@ -541,6 +682,15 @@ def value_id_text(text: str) -> str:
     return slug(without_placeholders) or "value"
 
 
+def search_text(*values: str) -> str:
+    return " ".join(
+        part
+        for value in values
+        for part in [slug(value).replace("_", " ")]
+        if part
+    )
+
+
 def compile_source(source: dict[str, Any]) -> dict[str, Any]:
     namespace = source["namespace"]
     identifiers: dict[str, tuple[str, int]] = {}
@@ -582,6 +732,15 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             register("value", value["id"], value["line"])
             values_by_text.setdefault(value["raw_text"], []).append(value)
 
+    for value in source["catalog_values"]:
+        value["text"] = PLACEHOLDER.sub(
+            lambda match: f"{{:{match.group(1)}{'*' if match.group(3) else ''}:}}",
+            value["raw_text"],
+        )
+        value["id"] = f"{namespace}_wert_{value['name']}"
+        register("catalog value", value["id"], value["line"])
+        values_by_text.setdefault(value["raw_text"], []).append(value)
+
     for definition in source["sets"]:
         definition["id"] = f"{namespace}_vorgabe_{slug(definition['title'])}"
         register("set", definition["id"], definition["line"])
@@ -593,6 +752,80 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
         register("editor", editor_id, editor["line"])
         local_editors[editor["name"]] = editor_id
         compiled_editors[editor_id] = compiled
+
+    def resolve_editor(attribute: str, editor_ref: str | None, line: int) -> str:
+        if editor_ref is None:
+            editor_id = local_editors.get(attribute)
+            if editor_id is None and attribute == "freitext" and "gemeinsam" in source["imports"]:
+                editor_id = "gemeinsam_eingabe_freitext"
+            if editor_id is None:
+                fail(source, line, f"placeholder '{attribute}' needs an editor")
+            return editor_id
+        if "." in editor_ref:
+            imported, editor_name = editor_ref.split(".", 1)
+            if imported not in source["imports"]:
+                fail(source, line, f"editor package '{imported}' is not imported")
+            return f"{imported}_eingabe_{editor_name}"
+        editor_id = local_editors.get(editor_ref)
+        if editor_id is None:
+            fail(source, line, f"unknown local editor '{editor_ref}'")
+        return editor_id
+
+    compiled_catalogs: dict[str, Any] = {}
+    if source["catalog_values"] or source["lenses"]:
+        if not source["catalog_values"]:
+            fail(source, 0, "a lens package needs catalog values")
+        known_lenses = {lens["id"] for lens in source["lenses"]}
+        catalog_attributes: dict[str, str] = {}
+        catalog_values: dict[str, Any] = {}
+        free_text_values = 0
+        for value in source["catalog_values"]:
+            unknown_lenses = set(value["lenses"]) - known_lenses
+            if unknown_lenses:
+                fail(
+                    source,
+                    value["line"],
+                    f"unknown lens '{sorted(unknown_lenses)[0]}'",
+                )
+            compiled_value: dict[str, Any] = {
+                "kind": value["kind"],
+                "text": value["text"],
+                "aliases": value["aliases"],
+                "lenses": value["lenses"],
+                "search": search_text(value["raw_text"], *value["aliases"]),
+            }
+            if value["snomed"] is not None:
+                compiled_value["snomed"] = value["snomed"]
+                compiled_value["snomedDisplay"] = value["snomed_display"]
+            if value["cedis"]:
+                compiled_value["cedis"] = value["cedis"]
+            if value["free_text"]:
+                compiled_value["freeText"] = True
+                free_text_values += 1
+            for placeholder in PLACEHOLDER.finditer(value["raw_text"]):
+                attribute, editor_ref = placeholder.group(1), placeholder.group(2)
+                editor_id = resolve_editor(attribute, editor_ref, value["line"])
+                previous = catalog_attributes.get(attribute)
+                if previous is not None and previous != editor_id:
+                    fail(
+                        source,
+                        value["line"],
+                        f"attribute '{attribute}' uses different editors",
+                    )
+                catalog_attributes[attribute] = editor_id
+            catalog_values[value["id"]] = compiled_value
+        if free_text_values > 1:
+            fail(source, 0, "a catalog may contain only one @freetext value")
+        catalog: dict[str, Any] = {
+            "lenses": [
+                {"id": lens["id"], "label": lens["label"]}
+                for lens in source["lenses"]
+            ],
+            "values": catalog_values,
+        }
+        if catalog_attributes:
+            catalog["attributes"] = catalog_attributes
+        compiled_catalogs[namespace] = catalog
 
     def unique_phrase(title: str, line: int) -> dict[str, Any]:
         matches = phrase_titles.get(title, [])
@@ -622,6 +855,14 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             return values
         if len(values) > 1:
             fail(source, line, f"ambiguous condition value '{reference}'")
+        external = re.fullmatch(
+            r"([a-z][a-z0-9_]*)\.([a-z][a-z0-9_]*)", reference
+        )
+        if external is not None:
+            package, value = external.groups()
+            if package != namespace and package not in source["imports"]:
+                fail(source, line, f"catalog package '{package}' is not imported")
+            return [{"id": f"{package}_wert_{value}"}]
         fail(source, line, f"unknown condition '{reference}'")
         return []
 
@@ -657,7 +898,7 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
         defaults = [value for value in phrase["values"] if value["default"]]
         if len(defaults) > 1:
             fail(source, phrase["line"], "a phrase may have only one default value (*)")
-        if phrase["prompt"] and len(phrase["values"]) < 2:
+        if phrase["prompt"] and len(phrase["values"]) < 2 and phrase["catalog"] is None:
             fail(source, phrase["line"], "a prompt phrase needs at least two values")
         default: str | None
         if defaults:
@@ -674,6 +915,8 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             "default": default,
             "values": {},
         }
+        if phrase["catalog"] is not None:
+            compiled["catalog"] = phrase["catalog"]
         if phrase["prompt"]:
             compiled["prompt"] = True
         attributes: dict[str, str] = {}
@@ -690,21 +933,7 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             compiled["values"][value["id"]] = compiled_value
             for placeholder in PLACEHOLDER.finditer(value["raw_text"]):
                 attribute, editor_ref = placeholder.group(1), placeholder.group(2)
-                if editor_ref is None:
-                    editor_id = local_editors.get(attribute)
-                    if editor_id is None and attribute == "freitext" and "gemeinsam" in source["imports"]:
-                        editor_id = "gemeinsam_eingabe_freitext"
-                    if editor_id is None:
-                        fail(source, value["line"], f"placeholder '{attribute}' needs an editor")
-                elif "." in editor_ref:
-                    imported, editor_name = editor_ref.split(".", 1)
-                    if imported not in source["imports"]:
-                        fail(source, value["line"], f"editor package '{imported}' is not imported")
-                    editor_id = f"{imported}_eingabe_{editor_name}"
-                else:
-                    editor_id = local_editors.get(editor_ref)
-                    if editor_id is None:
-                        fail(source, value["line"], f"unknown local editor '{editor_ref}'")
+                editor_id = resolve_editor(attribute, editor_ref, value["line"])
                 previous = attributes.get(attribute)
                 if previous is not None and previous != editor_id:
                     fail(source, value["line"], f"attribute '{attribute}' uses different editors")
@@ -894,6 +1123,8 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
         package["editors"] = compiled_editors
     if compiled_sets:
         package["sets"] = compiled_sets
+    if compiled_catalogs:
+        package["catalogs"] = compiled_catalogs
     package["groups"] = compiled_groups
     package["phrases"] = compiled_phrases
     return package
@@ -1016,6 +1247,17 @@ def output_path(source_path: Path) -> Path:
 def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path) -> None:
     cache = dict(packages)
     snomed_displays: dict[str, tuple[str, str]] = {}
+    try:
+        cedis_catalog = json.loads((data_directory / "cedis.json").read_text(encoding="utf-8"))
+        cedis_labels = {
+            entry["code"]: entry["label"]
+            for entry in cedis_catalog["entries"]
+            if isinstance(entry, dict)
+            and isinstance(entry.get("code"), str)
+            and isinstance(entry.get("label"), str)
+        }
+    except (FileNotFoundError, KeyError, TypeError, json.JSONDecodeError) as error:
+        raise CompileError(data_directory / "cedis.json", 0, "invalid CEDIS catalog") from error
 
     for package_name, package in packages.items():
         if package.get("version") != 2:
@@ -1025,6 +1267,8 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
             coded_values.extend(phrase.get("values", {}).values())
         for editor in package.get("editors", {}).values():
             coded_values.extend(editor.get("options", {}).values())
+        for catalog in package.get("catalogs", {}).values():
+            coded_values.extend(catalog.get("values", {}).values())
         for value in coded_values:
             snomed = value.get("snomed")
             if snomed is None:
@@ -1045,6 +1289,41 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                     f"in {previous[1]}.pt and '{display}'",
                 )
             snomed_displays[snomed] = (display, package_name)
+        for catalog_id, catalog in package.get("catalogs", {}).items():
+            mapped_cedis_codes: set[str] = set()
+            for value in catalog.get("values", {}).values():
+                for mapping in value.get("cedis", []):
+                    code = mapping.get("code")
+                    display = mapping.get("display")
+                    relation = mapping.get("relation")
+                    if code not in cedis_labels:
+                        raise CompileError(
+                            data_directory / f"{package_name}.pt",
+                            0,
+                            f"unknown CEDIS code '{code}'",
+                        )
+                    if cedis_labels[code] != display:
+                        raise CompileError(
+                            data_directory / f"{package_name}.pt",
+                            0,
+                            f"CEDIS code '{code}' uses '{display}', expected '{cedis_labels[code]}'",
+                        )
+                    if relation not in CEDIS_RELATIONS:
+                        raise CompileError(
+                            data_directory / f"{package_name}.pt",
+                            0,
+                            f"invalid CEDIS relation '{relation}'",
+                        )
+                    mapped_cedis_codes.add(code)
+            if catalog_id == "symptome":
+                missing_codes = sorted(set(cedis_labels) - mapped_cedis_codes)
+                if missing_codes:
+                    raise CompileError(
+                        data_directory / f"{package_name}.pt",
+                        0,
+                        "symptom catalog does not cover CEDIS codes: "
+                        + ", ".join(missing_codes),
+                    )
 
     def load(name: str, owner: str) -> dict[str, Any]:
         package = cache.get(name)
@@ -1080,6 +1359,7 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
             "phrases": {},
             "sets": {},
             "editors": {},
+            "catalogs": {},
         }
         if name in seen:
             return result
@@ -1120,9 +1400,72 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
             continue
         definitions = merged(name)
         values: dict[str, str] = {}
+        for catalog_id, catalog in definitions["catalogs"].items():
+            if not isinstance(catalog, dict) or not isinstance(catalog.get("values"), dict):
+                raise CompileError(
+                    data_directory / f"{name}.json", 0, f"invalid catalog '{catalog_id}'"
+                )
+            lenses = catalog.get("lenses")
+            if (
+                not isinstance(lenses, list)
+                or any(
+                    not isinstance(lens, dict)
+                    or not isinstance(lens.get("id"), str)
+                    or not isinstance(lens.get("label"), str)
+                    for lens in lenses
+                )
+            ):
+                raise CompileError(
+                    data_directory / f"{name}.json", 0, f"invalid lenses in catalog '{catalog_id}'"
+                )
+            lens_ids = {lens["id"] for lens in lenses}
+            for value_id, value in catalog["values"].items():
+                if (
+                    not isinstance(value, dict)
+                    or not isinstance(value.get("text"), str)
+                    or not isinstance(value.get("kind"), str)
+                    or not isinstance(value.get("lenses"), list)
+                    or any(lens not in lens_ids for lens in value["lenses"])
+                ):
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"invalid catalog value '{value_id}'",
+                    )
+            for editor_id in catalog.get("attributes", {}).values():
+                if editor_id not in definitions["editors"]:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"unknown editor '{editor_id}' in catalog '{catalog_id}'",
+                    )
         for phrase_id, phrase in definitions["phrases"].items():
             if not isinstance(phrase, dict) or not isinstance(phrase.get("values"), dict):
                 raise CompileError(data_directory / f"{name}.json", 0, f"invalid phrase '{phrase_id}'")
+            catalog_id = phrase.get("catalog")
+            if catalog_id is not None:
+                catalog = definitions["catalogs"].get(catalog_id)
+                if catalog is None:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"unknown value catalog '{catalog_id}' in phrase '{phrase_id}'",
+                    )
+                overlap = set(phrase["values"]) & set(catalog["values"])
+                if overlap:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"duplicate catalog value '{sorted(overlap)[0]}' in phrase '{phrase_id}'",
+                    )
+                phrase = {
+                    **phrase,
+                    "values": {**catalog["values"], **phrase["values"]},
+                    "attributes": {
+                        **catalog.get("attributes", {}),
+                        **phrase.get("attributes", {}),
+                    },
+                }
             default = phrase.get("default")
             if default not in ("", None) and default not in phrase["values"]:
                 raise CompileError(data_directory / f"{name}.json", 0, f"unknown default '{default}'")

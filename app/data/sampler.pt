@@ -1,6 +1,6 @@
 # SAMPLER
 N: sampler
-I: gemeinsam, schmerz, allergie, dauermedikation
+I: gemeinsam, schmerz, allergie, dauermedikation, symptome
 
 E ort: choice label="Lokalisation" => im Thorax|- / im Oberbauch|- / im Unterbauch|- / im Rücken|- / im Kopf|- / im Arm|- / im Bein|- / diffus|-
 E nrs: number label="NRS" min=0 max=10 step=1
@@ -12,11 +12,11 @@ E seite: choice label="Seite" => rechten|- / linken|-
 E ausloeser: text label="Auslöser" placeholder="Stoff oder Präparat" prefix=""
 E reaktion: text label="Reaktion" placeholder="beobachtete Reaktion" prefix=""
 
-C schmerz: Brustschmerz / Thoraxschmerz / Bauchschmerz / Kopfschmerz / Rückenschmerz / Schulterschmerz / Hüftschmerz / Knieschmerz / Gelenkschmerz / Schmerz
+C schmerz: symptome.brustschmerz / symptome.bauchschmerz / symptome.kopfschmerz / symptome.rueckenschmerz / symptome.schulter_arm_schmerz / symptome.bein_hueft_knieschmerz / symptome.gelenkschwellung
 
 G @root: SAMPLER
   G @repeat(initial=0,add="Symptom hinzufügen") @reset @inline: Symptom|a
-    P: Symptom* => Brustschmerz @sct=29857009[Chest pain]|a / Thoraxschmerz|a / Atemnot @sct=267036007[Dyspnoea]|a / Synkope @sct=271594007[Syncope]|a / Herzklopfen @sct=80313002[Palpitations]|a / Herzrasen|a / Bauchschmerz @sct=21522001[Abdominal pain]|a / Fieber @sct=386661006[Fever]|a / Kopfschmerz @sct=25064002[Headache]|a / Husten @sct=49727002[Cough]|a / Übelkeit @sct=422587007[Nausea]|a / Erbrechen @sct=422400008[Vomiting]|a / Algurie|a / Pollakisurie|a / Schwindel @sct=404640003[Dizziness]|a / Krampfanfall @sct=91175000[Seizure]|a / Schwäche @sct=13791008[Asthenia]|a / Rückenschmerz|a / Schulterschmerz|a / Hüftschmerz|a / Knieschmerz|a / Gelenkschmerz|a / Schmerz @sct=22253000[Pain]|a / {:freitext:}|a
+    P: Symptom* => @values(symptome)
     P: Beginn => Beginn {:beginn=seit*:}|-
     G<schmerz> @collapsed @inline @autocollapse: Provokation
       P: durch Belastung|-
@@ -66,19 +66,18 @@ G @root: SAMPLER
     P: u.a.|-
 
   G: Letzte
-    P<Brustschmerz / Synkope / Atemnot / Herzklopfen / Herzrasen>: letzte Koronarangiographie|-
+    P<symptome.brustschmerz / symptome.synkope / symptome.atemnot / symptome.herzklopfen>: letzte Koronarangiographie|-
 
   G: Ereignisvorgeschichte
-    P<!Atemnot>: keine Atemnot|n
-    P<!Synkope>: keine Synkope|n
-    P<!Herzklopfen>: kein Herzklopfen|n
-    P<!Herzrasen>: kein Herzrasen|n
-    P<!Fieber>: kein Fieber|n
-    P<!Husten>: kein Husten|n
-    P<!Übelkeit>: keine Übelkeit|n
-    P<!Erbrechen>: kein Erbrechen|n
-    P<!Algurie>: keine Algurie|n
-    P<!Pollakisurie>: keine Pollakisurie|n
-    P<!Schwindel>: kein Schwindel|n
-    P<!Krampfanfall>: kein Krampfanfall|n
-    P<!Schwäche>: keine Schwäche|n
+    P<!symptome.atemnot>: keine Atemnot|n
+    P<!symptome.synkope>: keine Synkope|n
+    P<!symptome.herzklopfen>: kein Herzklopfen|n
+    P<!symptome.fieber>: kein Fieber|n
+    P<!symptome.husten>: kein Husten|n
+    P<!symptome.uebelkeit>: keine Übelkeit|n
+    P<!symptome.erbrechen>: kein Erbrechen|n
+    P<!symptome.algurie>: keine Algurie|n
+    P<!symptome.pollakisurie>: keine Pollakisurie|n
+    P<!symptome.schwindel>: kein Schwindel|n
+    P<!symptome.krampfanfall>: kein Krampfanfall|n
+    P<!symptome.schwaeche>: keine Schwäche|n
