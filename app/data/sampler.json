@@ -137,27 +137,39 @@
         }
       },
       "label": "Seite"
+    },
+    "sampler_eingabe_ausloeser": {
+      "type": "text",
+      "label": "Auslöser",
+      "placeholder": "Stoff oder Präparat",
+      "prefix": ""
+    },
+    "sampler_eingabe_reaktion": {
+      "type": "text",
+      "label": "Reaktion",
+      "placeholder": "beobachtete Reaktion",
+      "prefix": ""
     }
   },
   "groups": {
     "sampler": {
       "title": "SAMPLER",
       "children": [
-        "sampler_gruppe_symptome",
+        "sampler_gruppe_symptom",
+        "sampler_gruppe_allergien",
         "sampler_gruppe_vorbestehende_erkrankungen",
         "sampler_gruppe_letzte",
         "sampler_gruppe_ereignisvorgeschichte",
-        "allergie",
         "dauermedikation"
       ],
       "items": [
         {
           "type": "group",
-          "id": "sampler_gruppe_symptome"
+          "id": "sampler_gruppe_symptom"
         },
         {
           "type": "group",
-          "id": "allergie"
+          "id": "sampler_gruppe_allergien"
         },
         {
           "type": "group",
@@ -177,93 +189,8 @@
         }
       ]
     },
-    "sampler_gruppe_symptome": {
-      "title": "Symptome",
-      "children": [
-        "sampler_gruppe_schmerz"
-      ],
-      "phrases": [
-        "sampler_eintrag_atemnot",
-        "sampler_eintrag_synkope",
-        "sampler_eintrag_herzklopfen",
-        "sampler_eintrag_herzrasen",
-        "sampler_eintrag_fieber",
-        "sampler_eintrag_husten",
-        "sampler_eintrag_uebelkeit",
-        "sampler_eintrag_erbrechen",
-        "sampler_eintrag_algurie",
-        "sampler_eintrag_pollakisurie",
-        "sampler_eintrag_schwindel",
-        "sampler_eintrag_krampfanfall",
-        "sampler_eintrag_schwaeche",
-        "sampler_eintrag_ergaenzung_zum_symptom"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_atemnot"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_synkope"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_herzklopfen"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_herzrasen"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_fieber"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_husten"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_uebelkeit"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_erbrechen"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_algurie"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_pollakisurie"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_schwindel"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_krampfanfall"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_schwaeche"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_ergaenzung_zum_symptom"
-        },
-        {
-          "type": "group",
-          "id": "sampler_gruppe_schmerz"
-        }
-      ],
-      "inline": true
-    },
-    "sampler_gruppe_schmerz": {
-      "title": "Schmerz",
+    "sampler_gruppe_symptom": {
+      "title": "Symptom",
       "kind": "abnormal",
       "children": [
         "sampler_gruppe_provokation",
@@ -271,24 +198,24 @@
         "sampler_gruppe_ausstrahlung"
       ],
       "phrases": [
-        "sampler_eintrag_schmerz",
-        "sampler_eintrag_schmerzbeginn",
+        "sampler_eintrag_symptom",
+        "sampler_eintrag_beginn",
         "sampler_eintrag_trauma",
         "sampler_eintrag_schmerzqualitaet",
         "sampler_eintrag_schmerzlokalisation",
         "sampler_eintrag_schmerzstaerke",
         "sampler_eintrag_dauer",
         "sampler_eintrag_verlauf",
-        "sampler_eintrag_ergaenzung_zum_schmerz"
+        "sampler_eintrag_freitext"
       ],
       "items": [
         {
           "type": "phrase",
-          "id": "sampler_eintrag_schmerz"
+          "id": "sampler_eintrag_symptom"
         },
         {
           "type": "phrase",
-          "id": "sampler_eintrag_schmerzbeginn"
+          "id": "sampler_eintrag_beginn"
         },
         {
           "type": "group",
@@ -328,14 +255,14 @@
         },
         {
           "type": "phrase",
-          "id": "sampler_eintrag_ergaenzung_zum_schmerz"
+          "id": "sampler_eintrag_freitext"
         }
       ],
       "reset": true,
       "inline": true,
       "repeatable": {
         "initial": 0,
-        "add": "Schmerz hinzufügen"
+        "add": "Symptom hinzufügen"
       }
     },
     "sampler_gruppe_provokation": {
@@ -382,15 +309,16 @@
       "autoCollapse": true,
       "condition": {
         "values": [
-          "sampler_eintrag_schmerz_wert_brustschmerz",
-          "sampler_eintrag_schmerz_wert_bauchschmerz",
-          "sampler_eintrag_schmerz_wert_kopfschmerz",
-          "sampler_eintrag_schmerz_wert_rueckenschmerz",
-          "sampler_eintrag_schmerz_wert_schulterschmerz",
-          "sampler_eintrag_schmerz_wert_hueftschmerz",
-          "sampler_eintrag_schmerz_wert_knieschmerz",
-          "sampler_eintrag_schmerz_wert_gelenkschmerz",
-          "sampler_eintrag_schmerz_wert_schmerz"
+          "sampler_eintrag_symptom_wert_brustschmerz",
+          "sampler_eintrag_symptom_wert_thoraxschmerz",
+          "sampler_eintrag_symptom_wert_bauchschmerz",
+          "sampler_eintrag_symptom_wert_kopfschmerz",
+          "sampler_eintrag_symptom_wert_rueckenschmerz",
+          "sampler_eintrag_symptom_wert_schulterschmerz",
+          "sampler_eintrag_symptom_wert_hueftschmerz",
+          "sampler_eintrag_symptom_wert_knieschmerz",
+          "sampler_eintrag_symptom_wert_gelenkschmerz",
+          "sampler_eintrag_symptom_wert_schmerz"
         ],
         "negated": false
       },
@@ -436,15 +364,16 @@
       "autoCollapse": true,
       "condition": {
         "values": [
-          "sampler_eintrag_schmerz_wert_brustschmerz",
-          "sampler_eintrag_schmerz_wert_bauchschmerz",
-          "sampler_eintrag_schmerz_wert_kopfschmerz",
-          "sampler_eintrag_schmerz_wert_rueckenschmerz",
-          "sampler_eintrag_schmerz_wert_schulterschmerz",
-          "sampler_eintrag_schmerz_wert_hueftschmerz",
-          "sampler_eintrag_schmerz_wert_knieschmerz",
-          "sampler_eintrag_schmerz_wert_gelenkschmerz",
-          "sampler_eintrag_schmerz_wert_schmerz"
+          "sampler_eintrag_symptom_wert_brustschmerz",
+          "sampler_eintrag_symptom_wert_thoraxschmerz",
+          "sampler_eintrag_symptom_wert_bauchschmerz",
+          "sampler_eintrag_symptom_wert_kopfschmerz",
+          "sampler_eintrag_symptom_wert_rueckenschmerz",
+          "sampler_eintrag_symptom_wert_schulterschmerz",
+          "sampler_eintrag_symptom_wert_hueftschmerz",
+          "sampler_eintrag_symptom_wert_knieschmerz",
+          "sampler_eintrag_symptom_wert_gelenkschmerz",
+          "sampler_eintrag_symptom_wert_schmerz"
         ],
         "negated": false
       },
@@ -462,7 +391,7 @@
         "sampler_eintrag_in_den_unterbauch",
         "sampler_eintrag_in_die_flanke",
         "sampler_eintrag_ins_genital",
-        "sampler_eintrag_freitext"
+        "sampler_eintrag_sonstiges"
       ],
       "items": [
         {
@@ -499,26 +428,82 @@
         },
         {
           "type": "phrase",
-          "id": "sampler_eintrag_freitext"
+          "id": "sampler_eintrag_sonstiges"
         }
       ],
       "autoCollapse": true,
       "condition": {
         "values": [
-          "sampler_eintrag_schmerz_wert_brustschmerz",
-          "sampler_eintrag_schmerz_wert_bauchschmerz",
-          "sampler_eintrag_schmerz_wert_kopfschmerz",
-          "sampler_eintrag_schmerz_wert_rueckenschmerz",
-          "sampler_eintrag_schmerz_wert_schulterschmerz",
-          "sampler_eintrag_schmerz_wert_hueftschmerz",
-          "sampler_eintrag_schmerz_wert_knieschmerz",
-          "sampler_eintrag_schmerz_wert_gelenkschmerz",
-          "sampler_eintrag_schmerz_wert_schmerz"
+          "sampler_eintrag_symptom_wert_brustschmerz",
+          "sampler_eintrag_symptom_wert_thoraxschmerz",
+          "sampler_eintrag_symptom_wert_bauchschmerz",
+          "sampler_eintrag_symptom_wert_kopfschmerz",
+          "sampler_eintrag_symptom_wert_rueckenschmerz",
+          "sampler_eintrag_symptom_wert_schulterschmerz",
+          "sampler_eintrag_symptom_wert_hueftschmerz",
+          "sampler_eintrag_symptom_wert_knieschmerz",
+          "sampler_eintrag_symptom_wert_gelenkschmerz",
+          "sampler_eintrag_symptom_wert_schmerz"
         ],
         "negated": false
       },
       "collapsed": true,
       "inline": true
+    },
+    "sampler_gruppe_allergien": {
+      "title": "Allergien",
+      "children": [
+        "sampler_gruppe_allergie"
+      ],
+      "phrases": [
+        "sampler_eintrag_allergiestatus"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_allergiestatus"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_allergie"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    },
+    "sampler_gruppe_allergie": {
+      "title": "Allergie",
+      "kind": "abnormal",
+      "phrases": [
+        "sampler_eintrag_allergie",
+        "sampler_eintrag_allergische_reaktion",
+        "sampler_eintrag_schweregrad_der_allergie",
+        "sampler_eintrag_ergaenzung_zur_allergie"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_allergie"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_allergische_reaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_schweregrad_der_allergie"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ergaenzung_zur_allergie"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Allergie hinzufügen",
+        "empty": "sampler_eintrag_allergiestatus"
+      }
     },
     "sampler_gruppe_vorbestehende_erkrankungen": {
       "title": "Vorbestehende Erkrankungen",
@@ -530,8 +515,7 @@
           "type": "phrase",
           "id": "sampler_eintrag_u_a"
         }
-      ],
-      "inline": true
+      ]
     },
     "sampler_gruppe_letzte": {
       "title": "Letzte",
@@ -543,8 +527,7 @@
           "type": "phrase",
           "id": "sampler_eintrag_letzte_koronarangiographie"
         }
-      ],
-      "inline": true
+      ]
     },
     "sampler_gruppe_ereignisvorgeschichte": {
       "title": "Ereignisvorgeschichte",
@@ -616,263 +599,157 @@
           "type": "phrase",
           "id": "sampler_eintrag_keine_schwaeche"
         }
-      ],
-      "inline": true
+      ]
     }
   },
   "phrases": {
-    "sampler_eintrag_atemnot": {
-      "title": "Atemnot",
+    "sampler_eintrag_symptom": {
+      "title": "Symptom",
       "kind": "abnormal",
       "default": "",
       "values": {
-        "sampler_eintrag_atemnot_wert_atemnot": {
-          "kind": "abnormal",
-          "text": "Atemnot",
-          "snomed": "267036007",
-          "snomedDisplay": "Dyspnoea"
-        }
-      }
-    },
-    "sampler_eintrag_synkope": {
-      "title": "Synkope",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_synkope_wert_synkope": {
-          "kind": "abnormal",
-          "text": "Synkope",
-          "snomed": "271594007",
-          "snomedDisplay": "Syncope"
-        }
-      }
-    },
-    "sampler_eintrag_herzklopfen": {
-      "title": "Herzklopfen",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_herzklopfen_wert_herzklopfen": {
-          "kind": "abnormal",
-          "text": "Herzklopfen",
-          "snomed": "80313002",
-          "snomedDisplay": "Palpitations"
-        }
-      }
-    },
-    "sampler_eintrag_herzrasen": {
-      "title": "Herzrasen",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_herzrasen_wert_herzrasen": {
-          "kind": "abnormal",
-          "text": "Herzrasen"
-        }
-      }
-    },
-    "sampler_eintrag_fieber": {
-      "title": "Fieber",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_fieber_wert_fieber": {
-          "kind": "abnormal",
-          "text": "Fieber",
-          "snomed": "386661006",
-          "snomedDisplay": "Fever"
-        }
-      }
-    },
-    "sampler_eintrag_husten": {
-      "title": "Husten",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_husten_wert_husten": {
-          "kind": "abnormal",
-          "text": "Husten",
-          "snomed": "49727002",
-          "snomedDisplay": "Cough"
-        }
-      }
-    },
-    "sampler_eintrag_uebelkeit": {
-      "title": "Übelkeit",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_uebelkeit_wert_uebelkeit": {
-          "kind": "abnormal",
-          "text": "Übelkeit",
-          "snomed": "422587007",
-          "snomedDisplay": "Nausea"
-        }
-      }
-    },
-    "sampler_eintrag_erbrechen": {
-      "title": "Erbrechen",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_erbrechen_wert_erbrechen": {
-          "kind": "abnormal",
-          "text": "Erbrechen",
-          "snomed": "422400008",
-          "snomedDisplay": "Vomiting"
-        }
-      }
-    },
-    "sampler_eintrag_algurie": {
-      "title": "Algurie",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_algurie_wert_algurie": {
-          "kind": "abnormal",
-          "text": "Algurie"
-        }
-      }
-    },
-    "sampler_eintrag_pollakisurie": {
-      "title": "Pollakisurie",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_pollakisurie_wert_pollakisurie": {
-          "kind": "abnormal",
-          "text": "Pollakisurie"
-        }
-      }
-    },
-    "sampler_eintrag_schwindel": {
-      "title": "Schwindel",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_schwindel_wert_schwindel": {
-          "kind": "abnormal",
-          "text": "Schwindel",
-          "snomed": "404640003",
-          "snomedDisplay": "Dizziness"
-        }
-      }
-    },
-    "sampler_eintrag_krampfanfall": {
-      "title": "Krampfanfall",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_krampfanfall_wert_krampfanfall": {
-          "kind": "abnormal",
-          "text": "Krampfanfall",
-          "snomed": "91175000",
-          "snomedDisplay": "Seizure"
-        }
-      }
-    },
-    "sampler_eintrag_schwaeche": {
-      "title": "Schwäche",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_schwaeche_wert_schwaeche": {
-          "kind": "abnormal",
-          "text": "Schwäche",
-          "snomed": "13791008",
-          "snomedDisplay": "Asthenia"
-        }
-      }
-    },
-    "sampler_eintrag_ergaenzung_zum_symptom": {
-      "title": "Ergänzung zum Symptom",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "sampler_eintrag_ergaenzung_zum_symptom_wert_value": {
-          "kind": "neutral",
-          "text": "{:freitext*:}"
-        }
-      },
-      "attributes": {
-        "freitext": "gemeinsam_eingabe_freitext"
-      }
-    },
-    "sampler_eintrag_schmerz": {
-      "title": "Schmerz",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": {
+        "sampler_eintrag_symptom_wert_brustschmerz": {
           "kind": "abnormal",
           "text": "Brustschmerz",
           "snomed": "29857009",
           "snomedDisplay": "Chest pain"
         },
-        "sampler_eintrag_schmerz_wert_bauchschmerz": {
+        "sampler_eintrag_symptom_wert_thoraxschmerz": {
+          "kind": "abnormal",
+          "text": "Thoraxschmerz"
+        },
+        "sampler_eintrag_symptom_wert_atemnot": {
+          "kind": "abnormal",
+          "text": "Atemnot",
+          "snomed": "267036007",
+          "snomedDisplay": "Dyspnoea"
+        },
+        "sampler_eintrag_symptom_wert_synkope": {
+          "kind": "abnormal",
+          "text": "Synkope",
+          "snomed": "271594007",
+          "snomedDisplay": "Syncope"
+        },
+        "sampler_eintrag_symptom_wert_herzklopfen": {
+          "kind": "abnormal",
+          "text": "Herzklopfen",
+          "snomed": "80313002",
+          "snomedDisplay": "Palpitations"
+        },
+        "sampler_eintrag_symptom_wert_herzrasen": {
+          "kind": "abnormal",
+          "text": "Herzrasen"
+        },
+        "sampler_eintrag_symptom_wert_bauchschmerz": {
           "kind": "abnormal",
           "text": "Bauchschmerz",
           "snomed": "21522001",
           "snomedDisplay": "Abdominal pain"
         },
-        "sampler_eintrag_schmerz_wert_kopfschmerz": {
+        "sampler_eintrag_symptom_wert_fieber": {
+          "kind": "abnormal",
+          "text": "Fieber",
+          "snomed": "386661006",
+          "snomedDisplay": "Fever"
+        },
+        "sampler_eintrag_symptom_wert_kopfschmerz": {
           "kind": "abnormal",
           "text": "Kopfschmerz",
           "snomed": "25064002",
           "snomedDisplay": "Headache"
         },
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": {
+        "sampler_eintrag_symptom_wert_husten": {
+          "kind": "abnormal",
+          "text": "Husten",
+          "snomed": "49727002",
+          "snomedDisplay": "Cough"
+        },
+        "sampler_eintrag_symptom_wert_uebelkeit": {
+          "kind": "abnormal",
+          "text": "Übelkeit",
+          "snomed": "422587007",
+          "snomedDisplay": "Nausea"
+        },
+        "sampler_eintrag_symptom_wert_erbrechen": {
+          "kind": "abnormal",
+          "text": "Erbrechen",
+          "snomed": "422400008",
+          "snomedDisplay": "Vomiting"
+        },
+        "sampler_eintrag_symptom_wert_algurie": {
+          "kind": "abnormal",
+          "text": "Algurie"
+        },
+        "sampler_eintrag_symptom_wert_pollakisurie": {
+          "kind": "abnormal",
+          "text": "Pollakisurie"
+        },
+        "sampler_eintrag_symptom_wert_schwindel": {
+          "kind": "abnormal",
+          "text": "Schwindel",
+          "snomed": "404640003",
+          "snomedDisplay": "Dizziness"
+        },
+        "sampler_eintrag_symptom_wert_krampfanfall": {
+          "kind": "abnormal",
+          "text": "Krampfanfall",
+          "snomed": "91175000",
+          "snomedDisplay": "Seizure"
+        },
+        "sampler_eintrag_symptom_wert_schwaeche": {
+          "kind": "abnormal",
+          "text": "Schwäche",
+          "snomed": "13791008",
+          "snomedDisplay": "Asthenia"
+        },
+        "sampler_eintrag_symptom_wert_rueckenschmerz": {
           "kind": "abnormal",
           "text": "Rückenschmerz"
         },
-        "sampler_eintrag_schmerz_wert_schulterschmerz": {
+        "sampler_eintrag_symptom_wert_schulterschmerz": {
           "kind": "abnormal",
           "text": "Schulterschmerz"
         },
-        "sampler_eintrag_schmerz_wert_hueftschmerz": {
+        "sampler_eintrag_symptom_wert_hueftschmerz": {
           "kind": "abnormal",
           "text": "Hüftschmerz"
         },
-        "sampler_eintrag_schmerz_wert_knieschmerz": {
+        "sampler_eintrag_symptom_wert_knieschmerz": {
           "kind": "abnormal",
           "text": "Knieschmerz"
         },
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": {
+        "sampler_eintrag_symptom_wert_gelenkschmerz": {
           "kind": "abnormal",
           "text": "Gelenkschmerz"
         },
-        "sampler_eintrag_schmerz_wert_schmerz": {
+        "sampler_eintrag_symptom_wert_schmerz": {
           "kind": "abnormal",
           "text": "Schmerz",
           "snomed": "22253000",
           "snomedDisplay": "Pain"
+        },
+        "sampler_eintrag_symptom_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext:}"
         }
       },
-      "prompt": true
+      "prompt": true,
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
     },
-    "sampler_eintrag_schmerzbeginn": {
-      "title": "Schmerzbeginn",
+    "sampler_eintrag_beginn": {
+      "title": "Beginn",
       "kind": "neutral",
-      "default": null,
+      "default": "",
       "values": {
-        "sampler_eintrag_schmerzbeginn_wert_beginn": {
+        "sampler_eintrag_beginn_wert_beginn": {
           "kind": "neutral",
           "text": "Beginn {:beginn*:}"
         }
       },
       "attributes": {
         "beginn": "sampler_eingabe_seit"
-      },
-      "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_bauchschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_kopfschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_schulterschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_hueftschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_knieschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": "sampler_eintrag_schmerzbeginn_wert_beginn",
-        "sampler_eintrag_schmerz_wert_schmerz": "sampler_eintrag_schmerzbeginn_wert_beginn"
       }
     },
     "sampler_eintrag_durch_belastung": {
@@ -1055,15 +932,16 @@
         "qualitaet": "sampler_eingabe_qualitaet"
       },
       "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_bauchschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_kopfschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_schulterschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_hueftschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_knieschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "sampler_eintrag_schmerz_wert_schmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet"
+        "sampler_eintrag_symptom_wert_brustschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_thoraxschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_bauchschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_kopfschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_rueckenschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_schulterschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_hueftschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_knieschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_gelenkschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
+        "sampler_eintrag_symptom_wert_schmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet"
       }
     },
     "sampler_eintrag_schmerzlokalisation": {
@@ -1080,15 +958,16 @@
         "ort": "sampler_eingabe_ort"
       },
       "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_bauchschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_kopfschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_schulterschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_hueftschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_knieschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "sampler_eintrag_schmerz_wert_schmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation"
+        "sampler_eintrag_symptom_wert_brustschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_thoraxschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_bauchschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_kopfschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_rueckenschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_schulterschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_hueftschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_knieschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_gelenkschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
+        "sampler_eintrag_symptom_wert_schmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation"
       }
     },
     "sampler_eintrag_in_den_ruecken": {
@@ -1182,12 +1061,12 @@
         }
       }
     },
-    "sampler_eintrag_freitext": {
-      "title": "{:freitext:}",
+    "sampler_eintrag_sonstiges": {
+      "title": "sonstiges",
       "kind": "neutral",
       "default": "",
       "values": {
-        "sampler_eintrag_freitext_wert_value": {
+        "sampler_eintrag_sonstiges_wert_value": {
           "kind": "neutral",
           "text": "{:freitext:}"
         }
@@ -1210,21 +1089,22 @@
         "wert": "sampler_eingabe_nrs"
       },
       "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_bauchschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_kopfschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_schulterschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_hueftschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_knieschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "sampler_eintrag_schmerz_wert_schmerz": "sampler_eintrag_schmerzstaerke_wert_nrs"
+        "sampler_eintrag_symptom_wert_brustschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_thoraxschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_bauchschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_kopfschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_rueckenschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_schulterschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_hueftschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_knieschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_gelenkschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
+        "sampler_eintrag_symptom_wert_schmerz": "sampler_eintrag_schmerzstaerke_wert_nrs"
       }
     },
     "sampler_eintrag_dauer": {
       "title": "Dauer",
       "kind": "neutral",
-      "default": null,
+      "default": "",
       "values": {
         "sampler_eintrag_dauer_wert_dauer": {
           "kind": "neutral",
@@ -1233,23 +1113,12 @@
       },
       "attributes": {
         "dauer": "sampler_eingabe_dauer"
-      },
-      "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_bauchschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_kopfschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_schulterschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_hueftschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_knieschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": "sampler_eintrag_dauer_wert_dauer",
-        "sampler_eintrag_schmerz_wert_schmerz": "sampler_eintrag_dauer_wert_dauer"
       }
     },
     "sampler_eintrag_verlauf": {
       "title": "Verlauf",
       "kind": "neutral",
-      "default": null,
+      "default": "",
       "values": {
         "sampler_eintrag_verlauf_wert_zunehmend": {
           "kind": "neutral",
@@ -1278,25 +1147,104 @@
       },
       "attributes": {
         "freitext": "gemeinsam_eingabe_freitext"
-      },
-      "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": null,
-        "sampler_eintrag_schmerz_wert_bauchschmerz": null,
-        "sampler_eintrag_schmerz_wert_kopfschmerz": null,
-        "sampler_eintrag_schmerz_wert_rueckenschmerz": null,
-        "sampler_eintrag_schmerz_wert_schulterschmerz": null,
-        "sampler_eintrag_schmerz_wert_hueftschmerz": null,
-        "sampler_eintrag_schmerz_wert_knieschmerz": null,
-        "sampler_eintrag_schmerz_wert_gelenkschmerz": null,
-        "sampler_eintrag_schmerz_wert_schmerz": null
       }
     },
-    "sampler_eintrag_ergaenzung_zum_schmerz": {
-      "title": "Ergänzung zum Schmerz",
+    "sampler_eintrag_freitext": {
+      "title": "Freitext",
       "kind": "neutral",
       "default": "",
       "values": {
-        "sampler_eintrag_ergaenzung_zum_schmerz_wert_value": {
+        "sampler_eintrag_freitext_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_allergiestatus": {
+      "title": "Allergiestatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_allergiestatus_wert_keine_bekannten_allergien": {
+          "kind": "normal",
+          "text": "keine bekannten Allergien",
+          "snomed": "716186003",
+          "snomedDisplay": "No known allergy"
+        },
+        "sampler_eintrag_allergiestatus_wert_allergiestatus_unbekannt": {
+          "kind": "neutral",
+          "text": "Allergiestatus unbekannt"
+        }
+      }
+    },
+    "sampler_eintrag_allergie": {
+      "title": "Allergie",
+      "kind": "abnormal",
+      "default": "sampler_eintrag_allergie_wert_allergie_gegen",
+      "values": {
+        "sampler_eintrag_allergie_wert_allergie_gegen": {
+          "kind": "abnormal",
+          "text": "Allergie gegen {:ausloeser*:}",
+          "snomed": "609328004",
+          "snomedDisplay": "Allergic disposition"
+        }
+      },
+      "attributes": {
+        "ausloeser": "sampler_eingabe_ausloeser"
+      }
+    },
+    "sampler_eintrag_allergische_reaktion": {
+      "title": "Allergische Reaktion",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "sampler_eintrag_allergische_reaktion_wert_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "allergische Reaktion: {:reaktion*:}"
+        }
+      },
+      "attributes": {
+        "reaktion": "sampler_eingabe_reaktion"
+      },
+      "suggestions": {
+        "sampler_eintrag_allergie_wert_allergie_gegen": "sampler_eintrag_allergische_reaktion_wert_allergische_reaktion"
+      }
+    },
+    "sampler_eintrag_schweregrad_der_allergie": {
+      "title": "Schweregrad der Allergie",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "sampler_eintrag_schweregrad_der_allergie_wert_leichte_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "leichte allergische Reaktion"
+        },
+        "sampler_eintrag_schweregrad_der_allergie_wert_mittelschwere_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "mittelschwere allergische Reaktion"
+        },
+        "sampler_eintrag_schweregrad_der_allergie_wert_schwere_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "schwere allergische Reaktion"
+        },
+        "sampler_eintrag_schweregrad_der_allergie_wert_anaphylaxie": {
+          "kind": "abnormal",
+          "text": "Anaphylaxie"
+        }
+      },
+      "suggestions": {
+        "sampler_eintrag_allergie_wert_allergie_gegen": null
+      }
+    },
+    "sampler_eintrag_ergaenzung_zur_allergie": {
+      "title": "Ergänzung zur Allergie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ergaenzung_zur_allergie_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }
@@ -1327,26 +1275,26 @@
         }
       },
       "suggestions": {
-        "sampler_eintrag_schmerz_wert_brustschmerz": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "sampler_eintrag_synkope_wert_synkope": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "sampler_eintrag_atemnot_wert_atemnot": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "sampler_eintrag_herzklopfen_wert_herzklopfen": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "sampler_eintrag_herzrasen_wert_herzrasen": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie"
+        "sampler_eintrag_symptom_wert_brustschmerz": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
+        "sampler_eintrag_symptom_wert_synkope": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
+        "sampler_eintrag_symptom_wert_atemnot": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
+        "sampler_eintrag_symptom_wert_herzklopfen": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
+        "sampler_eintrag_symptom_wert_herzrasen": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie"
       }
     },
     "sampler_eintrag_keine_atemnot": {
       "title": "keine Atemnot",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_keine_atemnot_wert_keine_atemnot": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "keine Atemnot"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_atemnot_wert_atemnot"
+          "sampler_eintrag_symptom_wert_atemnot"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_keine_atemnot_wert_keine_atemnot"
@@ -1354,17 +1302,17 @@
     },
     "sampler_eintrag_keine_synkope": {
       "title": "keine Synkope",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_keine_synkope_wert_keine_synkope": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "keine Synkope"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_synkope_wert_synkope"
+          "sampler_eintrag_symptom_wert_synkope"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_keine_synkope_wert_keine_synkope"
@@ -1372,17 +1320,17 @@
     },
     "sampler_eintrag_kein_herzklopfen": {
       "title": "kein Herzklopfen",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_herzklopfen_wert_kein_herzklopfen": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Herzklopfen"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_herzklopfen_wert_herzklopfen"
+          "sampler_eintrag_symptom_wert_herzklopfen"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_herzklopfen_wert_kein_herzklopfen"
@@ -1390,17 +1338,17 @@
     },
     "sampler_eintrag_kein_herzrasen": {
       "title": "kein Herzrasen",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_herzrasen_wert_kein_herzrasen": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Herzrasen"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_herzrasen_wert_herzrasen"
+          "sampler_eintrag_symptom_wert_herzrasen"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_herzrasen_wert_kein_herzrasen"
@@ -1408,17 +1356,17 @@
     },
     "sampler_eintrag_kein_fieber": {
       "title": "kein Fieber",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_fieber_wert_kein_fieber": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Fieber"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_fieber_wert_fieber"
+          "sampler_eintrag_symptom_wert_fieber"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_fieber_wert_kein_fieber"
@@ -1426,17 +1374,17 @@
     },
     "sampler_eintrag_kein_husten": {
       "title": "kein Husten",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_husten_wert_kein_husten": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Husten"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_husten_wert_husten"
+          "sampler_eintrag_symptom_wert_husten"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_husten_wert_kein_husten"
@@ -1444,17 +1392,17 @@
     },
     "sampler_eintrag_keine_uebelkeit": {
       "title": "keine Übelkeit",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_keine_uebelkeit_wert_keine_uebelkeit": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "keine Übelkeit"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_uebelkeit_wert_uebelkeit"
+          "sampler_eintrag_symptom_wert_uebelkeit"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_keine_uebelkeit_wert_keine_uebelkeit"
@@ -1462,17 +1410,17 @@
     },
     "sampler_eintrag_kein_erbrechen": {
       "title": "kein Erbrechen",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_erbrechen_wert_kein_erbrechen": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Erbrechen"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_erbrechen_wert_erbrechen"
+          "sampler_eintrag_symptom_wert_erbrechen"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_erbrechen_wert_kein_erbrechen"
@@ -1480,17 +1428,17 @@
     },
     "sampler_eintrag_keine_algurie": {
       "title": "keine Algurie",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_keine_algurie_wert_keine_algurie": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "keine Algurie"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_algurie_wert_algurie"
+          "sampler_eintrag_symptom_wert_algurie"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_keine_algurie_wert_keine_algurie"
@@ -1498,17 +1446,17 @@
     },
     "sampler_eintrag_keine_pollakisurie": {
       "title": "keine Pollakisurie",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_keine_pollakisurie_wert_keine_pollakisurie": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "keine Pollakisurie"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_pollakisurie_wert_pollakisurie"
+          "sampler_eintrag_symptom_wert_pollakisurie"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_keine_pollakisurie_wert_keine_pollakisurie"
@@ -1516,17 +1464,17 @@
     },
     "sampler_eintrag_kein_schwindel": {
       "title": "kein Schwindel",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_schwindel_wert_kein_schwindel": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Schwindel"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_schwindel_wert_schwindel"
+          "sampler_eintrag_symptom_wert_schwindel"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_schwindel_wert_kein_schwindel"
@@ -1534,17 +1482,17 @@
     },
     "sampler_eintrag_kein_krampfanfall": {
       "title": "kein Krampfanfall",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_kein_krampfanfall_wert_kein_krampfanfall": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "kein Krampfanfall"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_krampfanfall_wert_krampfanfall"
+          "sampler_eintrag_symptom_wert_krampfanfall"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_kein_krampfanfall_wert_kein_krampfanfall"
@@ -1552,17 +1500,17 @@
     },
     "sampler_eintrag_keine_schwaeche": {
       "title": "keine Schwäche",
-      "kind": "abnormal",
+      "kind": "normal",
       "default": null,
       "values": {
         "sampler_eintrag_keine_schwaeche_wert_keine_schwaeche": {
-          "kind": "abnormal",
+          "kind": "normal",
           "text": "keine Schwäche"
         }
       },
       "condition": {
         "values": [
-          "sampler_eintrag_schwaeche_wert_schwaeche"
+          "sampler_eintrag_symptom_wert_schwaeche"
         ],
         "negated": true,
         "suggestion": "sampler_eintrag_keine_schwaeche_wert_keine_schwaeche"
