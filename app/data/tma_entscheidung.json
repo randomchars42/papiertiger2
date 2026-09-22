@@ -1,0 +1,201 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "tma_entscheidung_eingabe_arbeitshypothese": {
+      "type": "text",
+      "label": "Arbeitshypothese",
+      "placeholder": "klinische Arbeitshypothese",
+      "prefix": ""
+    },
+    "tma_entscheidung_eingabe_ziel": {
+      "type": "text",
+      "label": "Versorgungsziel",
+      "placeholder": "Klinik, Fachgebiet oder Praxis",
+      "prefix": ""
+    },
+    "tma_entscheidung_eingabe_news2": {
+      "type": "number",
+      "label": "NEWS2-Gesamtwert",
+      "min": 0,
+      "max": 20,
+      "step": 1
+    }
+  },
+  "groups": {
+    "tma_entscheidung": {
+      "title": "Telemedizinische Entscheidung",
+      "phrases": [
+        "tma_entscheidung_eintrag_arbeitshypothese",
+        "tma_entscheidung_eintrag_news2_gesamtwert",
+        "tma_entscheidung_eintrag_dringlichkeit",
+        "tma_entscheidung_eintrag_versorgungsentscheidung",
+        "tma_entscheidung_eintrag_uebergabe",
+        "tma_entscheidung_eintrag_sicherheitsnetz",
+        "tma_entscheidung_eintrag_ergaenzung_zur_telemedizinischen_entscheidung"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_arbeitshypothese"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_news2_gesamtwert"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_dringlichkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_versorgungsentscheidung"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_uebergabe"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_sicherheitsnetz"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_entscheidung_eintrag_ergaenzung_zur_telemedizinischen_entscheidung"
+        }
+      ],
+      "reset": true
+    }
+  },
+  "phrases": {
+    "tma_entscheidung_eintrag_arbeitshypothese": {
+      "title": "Arbeitshypothese",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_arbeitshypothese_wert_arbeitshypothese": {
+          "kind": "neutral",
+          "text": "Arbeitshypothese: {:hypothese*:}"
+        }
+      },
+      "attributes": {
+        "hypothese": "tma_entscheidung_eingabe_arbeitshypothese"
+      }
+    },
+    "tma_entscheidung_eintrag_news2_gesamtwert": {
+      "title": "NEWS2-Gesamtwert",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_news2_gesamtwert_wert_news2": {
+          "kind": "neutral",
+          "text": "NEWS2 {:wert*:}",
+          "snomed": "1104051000000101",
+          "snomedDisplay": "Royal College of Physicians NEWS2 (National Early Warning Score 2) total score"
+        }
+      },
+      "attributes": {
+        "wert": "tma_entscheidung_eingabe_news2"
+      }
+    },
+    "tma_entscheidung_eintrag_dringlichkeit": {
+      "title": "Dringlichkeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_dringlichkeit_wert_keine_akute_eskalation_erforderlich": {
+          "kind": "normal",
+          "text": "keine akute Eskalation erforderlich"
+        },
+        "tma_entscheidung_eintrag_dringlichkeit_wert_zeitnahe_aerztliche_praesenzbeurteilung_erforderlich": {
+          "kind": "abnormal",
+          "text": "zeitnahe ärztliche Präsenzbeurteilung erforderlich"
+        },
+        "tma_entscheidung_eintrag_dringlichkeit_wert_sofortige_aerztliche_praesenzbeurteilung_erforderlich": {
+          "kind": "abnormal",
+          "text": "sofortige ärztliche Präsenzbeurteilung erforderlich"
+        },
+        "tma_entscheidung_eintrag_dringlichkeit_wert_notfall_rettungsdienst_alarmieren": {
+          "kind": "abnormal",
+          "text": "Notfall, Rettungsdienst alarmieren"
+        }
+      }
+    },
+    "tma_entscheidung_eintrag_versorgungsentscheidung": {
+      "title": "Versorgungsentscheidung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_versorgungsentscheidung_wert_verbleib_vor_ort_mit_verlaufskontrolle": {
+          "kind": "neutral",
+          "text": "Verbleib vor Ort mit Verlaufskontrolle"
+        },
+        "tma_entscheidung_eintrag_versorgungsentscheidung_wert_hausaerztliche_weiterbehandlung": {
+          "kind": "intervention",
+          "text": "hausärztliche Weiterbehandlung",
+          "snomed": "183561008",
+          "snomedDisplay": "Referral to general practitioner"
+        },
+        "tma_entscheidung_eintrag_versorgungsentscheidung_wert_fachaerztliche_weiterbehandlung": {
+          "kind": "intervention",
+          "text": "fachärztliche Weiterbehandlung",
+          "snomed": "103696004",
+          "snomedDisplay": "Patient referral to specialist"
+        },
+        "tma_entscheidung_eintrag_versorgungsentscheidung_wert_stationaere_aufnahme": {
+          "kind": "intervention",
+          "text": "stationäre Aufnahme",
+          "snomed": "32485007",
+          "snomedDisplay": "Hospital admission"
+        },
+        "tma_entscheidung_eintrag_versorgungsentscheidung_wert_verlegung_nach": {
+          "kind": "intervention",
+          "text": "Verlegung nach {:ziel*:}",
+          "snomed": "429202003",
+          "snomedDisplay": "Transfer of care to hospital"
+        }
+      },
+      "attributes": {
+        "ziel": "tma_entscheidung_eingabe_ziel"
+      }
+    },
+    "tma_entscheidung_eintrag_uebergabe": {
+      "title": "Übergabe",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_uebergabe_wert_strukturierte_uebergabe_erfolgt": {
+          "kind": "intervention",
+          "text": "strukturierte Übergabe erfolgt"
+        }
+      }
+    },
+    "tma_entscheidung_eintrag_sicherheitsnetz": {
+      "title": "Sicherheitsnetz",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_sicherheitsnetz_wert_warnzeichen_und_eskalationsweg_erlaeutert": {
+          "kind": "intervention",
+          "text": "Warnzeichen und Eskalationsweg erläutert"
+        }
+      }
+    },
+    "tma_entscheidung_eintrag_ergaenzung_zur_telemedizinischen_entscheidung": {
+      "title": "Ergänzung zur telemedizinischen Entscheidung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_entscheidung_eintrag_ergaenzung_zur_telemedizinischen_entscheidung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

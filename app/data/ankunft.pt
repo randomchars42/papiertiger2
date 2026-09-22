@@ -3,16 +3,23 @@ N: ankunft
 I: gemeinsam
 
 G @root @reset: Ankunft
-  G @collapsed: Auffindeort
-    P: Auffindeort => auf der Fahrbahn|- / auf öffentlichen Flächen|- / im RTW|- / in der Wohnstätte|- / auf dem Bett|- / auf dem Boden|-
+  G @inline @collapsed: Auffindeort
+    P: auf der Fahrbahn|-
+    P: auf öffentlichen Flächen|-
+    P: im RTW|-
+    P: in der Wohnstätte|-
+    P: dem Bett|-
+    P: auf dem Boden|-
     P: Sonstiger Auffindeort => {:freitext*:}|-
 
-  G @collapsed: Umstände
+  G @inline @collapsed: Umstände
     P: öffnet die Tür|-
-    P: Position => stehend|- / sitzend|- / liegend|-
+    P: stehend|-
+    P: sitzend|-
+    P: liegend|-
     P: Weitere Umstände => {:freitext*:}|-
 
-  G @collapsed: Anwesende
+  G @inline @collapsed: Anwesende
     P: Partnerin|-
     P: Partner|-
     P: Mutter|-
@@ -25,7 +32,7 @@ G @root @reset: Ankunft
     P: Zugehöriger|-
     P: Weitere anwesende Person => {:freitext*:}|-
 
-  G @collapsed: Weitere Kräfte
+  G @inline @collapsed: Weitere Kräfte
     P: Rettungsdienst|-
     P: Ersthelfer|-
     P: Krankenpflegekraft|-

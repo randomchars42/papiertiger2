@@ -1,5 +1,5 @@
 import { isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
+import { groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 const element = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className !== undefined)
@@ -13,6 +13,12 @@ const actionButton = (label, action, data = {}, className = "control") => {
     button.type = "button";
     button.dataset.action = action;
     Object.assign(button.dataset, data);
+    return button;
+};
+const iconActionButton = (symbol, label, action, data, className) => {
+    const button = actionButton(symbol, action, data, `${className} control--icon`);
+    button.setAttribute("aria-label", label);
+    button.title = label;
     return button;
 };
 const scopedData = (data, instanceId) => instanceId === undefined ? data : { ...data, instanceId };
@@ -198,6 +204,9 @@ const renderRepeatable = (parent, groupId, level, definitions, state, resolved, 
 };
 function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, collapseOverrides, instanceId, instanceIndex) {
     const group = definitions.groups[groupId];
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
+        return;
+    const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
     const collapsible = group.collapsed !== undefined;
     const collapsed = collapseOverrides[phraseKey(groupId, instanceId)] ??
@@ -206,7 +215,8 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     const section = element("section", [
         "group",
         `group--${group.kind ?? "neutral"}`,
-        instanceId === undefined ? "" : "group--instance",
+        isInstanceRoot ? "group--instance" : "",
+        group.inline === true ? "group--inline" : "",
         enabled ? "" : "group--inactive",
         collapsed ? "group--collapsed" : "",
     ]
@@ -226,17 +236,24 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     header.append(heading);
     const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
+    if (group.score !== undefined) {
+        tools.append(actionButton(group.score.label, "open-score", scopedData({ groupId }, instanceId), "control control--primary group__score"));
+    }
     for (const setId of group.sets ?? []) {
         const set = definitions.sets[setId];
         const button = actionButton(set.title, "toggle-set", scopedData({ setId }, instanceId), `set set--${set.kind ?? "neutral"}`);
         button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
     }
-    if (group.reset === true || instanceId !== undefined) {
-        tools.append(actionButton("↺ Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset"));
+    if (group.reset === true || isInstanceRoot) {
+        tools.append(group.inline === true
+            ? iconActionButton("↺", "Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset")
+            : actionButton("↺ Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset"));
     }
-    if (instanceId !== undefined) {
-        tools.append(actionButton("Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger"));
+    if (isInstanceRoot && instanceId !== undefined) {
+        tools.append(group.inline === true
+            ? iconActionButton("×", "Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger")
+            : actionButton("Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger"));
     }
     if (tools.childElementCount > 0)
         header.append(tools);
@@ -263,14 +280,18 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         if (group.content !== undefined && group.content !== "") {
             body.append(element("p", "group__content", group.content));
         }
-        if ((group.phrases ?? []).length > 0) {
-            const phrases = element("div", "phrases");
-            for (const phraseId of group.phrases ?? []) {
-                renderPhrase(phrases, phraseId, instanceId, definitions, state, resolved, openEditor);
+        let phrases = null;
+        for (const item of groupItems(group)) {
+            if (item.type === "phrase") {
+                if (phrases === null) {
+                    phrases = element("div", "phrases");
+                    body.append(phrases);
+                }
+                renderPhrase(phrases, item.id, instanceId, definitions, state, resolved, openEditor);
+                continue;
             }
-            body.append(phrases);
-        }
-        for (const child of group.children ?? []) {
+            phrases = null;
+            const child = item.id;
             if (definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined) {
                 renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, collapseOverrides);

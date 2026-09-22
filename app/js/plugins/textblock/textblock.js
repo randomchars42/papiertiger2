@@ -1,8 +1,9 @@
 import * as baselib from "@lib/base.js";
 import { getConfig } from "@lib/config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { createDocumentState, createScopeState, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
+import { createDocumentState, createScopeState, groupItems, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
 import { renderModule } from "./textblockui.js";
+const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const definitions = emptyDefinitions();
 const state = createDocumentState();
 const modules = new Map();
@@ -113,8 +114,81 @@ const renderAll = () => {
 };
 const scopeFor = (instanceId) => scopeState(state, instanceId);
 const currentPhrase = (phraseId, instanceId) => resolved.phrases[phraseKey(phraseId, instanceId)];
-const setOverride = (phraseId, valueId, included, instanceId) => {
-    scopeFor(instanceId).phraseOverrides[phraseId] = { valueId, included };
+const completePrompt = (phraseId, instanceId) => {
+    if (definitions.phrases[phraseId]?.prompt !== true)
+        return;
+    const scope = scopeFor(instanceId);
+    if (!scope.completedPrompts.includes(phraseId)) {
+        scope.completedPrompts.push(phraseId);
+    }
+};
+const resetPrompt = (phraseId, instanceId) => {
+    const scope = scopeFor(instanceId);
+    scope.completedPrompts = scope.completedPrompts.filter((candidate) => candidate !== phraseId);
+};
+const nextPromptInGroup = (module, groupId, instanceId) => {
+    if (!isGroupEnabled(groupId, definitions, state, instanceId))
+        return null;
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
+        return null;
+    }
+    const group = definitions.groups[groupId];
+    const collapsed = module.collapseOverrides[phraseKey(groupId, instanceId)] ??
+        group.collapsed ??
+        false;
+    if (collapsed)
+        return null;
+    const scope = scopeFor(instanceId);
+    for (const item of groupItems(group)) {
+        if (item.type === "phrase") {
+            const phrase = currentPhrase(item.id, instanceId);
+            if (definitions.phrases[item.id].prompt === true &&
+                phrase?.visible === true &&
+                !scope.completedPrompts.includes(item.id)) {
+                return {
+                    type: "phrase",
+                    phraseId: item.id,
+                    ...(instanceId === undefined ? {} : { instanceId }),
+                };
+            }
+            continue;
+        }
+        const childId = item.id;
+        const child = definitions.groups[childId];
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            for (const childInstanceId of state.groupInstances[childId] ?? []) {
+                const prompt = nextPromptInGroup(module, childId, childInstanceId);
+                if (prompt !== null)
+                    return prompt;
+            }
+        }
+        else {
+            const prompt = nextPromptInGroup(module, childId, instanceId);
+            if (prompt !== null)
+                return prompt;
+        }
+    }
+    return null;
+};
+const openNextPrompt = (module) => {
+    if (module.openEditor !== null)
+        return false;
+    const prompt = nextPromptInGroup(module, module.rootId);
+    if (prompt === null)
+        return false;
+    module.openEditor = prompt;
+    return true;
+};
+const setOverride = (phraseId, valueId, included, instanceId, provenance) => {
+    const scope = scopeFor(instanceId);
+    scope.phraseOverrides[phraseId] = { valueId, included };
+    delete scope.externalSuggestions[phraseId];
+    if (provenance === undefined) {
+        delete scope.acceptedProvenance[phraseId];
+    }
+    else {
+        scope.acceptedProvenance[phraseId] = [...provenance];
+    }
 };
 const requiredAttributes = (phraseId, valueId) => {
     if (valueId === null)
@@ -176,7 +250,16 @@ const openAttribute = (module, phraseId, attributeId, instanceId) => {
     };
 };
 const selectValue = (module, phraseId, valueId, instanceId) => {
-    setOverride(phraseId, valueId, true, instanceId);
+    const scope = scopeFor(instanceId);
+    const suggestion = scope.externalSuggestions[phraseId];
+    if (suggestion?.valueId === valueId) {
+        scope.attributes[phraseId] = {
+            ...(scope.attributes[phraseId] ?? {}),
+            ...suggestion.attributes,
+        };
+    }
+    setOverride(phraseId, valueId, true, instanceId, suggestion?.valueId === valueId ? suggestion.provenance : undefined);
+    completePrompt(phraseId, instanceId);
     const missing = missingAttribute(phraseId, valueId, instanceId);
     if (missing !== undefined) {
         openAttribute(module, phraseId, missing, instanceId);
@@ -242,8 +325,10 @@ const clearAttribute = (phraseId, attributeId, instanceId, deactivateIncompleteP
     if (Object.keys(scope.attributes[phraseId] ?? {}).length === 0) {
         delete scope.attributes[phraseId];
     }
-    if (deactivateIncompletePhrase)
+    if (deactivateIncompletePhrase) {
         delete scope.phraseOverrides[phraseId];
+        delete scope.acceptedProvenance[phraseId];
+    }
 };
 const selectedValueId = (phraseId, instanceId) => scopeFor(instanceId).phraseOverrides[phraseId]?.valueId ??
     currentPhrase(phraseId, instanceId)?.valueId ??
@@ -259,18 +344,20 @@ const advanceRequiredAttribute = (module, phraseId, instanceId) => {
 };
 const openFirstRequiredInGroup = (module, groupId, instanceId) => {
     const group = definitions.groups[groupId];
-    for (const phraseId of group.phrases ?? []) {
-        const definition = definitions.phrases[phraseId];
-        const valueId = definition.default === "" || definition.default === null
-            ? null
-            : definition.default;
-        const missing = missingAttribute(phraseId, valueId, instanceId);
-        if (missing !== undefined) {
-            openAttribute(module, phraseId, missing, instanceId);
-            return true;
+    for (const item of groupItems(group)) {
+        if (item.type === "phrase") {
+            const definition = definitions.phrases[item.id];
+            const valueId = definition.default === "" || definition.default === null
+                ? null
+                : definition.default;
+            const missing = missingAttribute(item.id, valueId, instanceId);
+            if (missing !== undefined) {
+                openAttribute(module, item.id, missing, instanceId);
+                return true;
+            }
+            continue;
         }
-    }
-    for (const childId of group.children ?? []) {
+        const childId = item.id;
         if (definitions.groups[childId].repeatable === undefined &&
             openFirstRequiredInGroup(module, childId, instanceId)) {
             return true;
@@ -280,6 +367,11 @@ const openFirstRequiredInGroup = (module, groupId, instanceId) => {
 };
 const closeEditor = (module) => {
     const editor = module.openEditor;
+    if (editor?.type === "phrase") {
+        completePrompt(editor.phraseId, editor.instanceId);
+        module.openEditor = null;
+        return;
+    }
     if (editor?.type !== "attribute") {
         module.openEditor = null;
         return;
@@ -332,6 +424,9 @@ const resetStaticGroup = (groupId) => {
     for (const phraseId of group.phrases ?? []) {
         delete state.phraseOverrides[phraseId];
         delete state.attributes[phraseId];
+        delete state.externalSuggestions[phraseId];
+        delete state.acceptedProvenance[phraseId];
+        resetPrompt(phraseId);
     }
     for (const setId of group.sets ?? []) {
         state.activeSets = state.activeSets.filter((id) => id !== setId);
@@ -397,6 +492,7 @@ const handleClick = async (module, event) => {
     else if (action === "exclude-phrase") {
         const phraseId = requireData(button, "phraseId");
         setOverride(phraseId, currentPhrase(phraseId, instanceId)?.valueId ?? null, false, instanceId);
+        completePrompt(phraseId, instanceId);
         module.openEditor = null;
     }
     else if (action === "reset-phrase") {
@@ -404,10 +500,23 @@ const handleClick = async (module, event) => {
         const scope = scopeFor(instanceId);
         delete scope.phraseOverrides[phraseId];
         delete scope.attributes[phraseId];
+        delete scope.externalSuggestions[phraseId];
+        delete scope.acceptedProvenance[phraseId];
+        resetPrompt(phraseId, instanceId);
         module.openEditor = null;
     }
     else if (action === "attribute") {
-        openAttribute(module, requireData(button, "phraseId"), requireData(button, "attributeId"), instanceId);
+        const phraseId = requireData(button, "phraseId");
+        const scope = scopeFor(instanceId);
+        const suggestion = scope.externalSuggestions[phraseId];
+        if (suggestion !== undefined) {
+            scope.attributes[phraseId] = {
+                ...(scope.attributes[phraseId] ?? {}),
+                ...suggestion.attributes,
+            };
+            setOverride(phraseId, suggestion.valueId, true, instanceId, suggestion.provenance);
+        }
+        openAttribute(module, phraseId, requireData(button, "attributeId"), instanceId);
     }
     else if (action === "choose-attribute") {
         const phraseId = requireData(button, "phraseId");
@@ -462,10 +571,43 @@ const handleClick = async (module, event) => {
             ? scope.activeSets.filter((id) => id !== setId)
             : [...scope.activeSets, setId];
     }
+    else if (action === "open-score") {
+        const groupId = requireData(button, "groupId");
+        const score = definitions.groups[groupId]?.score;
+        if (score !== undefined) {
+            const groupEnabled = isGroupEnabled(groupId, definitions, state, instanceId);
+            const selected = Object.fromEntries(score.criteria.flatMap((criterion) => {
+                const phrase = currentPhrase(criterion.phraseId, instanceId);
+                return groupEnabled &&
+                    phrase?.included === true &&
+                    phrase.valueId !== null
+                    ? [[criterion.phraseId, phrase.valueId]]
+                    : [];
+            }));
+            parent.dispatchEvent(new CustomEvent("papiertiger:open-tool", {
+                bubbles: true,
+                detail: {
+                    plugin: "score",
+                    id: score.id,
+                    label: score.label,
+                    params: {
+                        id: score.id,
+                        score,
+                        groupId,
+                        ...(instanceId === undefined
+                            ? {}
+                            : { instanceId }),
+                        selected,
+                    },
+                },
+            }));
+        }
+    }
     else if (action === "toggle-group") {
         const groupId = requireData(button, "groupId");
         const scope = scopeFor(instanceId);
         scope.groupOverrides[groupId] = !isGroupEnabled(groupId, definitions, state, instanceId);
+        module.openEditor = null;
     }
     else if (action === "toggle-collapse") {
         const groupId = requireData(button, "groupId");
@@ -517,6 +659,8 @@ const handleClick = async (module, event) => {
         }
     }
     renderAll();
+    if (openNextPrompt(module))
+        renderAll();
     focusOpenAttribute(module);
 };
 const updateFromInput = (field) => {
@@ -594,6 +738,8 @@ export const display = async (parentId, params) => {
     parent.addEventListener("input", (event) => handleInput(module, event));
     parent.addEventListener("change", (event) => handleChange(module, event));
     renderAll();
+    if (openNextPrompt(module))
+        renderAll();
 };
 export const getValue = async (id) => {
     await ensureGroup(id);
@@ -606,6 +752,63 @@ export const getStructuredValue = async (id) => {
     initialiseRepeatables(id);
     resolved = resolveDocument(definitions, state);
     return structuredDocument(id, definitions, state, resolved);
+};
+export const receive = (message) => {
+    if (message.type !== "score-result" || !isRecord(message.payload))
+        return;
+    const payload = message.payload;
+    const groupId = payload.groupId;
+    const instanceId = payload.instanceId;
+    if (typeof groupId !== "string" ||
+        (instanceId !== undefined && typeof instanceId !== "string") ||
+        !Array.isArray(payload.selections)) {
+        throw new Error("Ungültiges Rechnerergebnis.");
+    }
+    const group = definitions.groups[groupId];
+    const score = group?.score;
+    if (score === undefined) {
+        throw new Error(`Unbekannte Score-Definition "${groupId}".`);
+    }
+    if ((group.repeatable === undefined && instanceId !== undefined) ||
+        (group.repeatable !== undefined &&
+            (instanceId === undefined ||
+                !(state.groupInstances[groupId] ?? []).includes(instanceId)))) {
+        throw new Error("Das Rechnerergebnis gehört nicht zu dieser Instanz.");
+    }
+    const selections = payload.selections.filter((candidate) => isRecord(candidate) &&
+        typeof candidate.phraseId === "string" &&
+        typeof candidate.valueId === "string");
+    if (selections.length !== score.criteria.length) {
+        throw new Error("Das Rechnerergebnis ist unvollständig.");
+    }
+    const verified = score.criteria.map((criterion) => {
+        const selection = selections.find((candidate) => candidate.phraseId === criterion.phraseId);
+        const option = criterion.options.find((candidate) => candidate.valueId === selection?.valueId);
+        if (selection === undefined || option === undefined) {
+            throw new Error("Das Rechnerergebnis passt nicht zur Definition.");
+        }
+        return { criterion, option };
+    });
+    const total = verified.reduce((sum, entry) => sum + entry.option.points, 0);
+    if (total < score.minimum || total > score.maximum) {
+        throw new Error("Das Rechnerergebnis liegt außerhalb des gültigen Bereichs.");
+    }
+    const scope = scopeFor(instanceId);
+    const provenance = [groupId, ...verified.map((entry) => entry.option.valueId)];
+    scope.groupOverrides[groupId] = true;
+    for (const { criterion, option } of verified) {
+        scope.externalSuggestions[criterion.phraseId] = {
+            valueId: option.valueId,
+            attributes: {},
+            provenance: [groupId, option.valueId],
+        };
+    }
+    scope.externalSuggestions[score.target.phraseId] = {
+        valueId: score.target.valueId,
+        attributes: { [score.target.attributeId]: total },
+        provenance,
+    };
+    renderAll();
 };
 export const dispose = (parentId) => {
     modules.delete(parentId);

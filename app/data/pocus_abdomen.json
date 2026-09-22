@@ -1,0 +1,171 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "pocus_abdomen": {
+      "title": "POCUS Abdomen",
+      "kind": "neutral",
+      "phrases": [
+        "pocus_abdomen_eintrag_abdomensonographie",
+        "pocus_abdomen_eintrag_freie_fluessigkeit",
+        "pocus_abdomen_eintrag_gallenblase",
+        "pocus_abdomen_eintrag_harnstau",
+        "pocus_abdomen_eintrag_bauchaorta",
+        "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_abdomensonographie"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_freie_fluessigkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_gallenblase"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_harnstau"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_bauchaorta"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen"
+        }
+      ],
+      "default": false,
+      "reset": true
+    }
+  },
+  "phrases": {
+    "pocus_abdomen_eintrag_abdomensonographie": {
+      "title": "Abdomensonographie",
+      "kind": "intervention",
+      "default": "pocus_abdomen_eintrag_abdomensonographie_wert_point_of_care_ultraschall_des_abdomens_durchgefuehrt",
+      "values": {
+        "pocus_abdomen_eintrag_abdomensonographie_wert_point_of_care_ultraschall_des_abdomens_durchgefuehrt": {
+          "kind": "intervention",
+          "text": "Point-of-Care-Ultraschall des Abdomens durchgeführt",
+          "snomed": "870384002",
+          "snomedDisplay": "Point of care ultrasound"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_freie_fluessigkeit": {
+      "title": "Freie Flüssigkeit",
+      "kind": "neutral",
+      "default": "pocus_abdomen_eintrag_freie_fluessigkeit_wert_keine_freie_intraabdominelle_fluessigkeit",
+      "values": {
+        "pocus_abdomen_eintrag_freie_fluessigkeit_wert_keine_freie_intraabdominelle_fluessigkeit": {
+          "kind": "normal",
+          "text": "keine freie intraabdominelle Flüssigkeit"
+        },
+        "pocus_abdomen_eintrag_freie_fluessigkeit_wert_freie_intraabdominelle_fluessigkeit": {
+          "kind": "abnormal",
+          "text": "freie intraabdominelle Flüssigkeit"
+        },
+        "pocus_abdomen_eintrag_freie_fluessigkeit_wert_aszites": {
+          "kind": "abnormal",
+          "text": "Aszites",
+          "snomed": "389026000",
+          "snomedDisplay": "Ascites"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_gallenblase": {
+      "title": "Gallenblase",
+      "kind": "neutral",
+      "default": "pocus_abdomen_eintrag_gallenblase_wert_keine_gallensteine",
+      "values": {
+        "pocus_abdomen_eintrag_gallenblase_wert_keine_gallensteine": {
+          "kind": "normal",
+          "text": "keine Gallensteine",
+          "snomed": "413350009:{246090004=235919008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Gallstone; current; subject of record"
+        },
+        "pocus_abdomen_eintrag_gallenblase_wert_gallensteine": {
+          "kind": "abnormal",
+          "text": "Gallensteine",
+          "snomed": "235919008",
+          "snomedDisplay": "Gallstone"
+        },
+        "pocus_abdomen_eintrag_gallenblase_wert_sonographische_zeichen_einer_cholezystitis": {
+          "kind": "abnormal",
+          "text": "sonographische Zeichen einer Cholezystitis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_harnstau": {
+      "title": "Harnstau",
+      "kind": "neutral",
+      "default": "pocus_abdomen_eintrag_harnstau_wert_kein_harnstau",
+      "values": {
+        "pocus_abdomen_eintrag_harnstau_wert_kein_harnstau": {
+          "kind": "normal",
+          "text": "kein Harnstau",
+          "snomed": "413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Hydronephrosis; current; subject of record"
+        },
+        "pocus_abdomen_eintrag_harnstau_wert_harnstau_links": {
+          "kind": "abnormal",
+          "text": "Harnstau links",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_wert_harnstau_rechts": {
+          "kind": "abnormal",
+          "text": "Harnstau rechts",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_wert_harnstau_beidseits": {
+          "kind": "abnormal",
+          "text": "Harnstau beidseits",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_bauchaorta": {
+      "title": "Bauchaorta",
+      "kind": "neutral",
+      "default": "pocus_abdomen_eintrag_bauchaorta_wert_bauchaorta_ohne_aneurysma",
+      "values": {
+        "pocus_abdomen_eintrag_bauchaorta_wert_bauchaorta_ohne_aneurysma": {
+          "kind": "normal",
+          "text": "Bauchaorta ohne Aneurysma",
+          "snomed": "413350009:{246090004=233985008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Abdominal aortic aneurysm; current; subject of record"
+        },
+        "pocus_abdomen_eintrag_bauchaorta_wert_bauchaortenaneurysma": {
+          "kind": "abnormal",
+          "text": "Bauchaortenaneurysma",
+          "snomed": "233985008",
+          "snomedDisplay": "Abdominal aortic aneurysm"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen": {
+      "title": "Ergänzung zum POCUS Abdomen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

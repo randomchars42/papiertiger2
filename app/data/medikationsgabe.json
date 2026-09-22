@@ -1,0 +1,229 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "medikationsgabe_eingabe_wirkstoff": {
+      "type": "text",
+      "label": "Wirkstoff",
+      "placeholder": "Wirkstoff oder Präparat",
+      "prefix": ""
+    },
+    "medikationsgabe_eingabe_dosis": {
+      "type": "number",
+      "label": "Dosis",
+      "min": 0,
+      "step": 0.1
+    },
+    "medikationsgabe_eingabe_einheit": {
+      "type": "choice",
+      "options": {
+        "mg": {
+          "kind": "neutral",
+          "text": "mg"
+        },
+        "g_mikrogramm": {
+          "kind": "neutral",
+          "text": "µg (Mikrogramm)"
+        },
+        "g": {
+          "kind": "neutral",
+          "text": "g"
+        },
+        "ml": {
+          "kind": "neutral",
+          "text": "ml"
+        },
+        "i_e_internationale_einheit": {
+          "kind": "neutral",
+          "text": "I.E. (Internationale Einheit)"
+        }
+      },
+      "label": "Einheit"
+    },
+    "medikationsgabe_eingabe_applikationsweg": {
+      "type": "choice",
+      "options": {
+        "i_v": {
+          "kind": "neutral",
+          "text": "i.v."
+        },
+        "i_o": {
+          "kind": "neutral",
+          "text": "i.o."
+        },
+        "p_o": {
+          "kind": "neutral",
+          "text": "p.o."
+        },
+        "i_m": {
+          "kind": "neutral",
+          "text": "i.m."
+        },
+        "s_c": {
+          "kind": "neutral",
+          "text": "s.c."
+        },
+        "intranasal": {
+          "kind": "neutral",
+          "text": "intranasal"
+        },
+        "inhalativ": {
+          "kind": "neutral",
+          "text": "inhalativ"
+        },
+        "rektal": {
+          "kind": "neutral",
+          "text": "rektal"
+        }
+      },
+      "label": "Applikationsweg"
+    }
+  },
+  "groups": {
+    "medikationsgabe": {
+      "title": "Medikamentengaben",
+      "children": [
+        "medikationsgabe_gruppe_medikamentengabe"
+      ],
+      "phrases": [
+        "medikationsgabe_eintrag_medikamentengaben"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "medikationsgabe_eintrag_medikamentengaben"
+        },
+        {
+          "type": "group",
+          "id": "medikationsgabe_gruppe_medikamentengabe"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    },
+    "medikationsgabe_gruppe_medikamentengabe": {
+      "title": "Medikamentengabe",
+      "kind": "intervention",
+      "phrases": [
+        "medikationsgabe_eintrag_medikamentengabe",
+        "medikationsgabe_eintrag_wirkung_der_medikamentengabe",
+        "medikationsgabe_eintrag_unerwuenschte_wirkung",
+        "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "medikationsgabe_eintrag_medikamentengabe"
+        },
+        {
+          "type": "phrase",
+          "id": "medikationsgabe_eintrag_wirkung_der_medikamentengabe"
+        },
+        {
+          "type": "phrase",
+          "id": "medikationsgabe_eintrag_unerwuenschte_wirkung"
+        },
+        {
+          "type": "phrase",
+          "id": "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Medikamentengabe hinzufügen",
+        "empty": "medikationsgabe_eintrag_medikamentengaben"
+      }
+    }
+  },
+  "phrases": {
+    "medikationsgabe_eintrag_medikamentengaben": {
+      "title": "Medikamentengaben",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "medikationsgabe_eintrag_medikamentengaben_wert_keine_medikamentengabe_dokumentiert": {
+          "kind": "neutral",
+          "text": "keine Medikamentengabe dokumentiert"
+        }
+      }
+    },
+    "medikationsgabe_eintrag_medikamentengabe": {
+      "title": "Medikamentengabe",
+      "kind": "intervention",
+      "default": "medikationsgabe_eintrag_medikamentengabe_wert_um",
+      "values": {
+        "medikationsgabe_eintrag_medikamentengabe_wert_um": {
+          "kind": "intervention",
+          "text": "{:wirkstoff*:} {:dosis*:} {:einheit*:} {:weg*:} um {:zeitpunkt*:}",
+          "snomed": "18629005",
+          "snomedDisplay": "Administration of medicine"
+        }
+      },
+      "attributes": {
+        "wirkstoff": "medikationsgabe_eingabe_wirkstoff",
+        "dosis": "medikationsgabe_eingabe_dosis",
+        "einheit": "medikationsgabe_eingabe_einheit",
+        "weg": "medikationsgabe_eingabe_applikationsweg",
+        "zeitpunkt": "gemeinsam_eingabe_ereigniszeitpunkt"
+      }
+    },
+    "medikationsgabe_eintrag_wirkung_der_medikamentengabe": {
+      "title": "Wirkung der Medikamentengabe",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "medikationsgabe_eintrag_wirkung_der_medikamentengabe_wert_klinische_besserung_nach_medikamentengabe": {
+          "kind": "intervention",
+          "text": "klinische Besserung nach Medikamentengabe"
+        },
+        "medikationsgabe_eintrag_wirkung_der_medikamentengabe_wert_keine_erkennbare_wirkung_nach_medikamentengabe": {
+          "kind": "abnormal",
+          "text": "keine erkennbare Wirkung nach Medikamentengabe"
+        },
+        "medikationsgabe_eintrag_wirkung_der_medikamentengabe_wert_unerwuenschte_wirkung_nach_medikamentengabe": {
+          "kind": "abnormal",
+          "text": "unerwünschte Wirkung nach Medikamentengabe",
+          "snomed": "62014003",
+          "snomedDisplay": "Adverse drug reaction"
+        }
+      },
+      "suggestions": {
+        "medikationsgabe_eintrag_medikamentengabe_wert_um": null
+      }
+    },
+    "medikationsgabe_eintrag_unerwuenschte_wirkung": {
+      "title": "Unerwünschte Wirkung",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "medikationsgabe_eintrag_unerwuenschte_wirkung_wert_unerwuenschte_wirkung": {
+          "kind": "abnormal",
+          "text": "unerwünschte Wirkung: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "suggestions": {
+        "medikationsgabe_eintrag_wirkung_der_medikamentengabe_wert_unerwuenschte_wirkung_nach_medikamentengabe": "medikationsgabe_eintrag_unerwuenschte_wirkung_wert_unerwuenschte_wirkung"
+      }
+    },
+    "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe": {
+      "title": "Ergänzung zur Medikamentengabe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

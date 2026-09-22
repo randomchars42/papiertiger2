@@ -1,9 +1,12 @@
 import { attributePlaceholders, formatAttribute, hasAttributeValue, isDurationValue, parseValue, resolvedStart, } from "./textblocklib.js";
 export const createScopeState = () => ({
     activeSets: [],
+    completedPrompts: [],
     phraseOverrides: {},
     groupOverrides: {},
     attributes: {},
+    externalSuggestions: {},
+    acceptedProvenance: {},
 });
 export const createDocumentState = () => ({
     ...createScopeState(),
@@ -20,6 +23,10 @@ export const scopeState = (state, instanceId) => {
     return scope;
 };
 export const phraseKey = (phraseId, instanceId) => instanceId === undefined ? phraseId : `${instanceId}:${phraseId}`;
+export const groupItems = (group) => group.items ?? [
+    ...(group.phrases ?? []).map((id) => ({ type: "phrase", id })),
+    ...(group.children ?? []).map((id) => ({ type: "group", id })),
+];
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 export const isPackage = (value) => {
     if (!isRecord(value) || value.version !== 2)
@@ -58,6 +65,12 @@ export const validateDefinitions = (definitions) => {
         if (phrase.kind !== undefined && !itemKinds.has(phrase.kind)) {
             throw new Error(`Invalid suggestion kind in phrase "${id}"`);
         }
+        if (phrase.prompt !== undefined && typeof phrase.prompt !== "boolean") {
+            throw new Error(`Invalid prompt state in phrase "${id}"`);
+        }
+        if (phrase.prompt === true && Object.keys(phrase.values).length < 2) {
+            throw new Error(`Prompt phrase "${id}" needs at least two values`);
+        }
         for (const [valueId, value] of Object.entries(phrase.values)) {
             if (!isRecord(value) ||
                 typeof value.text !== "string" ||
@@ -70,6 +83,9 @@ export const validateDefinitions = (definitions) => {
                 throw new Error(`Value id "${valueId}" is used by both "${owner}" and "${id}"`);
             }
             valueOwners.set(valueId, id);
+            if (value.points !== undefined && !Number.isFinite(value.points)) {
+                throw new Error(`Invalid score points in value "${valueId}"`);
+            }
             for (const placeholder of attributePlaceholders(value.text)) {
                 if (phrase.attributes?.[placeholder.id] === undefined) {
                     throw new Error(`Missing attribute "${placeholder.id}" in value "${valueId}"`);
@@ -97,6 +113,15 @@ export const validateDefinitions = (definitions) => {
             }
         }
     }
+    const validateCondition = (condition, owner) => {
+        if (!isRecord(condition) ||
+            !Array.isArray(condition.values) ||
+            condition.values.length === 0 ||
+            condition.values.some((valueId) => typeof valueId !== "string" || !valueOwners.has(valueId)) ||
+            typeof condition.negated !== "boolean") {
+            throw new Error(`Invalid condition in "${owner}"`);
+        }
+    };
     for (const [id, group] of Object.entries(definitions.groups)) {
         if (group.kind !== undefined && !itemKinds.has(group.kind)) {
             throw new Error(`Invalid kind in group "${id}"`);
@@ -104,7 +129,43 @@ export const validateDefinitions = (definitions) => {
         if (group.collapsed !== undefined && typeof group.collapsed !== "boolean") {
             throw new Error(`Invalid collapsed state in group "${id}"`);
         }
+        if (group.inline !== undefined && typeof group.inline !== "boolean") {
+            throw new Error(`Invalid inline state in group "${id}"`);
+        }
+        if (group.score !== undefined) {
+            const score = group.score;
+            const targetPhrase = definitions.phrases[score.target.phraseId];
+            const targetEditorId = targetPhrase?.attributes?.[score.target.attributeId];
+            if (typeof score.id !== "string" ||
+                score.id === "" ||
+                typeof score.label !== "string" ||
+                score.label === "" ||
+                !Number.isFinite(score.minimum) ||
+                !Number.isFinite(score.maximum) ||
+                score.minimum > score.maximum ||
+                !Array.isArray(score.criteria) ||
+                score.criteria.length === 0 ||
+                targetPhrase === undefined ||
+                !(score.target.valueId in targetPhrase.values) ||
+                definitions.editors[targetEditorId ?? ""]?.type !== "number") {
+                throw new Error(`Invalid score configuration in group "${id}"`);
+            }
+            for (const criterion of score.criteria) {
+                const phrase = definitions.phrases[criterion.phraseId];
+                if (phrase === undefined ||
+                    typeof criterion.title !== "string" ||
+                    !Array.isArray(criterion.options) ||
+                    criterion.options.length === 0 ||
+                    criterion.options.some((option) => !(option.valueId in phrase.values) ||
+                        !Number.isFinite(option.points))) {
+                    throw new Error(`Invalid score criterion in group "${id}"`);
+                }
+            }
+        }
         if (group.repeatable !== undefined) {
+            if (group.condition !== undefined) {
+                throw new Error(`Repeatable group "${id}" cannot be conditional`);
+            }
             if (!Number.isInteger(group.repeatable.initial ?? 0) ||
                 (group.repeatable.initial ?? 0) < 0 ||
                 group.repeatable.add === "") {
@@ -114,6 +175,9 @@ export const validateDefinitions = (definitions) => {
                 !(group.repeatable.empty in definitions.phrases)) {
                 throw new Error(`Unknown empty phrase "${group.repeatable.empty}" in group "${id}"`);
             }
+        }
+        if (group.condition !== undefined) {
+            validateCondition(group.condition, id);
         }
         for (const child of group.children ?? []) {
             if (!(child in definitions.groups)) {
@@ -132,6 +196,33 @@ export const validateDefinitions = (definitions) => {
         for (const set of group.sets ?? []) {
             if (!(set in definitions.sets)) {
                 throw new Error(`Unknown set "${set}" in group "${id}"`);
+            }
+        }
+        if (group.items !== undefined) {
+            for (const item of group.items) {
+                if (!isRecord(item) ||
+                    (item.type !== "phrase" && item.type !== "group") ||
+                    typeof item.id !== "string" ||
+                    !(item.id in
+                        (item.type === "phrase"
+                            ? definitions.phrases
+                            : definitions.groups))) {
+                    throw new Error(`Invalid ordered item in group "${id}"`);
+                }
+            }
+            const orderedPhrases = group.items
+                .filter((item) => item.type === "phrase")
+                .map((item) => item.id)
+                .sort();
+            const orderedChildren = group.items
+                .filter((item) => item.type === "group")
+                .map((item) => item.id)
+                .sort();
+            if (orderedPhrases.join("\0") !==
+                [...(group.phrases ?? [])].sort().join("\0") ||
+                orderedChildren.join("\0") !==
+                    [...(group.children ?? [])].sort().join("\0")) {
+                throw new Error(`Ordered items do not match group "${id}"`);
             }
         }
     }
@@ -156,6 +247,13 @@ export const validateDefinitions = (definitions) => {
             }
             if (valueId !== null && !(valueId in phrase.values)) {
                 throw new Error(`Unknown suggested value "${valueId}" in "${id}"`);
+            }
+        }
+        if (phrase.condition !== undefined) {
+            validateCondition(phrase.condition, id);
+            if (phrase.condition.suggestion !== null &&
+                !(phrase.condition.suggestion in phrase.values)) {
+                throw new Error(`Unknown condition suggestion "${phrase.condition.suggestion}" in "${id}"`);
             }
         }
     }
@@ -191,11 +289,11 @@ const attributeParts = (text, phraseId, attributes, values, editors) => {
         parts.push({ type: "text", text: text.slice(cursor) });
     return parts.length === 0 ? [{ type: "text", text }] : parts;
 };
-const refreshPhraseText = (phrase, definitions, scope) => {
+const refreshPhraseText = (phrase, definitions, scope, suggestedAttributes) => {
     const definition = definitions.phrases[phrase.id];
     const selected = phrase.valueId === null ? undefined : definition.values[phrase.valueId];
     const parsed = selected === undefined ? { text: definition.title } : parseValue(selected);
-    const storedAttributes = scope.attributes[phrase.id] ?? {};
+    const storedAttributes = suggestedAttributes ?? scope.attributes[phrase.id] ?? {};
     phrase.parts = attributeParts(parsed.text, phrase.id, definition.attributes ?? {}, storedAttributes, definitions.editors);
     phrase.attributes = Object.fromEntries(phrase.parts.flatMap((part) => part.type === "attribute" && part.value !== undefined
         ? [[part.id, part.value]]
@@ -217,16 +315,16 @@ const refreshPhraseText = (phrase, definitions, scope) => {
 };
 const phraseIdsInGroup = (groupId, definitions, includeRepeatableChildren = false) => {
     const group = definitions.groups[groupId];
-    return [
-        ...(group.phrases ?? []),
-        ...(group.children ?? []).flatMap((child) => {
-            if (definitions.groups[child].repeatable !== undefined &&
-                !includeRepeatableChildren) {
-                return [];
-            }
-            return phraseIdsInGroup(child, definitions, includeRepeatableChildren);
-        }),
-    ];
+    return groupItems(group).flatMap((item) => {
+        if (item.type === "phrase")
+            return [item.id];
+        const child = item.id;
+        if (definitions.groups[child].repeatable !== undefined &&
+            !includeRepeatableChildren) {
+            return [];
+        }
+        return phraseIdsInGroup(child, definitions, includeRepeatableChildren);
+    });
 };
 const repeatedPhraseIds = (definitions) => new Set(Object.entries(definitions.groups).flatMap(([groupId, group]) => group.repeatable === undefined
     ? []
@@ -279,7 +377,7 @@ const resolveScope = (phraseIds, definitions, scope, instanceId) => {
         phrase.visible = true;
         phrase.included = override.included && override.valueId !== null;
         phrase.source = "user";
-        phrase.provenance = [phraseId];
+        phrase.provenance = scope.acceptedProvenance[phraseId] ?? [phraseId];
         phrase.touched = true;
     }
     for (const phrase of Object.values(phrases)) {
@@ -305,8 +403,42 @@ const resolveScope = (phraseIds, definitions, scope, instanceId) => {
         phrase.source = "suggestion";
         phrase.provenance = matches.map(([source]) => source);
     }
+    for (const phraseId of phraseIds) {
+        const definition = definitions.phrases[phraseId];
+        const condition = definition.condition;
+        const phrase = phrases[phraseKey(phraseId, instanceId)];
+        if (condition === undefined ||
+            scope.phraseOverrides[phraseId] !== undefined ||
+            phrase.source === "set") {
+            continue;
+        }
+        const hasMatch = condition.values.some((valueId) => activeValues.has(valueId));
+        const conditionMet = condition.negated ? !hasMatch : hasMatch;
+        if (!conditionMet)
+            continue;
+        phrase.valueId = condition.suggestion;
+        phrase.visible = true;
+        phrase.included = false;
+        phrase.source = "suggestion";
+        phrase.provenance = [...condition.values];
+    }
+    for (const [phraseId, suggestion] of Object.entries(scope.externalSuggestions)) {
+        if (scope.phraseOverrides[phraseId] !== undefined)
+            continue;
+        const phrase = phrases[phraseKey(phraseId, instanceId)];
+        if (phrase === undefined ||
+            !(suggestion.valueId in definitions.phrases[phraseId].values)) {
+            continue;
+        }
+        phrase.valueId = suggestion.valueId;
+        phrase.visible = true;
+        phrase.included = false;
+        phrase.source = "suggestion";
+        phrase.provenance = [...suggestion.provenance];
+        phrase.externalSuggestion = suggestion;
+    }
     for (const phrase of Object.values(phrases)) {
-        refreshPhraseText(phrase, definitions, scope);
+        refreshPhraseText(phrase, definitions, scope, phrase.externalSuggestion?.attributes);
     }
     return phrases;
 };
@@ -339,21 +471,34 @@ export const isGroupEnabled = (groupId, definitions, state, instanceId) => {
     const scope = scopeState(state, instanceId);
     return (scope.groupOverrides[groupId] ?? definitions.groups[groupId]?.default ?? true);
 };
+export const isGroupConditionMet = (groupId, definitions, resolved, instanceId) => {
+    const condition = definitions.groups[groupId]?.condition;
+    if (condition === undefined)
+        return true;
+    const hasMatch = Object.values(resolved.phrases).some((phrase) => phrase.instanceId === instanceId &&
+        phrase.included &&
+        phrase.valueId !== null &&
+        condition.values.includes(phrase.valueId));
+    return condition.negated ? !hasMatch : hasMatch;
+};
 const collectGroupPhrases = (groupId, definitions, state, resolved, instanceId) => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId))
         return [];
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
+        return [];
     const group = definitions.groups[groupId];
-    const own = (group.phrases ?? [])
-        .map((id) => resolved.phrases[phraseKey(id, instanceId)])
-        .filter((phrase) => phrase !== undefined);
-    const children = (group.children ?? []).flatMap((child) => {
+    return groupItems(group).flatMap((item) => {
+        if (item.type === "phrase") {
+            const phrase = resolved.phrases[phraseKey(item.id, instanceId)];
+            return phrase === undefined ? [] : [phrase];
+        }
+        const child = item.id;
         const childGroup = definitions.groups[child];
         if (childGroup.repeatable !== undefined && instanceId === undefined) {
             return (state.groupInstances[child] ?? []).flatMap((childInstance) => collectGroupPhrases(child, definitions, state, resolved, childInstance));
         }
         return collectGroupPhrases(child, definitions, state, resolved, instanceId);
     });
-    return [...own, ...children];
 };
 export const summarizeGroup = (groupId, definitions, state, resolved) => {
     const unique = new Map(collectGroupPhrases(groupId, definitions, state, resolved).map((phrase) => [
@@ -362,19 +507,24 @@ export const summarizeGroup = (groupId, definitions, state, resolved) => {
     ]));
     return [...unique.values()].filter((phrase) => phrase.included && phrase.kind === "abnormal");
 };
-const collectSummaryGroupIds = (groupId, definitions, state) => {
-    if (!isGroupEnabled(groupId, definitions, state))
+const collectSummaryGroupIds = (groupId, definitions, state, resolved, instanceId) => {
+    if (!isGroupEnabled(groupId, definitions, state, instanceId))
+        return [];
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
         return [];
     const group = definitions.groups[groupId];
     return [
         ...(group.summary === true ? [groupId] : []),
-        ...(group.children ?? []).flatMap((child) => definitions.groups[child].repeatable === undefined
-            ? collectSummaryGroupIds(child, definitions, state)
+        ...groupItems(group).flatMap((item) => item.type === "group" &&
+            definitions.groups[item.id].repeatable === undefined
+            ? collectSummaryGroupIds(item.id, definitions, state, resolved, instanceId)
             : []),
     ];
 };
 const renderGroupTextInternal = (groupId, definitions, state, resolved, instanceId, instanceIndex) => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId))
+        return "";
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
         return "";
     const group = definitions.groups[groupId];
     const baseTitle = parseValue(group.title).text;
@@ -418,6 +568,9 @@ const summaryItem = (phrase) => ({
     valueId: phrase.valueId,
     text: phrase.text,
     kind: phrase.kind,
+    source: phrase.source,
+    provenance: [...phrase.provenance],
+    attributes: exportAttributes(phrase.attributes),
 });
 export const structuredDocument = (root, definitions, state, resolved) => {
     const all = [
@@ -447,7 +600,7 @@ export const structuredDocument = (root, definitions, state, resolved) => {
         suggestions: all
             .filter((phrase) => phrase.visible && !phrase.included)
             .map(summaryItem),
-        summaries: collectSummaryGroupIds(root, definitions, state).map((groupId) => ({
+        summaries: collectSummaryGroupIds(root, definitions, state, resolved).map((groupId) => ({
             groupId,
             title: parseValue(definitions.groups[groupId].title).text,
             items: summarizeGroup(groupId, definitions, state, resolved).map(summaryItem),

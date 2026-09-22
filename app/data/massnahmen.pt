@@ -1,0 +1,6 @@
+# Wiederholbare Maßnahmen und Verlaufsuntersuchungen
+N: massnahmen
+I: zugang, medikationsgabe, reanimation
+
+G @root @reset: Maßnahmen und Verlauf
+  U: zugang, medikationsgabe, reanimation

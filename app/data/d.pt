@@ -1,0 +1,32 @@
+# D – Neurologie
+N: d
+I: gemeinsam, orientierung
+
+E blutzucker: number label="Blutzucker" suffix=" mg/dl" min=0 max=1000 step=1
+E gcs_summe: number label="GCS-Summe" min=3 max=15 step=1
+
+C bewusstseinsstoerung: verwirrt / reagiert auf Ansprache / reagiert auf Schmerzreiz / reagiert nicht
+
+G @root @reset @inline: D
+  P: Bewusstseinslage => wach|n* / verwirrt @sct=40917007[Confusion]|a / reagiert auf Ansprache|a / reagiert auf Schmerzreiz|a / reagiert nicht @sct=418107008[Unconscious]|a
+  P<bewusstseinsstoerung>: Blutzucker => Blutzucker {:wert=blutzucker*:}|-
+
+  P: Pupillenvergleich => Pupillen isokor @sct=301943000[Pupils equal]|n* / Pupillen anisokor @sct=13045009[Anisocoria]|a
+  P<Pupillen anisokor>: Größere Pupille => rechte Pupille weiter als linke|a / linke Pupille weiter als rechte|a
+  P: Pupillenweite => Pupillen mittelweit|n* / Pupillen eng|a / Pupillen weit|a
+  P: Pupillenreaktion => Pupillen beidseits lichtreagibel @sct=386666001[Pupils equal and reacting to light]|n* / Pupillenreaktion verzögert|a / Pupillen lichtstarr @sct=301944006[No pupillary reaction to light]|a
+
+  G @inactive @score(id=gcs,label="GCS berechnen",target="GCS-Summe",attribute=summe): Glasgow Coma Scale|-
+    P: Augenöffnen => Augen spontan geöffnet, GCS E4 @points=4|n* / Augenöffnen auf Ansprache, GCS E3 @points=3|a / Augenöffnen auf Schmerzreiz, GCS E2 @points=2|a / kein Augenöffnen, GCS E1 @points=1|a
+    P: Verbale Reaktion => verbal orientiert, GCS V5 @points=5|n* / verbal verwirrt, GCS V4 @points=4|a / unzusammenhängende Wörter, GCS V3 @points=3|a / unverständliche Laute, GCS V2 @points=2|a / keine verbale Reaktion, GCS V1 @points=1|a
+    P: Motorische Reaktion => befolgt Aufforderungen, GCS M6 @points=6|n* / gezielte Schmerzabwehr, GCS M5 @points=5|a / ungezielte Schmerzabwehr, GCS M4 @points=4|a / Beugesynergismen, GCS M3 @points=3|a / Strecksynergismen, GCS M2 @points=2|a / keine motorische Reaktion, GCS M1 @points=1|a
+    P: GCS-Summe => GCS {:summe=gcs_summe*:}|-
+
+  G @inactive: Fokalneurologie|-
+    P: Mimik => Mimik symmetrisch|n* / Facialisparese links @sct=280816001[Facial palsy]|a / Facialisparese rechts @sct=280816001[Facial palsy]|a
+    P: Sprache => Sprache unauffällig @sct=162293002[No speech problem]|n* / Dysarthrie @sct=8011004[Dysarthria]|a / Aphasie @sct=87486003[Aphasia]|a / Mutismus @sct=88052002[Mutism]|a
+    P: Motorik => Motorik seitengleich|n* / Hemiparese links @sct=20022000[Hemiparesis]|a / Hemiparese rechts @sct=20022000[Hemiparesis]|a / Paraparese @sct=1845001[Paraparesis]|a
+    P: Armhalteversuch => Armhalteversuch beidseits unauffällig|n* / Absinken des linken Arms @sct=428334004[Pronator drift]|a / Absinken des rechten Arms @sct=428334004[Pronator drift]|a
+
+  U: orientierung
+  P: Weitere D-Auffälligkeit => {:freitext*:}|a

@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "imports": [
+    "pocus_rush",
+    "pocus_abdomen",
+    "pocus_tvt"
+  ],
+  "groups": {
+    "pocus": {
+      "title": "Point-of-Care-Ultraschall",
+      "children": [
+        "pocus_rush",
+        "pocus_abdomen",
+        "pocus_tvt"
+      ],
+      "items": [
+        {
+          "type": "group",
+          "id": "pocus_rush"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen"
+        },
+        {
+          "type": "group",
+          "id": "pocus_tvt"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    }
+  },
+  "phrases": {}
+}

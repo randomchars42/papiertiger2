@@ -1,0 +1,16 @@
+# Technischer und organisatorischer Kontext einer telemedizinischen Akutversorgung
+N: tma_kontext
+I: gemeinsam
+
+E standort: text label="Standort" placeholder="Einrichtung oder Einsatzort" prefix=""
+E kontaktperson: text label="Kontaktperson vor Ort" placeholder="Name oder Funktion" prefix=""
+
+G @root @reset: Telemedizinischer Kontext
+  P: Kontaktart => Videokonsultation|- / Audiokonsultation|- / telefonische Konsultation|-
+  P: Standort => Patientin oder Patient in {:ort=standort*:}|-
+  P: Kontaktperson vor Ort => Kontaktperson vor Ort: {:person=kontaktperson*:}|-
+  P: Identitätsprüfung => Identität anhand zweier Merkmale geprüft|i
+  P: Einwilligung => Einwilligung zur telemedizinischen Konsultation liegt vor|i
+  P: Verbindungsqualität => Bild und Ton ausreichend|n / Bild eingeschränkt|a / Ton eingeschränkt|a / Verbindung wiederholt unterbrochen|a
+  P: Untersuchungsmöglichkeit => körperliche Untersuchung durch Person vor Ort möglich|- / nur visuelle Beurteilung möglich|- / keine körperliche Untersuchung möglich|-
+  P: Ergänzung zum telemedizinischen Kontext => {:freitext*:}|-

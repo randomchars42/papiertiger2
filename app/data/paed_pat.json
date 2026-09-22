@@ -1,0 +1,327 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "paed_pat": {
+      "title": "Pädiatrisches Beurteilungsdreieck",
+      "children": [
+        "paed_pat_gruppe_erscheinungsbild",
+        "paed_pat_gruppe_atmung",
+        "paed_pat_gruppe_haut_und_kreislauf"
+      ],
+      "phrases": [
+        "paed_pat_eintrag_pat_gesamteindruck",
+        "paed_pat_eintrag_ergaenzung_zum_paediatrischen_beurteilungsdreieck"
+      ],
+      "items": [
+        {
+          "type": "group",
+          "id": "paed_pat_gruppe_erscheinungsbild"
+        },
+        {
+          "type": "group",
+          "id": "paed_pat_gruppe_atmung"
+        },
+        {
+          "type": "group",
+          "id": "paed_pat_gruppe_haut_und_kreislauf"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_pat_gesamteindruck"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_ergaenzung_zum_paediatrischen_beurteilungsdreieck"
+        }
+      ],
+      "reset": true
+    },
+    "paed_pat_gruppe_erscheinungsbild": {
+      "title": "Erscheinungsbild",
+      "phrases": [
+        "paed_pat_eintrag_interaktion",
+        "paed_pat_eintrag_muskeltonus",
+        "paed_pat_eintrag_troestbarkeit",
+        "paed_pat_eintrag_blickkontakt",
+        "paed_pat_eintrag_sprache_oder_schreien"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_interaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_muskeltonus"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_troestbarkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_blickkontakt"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_sprache_oder_schreien"
+        }
+      ]
+    },
+    "paed_pat_gruppe_atmung": {
+      "title": "Atmung",
+      "phrases": [
+        "paed_pat_eintrag_atemarbeit",
+        "paed_pat_eintrag_atemgeraeusch"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_atemarbeit"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_atemgeraeusch"
+        }
+      ]
+    },
+    "paed_pat_gruppe_haut_und_kreislauf": {
+      "title": "Haut und Kreislauf",
+      "phrases": [
+        "paed_pat_eintrag_hautfarbe",
+        "paed_pat_eintrag_offensichtliche_blutung"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_hautfarbe"
+        },
+        {
+          "type": "phrase",
+          "id": "paed_pat_eintrag_offensichtliche_blutung"
+        }
+      ]
+    }
+  },
+  "phrases": {
+    "paed_pat_eintrag_interaktion": {
+      "title": "Interaktion",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_interaktion_wert_altersentsprechende_interaktion",
+      "values": {
+        "paed_pat_eintrag_interaktion_wert_altersentsprechende_interaktion": {
+          "kind": "normal",
+          "text": "altersentsprechende Interaktion"
+        },
+        "paed_pat_eintrag_interaktion_wert_verminderte_interaktion": {
+          "kind": "abnormal",
+          "text": "verminderte Interaktion"
+        },
+        "paed_pat_eintrag_interaktion_wert_keine_adaequate_interaktion": {
+          "kind": "abnormal",
+          "text": "keine adäquate Interaktion"
+        }
+      }
+    },
+    "paed_pat_eintrag_muskeltonus": {
+      "title": "Muskeltonus",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_muskeltonus_wert_muskeltonus_altersentsprechend",
+      "values": {
+        "paed_pat_eintrag_muskeltonus_wert_muskeltonus_altersentsprechend": {
+          "kind": "normal",
+          "text": "Muskeltonus altersentsprechend",
+          "snomed": "827065006",
+          "snomedDisplay": "Normal tone in skeletal muscle"
+        },
+        "paed_pat_eintrag_muskeltonus_wert_muskeltonus_vermindert": {
+          "kind": "abnormal",
+          "text": "Muskeltonus vermindert"
+        },
+        "paed_pat_eintrag_muskeltonus_wert_muskeltonus_erhoeht": {
+          "kind": "abnormal",
+          "text": "Muskeltonus erhöht"
+        }
+      }
+    },
+    "paed_pat_eintrag_troestbarkeit": {
+      "title": "Tröstbarkeit",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_troestbarkeit_wert_gut_troestbar",
+      "values": {
+        "paed_pat_eintrag_troestbarkeit_wert_gut_troestbar": {
+          "kind": "normal",
+          "text": "gut tröstbar"
+        },
+        "paed_pat_eintrag_troestbarkeit_wert_eingeschraenkt_troestbar": {
+          "kind": "abnormal",
+          "text": "eingeschränkt tröstbar"
+        },
+        "paed_pat_eintrag_troestbarkeit_wert_nicht_troestbar": {
+          "kind": "abnormal",
+          "text": "nicht tröstbar"
+        }
+      }
+    },
+    "paed_pat_eintrag_blickkontakt": {
+      "title": "Blickkontakt",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_blickkontakt_wert_blickkontakt_altersentsprechend",
+      "values": {
+        "paed_pat_eintrag_blickkontakt_wert_blickkontakt_altersentsprechend": {
+          "kind": "normal",
+          "text": "Blickkontakt altersentsprechend"
+        },
+        "paed_pat_eintrag_blickkontakt_wert_blickkontakt_vermindert": {
+          "kind": "abnormal",
+          "text": "Blickkontakt vermindert"
+        }
+      }
+    },
+    "paed_pat_eintrag_sprache_oder_schreien": {
+      "title": "Sprache oder Schreien",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_sprache_oder_schreien_wert_sprache_oder_schreien_kraeftig",
+      "values": {
+        "paed_pat_eintrag_sprache_oder_schreien_wert_sprache_oder_schreien_kraeftig": {
+          "kind": "normal",
+          "text": "Sprache oder Schreien kräftig"
+        },
+        "paed_pat_eintrag_sprache_oder_schreien_wert_sprache_oder_schreien_schwach": {
+          "kind": "abnormal",
+          "text": "Sprache oder Schreien schwach"
+        },
+        "paed_pat_eintrag_sprache_oder_schreien_wert_kein_laut": {
+          "kind": "abnormal",
+          "text": "kein Laut"
+        }
+      }
+    },
+    "paed_pat_eintrag_atemarbeit": {
+      "title": "Atemarbeit",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_atemarbeit_wert_atemarbeit_unauffaellig",
+      "values": {
+        "paed_pat_eintrag_atemarbeit_wert_atemarbeit_unauffaellig": {
+          "kind": "normal",
+          "text": "Atemarbeit unauffällig"
+        },
+        "paed_pat_eintrag_atemarbeit_wert_atemnot": {
+          "kind": "abnormal",
+          "text": "Atemnot",
+          "snomed": "271825005",
+          "snomedDisplay": "Respiratory distress"
+        },
+        "paed_pat_eintrag_atemarbeit_wert_einziehungen": {
+          "kind": "abnormal",
+          "text": "Einziehungen",
+          "snomed": "67909005",
+          "snomedDisplay": "Chest wall retraction"
+        }
+      }
+    },
+    "paed_pat_eintrag_atemgeraeusch": {
+      "title": "Atemgeräusch",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_atemgeraeusch_wert_kein_pathologisches_atemgeraeusch",
+      "values": {
+        "paed_pat_eintrag_atemgeraeusch_wert_kein_pathologisches_atemgeraeusch": {
+          "kind": "normal",
+          "text": "kein pathologisches Atemgeräusch"
+        },
+        "paed_pat_eintrag_atemgeraeusch_wert_stridor": {
+          "kind": "abnormal",
+          "text": "Stridor",
+          "snomed": "70407001",
+          "snomedDisplay": "Stridor"
+        },
+        "paed_pat_eintrag_atemgeraeusch_wert_giemen": {
+          "kind": "abnormal",
+          "text": "Giemen",
+          "snomed": "56018004",
+          "snomedDisplay": "Wheezing"
+        }
+      }
+    },
+    "paed_pat_eintrag_hautfarbe": {
+      "title": "Hautfarbe",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_hautfarbe_wert_hautfarbe_unauffaellig",
+      "values": {
+        "paed_pat_eintrag_hautfarbe_wert_hautfarbe_unauffaellig": {
+          "kind": "normal",
+          "text": "Hautfarbe unauffällig",
+          "snomed": "297952003",
+          "snomedDisplay": "Skin normal colour"
+        },
+        "paed_pat_eintrag_hautfarbe_wert_blass": {
+          "kind": "abnormal",
+          "text": "blass"
+        },
+        "paed_pat_eintrag_hautfarbe_wert_marmoriert": {
+          "kind": "abnormal",
+          "text": "marmoriert",
+          "snomed": "406128001",
+          "snomedDisplay": "Mottling of skin"
+        },
+        "paed_pat_eintrag_hautfarbe_wert_zyanotisch": {
+          "kind": "abnormal",
+          "text": "zyanotisch",
+          "snomed": "3415004",
+          "snomedDisplay": "Cyanosis"
+        }
+      }
+    },
+    "paed_pat_eintrag_offensichtliche_blutung": {
+      "title": "Offensichtliche Blutung",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_offensichtliche_blutung_wert_keine_offensichtliche_blutung",
+      "values": {
+        "paed_pat_eintrag_offensichtliche_blutung_wert_keine_offensichtliche_blutung": {
+          "kind": "normal",
+          "text": "keine offensichtliche Blutung"
+        },
+        "paed_pat_eintrag_offensichtliche_blutung_wert_offensichtliche_blutung": {
+          "kind": "abnormal",
+          "text": "offensichtliche Blutung"
+        }
+      }
+    },
+    "paed_pat_eintrag_pat_gesamteindruck": {
+      "title": "PAT-Gesamteindruck",
+      "kind": "neutral",
+      "default": "paed_pat_eintrag_pat_gesamteindruck_wert_paediatrisches_beurteilungsdreieck_unauffaellig",
+      "values": {
+        "paed_pat_eintrag_pat_gesamteindruck_wert_paediatrisches_beurteilungsdreieck_unauffaellig": {
+          "kind": "normal",
+          "text": "pädiatrisches Beurteilungsdreieck unauffällig"
+        },
+        "paed_pat_eintrag_pat_gesamteindruck_wert_eine_komponente_auffaellig": {
+          "kind": "abnormal",
+          "text": "eine Komponente auffällig"
+        },
+        "paed_pat_eintrag_pat_gesamteindruck_wert_mehrere_komponenten_auffaellig": {
+          "kind": "abnormal",
+          "text": "mehrere Komponenten auffällig"
+        }
+      }
+    },
+    "paed_pat_eintrag_ergaenzung_zum_paediatrischen_beurteilungsdreieck": {
+      "title": "Ergänzung zum pädiatrischen Beurteilungsdreieck",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "paed_pat_eintrag_ergaenzung_zum_paediatrischen_beurteilungsdreieck_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

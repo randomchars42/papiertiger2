@@ -1,0 +1,197 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "tma_kontext_eingabe_standort": {
+      "type": "text",
+      "label": "Standort",
+      "placeholder": "Einrichtung oder Einsatzort",
+      "prefix": ""
+    },
+    "tma_kontext_eingabe_kontaktperson": {
+      "type": "text",
+      "label": "Kontaktperson vor Ort",
+      "placeholder": "Name oder Funktion",
+      "prefix": ""
+    }
+  },
+  "groups": {
+    "tma_kontext": {
+      "title": "Telemedizinischer Kontext",
+      "phrases": [
+        "tma_kontext_eintrag_kontaktart",
+        "tma_kontext_eintrag_standort",
+        "tma_kontext_eintrag_kontaktperson_vor_ort",
+        "tma_kontext_eintrag_identitaetspruefung",
+        "tma_kontext_eintrag_einwilligung",
+        "tma_kontext_eintrag_verbindungsqualitaet",
+        "tma_kontext_eintrag_untersuchungsmoeglichkeit",
+        "tma_kontext_eintrag_ergaenzung_zum_telemedizinischen_kontext"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_kontaktart"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_standort"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_kontaktperson_vor_ort"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_identitaetspruefung"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_einwilligung"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_verbindungsqualitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_untersuchungsmoeglichkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "tma_kontext_eintrag_ergaenzung_zum_telemedizinischen_kontext"
+        }
+      ],
+      "reset": true
+    }
+  },
+  "phrases": {
+    "tma_kontext_eintrag_kontaktart": {
+      "title": "Kontaktart",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_kontaktart_wert_videokonsultation": {
+          "kind": "neutral",
+          "text": "Videokonsultation"
+        },
+        "tma_kontext_eintrag_kontaktart_wert_audiokonsultation": {
+          "kind": "neutral",
+          "text": "Audiokonsultation"
+        },
+        "tma_kontext_eintrag_kontaktart_wert_telefonische_konsultation": {
+          "kind": "neutral",
+          "text": "telefonische Konsultation"
+        }
+      }
+    },
+    "tma_kontext_eintrag_standort": {
+      "title": "Standort",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_standort_wert_patientin_oder_patient_in": {
+          "kind": "neutral",
+          "text": "Patientin oder Patient in {:ort*:}"
+        }
+      },
+      "attributes": {
+        "ort": "tma_kontext_eingabe_standort"
+      }
+    },
+    "tma_kontext_eintrag_kontaktperson_vor_ort": {
+      "title": "Kontaktperson vor Ort",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_kontaktperson_vor_ort_wert_kontaktperson_vor_ort": {
+          "kind": "neutral",
+          "text": "Kontaktperson vor Ort: {:person*:}"
+        }
+      },
+      "attributes": {
+        "person": "tma_kontext_eingabe_kontaktperson"
+      }
+    },
+    "tma_kontext_eintrag_identitaetspruefung": {
+      "title": "Identitätsprüfung",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_identitaetspruefung_wert_identitaet_anhand_zweier_merkmale_geprueft": {
+          "kind": "intervention",
+          "text": "Identität anhand zweier Merkmale geprüft"
+        }
+      }
+    },
+    "tma_kontext_eintrag_einwilligung": {
+      "title": "Einwilligung",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_einwilligung_wert_einwilligung_zur_telemedizinischen_konsultation_liegt_vor": {
+          "kind": "intervention",
+          "text": "Einwilligung zur telemedizinischen Konsultation liegt vor"
+        }
+      }
+    },
+    "tma_kontext_eintrag_verbindungsqualitaet": {
+      "title": "Verbindungsqualität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_verbindungsqualitaet_wert_bild_und_ton_ausreichend": {
+          "kind": "normal",
+          "text": "Bild und Ton ausreichend"
+        },
+        "tma_kontext_eintrag_verbindungsqualitaet_wert_bild_eingeschraenkt": {
+          "kind": "abnormal",
+          "text": "Bild eingeschränkt"
+        },
+        "tma_kontext_eintrag_verbindungsqualitaet_wert_ton_eingeschraenkt": {
+          "kind": "abnormal",
+          "text": "Ton eingeschränkt"
+        },
+        "tma_kontext_eintrag_verbindungsqualitaet_wert_verbindung_wiederholt_unterbrochen": {
+          "kind": "abnormal",
+          "text": "Verbindung wiederholt unterbrochen"
+        }
+      }
+    },
+    "tma_kontext_eintrag_untersuchungsmoeglichkeit": {
+      "title": "Untersuchungsmöglichkeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_untersuchungsmoeglichkeit_wert_koerperliche_untersuchung_durch_person_vor_ort_moeglich": {
+          "kind": "neutral",
+          "text": "körperliche Untersuchung durch Person vor Ort möglich"
+        },
+        "tma_kontext_eintrag_untersuchungsmoeglichkeit_wert_nur_visuelle_beurteilung_moeglich": {
+          "kind": "neutral",
+          "text": "nur visuelle Beurteilung möglich"
+        },
+        "tma_kontext_eintrag_untersuchungsmoeglichkeit_wert_keine_koerperliche_untersuchung_moeglich": {
+          "kind": "neutral",
+          "text": "keine körperliche Untersuchung möglich"
+        }
+      }
+    },
+    "tma_kontext_eintrag_ergaenzung_zum_telemedizinischen_kontext": {
+      "title": "Ergänzung zum telemedizinischen Kontext",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "tma_kontext_eintrag_ergaenzung_zum_telemedizinischen_kontext_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

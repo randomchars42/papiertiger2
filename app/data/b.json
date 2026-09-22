@@ -110,9 +110,76 @@
         "b_eintrag_brummen",
         "b_eintrag_weitere_b_auffaelligkeit"
       ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "b_eintrag_atmung"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_atemfrequenz"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_zyanose"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_atemexkursion"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_stabilitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_atemgeraeusch"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_punktion"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_effekt_der_punktion"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_thorakostomie"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_effekt_der_thorakostomie"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_anlage_einer_thoraxdrainage"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_effekt_der_drainagenanlage"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_rasselgeraeusche"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_giemen"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_brummen"
+        },
+        {
+          "type": "phrase",
+          "id": "b_eintrag_weitere_b_auffaelligkeit"
+        }
+      ],
       "sets": [
         "b_vorgabe_pneumonie_beispiel"
-      ]
+      ],
+      "inline": true
     }
   },
   "phrases": {
@@ -124,32 +191,38 @@
         "b_eintrag_atmung_wert_eupnoe": {
           "kind": "normal",
           "text": "Eupnoe",
-          "snomed": "20716004"
+          "snomed": "20716004",
+          "snomedDisplay": "Respiratory rate normal"
         },
         "b_eintrag_atmung_wert_apnoe": {
           "kind": "abnormal",
           "text": "Apnoe",
-          "snomed": "1023001"
+          "snomed": "1023001",
+          "snomedDisplay": "Apnoea"
         },
         "b_eintrag_atmung_wert_bradypnoe": {
           "kind": "abnormal",
           "text": "Bradypnoe",
-          "snomed": "86684002"
+          "snomed": "86684002",
+          "snomedDisplay": "Bradypnoea"
         },
         "b_eintrag_atmung_wert_tachypnoe": {
           "kind": "abnormal",
           "text": "Tachypnoe",
-          "snomed": "271823003"
+          "snomed": "271823003",
+          "snomedDisplay": "Tachypnoea"
         },
         "b_eintrag_atmung_wert_agonale_atmung": {
           "kind": "abnormal",
           "text": "agonale Atmung",
-          "snomed": "430546009"
+          "snomed": "430546009",
+          "snomedDisplay": "Agonal respiration"
         },
         "b_eintrag_atmung_wert_beatmet": {
           "kind": "intervention",
           "text": "beatmet",
-          "snomed": "1303532003"
+          "snomed": "1303532003",
+          "snomedDisplay": "On artificial ventilation"
         }
       }
     },
@@ -198,7 +271,8 @@
         "b_eintrag_atemexkursion_wert_atemexkursion_seitengleich": {
           "kind": "normal",
           "text": "Atemexkursion seitengleich",
-          "snomed": "248559000"
+          "snomed": "248559000",
+          "snomedDisplay": "Chest movement equal"
         },
         "b_eintrag_atemexkursion_wert_atemexkursion_links_vermindert": {
           "kind": "abnormal",
@@ -390,7 +464,8 @@
         "b_eintrag_giemen_wert_giemen": {
           "kind": "abnormal",
           "text": "Giemen",
-          "snomed": "56018004"
+          "snomed": "56018004",
+          "snomedDisplay": "Wheezing"
         }
       }
     },

@@ -1,13 +1,31 @@
 {
   "version": 2,
   "imports": [
-    "orientierung"
+    "status_allgemein",
+    "status_abdomen",
+    "status_extremitaeten"
   ],
   "groups": {
     "status": {
       "title": "Status",
       "children": [
-        "orientierung"
+        "status_allgemein",
+        "status_abdomen",
+        "status_extremitaeten"
+      ],
+      "items": [
+        {
+          "type": "group",
+          "id": "status_allgemein"
+        },
+        {
+          "type": "group",
+          "id": "status_abdomen"
+        },
+        {
+          "type": "group",
+          "id": "status_extremitaeten"
+        }
       ]
     }
   },

@@ -1,0 +1,41 @@
+# Fokussierte Traumadokumentation für Kopf, Wirbelsäule und Extremitäten
+N: trauma
+I: gemeinsam
+
+E mechanismus: text label="Unfallmechanismus" placeholder="Ablauf, Richtung und Energie" prefix=""
+E region: choice label="Region" => linke Schulter|- / rechte Schulter|- / linker Oberarm|- / rechter Oberarm|- / linker Ellenbogen|- / rechter Ellenbogen|- / linker Unterarm|- / rechter Unterarm|- / linkes Handgelenk|- / rechtes Handgelenk|- / linke Hand|- / rechte Hand|- / linke Hüfte|- / rechte Hüfte|- / linker Oberschenkel|- / rechter Oberschenkel|- / linkes Knie|- / rechtes Knie|- / linker Unterschenkel|- / rechter Unterschenkel|- / linkes Sprunggelenk|- / rechtes Sprunggelenk|- / linker Fuß|- / rechter Fuß|-
+
+G @root @reset: Trauma
+  G @collapsed: Unfallhergang
+    P: Unfallmechanismus => Unfallmechanismus: {:beschreibung=mechanismus*:}|-
+    P: Hochenergietrauma => kein Hochenergiemechanismus|n / Hochenergiemechanismus|a
+    P: Antikoagulation beim Trauma => keine Antikoagulation bekannt|n / Antikoagulation vorhanden|a / Antikoagulation unklar|-
+
+  G @inactive @reset: Kopfverletzung|a
+    P: Kopfverletzung => Kopfverletzung @sct=82271004[Head injury]|a*
+    P: Bewusstlosigkeit => keine Bewusstlosigkeit|n* / Bewusstlosigkeit @sct=418107008[Unconscious]|a / Bewusstlosigkeit unklar|-
+    P: Erinnerungslücke => keine Amnesie|n* / Amnesie|a
+    P: Erbrechen nach Kopfverletzung => kein Erbrechen @sct=162062008[No vomiting]|n* / Erbrechen @sct=422400008[Vomiting]|a
+    P: Kopfschmerz nach Kopfverletzung => kein Kopfschmerz @sct=162298006[No headache]|n* / Kopfschmerz @sct=25064002[Headache]|a
+    P: Kopfhaut => Kopfhaut intakt|n* / Kopfhautplatzwunde @sct=274166008[Scalp laceration]|a / Hämatom der Kopfhaut @sct=385494008[Haematoma]|a
+    P: Ergänzung zur Kopfverletzung => {:freitext*:}|-
+
+  G @inactive @reset: Wirbelsäule|a
+    P: Nackenschmerz => kein Nackenschmerz @sct=413350009:{246090004=81680005},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Neck pain; current; subject of record]|n* / Nackenschmerz @sct=81680005[Neck pain]|a
+    P: Mittelliniendruckschmerz => kein spinaler Mittelliniendruckschmerz|n* / spinaler Mittelliniendruckschmerz|a
+    P: Neurologisches Defizit => kein neues neurologisches Defizit|n* / neues neurologisches Defizit|a
+    P: Wirbelsäulenimmobilisation => Wirbelsäule immobilisiert|i
+    P: Ergänzung zur Wirbelsäule => {:freitext*:}|-
+
+  P: Extremitäten und Gelenke => keine fokussierte Extremitäten- oder Gelenkuntersuchung dokumentiert|-
+  G @repeat(initial=0,add="Extremität oder Gelenk hinzufügen",empty="Extremitäten und Gelenke") @reset: Extremität oder Gelenk|a
+    P: Untersuchte Region => Untersuchung der {:region=region*:}|-*
+    P: Fehlstellung => keine Fehlstellung|n* / Fehlstellung @sct=250087009[Joint deformity]|a
+    P: Schwellung => keine Schwellung|n* / Schwellung @sct=271771009[Joint swelling]|a
+    P: Beweglichkeit => Beweglichkeit frei|n* / Beweglichkeit eingeschränkt @sct=70733008[Limitation of joint movement]|a / keine aktive Bewegung möglich|a
+    P: Druckschmerz => kein knöcherner Druckschmerz|n* / knöcherner Druckschmerz|a
+    P: Durchblutung, Motorik und Sensibilität => DMS intakt|n* / Durchblutung gestört|a / Motorik gestört|a / Sensibilität gestört @sct=397974008[Hypoaesthesia]|a
+    P: Frakturverdacht => kein klinischer Frakturverdacht|n* / klinischer Frakturverdacht|a
+    P: Ergänzung zur Region => {:freitext*:}|-
+
+  P: Ergänzung zum Trauma => {:freitext*:}|-

@@ -4,6 +4,8 @@ import {
     parseValue,
 } from "./textblocklib.js";
 import {
+    groupItems,
+    isGroupConditionMet,
     isGroupEnabled,
     phraseKey,
     scopeState,
@@ -50,6 +52,19 @@ const actionButton = (
     button.type = "button";
     button.dataset.action = action;
     Object.assign(button.dataset, data);
+    return button;
+};
+
+const iconActionButton = (
+    symbol: string,
+    label: string,
+    action: string,
+    data: Record<string, string>,
+    className: string,
+): HTMLButtonElement => {
+    const button = actionButton(symbol, action, data, `${className} control--icon`);
+    button.setAttribute("aria-label", label);
+    button.title = label;
     return button;
 };
 
@@ -477,6 +492,8 @@ function renderGroup(
     instanceIndex?: number,
 ): void {
     const group = definitions.groups[groupId];
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return;
+    const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
     const collapsible = group.collapsed !== undefined;
     const collapsed =
@@ -488,7 +505,8 @@ function renderGroup(
         [
             "group",
             `group--${group.kind ?? "neutral"}`,
-            instanceId === undefined ? "" : "group--instance",
+            isInstanceRoot ? "group--instance" : "",
+            group.inline === true ? "group--inline" : "",
             enabled ? "" : "group--inactive",
             collapsed ? "group--collapsed" : "",
         ]
@@ -522,6 +540,16 @@ function renderGroup(
 
     const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
+    if (group.score !== undefined) {
+        tools.append(
+            actionButton(
+                group.score.label,
+                "open-score",
+                scopedData({ groupId }, instanceId),
+                "control control--primary group__score",
+            ),
+        );
+    }
     for (const setId of group.sets ?? []) {
         const set = definitions.sets[setId];
         const button = actionButton(
@@ -533,24 +561,40 @@ function renderGroup(
         button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
     }
-    if (group.reset === true || instanceId !== undefined) {
+    if (group.reset === true || isInstanceRoot) {
         tools.append(
-            actionButton(
-                "↺ Zurücksetzen",
-                "reset-group",
-                scopedData({ groupId }, instanceId),
-                "control group__reset",
-            ),
+            group.inline === true
+                ? iconActionButton(
+                      "↺",
+                      "Zurücksetzen",
+                      "reset-group",
+                      scopedData({ groupId }, instanceId),
+                      "control group__reset",
+                  )
+                : actionButton(
+                      "↺ Zurücksetzen",
+                      "reset-group",
+                      scopedData({ groupId }, instanceId),
+                      "control group__reset",
+                  ),
         );
     }
-    if (instanceId !== undefined) {
+    if (isInstanceRoot && instanceId !== undefined) {
         tools.append(
-            actionButton(
-                "Entfernen",
-                "remove-group-instance",
-                { groupId, instanceId },
-                "control control--danger",
-            ),
+            group.inline === true
+                ? iconActionButton(
+                      "×",
+                      "Entfernen",
+                      "remove-group-instance",
+                      { groupId, instanceId },
+                      "control control--danger",
+                  )
+                : actionButton(
+                      "Entfernen",
+                      "remove-group-instance",
+                      { groupId, instanceId },
+                      "control control--danger",
+                  ),
         );
     }
     if (tools.childElementCount > 0) header.append(tools);
@@ -592,22 +636,26 @@ function renderGroup(
         if (group.content !== undefined && group.content !== "") {
             body.append(element("p", "group__content", group.content));
         }
-        if ((group.phrases ?? []).length > 0) {
-            const phrases = element("div", "phrases");
-            for (const phraseId of group.phrases ?? []) {
+        let phrases: HTMLDivElement | null = null;
+        for (const item of groupItems(group)) {
+            if (item.type === "phrase") {
+                if (phrases === null) {
+                    phrases = element("div", "phrases");
+                    body.append(phrases);
+                }
                 renderPhrase(
                     phrases,
-                    phraseId,
+                    item.id,
                     instanceId,
                     definitions,
                     state,
                     resolved,
                     openEditor,
                 );
+                continue;
             }
-            body.append(phrases);
-        }
-        for (const child of group.children ?? []) {
+            phrases = null;
+            const child = item.id;
             if (
                 definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined

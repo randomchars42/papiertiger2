@@ -1,0 +1,231 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "zugang_eingabe_lokalisation": {
+      "type": "choice",
+      "options": {
+        "am_linken_handruecken": {
+          "kind": "neutral",
+          "text": "am linken Handrücken"
+        },
+        "am_rechten_handruecken": {
+          "kind": "neutral",
+          "text": "am rechten Handrücken"
+        },
+        "am_linken_unterarm": {
+          "kind": "neutral",
+          "text": "am linken Unterarm"
+        },
+        "am_rechten_unterarm": {
+          "kind": "neutral",
+          "text": "am rechten Unterarm"
+        },
+        "in_der_linken_ellenbeuge": {
+          "kind": "neutral",
+          "text": "in der linken Ellenbeuge"
+        },
+        "in_der_rechten_ellenbeuge": {
+          "kind": "neutral",
+          "text": "in der rechten Ellenbeuge"
+        },
+        "an_der_linken_proximalen_tibia": {
+          "kind": "neutral",
+          "text": "an der linken proximalen Tibia"
+        },
+        "an_der_rechten_proximalen_tibia": {
+          "kind": "neutral",
+          "text": "an der rechten proximalen Tibia"
+        },
+        "an_der_linken_v_jugularis_interna": {
+          "kind": "neutral",
+          "text": "an der linken V. jugularis interna"
+        },
+        "an_der_rechten_v_jugularis_interna": {
+          "kind": "neutral",
+          "text": "an der rechten V. jugularis interna"
+        },
+        "an_der_linken_v_femoralis": {
+          "kind": "neutral",
+          "text": "an der linken V. femoralis"
+        },
+        "an_der_rechten_v_femoralis": {
+          "kind": "neutral",
+          "text": "an der rechten V. femoralis"
+        }
+      },
+      "label": "Lokalisation"
+    }
+  },
+  "groups": {
+    "zugang": {
+      "title": "Gefäßzugänge",
+      "children": [
+        "zugang_gruppe_gefaesszugang"
+      ],
+      "phrases": [
+        "zugang_eintrag_gefaesszugaenge"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "zugang_eintrag_gefaesszugaenge"
+        },
+        {
+          "type": "group",
+          "id": "zugang_gruppe_gefaesszugang"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    },
+    "zugang_gruppe_gefaesszugang": {
+      "title": "Gefäßzugang",
+      "kind": "intervention",
+      "phrases": [
+        "zugang_eintrag_gefaesszugang",
+        "zugang_eintrag_groesse_des_gefaesszugangs",
+        "zugang_eintrag_funktion_des_gefaesszugangs",
+        "zugang_eintrag_ergaenzung_zum_gefaesszugang"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "zugang_eintrag_gefaesszugang"
+        },
+        {
+          "type": "phrase",
+          "id": "zugang_eintrag_groesse_des_gefaesszugangs"
+        },
+        {
+          "type": "phrase",
+          "id": "zugang_eintrag_funktion_des_gefaesszugangs"
+        },
+        {
+          "type": "phrase",
+          "id": "zugang_eintrag_ergaenzung_zum_gefaesszugang"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Gefäßzugang hinzufügen",
+        "empty": "zugang_eintrag_gefaesszugaenge"
+      }
+    }
+  },
+  "phrases": {
+    "zugang_eintrag_gefaesszugaenge": {
+      "title": "Gefäßzugänge",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "zugang_eintrag_gefaesszugaenge_wert_kein_gefaesszugang_dokumentiert": {
+          "kind": "neutral",
+          "text": "kein Gefäßzugang dokumentiert"
+        }
+      }
+    },
+    "zugang_eintrag_gefaesszugang": {
+      "title": "Gefäßzugang",
+      "kind": "intervention",
+      "default": "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um",
+      "values": {
+        "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um": {
+          "kind": "intervention",
+          "text": "peripher-venöser Zugang {:ort*:} um {:zeitpunkt*:}",
+          "snomed": "233520008",
+          "snomedDisplay": "Peripheral venous cannula insertion"
+        },
+        "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um": {
+          "kind": "intervention",
+          "text": "intraossärer Zugang {:ort*:} um {:zeitpunkt*:}",
+          "snomed": "440009003",
+          "snomedDisplay": "Insertion of needle for intraosseous infusion"
+        },
+        "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um": {
+          "kind": "intervention",
+          "text": "zentralvenöser Zugang {:ort*:} um {:zeitpunkt*:}",
+          "snomed": "449860009",
+          "snomedDisplay": "Nontunnelled central venous catheterisation"
+        }
+      },
+      "attributes": {
+        "ort": "zugang_eingabe_lokalisation",
+        "zeitpunkt": "gemeinsam_eingabe_ereigniszeitpunkt"
+      }
+    },
+    "zugang_eintrag_groesse_des_gefaesszugangs": {
+      "title": "Größe des Gefäßzugangs",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "zugang_eintrag_groesse_des_gefaesszugangs_wert_groesse_14_g": {
+          "kind": "neutral",
+          "text": "Größe 14 G"
+        },
+        "zugang_eintrag_groesse_des_gefaesszugangs_wert_groesse_16_g": {
+          "kind": "neutral",
+          "text": "Größe 16 G"
+        },
+        "zugang_eintrag_groesse_des_gefaesszugangs_wert_groesse_18_g": {
+          "kind": "neutral",
+          "text": "Größe 18 G"
+        },
+        "zugang_eintrag_groesse_des_gefaesszugangs_wert_groesse_20_g": {
+          "kind": "neutral",
+          "text": "Größe 20 G"
+        },
+        "zugang_eintrag_groesse_des_gefaesszugangs_wert_groesse_22_g": {
+          "kind": "neutral",
+          "text": "Größe 22 G"
+        },
+        "zugang_eintrag_groesse_des_gefaesszugangs_wert_groesse_24_g": {
+          "kind": "neutral",
+          "text": "Größe 24 G"
+        }
+      },
+      "suggestions": {
+        "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um": null,
+        "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um": null,
+        "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um": null
+      }
+    },
+    "zugang_eintrag_funktion_des_gefaesszugangs": {
+      "title": "Funktion des Gefäßzugangs",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "zugang_eintrag_funktion_des_gefaesszugangs_wert_gefaesszugang_durchgaengig": {
+          "kind": "intervention",
+          "text": "Gefäßzugang durchgängig"
+        },
+        "zugang_eintrag_funktion_des_gefaesszugangs_wert_gefaesszugang_nicht_durchgaengig": {
+          "kind": "abnormal",
+          "text": "Gefäßzugang nicht durchgängig"
+        }
+      },
+      "suggestions": {
+        "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um": null,
+        "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um": null,
+        "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um": null
+      }
+    },
+    "zugang_eintrag_ergaenzung_zum_gefaesszugang": {
+      "title": "Ergänzung zum Gefäßzugang",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "zugang_eintrag_ergaenzung_zum_gefaesszugang_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

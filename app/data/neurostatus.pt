@@ -1,0 +1,34 @@
+# Ausführlicher neurologischer Status; NIHSS wird manuell dokumentiert
+N: neurostatus
+I: gemeinsam, orientierung
+
+E nihss: number label="NIHSS-Gesamtwert" min=0 max=42 step=1
+
+G @root @reset: Neurologischer Status
+  P: Bewusstseinszustand => wach|n* / schläfrig @sct=79519003[Drowsiness]|a / verwirrt @sct=40917007[Confusion]|a / bewusstlos @sct=418107008[Unconscious]|a / Koma @sct=371632003[Coma]|a
+  U: orientierung
+
+  G @collapsed: Hirnnerven
+    P: Gesichtsfeld => Gesichtsfeld unauffällig|n* / Gesichtsfeldausfall @sct=12184005[Visual field defect]|a / Hemianopsie @sct=77674003[Hemianopia]|a
+    P: Augenbewegungen => Augenbewegungen frei|n* / Blickparese|a / Nystagmus @sct=563001[Nystagmus]|a
+    P: Pupillen => Pupillen isokor @sct=301943000[Pupils equal]|n* / Anisokorie @sct=13045009[Anisocoria]|a
+    P: Mimik => Mimik symmetrisch|n* / Fazialisparese links @sct=280816001[Facial palsy]|a / Fazialisparese rechts @sct=280816001[Facial palsy]|a
+    P: Schlucken => Schlucken unauffällig|n* / Dysphagie @sct=40739000[Dysphagia]|a
+
+  G @collapsed: Sprache und Sprechen
+    P: Sprache => Sprache unauffällig @sct=162293002[No speech problem]|n* / Aphasie @sct=87486003[Aphasia]|a / Mutismus @sct=88052002[Mutism]|a
+    P: Sprechen => Artikulation unauffällig|n* / Dysarthrie @sct=8011004[Dysarthria]|a
+
+  G @collapsed: Motorik, Koordination und Sensibilität
+    P: Kraft => Kraft seitengleich|n* / Hemiparese links @sct=20022000[Hemiparesis]|a / Hemiparese rechts @sct=20022000[Hemiparesis]|a / Paraparese @sct=1845001[Paraparesis]|a
+    P: Armhalteversuch => Armhalteversuch beidseits unauffällig|n* / Pronator-Drift links @sct=428334004[Pronator drift]|a / Pronator-Drift rechts @sct=428334004[Pronator drift]|a
+    P: Koordination => Koordination unauffällig|n* / Ataxie @sct=20262006[Ataxia]|a / Tremor @sct=26079004[Tremor]|a
+    P: Sensibilität => Sensibilität seitengleich|n* / Hypästhesie links @sct=397974008[Hypoaesthesia]|a / Hypästhesie rechts @sct=397974008[Hypoaesthesia]|a
+    P: Neglect => kein Neglect|n* / Hemineglect links @sct=32422007[Hemispatial neglect]|a / Hemineglect rechts @sct=32422007[Hemispatial neglect]|a
+
+  G @collapsed: Weitere Befunde und Skalen
+    P: Meningismus => kein Meningismus @sct=274829000[Meningism absent]|n* / Meningismus @sct=274830005[Meningism present]|a
+    P: Gang und Stand => Gang und Stand sicher|n* / Gangunsicherheit|a / Standunsicherheit|a / nicht prüfbar|-
+    P: NIHSS => NIHSS {:wert=nihss*:} @sct=450743008[National Institutes of Health stroke scale score]|-
+
+  P: Ergänzung zum neurologischen Status => {:freitext*:}|-

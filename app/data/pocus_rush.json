@@ -1,0 +1,289 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "pocus_rush": {
+      "title": "POCUS Herz, Thorax und Kreislauf",
+      "kind": "neutral",
+      "children": [
+        "pocus_rush_gruppe_herz",
+        "pocus_rush_gruppe_thorax"
+      ],
+      "phrases": [
+        "pocus_rush_eintrag_pocus_untersuchung",
+        "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_pocus_untersuchung"
+        },
+        {
+          "type": "group",
+          "id": "pocus_rush_gruppe_herz"
+        },
+        {
+          "type": "group",
+          "id": "pocus_rush_gruppe_thorax"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax"
+        }
+      ],
+      "default": false,
+      "reset": true
+    },
+    "pocus_rush_gruppe_herz": {
+      "title": "Herz",
+      "phrases": [
+        "pocus_rush_eintrag_perikarderguss",
+        "pocus_rush_eintrag_rechtsventrikel",
+        "pocus_rush_eintrag_herzaktivitaet"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_perikarderguss"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_rechtsventrikel"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_herzaktivitaet"
+        }
+      ],
+      "collapsed": true
+    },
+    "pocus_rush_gruppe_thorax": {
+      "title": "Thorax",
+      "phrases": [
+        "pocus_rush_eintrag_lungengleiten",
+        "pocus_rush_eintrag_pneumothorax",
+        "pocus_rush_eintrag_b_linien",
+        "pocus_rush_eintrag_pleuraerguss",
+        "pocus_rush_eintrag_lungenkonsolidierung"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_lungengleiten"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_pneumothorax"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_b_linien"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_pleuraerguss"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_lungenkonsolidierung"
+        }
+      ],
+      "collapsed": true
+    }
+  },
+  "phrases": {
+    "pocus_rush_eintrag_pocus_untersuchung": {
+      "title": "POCUS-Untersuchung",
+      "kind": "intervention",
+      "default": "pocus_rush_eintrag_pocus_untersuchung_wert_point_of_care_ultraschall_durchgefuehrt",
+      "values": {
+        "pocus_rush_eintrag_pocus_untersuchung_wert_point_of_care_ultraschall_durchgefuehrt": {
+          "kind": "intervention",
+          "text": "Point-of-Care-Ultraschall durchgeführt",
+          "snomed": "870384002",
+          "snomedDisplay": "Point of care ultrasound"
+        }
+      }
+    },
+    "pocus_rush_eintrag_perikarderguss": {
+      "title": "Perikarderguss",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_perikarderguss_wert_kein_perikarderguss",
+      "values": {
+        "pocus_rush_eintrag_perikarderguss_wert_kein_perikarderguss": {
+          "kind": "normal",
+          "text": "kein Perikarderguss",
+          "snomed": "413350009:{246090004=373945007},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Pericardial effusion; current; subject of record"
+        },
+        "pocus_rush_eintrag_perikarderguss_wert_perikarderguss": {
+          "kind": "abnormal",
+          "text": "Perikarderguss",
+          "snomed": "373945007",
+          "snomedDisplay": "Pericardial effusion"
+        }
+      }
+    },
+    "pocus_rush_eintrag_rechtsventrikel": {
+      "title": "Rechtsventrikel",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_rechtsventrikel_wert_rechter_ventrikel_nicht_dilatiert",
+      "values": {
+        "pocus_rush_eintrag_rechtsventrikel_wert_rechter_ventrikel_nicht_dilatiert": {
+          "kind": "normal",
+          "text": "rechter Ventrikel nicht dilatiert"
+        },
+        "pocus_rush_eintrag_rechtsventrikel_wert_rechter_ventrikel_dilatiert": {
+          "kind": "abnormal",
+          "text": "rechter Ventrikel dilatiert",
+          "snomed": "253522006",
+          "snomedDisplay": "Right cardiac ventricular dilatation"
+        }
+      }
+    },
+    "pocus_rush_eintrag_herzaktivitaet": {
+      "title": "Herzaktivität",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_herzaktivitaet_wert_herzaktivitaet_nachweisbar",
+      "values": {
+        "pocus_rush_eintrag_herzaktivitaet_wert_herzaktivitaet_nachweisbar": {
+          "kind": "normal",
+          "text": "Herzaktivität nachweisbar"
+        },
+        "pocus_rush_eintrag_herzaktivitaet_wert_keine_herzaktivitaet_asystolie": {
+          "kind": "abnormal",
+          "text": "keine Herzaktivität, Asystolie",
+          "snomed": "397829000",
+          "snomedDisplay": "Asystole"
+        }
+      }
+    },
+    "pocus_rush_eintrag_lungengleiten": {
+      "title": "Lungengleiten",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_beidseits_nachweisbar",
+      "values": {
+        "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_beidseits_nachweisbar": {
+          "kind": "normal",
+          "text": "Lungengleiten beidseits nachweisbar"
+        },
+        "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_links_aufgehoben": {
+          "kind": "abnormal",
+          "text": "Lungengleiten links aufgehoben"
+        },
+        "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_rechts_aufgehoben": {
+          "kind": "abnormal",
+          "text": "Lungengleiten rechts aufgehoben"
+        }
+      }
+    },
+    "pocus_rush_eintrag_pneumothorax": {
+      "title": "Pneumothorax",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_pneumothorax_wert_kein_sonographischer_hinweis_auf_pneumothorax",
+      "values": {
+        "pocus_rush_eintrag_pneumothorax_wert_kein_sonographischer_hinweis_auf_pneumothorax": {
+          "kind": "normal",
+          "text": "kein sonographischer Hinweis auf Pneumothorax",
+          "snomed": "413350009:{246090004=36118008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Pneumothorax; current; subject of record"
+        },
+        "pocus_rush_eintrag_pneumothorax_wert_pneumothorax_links": {
+          "kind": "abnormal",
+          "text": "Pneumothorax links",
+          "snomed": "109364007",
+          "snomedDisplay": "Left pneumothorax"
+        },
+        "pocus_rush_eintrag_pneumothorax_wert_pneumothorax_rechts": {
+          "kind": "abnormal",
+          "text": "Pneumothorax rechts",
+          "snomed": "109363001",
+          "snomedDisplay": "Right pneumothorax"
+        }
+      }
+    },
+    "pocus_rush_eintrag_b_linien": {
+      "title": "B-Linien",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_b_linien_wert_keine_vermehrten_b_linien",
+      "values": {
+        "pocus_rush_eintrag_b_linien_wert_keine_vermehrten_b_linien": {
+          "kind": "normal",
+          "text": "keine vermehrten B-Linien"
+        },
+        "pocus_rush_eintrag_b_linien_wert_vermehrte_b_linien": {
+          "kind": "abnormal",
+          "text": "vermehrte B-Linien",
+          "snomed": "1217292008",
+          "snomedDisplay": "Lung B-lines"
+        }
+      }
+    },
+    "pocus_rush_eintrag_pleuraerguss": {
+      "title": "Pleuraerguss",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_pleuraerguss_wert_kein_pleuraerguss",
+      "values": {
+        "pocus_rush_eintrag_pleuraerguss_wert_kein_pleuraerguss": {
+          "kind": "normal",
+          "text": "kein Pleuraerguss",
+          "snomed": "413350009:{246090004=60046008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Pleural effusion; current; subject of record"
+        },
+        "pocus_rush_eintrag_pleuraerguss_wert_pleuraerguss_links": {
+          "kind": "abnormal",
+          "text": "Pleuraerguss links",
+          "snomed": "1366511008",
+          "snomedDisplay": "Left pleural effusion"
+        },
+        "pocus_rush_eintrag_pleuraerguss_wert_pleuraerguss_rechts": {
+          "kind": "abnormal",
+          "text": "Pleuraerguss rechts",
+          "snomed": "1366512001",
+          "snomedDisplay": "Right pleural effusion"
+        },
+        "pocus_rush_eintrag_pleuraerguss_wert_pleuraerguss_beidseits": {
+          "kind": "abnormal",
+          "text": "Pleuraerguss beidseits",
+          "snomed": "60046008",
+          "snomedDisplay": "Pleural effusion"
+        }
+      }
+    },
+    "pocus_rush_eintrag_lungenkonsolidierung": {
+      "title": "Lungenkonsolidierung",
+      "kind": "neutral",
+      "default": "pocus_rush_eintrag_lungenkonsolidierung_wert_keine_lungenkonsolidierung",
+      "values": {
+        "pocus_rush_eintrag_lungenkonsolidierung_wert_keine_lungenkonsolidierung": {
+          "kind": "normal",
+          "text": "keine Lungenkonsolidierung",
+          "snomed": "413350009:{246090004=95436008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Lung consolidation; current; subject of record"
+        },
+        "pocus_rush_eintrag_lungenkonsolidierung_wert_lungenkonsolidierung": {
+          "kind": "abnormal",
+          "text": "Lungenkonsolidierung",
+          "snomed": "95436008",
+          "snomedDisplay": "Lung consolidation"
+        }
+      }
+    },
+    "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax": {
+      "title": "Ergänzung zum POCUS Herz und Thorax",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

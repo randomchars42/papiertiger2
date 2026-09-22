@@ -1,0 +1,277 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "ekg_eingabe_herzfrequenz": {
+      "type": "number",
+      "label": "Kammerfrequenz",
+      "suffix": " / min",
+      "min": 0,
+      "max": 300,
+      "step": 1
+    },
+    "ekg_eingabe_ableitungen": {
+      "type": "text",
+      "label": "Ableitungen",
+      "placeholder": "z. B. II, III, aVF",
+      "prefix": ""
+    }
+  },
+  "groups": {
+    "ekg": {
+      "title": "EKG",
+      "children": [
+        "ekg_gruppe_ekg"
+      ],
+      "phrases": [
+        "ekg_eintrag_ekg_untersuchungen"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_ekg_untersuchungen"
+        },
+        {
+          "type": "group",
+          "id": "ekg_gruppe_ekg"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    },
+    "ekg_gruppe_ekg": {
+      "title": "EKG",
+      "kind": "neutral",
+      "phrases": [
+        "ekg_eintrag_ekg_ableitung",
+        "ekg_eintrag_rhythmus",
+        "ekg_eintrag_kammerfrequenz",
+        "ekg_eintrag_st_strecken",
+        "ekg_eintrag_ekg_beurteilung",
+        "ekg_eintrag_ergaenzung_zum_ekg"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_ekg_ableitung"
+        },
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_rhythmus"
+        },
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_kammerfrequenz"
+        },
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_st_strecken"
+        },
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_ekg_beurteilung"
+        },
+        {
+          "type": "phrase",
+          "id": "ekg_eintrag_ergaenzung_zum_ekg"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "EKG hinzufügen",
+        "empty": "ekg_eintrag_ekg_untersuchungen"
+      }
+    }
+  },
+  "phrases": {
+    "ekg_eintrag_ekg_untersuchungen": {
+      "title": "EKG-Untersuchungen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ekg_eintrag_ekg_untersuchungen_wert_kein_ekg_dokumentiert": {
+          "kind": "neutral",
+          "text": "kein EKG dokumentiert"
+        }
+      }
+    },
+    "ekg_eintrag_ekg_ableitung": {
+      "title": "EKG-Ableitung",
+      "kind": "intervention",
+      "default": "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_um",
+      "values": {
+        "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_um": {
+          "kind": "intervention",
+          "text": "12-Kanal-EKG um {:zeitpunkt*:}",
+          "snomed": "268400002",
+          "snomedDisplay": "12 lead ECG"
+        }
+      },
+      "attributes": {
+        "zeitpunkt": "gemeinsam_eingabe_ereigniszeitpunkt"
+      }
+    },
+    "ekg_eintrag_rhythmus": {
+      "title": "Rhythmus",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "ekg_eintrag_rhythmus_wert_sinusrhythmus": {
+          "kind": "normal",
+          "text": "Sinusrhythmus",
+          "snomed": "426783006",
+          "snomedDisplay": "ECG: sinus rhythm"
+        },
+        "ekg_eintrag_rhythmus_wert_vorhofflimmern": {
+          "kind": "abnormal",
+          "text": "Vorhofflimmern",
+          "snomed": "164889003",
+          "snomedDisplay": "ECG: atrial fibrillation"
+        },
+        "ekg_eintrag_rhythmus_wert_vorhofflattern": {
+          "kind": "abnormal",
+          "text": "Vorhofflattern",
+          "snomed": "164890007",
+          "snomedDisplay": "ECG: atrial flutter"
+        },
+        "ekg_eintrag_rhythmus_wert_regelmaessige_schmalkomplextachykardie": {
+          "kind": "abnormal",
+          "text": "regelmäßige Schmalkomplextachykardie",
+          "snomed": "426761007",
+          "snomedDisplay": "ECG: supraventricular tachycardia"
+        },
+        "ekg_eintrag_rhythmus_wert_unregelmaessige_schmalkomplextachykardie": {
+          "kind": "abnormal",
+          "text": "unregelmäßige Schmalkomplextachykardie"
+        },
+        "ekg_eintrag_rhythmus_wert_breitkomplextachykardie": {
+          "kind": "abnormal",
+          "text": "Breitkomplextachykardie",
+          "snomed": "164895002",
+          "snomedDisplay": "ECG: ventricular tachycardia"
+        },
+        "ekg_eintrag_rhythmus_wert_schrittmacherrhythmus": {
+          "kind": "neutral",
+          "text": "Schrittmacherrhythmus",
+          "snomed": "426453001",
+          "snomedDisplay": "ECG: paced rhythm"
+        }
+      },
+      "suggestions": {
+        "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_um": null
+      }
+    },
+    "ekg_eintrag_kammerfrequenz": {
+      "title": "Kammerfrequenz",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "ekg_eintrag_kammerfrequenz_wert_kammerfrequenz": {
+          "kind": "neutral",
+          "text": "Kammerfrequenz {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "ekg_eingabe_herzfrequenz"
+      },
+      "suggestions": {
+        "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_um": "ekg_eintrag_kammerfrequenz_wert_kammerfrequenz"
+      }
+    },
+    "ekg_eintrag_st_strecken": {
+      "title": "ST-Strecken",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "ekg_eintrag_st_strecken_wert_keine_signifikanten_st_streckenveraenderungen": {
+          "kind": "normal",
+          "text": "keine signifikanten ST-Streckenveränderungen"
+        },
+        "ekg_eintrag_st_strecken_wert_st_streckenhebungen_in": {
+          "kind": "abnormal",
+          "text": "ST-Streckenhebungen in {:ableitungen*:}",
+          "snomed": "76388001",
+          "snomedDisplay": "ST segment elevation"
+        },
+        "ekg_eintrag_st_strecken_wert_st_streckensenkungen_in": {
+          "kind": "abnormal",
+          "text": "ST-Streckensenkungen in {:ableitungen*:}",
+          "snomed": "26141007",
+          "snomedDisplay": "ST segment depression"
+        }
+      },
+      "attributes": {
+        "ableitungen": "ekg_eingabe_ableitungen"
+      },
+      "suggestions": {
+        "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_um": null
+      }
+    },
+    "ekg_eintrag_ekg_beurteilung": {
+      "title": "EKG-Beurteilung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ekg_eintrag_ekg_beurteilung_wert_unauffaelliges_ekg": {
+          "kind": "normal",
+          "text": "unauffälliges EKG",
+          "snomed": "164854000",
+          "snomedDisplay": "ECG normal"
+        },
+        "ekg_eintrag_ekg_beurteilung_wert_sinustachykardie": {
+          "kind": "abnormal",
+          "text": "Sinustachykardie",
+          "snomed": "427084000",
+          "snomedDisplay": "ECG: sinus tachycardia"
+        },
+        "ekg_eintrag_ekg_beurteilung_wert_vorhofflimmern": {
+          "kind": "abnormal",
+          "text": "Vorhofflimmern",
+          "snomed": "164889003",
+          "snomedDisplay": "ECG: atrial fibrillation"
+        },
+        "ekg_eintrag_ekg_beurteilung_wert_vorhofflattern": {
+          "kind": "abnormal",
+          "text": "Vorhofflattern",
+          "snomed": "164890007",
+          "snomedDisplay": "ECG: atrial flutter"
+        },
+        "ekg_eintrag_ekg_beurteilung_wert_av_block": {
+          "kind": "abnormal",
+          "text": "AV-Block",
+          "snomed": "233917008",
+          "snomedDisplay": "Atrioventricular block"
+        },
+        "ekg_eintrag_ekg_beurteilung_wert_schenkelblock": {
+          "kind": "abnormal",
+          "text": "Schenkelblock",
+          "snomed": "6374002",
+          "snomedDisplay": "Bundle branch block"
+        },
+        "ekg_eintrag_ekg_beurteilung_wert_stemi": {
+          "kind": "abnormal",
+          "text": "STEMI",
+          "snomed": "401303003",
+          "snomedDisplay": "Acute ST segment elevation myocardial infarction"
+        }
+      }
+    },
+    "ekg_eintrag_ergaenzung_zum_ekg": {
+      "title": "Ergänzung zum EKG",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ekg_eintrag_ergaenzung_zum_ekg_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

@@ -14,6 +14,28 @@
         "orientierung_eintrag_orientierung_zur_situation",
         "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung"
       ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "orientierung_eintrag_orientierung_zur_zeit"
+        },
+        {
+          "type": "phrase",
+          "id": "orientierung_eintrag_orientierung_zum_ort"
+        },
+        {
+          "type": "phrase",
+          "id": "orientierung_eintrag_orientierung_zur_person"
+        },
+        {
+          "type": "phrase",
+          "id": "orientierung_eintrag_orientierung_zur_situation"
+        },
+        {
+          "type": "phrase",
+          "id": "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung"
+        }
+      ],
       "default": false
     }
   },

@@ -1,6 +1,6 @@
 # Status
 N: status
-I: orientierung
+I: status_allgemein, status_abdomen, status_extremitaeten
 
 G @root: Status
-  U: orientierung
+  U: status_allgemein, status_abdomen, status_extremitaeten

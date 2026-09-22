@@ -1,0 +1,628 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam",
+    "orientierung"
+  ],
+  "editors": {
+    "d_eingabe_blutzucker": {
+      "type": "number",
+      "label": "Blutzucker",
+      "suffix": " mg/dl",
+      "min": 0,
+      "max": 1000,
+      "step": 1
+    },
+    "d_eingabe_gcs_summe": {
+      "type": "number",
+      "label": "GCS-Summe",
+      "min": 3,
+      "max": 15,
+      "step": 1
+    }
+  },
+  "groups": {
+    "d": {
+      "title": "D",
+      "children": [
+        "d_gruppe_glasgow_coma_scale",
+        "d_gruppe_fokalneurologie",
+        "orientierung"
+      ],
+      "phrases": [
+        "d_eintrag_bewusstseinslage",
+        "d_eintrag_blutzucker",
+        "d_eintrag_pupillenvergleich",
+        "d_eintrag_groessere_pupille",
+        "d_eintrag_pupillenweite",
+        "d_eintrag_pupillenreaktion",
+        "d_eintrag_weitere_d_auffaelligkeit"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "d_eintrag_bewusstseinslage"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_blutzucker"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_pupillenvergleich"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_groessere_pupille"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_pupillenweite"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_pupillenreaktion"
+        },
+        {
+          "type": "group",
+          "id": "d_gruppe_glasgow_coma_scale"
+        },
+        {
+          "type": "group",
+          "id": "d_gruppe_fokalneurologie"
+        },
+        {
+          "type": "group",
+          "id": "orientierung"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_weitere_d_auffaelligkeit"
+        }
+      ],
+      "reset": true,
+      "inline": true
+    },
+    "d_gruppe_glasgow_coma_scale": {
+      "title": "Glasgow Coma Scale",
+      "kind": "neutral",
+      "phrases": [
+        "d_eintrag_augenoeffnen",
+        "d_eintrag_verbale_reaktion",
+        "d_eintrag_motorische_reaktion",
+        "d_eintrag_gcs_summe"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "d_eintrag_augenoeffnen"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_verbale_reaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_motorische_reaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_gcs_summe"
+        }
+      ],
+      "default": false,
+      "score": {
+        "id": "gcs",
+        "label": "GCS berechnen",
+        "minimum": 3,
+        "maximum": 15,
+        "criteria": [
+          {
+            "phraseId": "d_eintrag_augenoeffnen",
+            "title": "Augenöffnen",
+            "options": [
+              {
+                "valueId": "d_eintrag_augenoeffnen_wert_augen_spontan_geoeffnet_gcs_e4",
+                "text": "Augen spontan geöffnet, GCS E4",
+                "kind": "normal",
+                "points": 4
+              },
+              {
+                "valueId": "d_eintrag_augenoeffnen_wert_augenoeffnen_auf_ansprache_gcs_e3",
+                "text": "Augenöffnen auf Ansprache, GCS E3",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "d_eintrag_augenoeffnen_wert_augenoeffnen_auf_schmerzreiz_gcs_e2",
+                "text": "Augenöffnen auf Schmerzreiz, GCS E2",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "d_eintrag_augenoeffnen_wert_kein_augenoeffnen_gcs_e1",
+                "text": "kein Augenöffnen, GCS E1",
+                "kind": "abnormal",
+                "points": 1
+              }
+            ]
+          },
+          {
+            "phraseId": "d_eintrag_verbale_reaktion",
+            "title": "Verbale Reaktion",
+            "options": [
+              {
+                "valueId": "d_eintrag_verbale_reaktion_wert_verbal_orientiert_gcs_v5",
+                "text": "verbal orientiert, GCS V5",
+                "kind": "normal",
+                "points": 5
+              },
+              {
+                "valueId": "d_eintrag_verbale_reaktion_wert_verbal_verwirrt_gcs_v4",
+                "text": "verbal verwirrt, GCS V4",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "d_eintrag_verbale_reaktion_wert_unzusammenhaengende_woerter_gcs_v3",
+                "text": "unzusammenhängende Wörter, GCS V3",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "d_eintrag_verbale_reaktion_wert_unverstaendliche_laute_gcs_v2",
+                "text": "unverständliche Laute, GCS V2",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "d_eintrag_verbale_reaktion_wert_keine_verbale_reaktion_gcs_v1",
+                "text": "keine verbale Reaktion, GCS V1",
+                "kind": "abnormal",
+                "points": 1
+              }
+            ]
+          },
+          {
+            "phraseId": "d_eintrag_motorische_reaktion",
+            "title": "Motorische Reaktion",
+            "options": [
+              {
+                "valueId": "d_eintrag_motorische_reaktion_wert_befolgt_aufforderungen_gcs_m6",
+                "text": "befolgt Aufforderungen, GCS M6",
+                "kind": "normal",
+                "points": 6
+              },
+              {
+                "valueId": "d_eintrag_motorische_reaktion_wert_gezielte_schmerzabwehr_gcs_m5",
+                "text": "gezielte Schmerzabwehr, GCS M5",
+                "kind": "abnormal",
+                "points": 5
+              },
+              {
+                "valueId": "d_eintrag_motorische_reaktion_wert_ungezielte_schmerzabwehr_gcs_m4",
+                "text": "ungezielte Schmerzabwehr, GCS M4",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "d_eintrag_motorische_reaktion_wert_beugesynergismen_gcs_m3",
+                "text": "Beugesynergismen, GCS M3",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "d_eintrag_motorische_reaktion_wert_strecksynergismen_gcs_m2",
+                "text": "Strecksynergismen, GCS M2",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "d_eintrag_motorische_reaktion_wert_keine_motorische_reaktion_gcs_m1",
+                "text": "keine motorische Reaktion, GCS M1",
+                "kind": "abnormal",
+                "points": 1
+              }
+            ]
+          }
+        ],
+        "target": {
+          "phraseId": "d_eintrag_gcs_summe",
+          "valueId": "d_eintrag_gcs_summe_wert_gcs",
+          "attributeId": "summe"
+        }
+      }
+    },
+    "d_gruppe_fokalneurologie": {
+      "title": "Fokalneurologie",
+      "kind": "neutral",
+      "phrases": [
+        "d_eintrag_mimik",
+        "d_eintrag_sprache",
+        "d_eintrag_motorik",
+        "d_eintrag_armhalteversuch"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "d_eintrag_mimik"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_sprache"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_motorik"
+        },
+        {
+          "type": "phrase",
+          "id": "d_eintrag_armhalteversuch"
+        }
+      ],
+      "default": false
+    }
+  },
+  "phrases": {
+    "d_eintrag_bewusstseinslage": {
+      "title": "Bewusstseinslage",
+      "kind": "neutral",
+      "default": "d_eintrag_bewusstseinslage_wert_wach",
+      "values": {
+        "d_eintrag_bewusstseinslage_wert_wach": {
+          "kind": "normal",
+          "text": "wach"
+        },
+        "d_eintrag_bewusstseinslage_wert_verwirrt": {
+          "kind": "abnormal",
+          "text": "verwirrt",
+          "snomed": "40917007",
+          "snomedDisplay": "Confusion"
+        },
+        "d_eintrag_bewusstseinslage_wert_reagiert_auf_ansprache": {
+          "kind": "abnormal",
+          "text": "reagiert auf Ansprache"
+        },
+        "d_eintrag_bewusstseinslage_wert_reagiert_auf_schmerzreiz": {
+          "kind": "abnormal",
+          "text": "reagiert auf Schmerzreiz"
+        },
+        "d_eintrag_bewusstseinslage_wert_reagiert_nicht": {
+          "kind": "abnormal",
+          "text": "reagiert nicht",
+          "snomed": "418107008",
+          "snomedDisplay": "Unconscious"
+        }
+      }
+    },
+    "d_eintrag_blutzucker": {
+      "title": "Blutzucker",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "d_eintrag_blutzucker_wert_blutzucker": {
+          "kind": "neutral",
+          "text": "Blutzucker {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "d_eingabe_blutzucker"
+      },
+      "suggestions": {
+        "d_eintrag_bewusstseinslage_wert_verwirrt": "d_eintrag_blutzucker_wert_blutzucker",
+        "d_eintrag_bewusstseinslage_wert_reagiert_auf_ansprache": "d_eintrag_blutzucker_wert_blutzucker",
+        "d_eintrag_bewusstseinslage_wert_reagiert_auf_schmerzreiz": "d_eintrag_blutzucker_wert_blutzucker",
+        "d_eintrag_bewusstseinslage_wert_reagiert_nicht": "d_eintrag_blutzucker_wert_blutzucker"
+      }
+    },
+    "d_eintrag_pupillenvergleich": {
+      "title": "Pupillenvergleich",
+      "kind": "neutral",
+      "default": "d_eintrag_pupillenvergleich_wert_pupillen_isokor",
+      "values": {
+        "d_eintrag_pupillenvergleich_wert_pupillen_isokor": {
+          "kind": "normal",
+          "text": "Pupillen isokor",
+          "snomed": "301943000",
+          "snomedDisplay": "Pupils equal"
+        },
+        "d_eintrag_pupillenvergleich_wert_pupillen_anisokor": {
+          "kind": "abnormal",
+          "text": "Pupillen anisokor",
+          "snomed": "13045009",
+          "snomedDisplay": "Anisocoria"
+        }
+      }
+    },
+    "d_eintrag_groessere_pupille": {
+      "title": "Größere Pupille",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "d_eintrag_groessere_pupille_wert_rechte_pupille_weiter_als_linke": {
+          "kind": "abnormal",
+          "text": "rechte Pupille weiter als linke"
+        },
+        "d_eintrag_groessere_pupille_wert_linke_pupille_weiter_als_rechte": {
+          "kind": "abnormal",
+          "text": "linke Pupille weiter als rechte"
+        }
+      },
+      "suggestions": {
+        "d_eintrag_pupillenvergleich_wert_pupillen_anisokor": null
+      }
+    },
+    "d_eintrag_pupillenweite": {
+      "title": "Pupillenweite",
+      "kind": "neutral",
+      "default": "d_eintrag_pupillenweite_wert_pupillen_mittelweit",
+      "values": {
+        "d_eintrag_pupillenweite_wert_pupillen_mittelweit": {
+          "kind": "normal",
+          "text": "Pupillen mittelweit"
+        },
+        "d_eintrag_pupillenweite_wert_pupillen_eng": {
+          "kind": "abnormal",
+          "text": "Pupillen eng"
+        },
+        "d_eintrag_pupillenweite_wert_pupillen_weit": {
+          "kind": "abnormal",
+          "text": "Pupillen weit"
+        }
+      }
+    },
+    "d_eintrag_pupillenreaktion": {
+      "title": "Pupillenreaktion",
+      "kind": "neutral",
+      "default": "d_eintrag_pupillenreaktion_wert_pupillen_beidseits_lichtreagibel",
+      "values": {
+        "d_eintrag_pupillenreaktion_wert_pupillen_beidseits_lichtreagibel": {
+          "kind": "normal",
+          "text": "Pupillen beidseits lichtreagibel",
+          "snomed": "386666001",
+          "snomedDisplay": "Pupils equal and reacting to light"
+        },
+        "d_eintrag_pupillenreaktion_wert_pupillenreaktion_verzoegert": {
+          "kind": "abnormal",
+          "text": "Pupillenreaktion verzögert"
+        },
+        "d_eintrag_pupillenreaktion_wert_pupillen_lichtstarr": {
+          "kind": "abnormal",
+          "text": "Pupillen lichtstarr",
+          "snomed": "301944006",
+          "snomedDisplay": "No pupillary reaction to light"
+        }
+      }
+    },
+    "d_eintrag_augenoeffnen": {
+      "title": "Augenöffnen",
+      "kind": "neutral",
+      "default": "d_eintrag_augenoeffnen_wert_augen_spontan_geoeffnet_gcs_e4",
+      "values": {
+        "d_eintrag_augenoeffnen_wert_augen_spontan_geoeffnet_gcs_e4": {
+          "kind": "normal",
+          "text": "Augen spontan geöffnet, GCS E4",
+          "points": 4
+        },
+        "d_eintrag_augenoeffnen_wert_augenoeffnen_auf_ansprache_gcs_e3": {
+          "kind": "abnormal",
+          "text": "Augenöffnen auf Ansprache, GCS E3",
+          "points": 3
+        },
+        "d_eintrag_augenoeffnen_wert_augenoeffnen_auf_schmerzreiz_gcs_e2": {
+          "kind": "abnormal",
+          "text": "Augenöffnen auf Schmerzreiz, GCS E2",
+          "points": 2
+        },
+        "d_eintrag_augenoeffnen_wert_kein_augenoeffnen_gcs_e1": {
+          "kind": "abnormal",
+          "text": "kein Augenöffnen, GCS E1",
+          "points": 1
+        }
+      }
+    },
+    "d_eintrag_verbale_reaktion": {
+      "title": "Verbale Reaktion",
+      "kind": "neutral",
+      "default": "d_eintrag_verbale_reaktion_wert_verbal_orientiert_gcs_v5",
+      "values": {
+        "d_eintrag_verbale_reaktion_wert_verbal_orientiert_gcs_v5": {
+          "kind": "normal",
+          "text": "verbal orientiert, GCS V5",
+          "points": 5
+        },
+        "d_eintrag_verbale_reaktion_wert_verbal_verwirrt_gcs_v4": {
+          "kind": "abnormal",
+          "text": "verbal verwirrt, GCS V4",
+          "points": 4
+        },
+        "d_eintrag_verbale_reaktion_wert_unzusammenhaengende_woerter_gcs_v3": {
+          "kind": "abnormal",
+          "text": "unzusammenhängende Wörter, GCS V3",
+          "points": 3
+        },
+        "d_eintrag_verbale_reaktion_wert_unverstaendliche_laute_gcs_v2": {
+          "kind": "abnormal",
+          "text": "unverständliche Laute, GCS V2",
+          "points": 2
+        },
+        "d_eintrag_verbale_reaktion_wert_keine_verbale_reaktion_gcs_v1": {
+          "kind": "abnormal",
+          "text": "keine verbale Reaktion, GCS V1",
+          "points": 1
+        }
+      }
+    },
+    "d_eintrag_motorische_reaktion": {
+      "title": "Motorische Reaktion",
+      "kind": "neutral",
+      "default": "d_eintrag_motorische_reaktion_wert_befolgt_aufforderungen_gcs_m6",
+      "values": {
+        "d_eintrag_motorische_reaktion_wert_befolgt_aufforderungen_gcs_m6": {
+          "kind": "normal",
+          "text": "befolgt Aufforderungen, GCS M6",
+          "points": 6
+        },
+        "d_eintrag_motorische_reaktion_wert_gezielte_schmerzabwehr_gcs_m5": {
+          "kind": "abnormal",
+          "text": "gezielte Schmerzabwehr, GCS M5",
+          "points": 5
+        },
+        "d_eintrag_motorische_reaktion_wert_ungezielte_schmerzabwehr_gcs_m4": {
+          "kind": "abnormal",
+          "text": "ungezielte Schmerzabwehr, GCS M4",
+          "points": 4
+        },
+        "d_eintrag_motorische_reaktion_wert_beugesynergismen_gcs_m3": {
+          "kind": "abnormal",
+          "text": "Beugesynergismen, GCS M3",
+          "points": 3
+        },
+        "d_eintrag_motorische_reaktion_wert_strecksynergismen_gcs_m2": {
+          "kind": "abnormal",
+          "text": "Strecksynergismen, GCS M2",
+          "points": 2
+        },
+        "d_eintrag_motorische_reaktion_wert_keine_motorische_reaktion_gcs_m1": {
+          "kind": "abnormal",
+          "text": "keine motorische Reaktion, GCS M1",
+          "points": 1
+        }
+      }
+    },
+    "d_eintrag_gcs_summe": {
+      "title": "GCS-Summe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "d_eintrag_gcs_summe_wert_gcs": {
+          "kind": "neutral",
+          "text": "GCS {:summe*:}"
+        }
+      },
+      "attributes": {
+        "summe": "d_eingabe_gcs_summe"
+      }
+    },
+    "d_eintrag_mimik": {
+      "title": "Mimik",
+      "kind": "neutral",
+      "default": "d_eintrag_mimik_wert_mimik_symmetrisch",
+      "values": {
+        "d_eintrag_mimik_wert_mimik_symmetrisch": {
+          "kind": "normal",
+          "text": "Mimik symmetrisch"
+        },
+        "d_eintrag_mimik_wert_facialisparese_links": {
+          "kind": "abnormal",
+          "text": "Facialisparese links",
+          "snomed": "280816001",
+          "snomedDisplay": "Facial palsy"
+        },
+        "d_eintrag_mimik_wert_facialisparese_rechts": {
+          "kind": "abnormal",
+          "text": "Facialisparese rechts",
+          "snomed": "280816001",
+          "snomedDisplay": "Facial palsy"
+        }
+      }
+    },
+    "d_eintrag_sprache": {
+      "title": "Sprache",
+      "kind": "neutral",
+      "default": "d_eintrag_sprache_wert_sprache_unauffaellig",
+      "values": {
+        "d_eintrag_sprache_wert_sprache_unauffaellig": {
+          "kind": "normal",
+          "text": "Sprache unauffällig",
+          "snomed": "162293002",
+          "snomedDisplay": "No speech problem"
+        },
+        "d_eintrag_sprache_wert_dysarthrie": {
+          "kind": "abnormal",
+          "text": "Dysarthrie",
+          "snomed": "8011004",
+          "snomedDisplay": "Dysarthria"
+        },
+        "d_eintrag_sprache_wert_aphasie": {
+          "kind": "abnormal",
+          "text": "Aphasie",
+          "snomed": "87486003",
+          "snomedDisplay": "Aphasia"
+        },
+        "d_eintrag_sprache_wert_mutismus": {
+          "kind": "abnormal",
+          "text": "Mutismus",
+          "snomed": "88052002",
+          "snomedDisplay": "Mutism"
+        }
+      }
+    },
+    "d_eintrag_motorik": {
+      "title": "Motorik",
+      "kind": "neutral",
+      "default": "d_eintrag_motorik_wert_motorik_seitengleich",
+      "values": {
+        "d_eintrag_motorik_wert_motorik_seitengleich": {
+          "kind": "normal",
+          "text": "Motorik seitengleich"
+        },
+        "d_eintrag_motorik_wert_hemiparese_links": {
+          "kind": "abnormal",
+          "text": "Hemiparese links",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "d_eintrag_motorik_wert_hemiparese_rechts": {
+          "kind": "abnormal",
+          "text": "Hemiparese rechts",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "d_eintrag_motorik_wert_paraparese": {
+          "kind": "abnormal",
+          "text": "Paraparese",
+          "snomed": "1845001",
+          "snomedDisplay": "Paraparesis"
+        }
+      }
+    },
+    "d_eintrag_armhalteversuch": {
+      "title": "Armhalteversuch",
+      "kind": "neutral",
+      "default": "d_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig",
+      "values": {
+        "d_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig": {
+          "kind": "normal",
+          "text": "Armhalteversuch beidseits unauffällig"
+        },
+        "d_eintrag_armhalteversuch_wert_absinken_des_linken_arms": {
+          "kind": "abnormal",
+          "text": "Absinken des linken Arms",
+          "snomed": "428334004",
+          "snomedDisplay": "Pronator drift"
+        },
+        "d_eintrag_armhalteversuch_wert_absinken_des_rechten_arms": {
+          "kind": "abnormal",
+          "text": "Absinken des rechten Arms",
+          "snomed": "428334004",
+          "snomedDisplay": "Pronator drift"
+        }
+      }
+    },
+    "d_eintrag_weitere_d_auffaelligkeit": {
+      "title": "Weitere D-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "d_eintrag_weitere_d_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

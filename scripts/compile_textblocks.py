@@ -64,6 +64,7 @@ def split_top_level(value: str, delimiter: str) -> list[str]:
     quote = ""
     escaped = False
     parentheses = 0
+    brackets = 0
     placeholder = 0
     index = 0
     while index < len(value):
@@ -87,9 +88,14 @@ def split_top_level(value: str, delimiter: str) -> list[str]:
             parentheses += 1
         elif not placeholder and character == ")":
             parentheses -= 1
+        elif not placeholder and character == "[":
+            brackets += 1
+        elif not placeholder and character == "]":
+            brackets -= 1
         elif (
             not placeholder
             and parentheses == 0
+            and brackets == 0
             and value.startswith(delimiter, index)
         ):
             parts.append(value[start:index].strip())
@@ -202,9 +208,28 @@ def parse_value(value: str, path: Path, line: int) -> dict[str, Any]:
     body = match.group(1).strip()
     if not body:
         raise CompileError(path, line, "empty value")
-    coding = re.fullmatch(r"([\s\S]*?)(?:\s+@sct=([^\s]+))?", body)
-    assert coding is not None
-    text = coding.group(1).strip()
+    snomed: str | None = None
+    snomed_display: str | None = None
+    points: int | None = None
+    text = body
+    points_match = re.fullmatch(r"([\s\S]*?)\s+@points=(-?\d+)", text)
+    if points_match is not None:
+        text = points_match.group(1).strip()
+        points = int(points_match.group(2))
+    if "@sct=" in body:
+        coding = re.fullmatch(
+            r"([\s\S]*?)\s+@sct=([^\s\[\]]+)\[([^\[\]\r\n]+)\]",
+            text,
+        )
+        if coding is None:
+            raise CompileError(
+                path,
+                line,
+                "SNOMED coding must use @sct=<code-or-expression>[<human-readable term>]",
+            )
+        text = coding.group(1).strip()
+        snomed = coding.group(2)
+        snomed_display = coding.group(3).strip()
     if not text:
         raise CompileError(path, line, "empty value text")
     return {
@@ -212,7 +237,9 @@ def parse_value(value: str, path: Path, line: int) -> dict[str, Any]:
         "raw_text": text,
         "kind": KIND[match.group(2)],
         "default": match.group(3) == "*",
-        "snomed": coding.group(2),
+        "snomed": snomed,
+        "snomed_display": snomed_display,
+        "points": points,
     }
 
 
@@ -244,7 +271,7 @@ def parse_source(path: Path) -> dict[str, Any]:
             continue
 
         if current_set is not None and indent > current_set["indent"] and not re.match(
-            r"^(?:N|I|E|C|G|U|P(?:<[^>]+>)?|S)\s*[: ]", text
+            r"^(?:N|I|E|C|G(?:<[^>]+>)?|U|P(?:<[^>]+>)?|S)\s*[: ]", text
         ):
             if "=" not in text:
                 fail(source, line_number, "set assignment needs 'Phrase = Value'")
@@ -323,8 +350,14 @@ def parse_source(path: Path) -> dict[str, Any]:
             }
             continue
 
-        if text.startswith("G "):
-            head, body = split_directive(text[2:], path, line_number)
+        group_match = re.match(r"^G(?:<([\s\S]*?)>)?\s*([:\s][\s\S]*)$", text)
+        if group_match is not None:
+            conditions = (
+                split_top_level(group_match.group(1), " / ")
+                if group_match.group(1) is not None
+                else []
+            )
+            head, body = split_directive(group_match.group(2).lstrip(), path, line_number)
             annotations = parse_annotations(head, path, line_number)
             title, kind = parse_kind_suffix(body, path, line_number)
             while group_stack and group_stack[-1]["indent"] >= indent:
@@ -335,15 +368,18 @@ def parse_source(path: Path) -> dict[str, Any]:
                 "indent": indent,
                 "title": title,
                 "kind": kind,
+                "conditions": conditions,
                 "annotations": annotations,
                 "parent": parent,
                 "children": [],
                 "external_children": [],
                 "phrases": [],
+                "items": [],
                 "sets": [],
             }
             if parent is not None:
                 parent["children"].append(group)
+                parent["items"].append({"type": "group", "definition": group})
             source["groups"].append(group)
             group_stack.append(group)
             current_set = None
@@ -362,6 +398,7 @@ def parse_source(path: Path) -> dict[str, Any]:
                 if child in parent["external_children"]:
                     fail(source, line_number, f"duplicate imported group '{child}'")
                 parent["external_children"].append(child)
+                parent["items"].append({"type": "group", "id": child})
             current_set = None
             continue
 
@@ -381,9 +418,15 @@ def parse_source(path: Path) -> dict[str, Any]:
                 value = parse_value(arrow[0], path, line_number)
                 title = value["raw_text"]
                 phrase_kind = value["kind"]
+                prompt = False
                 values = [value]
             else:
                 title, phrase_kind = parse_kind_suffix(arrow[0], path, line_number)
+                prompt = title.endswith("*")
+                if prompt:
+                    title = title[:-1].rstrip()
+                    if not title:
+                        fail(source, line_number, "prompt phrase needs a title before '*'")
                 values = [
                     parse_value(candidate, path, line_number)
                     for candidate in split_top_level(arrow[1], " / ")
@@ -392,12 +435,14 @@ def parse_source(path: Path) -> dict[str, Any]:
                 "line": line_number,
                 "title": title,
                 "kind": phrase_kind,
+                "prompt": prompt,
                 "conditions": conditions,
                 "values": values,
                 "group": parent,
             }
             source["phrases"].append(phrase)
             parent["phrases"].append(phrase)
+            parent["items"].append({"type": "phrase", "definition": phrase})
             current_set = None
             continue
 
@@ -464,6 +509,9 @@ def compile_editor(source: dict[str, Any], editor: dict[str, Any]) -> tuple[str,
             option: dict[str, Any] = {"kind": value["kind"], "text": value["raw_text"]}
             if value["snomed"] is not None:
                 option["snomed"] = value["snomed"]
+                option["snomedDisplay"] = value["snomed_display"]
+            if value["points"] is not None:
+                option["points"] = value["points"]
             compiled["options"][option_id] = option
             if value["default"]:
                 compiled["default"] = option_id
@@ -586,11 +634,31 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             return others[0]["id"]
         return None
 
+    def compile_condition(references: list[str], line: int) -> dict[str, Any]:
+        parsed: list[tuple[str, bool]] = []
+        for reference in references:
+            negated = reference.startswith("!")
+            name = reference[1:].lstrip() if negated else reference
+            if not name:
+                fail(source, line, "condition reference cannot be empty")
+            parsed.append((name, negated))
+        polarities = {negated for _, negated in parsed}
+        if len(polarities) > 1:
+            fail(source, line, "positive and negated conditions cannot be mixed")
+        value_ids: list[str] = []
+        for reference, _ in parsed:
+            for trigger in resolve_reference(reference, line):
+                if trigger["id"] not in value_ids:
+                    value_ids.append(trigger["id"])
+        return {"values": value_ids, "negated": next(iter(polarities))}
+
     compiled_phrases: dict[str, Any] = {}
     for phrase in source["phrases"]:
         defaults = [value for value in phrase["values"] if value["default"]]
         if len(defaults) > 1:
             fail(source, phrase["line"], "a phrase may have only one default value (*)")
+        if phrase["prompt"] and len(phrase["values"]) < 2:
+            fail(source, phrase["line"], "a prompt phrase needs at least two values")
         default: str | None
         if defaults:
             default = defaults[0]["id"]
@@ -606,6 +674,8 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             "default": default,
             "values": {},
         }
+        if phrase["prompt"]:
+            compiled["prompt"] = True
         attributes: dict[str, str] = {}
         for value in phrase["values"]:
             compiled_value: dict[str, Any] = {
@@ -614,6 +684,9 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             }
             if value["snomed"] is not None:
                 compiled_value["snomed"] = value["snomed"]
+                compiled_value["snomedDisplay"] = value["snomed_display"]
+            if value["points"] is not None:
+                compiled_value["points"] = value["points"]
             compiled["values"][value["id"]] = compiled_value
             for placeholder in PLACEHOLDER.finditer(value["raw_text"]):
                 attribute, editor_ref = placeholder.group(1), placeholder.group(2)
@@ -640,11 +713,13 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             compiled["attributes"] = attributes
         if phrase["conditions"]:
             target = suggested_value(phrase)
-            suggestions: dict[str, str | None] = {}
-            for condition in phrase["conditions"]:
-                for trigger in resolve_reference(condition, phrase["line"]):
-                    suggestions[trigger["id"]] = target
-            compiled["suggestions"] = suggestions
+            condition = compile_condition(phrase["conditions"], phrase["line"])
+            if condition["negated"]:
+                compiled["condition"] = {**condition, "suggestion": target}
+            else:
+                compiled["suggestions"] = {
+                    trigger: target for trigger in condition["values"]
+                }
         compiled_phrases[phrase["id"]] = compiled
 
     compiled_sets: dict[str, Any] = {}
@@ -661,14 +736,23 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             compiled_set["kind"] = definition["kind"]
         compiled_sets[definition["id"]] = compiled_set
 
-    known_annotations = {"root", "reset", "summary", "collapsed", "inactive", "repeat"}
+    known_annotations = {
+        "root",
+        "reset",
+        "summary",
+        "collapsed",
+        "inline",
+        "inactive",
+        "repeat",
+        "score",
+    }
     compiled_groups: dict[str, Any] = {}
     for group in source["groups"]:
         annotations = group["annotations"]
         unknown = set(annotations) - known_annotations
         if unknown:
             fail(source, group["line"], f"unknown group annotation '@{sorted(unknown)[0]}'")
-        for boolean_annotation in known_annotations - {"repeat"}:
+        for boolean_annotation in known_annotations - {"repeat", "score"}:
             if boolean_annotation in annotations and annotations[boolean_annotation] is not True:
                 fail(source, group["line"], f"@{boolean_annotation} takes no arguments")
         compiled_group: dict[str, Any] = {"title": group["title"]}
@@ -679,11 +763,29 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             compiled_group["children"] = children
         if group["phrases"]:
             compiled_group["phrases"] = [phrase["id"] for phrase in group["phrases"]]
+        if group["items"]:
+            compiled_group["items"] = [
+                {
+                    "type": item["type"],
+                    "id": (
+                        item["id"]
+                        if "id" in item
+                        else item["definition"]["id"]
+                    ),
+                }
+                for item in group["items"]
+            ]
         if group["sets"]:
             compiled_group["sets"] = [definition["id"] for definition in group["sets"]]
         if "inactive" in annotations:
             compiled_group["default"] = False
-        for annotation in ("summary", "reset", "collapsed"):
+        if group["conditions"]:
+            if "repeat" in annotations:
+                fail(source, group["line"], "a repeatable group cannot be conditional")
+            compiled_group["condition"] = compile_condition(
+                group["conditions"], group["line"]
+            )
+        for annotation in ("summary", "reset", "collapsed", "inline"):
             if annotation in annotations:
                 compiled_group[annotation] = True
         if "repeat" in annotations:
@@ -701,6 +803,80 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             if "empty" in options:
                 repeatable["empty"] = unique_phrase(str(options["empty"]), group["line"])["id"]
             compiled_group["repeatable"] = repeatable
+        if "score" in annotations:
+            options = annotations["score"]
+            assert isinstance(options, dict)
+            unknown_score = set(options) - {"id", "label", "target", "attribute"}
+            if unknown_score:
+                fail(source, group["line"], f"unknown @score option '{sorted(unknown_score)[0]}'")
+            score_id = options.get("id", slug(group["title"]))
+            label = options.get("label", f"{group['title']} berechnen")
+            target_title = options.get("target")
+            attribute = options.get("attribute")
+            if not isinstance(score_id, str) or not re.fullmatch(r"[a-z][a-z0-9_-]*", score_id):
+                fail(source, group["line"], "@score id must be a lowercase identifier")
+            if not isinstance(label, str) or not label:
+                fail(source, group["line"], "@score label must be non-empty text")
+            if not isinstance(target_title, str) or not target_title:
+                fail(source, group["line"], "@score needs target=\"Phrase title\"")
+            if not isinstance(attribute, str) or not re.fullmatch(r"[a-zA-Z0-9_-]+", attribute):
+                fail(source, group["line"], "@score needs a valid attribute name")
+            target = unique_phrase(target_title, group["line"])
+            if target not in group["phrases"]:
+                fail(source, group["line"], "@score target must be a direct phrase of the group")
+            target_definition = compiled_phrases[target["id"]]
+            target_editor_id = target_definition.get("attributes", {}).get(attribute)
+            target_editor = compiled_editors.get(target_editor_id)
+            if target_editor is None or target_editor.get("type") != "number":
+                fail(source, group["line"], "@score target attribute must use a number editor")
+            target_values = list(target_definition["values"])
+            if len(target_values) != 1:
+                fail(source, group["line"], "@score target phrase must have exactly one value")
+
+            criteria: list[dict[str, Any]] = []
+            for phrase in group["phrases"]:
+                if phrase is target:
+                    continue
+                annotated = [value["points"] is not None for value in phrase["values"]]
+                if any(annotated) and not all(annotated):
+                    fail(source, phrase["line"], "all values of a score criterion need @points")
+                if not annotated or not all(annotated):
+                    continue
+                criteria.append(
+                    {
+                        "phraseId": phrase["id"],
+                        "title": phrase["title"],
+                        "options": [
+                            {
+                                "valueId": value["id"],
+                                "text": value["raw_text"],
+                                "kind": value["kind"],
+                                "points": value["points"],
+                            }
+                            for value in phrase["values"]
+                        ],
+                    }
+                )
+            if not criteria:
+                fail(source, group["line"], "@score needs at least one phrase with @points values")
+            minimum = sum(min(option["points"] for option in criterion["options"]) for criterion in criteria)
+            maximum = sum(max(option["points"] for option in criterion["options"]) for criterion in criteria)
+            if target_editor.get("min") is not None and target_editor["min"] != minimum:
+                fail(source, group["line"], f"@score minimum {minimum} differs from target editor minimum")
+            if target_editor.get("max") is not None and target_editor["max"] != maximum:
+                fail(source, group["line"], f"@score maximum {maximum} differs from target editor maximum")
+            compiled_group["score"] = {
+                "id": score_id,
+                "label": label,
+                "minimum": minimum,
+                "maximum": maximum,
+                "criteria": criteria,
+                "target": {
+                    "phraseId": target["id"],
+                    "valueId": target_values[0],
+                    "attributeId": attribute,
+                },
+            }
         compiled_groups[group["id"]] = compiled_group
 
     package: dict[str, Any] = {"version": 2}
@@ -729,6 +905,7 @@ def is_document_source(path: Path) -> bool:
 
 def compile_documents(path: Path) -> dict[str, Any]:
     documents: dict[str, Any] = {}
+    tools: list[dict[str, Any]] = []
     default_id: str | None = None
     current: dict[str, Any] | None = None
     current_indent = -1
@@ -761,6 +938,36 @@ def compile_documents(path: Path) -> dict[str, Any]:
                     raise CompileError(path, line_number, "only one document may be the default (*)")
                 default_id = identifier
             continue
+        if text.startswith("W:"):
+            if indent:
+                raise CompileError(path, line_number, "W must not be indented")
+            if documents:
+                raise CompileError(path, line_number, "W must occur before the first document")
+            try:
+                tokens = shlex.split(text[2:].strip())
+            except ValueError as error:
+                raise CompileError(path, line_number, str(error)) from error
+            if len(tokens) < 2:
+                raise CompileError(path, line_number, "W needs a plugin and tool id")
+            plugin, tool_id = tokens[:2]
+            if not re.fullmatch(r"[a-z][a-z0-9_-]*", plugin):
+                raise CompileError(path, line_number, f"invalid plugin id '{plugin}'")
+            if not re.fullmatch(r"[a-z][a-z0-9_-]*", tool_id):
+                raise CompileError(path, line_number, f"invalid tool id '{tool_id}'")
+            params = {"id": tool_id}
+            for name, value in parse_options(
+                " ".join(shlex.quote(token) for token in tokens[2:]),
+                path,
+                line_number,
+            ).items():
+                params[name] = value
+            if any(
+                tool["plugin"] == plugin and tool["params"]["id"] == tool_id
+                for tool in tools
+            ):
+                raise CompileError(path, line_number, f"duplicate tool '{plugin}:{tool_id}'")
+            tools.append({"plugin": plugin, "params": params})
+            continue
         if text.startswith("B:"):
             if current is None or indent <= current_indent:
                 raise CompileError(path, line_number, "B needs an enclosing document")
@@ -788,7 +995,10 @@ def compile_documents(path: Path) -> dict[str, Any]:
         raise CompileError(path, 0, "at least one document is required")
     if default_id is None:
         raise CompileError(path, 0, "one document needs D* as the default")
-    return {"version": 1, "default": default_id, "documents": documents}
+    catalog = {"version": 1, "default": default_id, "documents": documents}
+    if tools:
+        catalog["tools"] = tools
+    return catalog
 
 
 def output_path(source_path: Path) -> Path:
@@ -797,6 +1007,36 @@ def output_path(source_path: Path) -> Path:
 
 def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path) -> None:
     cache = dict(packages)
+    snomed_displays: dict[str, tuple[str, str]] = {}
+
+    for package_name, package in packages.items():
+        if package.get("version") != 2:
+            continue
+        coded_values: list[dict[str, Any]] = []
+        for phrase in package.get("phrases", {}).values():
+            coded_values.extend(phrase.get("values", {}).values())
+        for editor in package.get("editors", {}).values():
+            coded_values.extend(editor.get("options", {}).values())
+        for value in coded_values:
+            snomed = value.get("snomed")
+            if snomed is None:
+                continue
+            display = value.get("snomedDisplay")
+            if not isinstance(display, str) or not display:
+                raise CompileError(
+                    data_directory / f"{package_name}.pt",
+                    0,
+                    f"SNOMED coding '{snomed}' needs a human-readable term",
+                )
+            previous = snomed_displays.get(snomed)
+            if previous is not None and previous[0] != display:
+                raise CompileError(
+                    data_directory / f"{package_name}.pt",
+                    0,
+                    f"SNOMED coding '{snomed}' uses both '{previous[0]}' "
+                    f"in {previous[1]}.pt and '{display}'",
+                )
+            snomed_displays[snomed] = (display, package_name)
 
     def load(name: str, owner: str) -> dict[str, Any]:
         package = cache.get(name)
@@ -904,6 +1144,30 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                         0,
                         f"unknown editor '{editor_id}' in phrase '{phrase_id}'",
                     )
+
+        def validate_condition(condition: Any, owner: str) -> None:
+            if not isinstance(condition, dict):
+                raise CompileError(
+                    data_directory / f"{name}.json", 0, f"invalid condition in '{owner}'"
+                )
+            triggers = condition.get("values")
+            if (
+                not isinstance(triggers, list)
+                or not triggers
+                or any(not isinstance(trigger, str) for trigger in triggers)
+                or not isinstance(condition.get("negated"), bool)
+            ):
+                raise CompileError(
+                    data_directory / f"{name}.json", 0, f"invalid condition in '{owner}'"
+                )
+            for trigger in triggers:
+                if trigger not in values:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"unknown condition value '{trigger}' in '{owner}'",
+                    )
+
         for group_id, group in definitions["groups"].items():
             for child in group.get("children", []):
                 if child not in definitions["groups"]:
@@ -917,12 +1181,68 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
             empty = group.get("repeatable", {}).get("empty")
             if empty is not None and empty not in definitions["phrases"]:
                 raise CompileError(data_directory / f"{name}.json", 0, f"unknown empty phrase '{empty}'")
+            condition = group.get("condition")
+            if condition is not None:
+                validate_condition(condition, group_id)
+                if group.get("repeatable") is not None:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"repeatable group '{group_id}' cannot be conditional",
+                    )
+            items = group.get("items")
+            if items is not None:
+                if not isinstance(items, list):
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"invalid ordered items in group '{group_id}'",
+                    )
+                ordered_phrases: list[str] = []
+                ordered_children: list[str] = []
+                for item in items:
+                    if not isinstance(item, dict) or set(item) != {"type", "id"}:
+                        raise CompileError(
+                            data_directory / f"{name}.json",
+                            0,
+                            f"invalid ordered item in group '{group_id}'",
+                        )
+                    item_type, item_id = item["type"], item["id"]
+                    if item_type == "phrase" and item_id in definitions["phrases"]:
+                        ordered_phrases.append(item_id)
+                    elif item_type == "group" and item_id in definitions["groups"]:
+                        ordered_children.append(item_id)
+                    else:
+                        raise CompileError(
+                            data_directory / f"{name}.json",
+                            0,
+                            f"invalid ordered item in group '{group_id}'",
+                        )
+                if (
+                    sorted(ordered_phrases) != sorted(group.get("phrases", []))
+                    or sorted(ordered_children) != sorted(group.get("children", []))
+                ):
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"ordered items do not match group '{group_id}'",
+                    )
         for phrase_id, phrase in definitions["phrases"].items():
             for trigger, target in phrase.get("suggestions", {}).items():
                 if trigger not in values:
                     raise CompileError(data_directory / f"{name}.json", 0, f"unknown suggestion trigger '{trigger}'")
                 if target is not None and target not in phrase["values"]:
                     raise CompileError(data_directory / f"{name}.json", 0, f"unknown suggestion target '{target}'")
+            condition = phrase.get("condition")
+            if condition is not None:
+                validate_condition(condition, phrase_id)
+                target = condition.get("suggestion")
+                if target is not None and target not in phrase["values"]:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"unknown condition suggestion target '{target}'",
+                    )
         for set_id, definition in definitions["sets"].items():
             for phrase_id, value_id in definition.get("values", {}).items():
                 phrase = definitions["phrases"].get(phrase_id)

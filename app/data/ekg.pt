@@ -1,0 +1,17 @@
+# Wiederholbare EKG-Befunde
+N: ekg
+I: gemeinsam
+
+E herzfrequenz: number label="Kammerfrequenz" suffix=" / min" min=0 max=300 step=1
+E ableitungen: text label="Ableitungen" placeholder="z. B. II, III, aVF" prefix=""
+
+G @root @collapsed @reset: EKG
+  P: EKG-Untersuchungen => kein EKG dokumentiert|-
+
+  G @repeat(initial=0,add="EKG hinzufügen",empty="EKG-Untersuchungen") @reset: EKG|-
+    P: EKG-Ableitung => 12-Kanal-EKG um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=268400002[12 lead ECG]|i*
+    P<EKG-Ableitung>: Rhythmus => Sinusrhythmus @sct=426783006[ECG: sinus rhythm]|n / Vorhofflimmern @sct=164889003[ECG: atrial fibrillation]|a / Vorhofflattern @sct=164890007[ECG: atrial flutter]|a / regelmäßige Schmalkomplextachykardie @sct=426761007[ECG: supraventricular tachycardia]|a / unregelmäßige Schmalkomplextachykardie|a / Breitkomplextachykardie @sct=164895002[ECG: ventricular tachycardia]|a / Schrittmacherrhythmus @sct=426453001[ECG: paced rhythm]|-
+    P<EKG-Ableitung>: Kammerfrequenz => Kammerfrequenz {:wert=herzfrequenz*:}|-
+    P<EKG-Ableitung>: ST-Strecken => keine signifikanten ST-Streckenveränderungen|n / ST-Streckenhebungen in {:ableitungen=ableitungen*:} @sct=76388001[ST segment elevation]|a / ST-Streckensenkungen in {:ableitungen=ableitungen*:} @sct=26141007[ST segment depression]|a
+    P: EKG-Beurteilung => unauffälliges EKG @sct=164854000[ECG normal]|n / Sinustachykardie @sct=427084000[ECG: sinus tachycardia]|a / Vorhofflimmern @sct=164889003[ECG: atrial fibrillation]|a / Vorhofflattern @sct=164890007[ECG: atrial flutter]|a / AV-Block @sct=233917008[Atrioventricular block]|a / Schenkelblock @sct=6374002[Bundle branch block]|a / STEMI @sct=401303003[Acute ST segment elevation myocardial infarction]|a
+    P: Ergänzung zum EKG => {:freitext*:}|-

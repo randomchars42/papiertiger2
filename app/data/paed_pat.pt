@@ -1,0 +1,22 @@
+# Pädiatrisches Beurteilungsdreieck (PAT/TICLS-nahe Dokumentation)
+N: paed_pat
+I: gemeinsam
+
+G @root @reset: Pädiatrisches Beurteilungsdreieck
+  G : Erscheinungsbild
+    P: Interaktion => altersentsprechende Interaktion|n* / verminderte Interaktion|a / keine adäquate Interaktion|a
+    P: Muskeltonus => Muskeltonus altersentsprechend @sct=827065006[Normal tone in skeletal muscle]|n* / Muskeltonus vermindert|a / Muskeltonus erhöht|a
+    P: Tröstbarkeit => gut tröstbar|n* / eingeschränkt tröstbar|a / nicht tröstbar|a
+    P: Blickkontakt => Blickkontakt altersentsprechend|n* / Blickkontakt vermindert|a
+    P: Sprache oder Schreien => Sprache oder Schreien kräftig|n* / Sprache oder Schreien schwach|a / kein Laut|a
+
+  G : Atmung
+    P: Atemarbeit => Atemarbeit unauffällig|n* / Atemnot @sct=271825005[Respiratory distress]|a / Einziehungen @sct=67909005[Chest wall retraction]|a
+    P: Atemgeräusch => kein pathologisches Atemgeräusch|n* / Stridor @sct=70407001[Stridor]|a / Giemen @sct=56018004[Wheezing]|a
+
+  G : Haut und Kreislauf
+    P: Hautfarbe => Hautfarbe unauffällig @sct=297952003[Skin normal colour]|n* / blass|a / marmoriert @sct=406128001[Mottling of skin]|a / zyanotisch @sct=3415004[Cyanosis]|a
+    P: Offensichtliche Blutung => keine offensichtliche Blutung|n* / offensichtliche Blutung|a
+
+  P: PAT-Gesamteindruck => pädiatrisches Beurteilungsdreieck unauffällig|n* / eine Komponente auffällig|a / mehrere Komponenten auffällig|a
+  P: Ergänzung zum pädiatrischen Beurteilungsdreieck => {:freitext*:}|-

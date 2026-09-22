@@ -1,0 +1,18 @@
+# Manuelle APGAR-Dokumentation für Neugeborene
+N: apgar
+I: gemeinsam
+
+E minute: number label="Lebensminute" suffix=" min" min=1 max=60 step=1
+E gesamt: number label="APGAR-Gesamtwert" min=0 max=10 step=1
+
+G @root @reset: APGAR
+  P: APGAR-Beurteilungen => keine APGAR-Beurteilung dokumentiert|-
+  G @repeat(initial=1,add="APGAR-Beurteilung hinzufügen",empty="APGAR-Beurteilungen") @reset @score(id=apgar,label="APGAR berechnen",target="APGAR-Gesamtwert",attribute=wert): APGAR-Beurteilung|-
+    P: Zeitpunkt der APGAR-Beurteilung => APGAR in der {:minute=minute*:}. Lebensminute|-*
+    P: Hautfarbe => Stamm rosig, Extremitäten rosig @points=2|- / Stamm rosig, Extremitäten blau @points=1|- / vollständig blass oder blau @points=0|-
+    P: Herzfrequenz => Herzfrequenz über 100 pro Minute @points=2|n / Herzfrequenz unter 100 pro Minute @points=1|a / keine Herzfrequenz @points=0|a
+    P: Reflexe => kräftige Reaktion @points=2|n / Grimassieren oder schwache Reaktion @points=1|a / keine Reaktion @points=0|a
+    P: Muskeltonus => aktive Bewegung @points=2|n / geringe Beugung der Extremitäten @points=1|a / schlaff @points=0|a
+    P: Atmung => regelmäßige Atmung, kräftiges Schreien @points=2|n / langsame oder unregelmäßige Atmung, schwaches Schreien @points=1|a / keine Atmung @sct=1023001[Apnoea] @points=0|a
+    P: APGAR-Gesamtwert => APGAR {:wert=gesamt*:} @sct=249228009[Total apgar score]|-
+    P: Ergänzung zur APGAR-Beurteilung => {:freitext*:}|-

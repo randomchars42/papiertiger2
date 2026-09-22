@@ -1,0 +1,169 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "vorstellung_eingabe_vorstellungsgrund": {
+      "type": "text",
+      "label": "Vorstellungsgrund",
+      "placeholder": "Leitsymptom oder Anliegen",
+      "prefix": ""
+    },
+    "vorstellung_eingabe_informationsquelle": {
+      "type": "text",
+      "label": "Informationsquelle",
+      "placeholder": "z. B. Patientin, Angehöriger, Vorbefund",
+      "prefix": ""
+    }
+  },
+  "groups": {
+    "vorstellung": {
+      "title": "Vorstellung",
+      "phrases": [
+        "vorstellung_eintrag_vorstellungsgrund",
+        "vorstellung_eintrag_vorstellungsweg",
+        "vorstellung_eintrag_informationsquelle",
+        "vorstellung_eintrag_kommunikation",
+        "vorstellung_eintrag_begleitung",
+        "vorstellung_eintrag_ergaenzung_zur_vorstellung"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "vorstellung_eintrag_vorstellungsgrund"
+        },
+        {
+          "type": "phrase",
+          "id": "vorstellung_eintrag_vorstellungsweg"
+        },
+        {
+          "type": "phrase",
+          "id": "vorstellung_eintrag_informationsquelle"
+        },
+        {
+          "type": "phrase",
+          "id": "vorstellung_eintrag_kommunikation"
+        },
+        {
+          "type": "phrase",
+          "id": "vorstellung_eintrag_begleitung"
+        },
+        {
+          "type": "phrase",
+          "id": "vorstellung_eintrag_ergaenzung_zur_vorstellung"
+        }
+      ],
+      "reset": true
+    }
+  },
+  "phrases": {
+    "vorstellung_eintrag_vorstellungsgrund": {
+      "title": "Vorstellungsgrund",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "vorstellung_eintrag_vorstellungsgrund_wert_vorstellungsgrund": {
+          "kind": "neutral",
+          "text": "Vorstellungsgrund: {:grund*:}"
+        }
+      },
+      "attributes": {
+        "grund": "vorstellung_eingabe_vorstellungsgrund"
+      }
+    },
+    "vorstellung_eintrag_vorstellungsweg": {
+      "title": "Vorstellungsweg",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "vorstellung_eintrag_vorstellungsweg_wert_selbststaendige_vorstellung": {
+          "kind": "neutral",
+          "text": "selbstständige Vorstellung"
+        },
+        "vorstellung_eintrag_vorstellungsweg_wert_vorstellung_per_rettungsdienst": {
+          "kind": "neutral",
+          "text": "Vorstellung per Rettungsdienst"
+        },
+        "vorstellung_eintrag_vorstellungsweg_wert_aerztlich_eingewiesen": {
+          "kind": "neutral",
+          "text": "ärztlich eingewiesen"
+        },
+        "vorstellung_eintrag_vorstellungsweg_wert_aus_anderer_einrichtung_verlegt": {
+          "kind": "neutral",
+          "text": "aus anderer Einrichtung verlegt"
+        }
+      }
+    },
+    "vorstellung_eintrag_informationsquelle": {
+      "title": "Informationsquelle",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "vorstellung_eintrag_informationsquelle_wert_anamnese_nach_angaben_von": {
+          "kind": "neutral",
+          "text": "Anamnese nach Angaben von {:quelle*:}"
+        }
+      },
+      "attributes": {
+        "quelle": "vorstellung_eingabe_informationsquelle"
+      }
+    },
+    "vorstellung_eintrag_kommunikation": {
+      "title": "Kommunikation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "vorstellung_eintrag_kommunikation_wert_verstaendigung_uneingeschraenkt_moeglich": {
+          "kind": "normal",
+          "text": "Verständigung uneingeschränkt möglich"
+        },
+        "vorstellung_eintrag_kommunikation_wert_verstaendigung_eingeschraenkt": {
+          "kind": "abnormal",
+          "text": "Verständigung eingeschränkt"
+        },
+        "vorstellung_eintrag_kommunikation_wert_fremdanamnese_erforderlich": {
+          "kind": "abnormal",
+          "text": "Fremdanamnese erforderlich"
+        }
+      }
+    },
+    "vorstellung_eintrag_begleitung": {
+      "title": "Begleitung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "vorstellung_eintrag_begleitung_wert_unbegleitet": {
+          "kind": "neutral",
+          "text": "unbegleitet"
+        },
+        "vorstellung_eintrag_begleitung_wert_durch_angehoerige_begleitet": {
+          "kind": "neutral",
+          "text": "durch Angehörige begleitet"
+        },
+        "vorstellung_eintrag_begleitung_wert_durch_betreuungsperson_begleitet": {
+          "kind": "neutral",
+          "text": "durch Betreuungsperson begleitet"
+        },
+        "vorstellung_eintrag_begleitung_wert_durch_rettungsdienst_begleitet": {
+          "kind": "neutral",
+          "text": "durch Rettungsdienst begleitet"
+        }
+      }
+    },
+    "vorstellung_eintrag_ergaenzung_zur_vorstellung": {
+      "title": "Ergänzung zur Vorstellung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "vorstellung_eintrag_ergaenzung_zur_vorstellung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

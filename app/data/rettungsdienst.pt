@@ -1,6 +1,6 @@
 # Vollständiger Rettungsdienst-Textblock
 N: rettungsdienst
-I: ankunft, anamnese, abcde, status
+I: ankunft, sampler, abcde, vitalparameter, diagnostik, massnahmen, status, procedere
 
 G @root: Rettungsdienst
-  U: ankunft, anamnese, abcde, status
+  U: ankunft, sampler, abcde, vitalparameter, diagnostik, massnahmen, status, procedere

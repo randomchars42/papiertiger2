@@ -1,0 +1,545 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam",
+    "orientierung"
+  ],
+  "editors": {
+    "neurostatus_eingabe_nihss": {
+      "type": "number",
+      "label": "NIHSS-Gesamtwert",
+      "min": 0,
+      "max": 42,
+      "step": 1
+    }
+  },
+  "groups": {
+    "neurostatus": {
+      "title": "Neurologischer Status",
+      "children": [
+        "neurostatus_gruppe_hirnnerven",
+        "neurostatus_gruppe_sprache_und_sprechen",
+        "neurostatus_gruppe_motorik_koordination_und_sensibilitaet",
+        "neurostatus_gruppe_weitere_befunde_und_skalen",
+        "orientierung"
+      ],
+      "phrases": [
+        "neurostatus_eintrag_bewusstseinszustand",
+        "neurostatus_eintrag_ergaenzung_zum_neurologischen_status"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_bewusstseinszustand"
+        },
+        {
+          "type": "group",
+          "id": "orientierung"
+        },
+        {
+          "type": "group",
+          "id": "neurostatus_gruppe_hirnnerven"
+        },
+        {
+          "type": "group",
+          "id": "neurostatus_gruppe_sprache_und_sprechen"
+        },
+        {
+          "type": "group",
+          "id": "neurostatus_gruppe_motorik_koordination_und_sensibilitaet"
+        },
+        {
+          "type": "group",
+          "id": "neurostatus_gruppe_weitere_befunde_und_skalen"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_ergaenzung_zum_neurologischen_status"
+        }
+      ],
+      "reset": true
+    },
+    "neurostatus_gruppe_hirnnerven": {
+      "title": "Hirnnerven",
+      "phrases": [
+        "neurostatus_eintrag_gesichtsfeld",
+        "neurostatus_eintrag_augenbewegungen",
+        "neurostatus_eintrag_pupillen",
+        "neurostatus_eintrag_mimik",
+        "neurostatus_eintrag_schlucken"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_gesichtsfeld"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_augenbewegungen"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_pupillen"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_mimik"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_schlucken"
+        }
+      ],
+      "collapsed": true
+    },
+    "neurostatus_gruppe_sprache_und_sprechen": {
+      "title": "Sprache und Sprechen",
+      "phrases": [
+        "neurostatus_eintrag_sprache",
+        "neurostatus_eintrag_sprechen"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_sprache"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_sprechen"
+        }
+      ],
+      "collapsed": true
+    },
+    "neurostatus_gruppe_motorik_koordination_und_sensibilitaet": {
+      "title": "Motorik, Koordination und Sensibilität",
+      "phrases": [
+        "neurostatus_eintrag_kraft",
+        "neurostatus_eintrag_armhalteversuch",
+        "neurostatus_eintrag_koordination",
+        "neurostatus_eintrag_sensibilitaet",
+        "neurostatus_eintrag_neglect"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_kraft"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_armhalteversuch"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_koordination"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_sensibilitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_neglect"
+        }
+      ],
+      "collapsed": true
+    },
+    "neurostatus_gruppe_weitere_befunde_und_skalen": {
+      "title": "Weitere Befunde und Skalen",
+      "phrases": [
+        "neurostatus_eintrag_meningismus",
+        "neurostatus_eintrag_gang_und_stand",
+        "neurostatus_eintrag_nihss"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_meningismus"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_gang_und_stand"
+        },
+        {
+          "type": "phrase",
+          "id": "neurostatus_eintrag_nihss"
+        }
+      ],
+      "collapsed": true
+    }
+  },
+  "phrases": {
+    "neurostatus_eintrag_bewusstseinszustand": {
+      "title": "Bewusstseinszustand",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_bewusstseinszustand_wert_wach",
+      "values": {
+        "neurostatus_eintrag_bewusstseinszustand_wert_wach": {
+          "kind": "normal",
+          "text": "wach"
+        },
+        "neurostatus_eintrag_bewusstseinszustand_wert_schlaefrig": {
+          "kind": "abnormal",
+          "text": "schläfrig",
+          "snomed": "79519003",
+          "snomedDisplay": "Drowsiness"
+        },
+        "neurostatus_eintrag_bewusstseinszustand_wert_verwirrt": {
+          "kind": "abnormal",
+          "text": "verwirrt",
+          "snomed": "40917007",
+          "snomedDisplay": "Confusion"
+        },
+        "neurostatus_eintrag_bewusstseinszustand_wert_bewusstlos": {
+          "kind": "abnormal",
+          "text": "bewusstlos",
+          "snomed": "418107008",
+          "snomedDisplay": "Unconscious"
+        },
+        "neurostatus_eintrag_bewusstseinszustand_wert_koma": {
+          "kind": "abnormal",
+          "text": "Koma",
+          "snomed": "371632003",
+          "snomedDisplay": "Coma"
+        }
+      }
+    },
+    "neurostatus_eintrag_gesichtsfeld": {
+      "title": "Gesichtsfeld",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_gesichtsfeld_wert_gesichtsfeld_unauffaellig",
+      "values": {
+        "neurostatus_eintrag_gesichtsfeld_wert_gesichtsfeld_unauffaellig": {
+          "kind": "normal",
+          "text": "Gesichtsfeld unauffällig"
+        },
+        "neurostatus_eintrag_gesichtsfeld_wert_gesichtsfeldausfall": {
+          "kind": "abnormal",
+          "text": "Gesichtsfeldausfall",
+          "snomed": "12184005",
+          "snomedDisplay": "Visual field defect"
+        },
+        "neurostatus_eintrag_gesichtsfeld_wert_hemianopsie": {
+          "kind": "abnormal",
+          "text": "Hemianopsie",
+          "snomed": "77674003",
+          "snomedDisplay": "Hemianopia"
+        }
+      }
+    },
+    "neurostatus_eintrag_augenbewegungen": {
+      "title": "Augenbewegungen",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_augenbewegungen_wert_augenbewegungen_frei",
+      "values": {
+        "neurostatus_eintrag_augenbewegungen_wert_augenbewegungen_frei": {
+          "kind": "normal",
+          "text": "Augenbewegungen frei"
+        },
+        "neurostatus_eintrag_augenbewegungen_wert_blickparese": {
+          "kind": "abnormal",
+          "text": "Blickparese"
+        },
+        "neurostatus_eintrag_augenbewegungen_wert_nystagmus": {
+          "kind": "abnormal",
+          "text": "Nystagmus",
+          "snomed": "563001",
+          "snomedDisplay": "Nystagmus"
+        }
+      }
+    },
+    "neurostatus_eintrag_pupillen": {
+      "title": "Pupillen",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_pupillen_wert_pupillen_isokor",
+      "values": {
+        "neurostatus_eintrag_pupillen_wert_pupillen_isokor": {
+          "kind": "normal",
+          "text": "Pupillen isokor",
+          "snomed": "301943000",
+          "snomedDisplay": "Pupils equal"
+        },
+        "neurostatus_eintrag_pupillen_wert_anisokorie": {
+          "kind": "abnormal",
+          "text": "Anisokorie",
+          "snomed": "13045009",
+          "snomedDisplay": "Anisocoria"
+        }
+      }
+    },
+    "neurostatus_eintrag_mimik": {
+      "title": "Mimik",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_mimik_wert_mimik_symmetrisch",
+      "values": {
+        "neurostatus_eintrag_mimik_wert_mimik_symmetrisch": {
+          "kind": "normal",
+          "text": "Mimik symmetrisch"
+        },
+        "neurostatus_eintrag_mimik_wert_fazialisparese_links": {
+          "kind": "abnormal",
+          "text": "Fazialisparese links",
+          "snomed": "280816001",
+          "snomedDisplay": "Facial palsy"
+        },
+        "neurostatus_eintrag_mimik_wert_fazialisparese_rechts": {
+          "kind": "abnormal",
+          "text": "Fazialisparese rechts",
+          "snomed": "280816001",
+          "snomedDisplay": "Facial palsy"
+        }
+      }
+    },
+    "neurostatus_eintrag_schlucken": {
+      "title": "Schlucken",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_schlucken_wert_schlucken_unauffaellig",
+      "values": {
+        "neurostatus_eintrag_schlucken_wert_schlucken_unauffaellig": {
+          "kind": "normal",
+          "text": "Schlucken unauffällig"
+        },
+        "neurostatus_eintrag_schlucken_wert_dysphagie": {
+          "kind": "abnormal",
+          "text": "Dysphagie",
+          "snomed": "40739000",
+          "snomedDisplay": "Dysphagia"
+        }
+      }
+    },
+    "neurostatus_eintrag_sprache": {
+      "title": "Sprache",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_sprache_wert_sprache_unauffaellig",
+      "values": {
+        "neurostatus_eintrag_sprache_wert_sprache_unauffaellig": {
+          "kind": "normal",
+          "text": "Sprache unauffällig",
+          "snomed": "162293002",
+          "snomedDisplay": "No speech problem"
+        },
+        "neurostatus_eintrag_sprache_wert_aphasie": {
+          "kind": "abnormal",
+          "text": "Aphasie",
+          "snomed": "87486003",
+          "snomedDisplay": "Aphasia"
+        },
+        "neurostatus_eintrag_sprache_wert_mutismus": {
+          "kind": "abnormal",
+          "text": "Mutismus",
+          "snomed": "88052002",
+          "snomedDisplay": "Mutism"
+        }
+      }
+    },
+    "neurostatus_eintrag_sprechen": {
+      "title": "Sprechen",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_sprechen_wert_artikulation_unauffaellig",
+      "values": {
+        "neurostatus_eintrag_sprechen_wert_artikulation_unauffaellig": {
+          "kind": "normal",
+          "text": "Artikulation unauffällig"
+        },
+        "neurostatus_eintrag_sprechen_wert_dysarthrie": {
+          "kind": "abnormal",
+          "text": "Dysarthrie",
+          "snomed": "8011004",
+          "snomedDisplay": "Dysarthria"
+        }
+      }
+    },
+    "neurostatus_eintrag_kraft": {
+      "title": "Kraft",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_kraft_wert_kraft_seitengleich",
+      "values": {
+        "neurostatus_eintrag_kraft_wert_kraft_seitengleich": {
+          "kind": "normal",
+          "text": "Kraft seitengleich"
+        },
+        "neurostatus_eintrag_kraft_wert_hemiparese_links": {
+          "kind": "abnormal",
+          "text": "Hemiparese links",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "neurostatus_eintrag_kraft_wert_hemiparese_rechts": {
+          "kind": "abnormal",
+          "text": "Hemiparese rechts",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "neurostatus_eintrag_kraft_wert_paraparese": {
+          "kind": "abnormal",
+          "text": "Paraparese",
+          "snomed": "1845001",
+          "snomedDisplay": "Paraparesis"
+        }
+      }
+    },
+    "neurostatus_eintrag_armhalteversuch": {
+      "title": "Armhalteversuch",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig",
+      "values": {
+        "neurostatus_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig": {
+          "kind": "normal",
+          "text": "Armhalteversuch beidseits unauffällig"
+        },
+        "neurostatus_eintrag_armhalteversuch_wert_pronator_drift_links": {
+          "kind": "abnormal",
+          "text": "Pronator-Drift links",
+          "snomed": "428334004",
+          "snomedDisplay": "Pronator drift"
+        },
+        "neurostatus_eintrag_armhalteversuch_wert_pronator_drift_rechts": {
+          "kind": "abnormal",
+          "text": "Pronator-Drift rechts",
+          "snomed": "428334004",
+          "snomedDisplay": "Pronator drift"
+        }
+      }
+    },
+    "neurostatus_eintrag_koordination": {
+      "title": "Koordination",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_koordination_wert_koordination_unauffaellig",
+      "values": {
+        "neurostatus_eintrag_koordination_wert_koordination_unauffaellig": {
+          "kind": "normal",
+          "text": "Koordination unauffällig"
+        },
+        "neurostatus_eintrag_koordination_wert_ataxie": {
+          "kind": "abnormal",
+          "text": "Ataxie",
+          "snomed": "20262006",
+          "snomedDisplay": "Ataxia"
+        },
+        "neurostatus_eintrag_koordination_wert_tremor": {
+          "kind": "abnormal",
+          "text": "Tremor",
+          "snomed": "26079004",
+          "snomedDisplay": "Tremor"
+        }
+      }
+    },
+    "neurostatus_eintrag_sensibilitaet": {
+      "title": "Sensibilität",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_sensibilitaet_wert_sensibilitaet_seitengleich",
+      "values": {
+        "neurostatus_eintrag_sensibilitaet_wert_sensibilitaet_seitengleich": {
+          "kind": "normal",
+          "text": "Sensibilität seitengleich"
+        },
+        "neurostatus_eintrag_sensibilitaet_wert_hypaesthesie_links": {
+          "kind": "abnormal",
+          "text": "Hypästhesie links",
+          "snomed": "397974008",
+          "snomedDisplay": "Hypoaesthesia"
+        },
+        "neurostatus_eintrag_sensibilitaet_wert_hypaesthesie_rechts": {
+          "kind": "abnormal",
+          "text": "Hypästhesie rechts",
+          "snomed": "397974008",
+          "snomedDisplay": "Hypoaesthesia"
+        }
+      }
+    },
+    "neurostatus_eintrag_neglect": {
+      "title": "Neglect",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_neglect_wert_kein_neglect",
+      "values": {
+        "neurostatus_eintrag_neglect_wert_kein_neglect": {
+          "kind": "normal",
+          "text": "kein Neglect"
+        },
+        "neurostatus_eintrag_neglect_wert_hemineglect_links": {
+          "kind": "abnormal",
+          "text": "Hemineglect links",
+          "snomed": "32422007",
+          "snomedDisplay": "Hemispatial neglect"
+        },
+        "neurostatus_eintrag_neglect_wert_hemineglect_rechts": {
+          "kind": "abnormal",
+          "text": "Hemineglect rechts",
+          "snomed": "32422007",
+          "snomedDisplay": "Hemispatial neglect"
+        }
+      }
+    },
+    "neurostatus_eintrag_meningismus": {
+      "title": "Meningismus",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_meningismus_wert_kein_meningismus",
+      "values": {
+        "neurostatus_eintrag_meningismus_wert_kein_meningismus": {
+          "kind": "normal",
+          "text": "kein Meningismus",
+          "snomed": "274829000",
+          "snomedDisplay": "Meningism absent"
+        },
+        "neurostatus_eintrag_meningismus_wert_meningismus": {
+          "kind": "abnormal",
+          "text": "Meningismus",
+          "snomed": "274830005",
+          "snomedDisplay": "Meningism present"
+        }
+      }
+    },
+    "neurostatus_eintrag_gang_und_stand": {
+      "title": "Gang und Stand",
+      "kind": "neutral",
+      "default": "neurostatus_eintrag_gang_und_stand_wert_gang_und_stand_sicher",
+      "values": {
+        "neurostatus_eintrag_gang_und_stand_wert_gang_und_stand_sicher": {
+          "kind": "normal",
+          "text": "Gang und Stand sicher"
+        },
+        "neurostatus_eintrag_gang_und_stand_wert_gangunsicherheit": {
+          "kind": "abnormal",
+          "text": "Gangunsicherheit"
+        },
+        "neurostatus_eintrag_gang_und_stand_wert_standunsicherheit": {
+          "kind": "abnormal",
+          "text": "Standunsicherheit"
+        },
+        "neurostatus_eintrag_gang_und_stand_wert_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "nicht prüfbar"
+        }
+      }
+    },
+    "neurostatus_eintrag_nihss": {
+      "title": "NIHSS",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "neurostatus_eintrag_nihss_wert_nihss": {
+          "kind": "neutral",
+          "text": "NIHSS {:wert*:}",
+          "snomed": "450743008",
+          "snomedDisplay": "National Institutes of Health stroke scale score"
+        }
+      },
+      "attributes": {
+        "wert": "neurostatus_eingabe_nihss"
+      }
+    },
+    "neurostatus_eintrag_ergaenzung_zum_neurologischen_status": {
+      "title": "Ergänzung zum neurologischen Status",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "neurostatus_eintrag_ergaenzung_zum_neurologischen_status_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+# E – Exposition und Untersuchung
+N: e
+I: gemeinsam
+
+E temperatur: number label="Körpertemperatur" suffix=" °C" min=20 max=45 step=0.1
+E verletzungsort: choice label="Verletzungsort" => am Kopf|- / am Hals|- / am Thorax|- / am Abdomen|- / am Becken|- / am linken Arm|- / am rechten Arm|- / an der linken Hand|- / an der rechten Hand|- / am linken Bein|- / am rechten Bein|- / am linken Fuß|- / am rechten Fuß|-
+
+G @root @reset @inline: E
+  P: Temperaturzustand => normotherm|n* / hypotherm|a / hypertherm|a
+  P: Körpertemperatur => Körpertemperatur {:wert=temperatur*:}|-
+  P<hypotherm>: Wärmeerhalt => Wärmeerhalt durchgeführt|i
+
+  P: Hautbefund => Haut ohne richtungsweisenden Befund|n* / Exanthem @sct=271807003[Rash]|a / Urtikaria @sct=126485001[Urticaria]|a / Petechien @sct=271813007[Petechiae]|a
+
+  P: Verletzungen => keine offensichtliche Verletzung|n*
+  G @repeat(initial=0,add="Verletzung hinzufügen",empty="Verletzungen") @reset: Verletzung|a
+    P: Verletzungslokalisation => Verletzung {:ort=verletzungsort*:}|a*
+    P<Verletzungslokalisation>: Verletzungsart => Schürfwunde @sct=399963005[Abrasion]|a / Schnittwunde @sct=35933005[Laceration]|a / Platzwunde @sct=35933005[Laceration]|a / Stichverletzung @sct=425322008[Stab wound]|a / Hämatom @sct=385494008[Haematoma]|a / Schwellung @sct=442672001[Swelling]|a / Fehlstellung @sct=250087009[Joint deformity]|a / Verbrennung @sct=125666000[Burn]|a
+    P: Versorgung der Verletzung => sterile Abdeckung|i / Kühlung|i / Immobilisation|i
+    P: Ergänzung zur Verletzung => {:freitext*:}|-
+
+  P: Untersuchung => vollständig untersucht|i
+  P: Weitere E-Auffälligkeit => {:freitext*:}|a

@@ -12,24 +12,103 @@
         "ankunft_gruppe_anwesende",
         "ankunft_gruppe_weitere_kraefte"
       ],
+      "items": [
+        {
+          "type": "group",
+          "id": "ankunft_gruppe_auffindeort"
+        },
+        {
+          "type": "group",
+          "id": "ankunft_gruppe_umstaende"
+        },
+        {
+          "type": "group",
+          "id": "ankunft_gruppe_anwesende"
+        },
+        {
+          "type": "group",
+          "id": "ankunft_gruppe_weitere_kraefte"
+        }
+      ],
       "reset": true
     },
     "ankunft_gruppe_auffindeort": {
       "title": "Auffindeort",
       "phrases": [
-        "ankunft_eintrag_auffindeort",
+        "ankunft_eintrag_auf_der_fahrbahn",
+        "ankunft_eintrag_auf_oeffentlichen_flaechen",
+        "ankunft_eintrag_im_rtw",
+        "ankunft_eintrag_in_der_wohnstaette",
+        "ankunft_eintrag_dem_bett",
+        "ankunft_eintrag_auf_dem_boden",
         "ankunft_eintrag_sonstiger_auffindeort"
       ],
-      "collapsed": true
+      "items": [
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_auf_der_fahrbahn"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_auf_oeffentlichen_flaechen"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_im_rtw"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_in_der_wohnstaette"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_dem_bett"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_auf_dem_boden"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_sonstiger_auffindeort"
+        }
+      ],
+      "collapsed": true,
+      "inline": true
     },
     "ankunft_gruppe_umstaende": {
       "title": "Umstände",
       "phrases": [
         "ankunft_eintrag_oeffnet_die_tuer",
-        "ankunft_eintrag_position",
+        "ankunft_eintrag_stehend",
+        "ankunft_eintrag_sitzend",
+        "ankunft_eintrag_liegend",
         "ankunft_eintrag_weitere_umstaende"
       ],
-      "collapsed": true
+      "items": [
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_oeffnet_die_tuer"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_stehend"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_sitzend"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_liegend"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_weitere_umstaende"
+        }
+      ],
+      "collapsed": true,
+      "inline": true
     },
     "ankunft_gruppe_anwesende": {
       "title": "Anwesende",
@@ -46,7 +125,54 @@
         "ankunft_eintrag_zugehoeriger",
         "ankunft_eintrag_weitere_anwesende_person"
       ],
-      "collapsed": true
+      "items": [
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_partnerin"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_partner"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_mutter"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_vater"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_tochter"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_sohn"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_enkelin"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_enkel"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_zugehoerige"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_zugehoeriger"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_weitere_anwesende_person"
+        }
+      ],
+      "collapsed": true,
+      "inline": true
     },
     "ankunft_gruppe_weitere_kraefte": {
       "title": "Weitere Kräfte",
@@ -58,36 +184,98 @@
         "ankunft_eintrag_arzt",
         "ankunft_eintrag_weitere_kraft"
       ],
-      "collapsed": true
+      "items": [
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_rettungsdienst"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_ersthelfer"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_krankenpflegekraft"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_aerztin"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_arzt"
+        },
+        {
+          "type": "phrase",
+          "id": "ankunft_eintrag_weitere_kraft"
+        }
+      ],
+      "collapsed": true,
+      "inline": true
     }
   },
   "phrases": {
-    "ankunft_eintrag_auffindeort": {
-      "title": "Auffindeort",
+    "ankunft_eintrag_auf_der_fahrbahn": {
+      "title": "auf der Fahrbahn",
       "kind": "neutral",
       "default": "",
       "values": {
-        "ankunft_eintrag_auffindeort_wert_auf_der_fahrbahn": {
+        "ankunft_eintrag_auf_der_fahrbahn_wert_auf_der_fahrbahn": {
           "kind": "neutral",
           "text": "auf der Fahrbahn"
-        },
-        "ankunft_eintrag_auffindeort_wert_auf_oeffentlichen_flaechen": {
+        }
+      }
+    },
+    "ankunft_eintrag_auf_oeffentlichen_flaechen": {
+      "title": "auf öffentlichen Flächen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_auf_oeffentlichen_flaechen_wert_auf_oeffentlichen_flaechen": {
           "kind": "neutral",
           "text": "auf öffentlichen Flächen"
-        },
-        "ankunft_eintrag_auffindeort_wert_im_rtw": {
+        }
+      }
+    },
+    "ankunft_eintrag_im_rtw": {
+      "title": "im RTW",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_im_rtw_wert_im_rtw": {
           "kind": "neutral",
           "text": "im RTW"
-        },
-        "ankunft_eintrag_auffindeort_wert_in_der_wohnstaette": {
+        }
+      }
+    },
+    "ankunft_eintrag_in_der_wohnstaette": {
+      "title": "in der Wohnstätte",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_in_der_wohnstaette_wert_in_der_wohnstaette": {
           "kind": "neutral",
           "text": "in der Wohnstätte"
-        },
-        "ankunft_eintrag_auffindeort_wert_auf_dem_bett": {
+        }
+      }
+    },
+    "ankunft_eintrag_dem_bett": {
+      "title": "dem Bett",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_dem_bett_wert_dem_bett": {
           "kind": "neutral",
-          "text": "auf dem Bett"
-        },
-        "ankunft_eintrag_auffindeort_wert_auf_dem_boden": {
+          "text": "dem Bett"
+        }
+      }
+    },
+    "ankunft_eintrag_auf_dem_boden": {
+      "title": "auf dem Boden",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_auf_dem_boden_wert_auf_dem_boden": {
           "kind": "neutral",
           "text": "auf dem Boden"
         }
@@ -118,20 +306,34 @@
         }
       }
     },
-    "ankunft_eintrag_position": {
-      "title": "Position",
+    "ankunft_eintrag_stehend": {
+      "title": "stehend",
       "kind": "neutral",
       "default": "",
       "values": {
-        "ankunft_eintrag_position_wert_stehend": {
+        "ankunft_eintrag_stehend_wert_stehend": {
           "kind": "neutral",
           "text": "stehend"
-        },
-        "ankunft_eintrag_position_wert_sitzend": {
+        }
+      }
+    },
+    "ankunft_eintrag_sitzend": {
+      "title": "sitzend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_sitzend_wert_sitzend": {
           "kind": "neutral",
           "text": "sitzend"
-        },
-        "ankunft_eintrag_position_wert_liegend": {
+        }
+      }
+    },
+    "ankunft_eintrag_liegend": {
+      "title": "liegend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "ankunft_eintrag_liegend_wert_liegend": {
           "kind": "neutral",
           "text": "liegend"
         }

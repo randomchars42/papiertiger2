@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "imports": [
+    "zugang",
+    "medikationsgabe",
+    "reanimation"
+  ],
+  "groups": {
+    "massnahmen": {
+      "title": "Maßnahmen und Verlauf",
+      "children": [
+        "zugang",
+        "medikationsgabe",
+        "reanimation"
+      ],
+      "items": [
+        {
+          "type": "group",
+          "id": "zugang"
+        },
+        {
+          "type": "group",
+          "id": "medikationsgabe"
+        },
+        {
+          "type": "group",
+          "id": "reanimation"
+        }
+      ],
+      "reset": true
+    }
+  },
+  "phrases": {}
+}

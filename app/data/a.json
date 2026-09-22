@@ -33,7 +33,7 @@
       "title": "A instabil",
       "values": {
         "a_eintrag_zustand_des_atemwegs": "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
-        "a_eintrag_gefaehrdung_des_atemwegs": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        "a_eintrag_freihalten_des_atemwegs": "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
       },
       "kind": "abnormal"
     }
@@ -43,7 +43,7 @@
       "title": "A",
       "phrases": [
         "a_eintrag_zustand_des_atemwegs",
-        "a_eintrag_gefaehrdung_des_atemwegs",
+        "a_eintrag_freihalten_des_atemwegs",
         "a_eintrag_schwellung_der_uvula",
         "a_eintrag_schwellung_der_zunge",
         "a_eintrag_guedeltubus",
@@ -65,9 +65,100 @@
         "a_eintrag_ergaenzung_zum_chirurgischen_atemweg",
         "a_eintrag_weitere_a_auffaelligkeit"
       ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "a_eintrag_zustand_des_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_freihalten_des_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_schwellung_der_uvula"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_schwellung_der_zunge"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_guedeltubus"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_ergebnis_der_guedeltubus_anlage"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_wendeltubus"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_ergebnis_der_wendeltubus_anlage"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_supraglottische_atemwegshilfe"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_ergebnis_der_supraglottischen_atemwegshilfe"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_endotracheale_intubation"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_tubusgroesse"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_tiefe_des_endotrachealtubus"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_intubationsversuche"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_bestaetigung_der_tubuslage"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_zahnstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_ergaenzung_zur_endotrachealen_intubation"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_chirurgischer_atemweg"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_bestaetigung_des_chirurgischen_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_ergaenzung_zum_chirurgischen_atemweg"
+        },
+        {
+          "type": "phrase",
+          "id": "a_eintrag_weitere_a_auffaelligkeit"
+        }
+      ],
       "sets": [
         "a_vorgabe_a_instabil"
-      ]
+      ],
+      "inline": true
     }
   },
   "phrases": {
@@ -79,12 +170,14 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_frei": {
           "kind": "normal",
           "text": "Atemweg frei",
-          "snomed": "248553004"
+          "snomed": "248553004",
+          "snomedDisplay": "No obstruction of airway"
         },
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": {
           "kind": "abnormal",
           "text": "Atemweg durch Zunge verlegt",
-          "snomed": "425227004"
+          "snomed": "425227004",
+          "snomedDisplay": "Obstruction of airway caused by tongue"
         },
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": {
           "kind": "abnormal",
@@ -93,36 +186,40 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": {
           "kind": "abnormal",
           "text": "Atemweg durch Blutung verlegt",
-          "snomed": "427480003"
+          "snomed": "427480003",
+          "snomedDisplay": "Obstruction of airway caused by blood"
         },
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": {
           "kind": "abnormal",
           "text": "Atemweg vollständig verlegt",
-          "snomed": "248555006"
+          "snomed": "248555006",
+          "snomedDisplay": "Total airway obstruction"
         }
       }
     },
-    "a_eintrag_gefaehrdung_des_atemwegs": {
-      "title": "Gefährdung des Atemwegs",
+    "a_eintrag_freihalten_des_atemwegs": {
+      "title": "Freihalten des Atemwegs",
       "kind": "neutral",
-      "default": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_nicht_gefaehrdet",
+      "default": "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_effektiv_freigehalten",
       "values": {
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_nicht_gefaehrdet": {
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_effektiv_freigehalten": {
           "kind": "normal",
-          "text": "Atemweg nicht gefährdet",
-          "snomed": "1145305006"
+          "text": "Atemweg wird effektiv freigehalten",
+          "snomed": "1145305006",
+          "snomedDisplay": "Able to clear airway effectively"
         },
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": {
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": {
           "kind": "abnormal",
           "text": "Atemweg wird nicht effektiv freigehalten",
-          "snomed": "67750007"
+          "snomed": "67750007",
+          "snomedDisplay": "Ineffective airway clearance"
         }
       },
       "suggestions": {
-        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
-        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
-        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
-        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten",
+        "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
       }
     },
     "a_eintrag_schwellung_der_uvula": {
@@ -168,7 +265,7 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus",
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus"
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": "a_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus"
       }
     },
     "a_eintrag_ergebnis_der_guedeltubus_anlage": {
@@ -204,7 +301,7 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus",
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus"
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": "a_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus"
       }
     },
     "a_eintrag_ergebnis_der_wendeltubus_anlage": {
@@ -248,7 +345,7 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": null,
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": null,
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": null,
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
       }
     },
     "a_eintrag_ergebnis_der_supraglottischen_atemwegshilfe": {
@@ -290,7 +387,7 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": null,
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": null,
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": null,
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
       }
     },
     "a_eintrag_tubusgroesse": {
@@ -425,7 +522,7 @@
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": null,
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": null,
         "a_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": null,
-        "a_eintrag_gefaehrdung_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
+        "a_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": null
       }
     },
     "a_eintrag_tubusgroesse_des_chirurgischen_atemwegs": {

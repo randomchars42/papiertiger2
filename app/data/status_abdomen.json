@@ -1,0 +1,233 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "status_abdomen": {
+      "title": "Abdomen",
+      "kind": "neutral",
+      "phrases": [
+        "status_abdomen_eintrag_bauchdecke",
+        "status_abdomen_eintrag_druckschmerz",
+        "status_abdomen_eintrag_peritonealreizung",
+        "status_abdomen_eintrag_darmgeraeusche",
+        "status_abdomen_eintrag_nierenlager",
+        "status_abdomen_eintrag_ergaenzung_zum_abdomen"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_abdomen_eintrag_bauchdecke"
+        },
+        {
+          "type": "phrase",
+          "id": "status_abdomen_eintrag_druckschmerz"
+        },
+        {
+          "type": "phrase",
+          "id": "status_abdomen_eintrag_peritonealreizung"
+        },
+        {
+          "type": "phrase",
+          "id": "status_abdomen_eintrag_darmgeraeusche"
+        },
+        {
+          "type": "phrase",
+          "id": "status_abdomen_eintrag_nierenlager"
+        },
+        {
+          "type": "phrase",
+          "id": "status_abdomen_eintrag_ergaenzung_zum_abdomen"
+        }
+      ],
+      "default": false,
+      "reset": true
+    }
+  },
+  "phrases": {
+    "status_abdomen_eintrag_bauchdecke": {
+      "title": "Bauchdecke",
+      "kind": "neutral",
+      "default": "status_abdomen_eintrag_bauchdecke_wert_bauchdecke_weich",
+      "values": {
+        "status_abdomen_eintrag_bauchdecke_wert_bauchdecke_weich": {
+          "kind": "normal",
+          "text": "Bauchdecke weich",
+          "snomed": "249543005",
+          "snomedDisplay": "Abdomen soft"
+        },
+        "status_abdomen_eintrag_bauchdecke_wert_bauchdecke_angespannt": {
+          "kind": "abnormal",
+          "text": "Bauchdecke angespannt"
+        },
+        "status_abdomen_eintrag_bauchdecke_wert_bauchdecke_meteoristisch_gespannt": {
+          "kind": "abnormal",
+          "text": "Bauchdecke meteoristisch gespannt"
+        },
+        "status_abdomen_eintrag_bauchdecke_wert_bauchdecke_aszitisch_gespannt": {
+          "kind": "abnormal",
+          "text": "Bauchdecke aszitisch gespannt",
+          "snomed": "389026000",
+          "snomedDisplay": "Ascites"
+        }
+      }
+    },
+    "status_abdomen_eintrag_druckschmerz": {
+      "title": "Druckschmerz",
+      "kind": "neutral",
+      "default": "status_abdomen_eintrag_druckschmerz_wert_kein_abdomineller_druckschmerz",
+      "values": {
+        "status_abdomen_eintrag_druckschmerz_wert_kein_abdomineller_druckschmerz": {
+          "kind": "normal",
+          "text": "kein abdomineller Druckschmerz",
+          "snomed": "297125009",
+          "snomedDisplay": "Abdominal tenderness absent"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_diffuser_abdomineller_druckschmerz": {
+          "kind": "abnormal",
+          "text": "diffuser abdomineller Druckschmerz",
+          "snomed": "440220007",
+          "snomedDisplay": "Generalised abdominal tenderness"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_druckschmerz_im_rechten_oberbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im rechten Oberbauch",
+          "snomed": "448265002",
+          "snomedDisplay": "Tenderness of right upper quadrant of abdomen"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_druckschmerz_im_linken_oberbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im linken Oberbauch",
+          "snomed": "448660000",
+          "snomedDisplay": "Tenderness of left upper quadrant of abdomen"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_druckschmerz_im_epigastrium": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im Epigastrium",
+          "snomed": "301403003",
+          "snomedDisplay": "Tenderness of epigastric region"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_druckschmerz_im_rechten_unterbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im rechten Unterbauch",
+          "snomed": "448661001",
+          "snomedDisplay": "Tenderness of right lower quadrant of abdomen"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_druckschmerz_im_linken_unterbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im linken Unterbauch",
+          "snomed": "439774009",
+          "snomedDisplay": "Abdominal tenderness of left lower quadrant"
+        },
+        "status_abdomen_eintrag_druckschmerz_wert_druckschmerz_im_mittelbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im Mittelbauch",
+          "snomed": "43478001",
+          "snomedDisplay": "Abdominal tenderness"
+        }
+      }
+    },
+    "status_abdomen_eintrag_peritonealreizung": {
+      "title": "Peritonealreizung",
+      "kind": "neutral",
+      "default": "status_abdomen_eintrag_peritonealreizung_wert_kein_hinweis_auf_peritonealreizung",
+      "values": {
+        "status_abdomen_eintrag_peritonealreizung_wert_kein_hinweis_auf_peritonealreizung": {
+          "kind": "normal",
+          "text": "kein Hinweis auf Peritonealreizung"
+        },
+        "status_abdomen_eintrag_peritonealreizung_wert_abwehrspannung": {
+          "kind": "abnormal",
+          "text": "Abwehrspannung",
+          "snomed": "249545003",
+          "snomedDisplay": "Abdominal guarding"
+        },
+        "status_abdomen_eintrag_peritonealreizung_wert_loslassschmerz": {
+          "kind": "abnormal",
+          "text": "Loslassschmerz",
+          "snomed": "35611005",
+          "snomedDisplay": "Rebound tenderness"
+        },
+        "status_abdomen_eintrag_peritonealreizung_wert_peritonismus": {
+          "kind": "abnormal",
+          "text": "Peritonismus"
+        }
+      }
+    },
+    "status_abdomen_eintrag_darmgeraeusche": {
+      "title": "Darmgeräusche",
+      "kind": "neutral",
+      "default": "status_abdomen_eintrag_darmgeraeusche_wert_darmgeraeusche_regelrecht",
+      "values": {
+        "status_abdomen_eintrag_darmgeraeusche_wert_darmgeraeusche_regelrecht": {
+          "kind": "normal",
+          "text": "Darmgeräusche regelrecht",
+          "snomed": "61539000",
+          "snomedDisplay": "Normal bowel sounds"
+        },
+        "status_abdomen_eintrag_darmgeraeusche_wert_darmgeraeusche_traege": {
+          "kind": "abnormal",
+          "text": "Darmgeräusche träge"
+        },
+        "status_abdomen_eintrag_darmgeraeusche_wert_darmgeraeusche_hochgestellt": {
+          "kind": "abnormal",
+          "text": "Darmgeräusche hochgestellt",
+          "snomed": "18101008",
+          "snomedDisplay": "Hyperactive bowel sounds"
+        },
+        "status_abdomen_eintrag_darmgeraeusche_wert_keine_darmgeraeusche": {
+          "kind": "abnormal",
+          "text": "keine Darmgeräusche",
+          "snomed": "16268000",
+          "snomedDisplay": "Bowel sounds absent"
+        }
+      }
+    },
+    "status_abdomen_eintrag_nierenlager": {
+      "title": "Nierenlager",
+      "kind": "neutral",
+      "default": "status_abdomen_eintrag_nierenlager_wert_kein_nierenlagerklopfschmerz",
+      "values": {
+        "status_abdomen_eintrag_nierenlager_wert_kein_nierenlagerklopfschmerz": {
+          "kind": "normal",
+          "text": "kein Nierenlagerklopfschmerz",
+          "snomed": "413350009:{246090004=102830001},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Renal angle tenderness; current; subject of record"
+        },
+        "status_abdomen_eintrag_nierenlager_wert_nierenlagerklopfschmerz_links": {
+          "kind": "abnormal",
+          "text": "Nierenlagerklopfschmerz links",
+          "snomed": "796104681000119101",
+          "snomedDisplay": "Left renal angle tenderness"
+        },
+        "status_abdomen_eintrag_nierenlager_wert_nierenlagerklopfschmerz_rechts": {
+          "kind": "abnormal",
+          "text": "Nierenlagerklopfschmerz rechts",
+          "snomed": "173789951000119107",
+          "snomedDisplay": "Right renal angle tenderness"
+        },
+        "status_abdomen_eintrag_nierenlager_wert_nierenlagerklopfschmerz_beidseits": {
+          "kind": "abnormal",
+          "text": "Nierenlagerklopfschmerz beidseits",
+          "snomed": "102830001",
+          "snomedDisplay": "Renal angle tenderness"
+        }
+      }
+    },
+    "status_abdomen_eintrag_ergaenzung_zum_abdomen": {
+      "title": "Ergänzung zum Abdomen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_abdomen_eintrag_ergaenzung_zum_abdomen_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

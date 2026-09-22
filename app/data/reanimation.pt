@@ -1,0 +1,22 @@
+# Reanimation mit wiederholbaren Rhythmusanalysen
+N: reanimation
+I: gemeinsam
+
+E energie: number label="Energie" suffix=" J" min=1 max=500 step=1
+E rosc_dauer: number label="Dauer bis ROSC" suffix=" min" min=0 max=300 step=1
+
+C defibrillierbarer_rhythmus: Kammerflimmern / pulslose ventrikuläre Tachykardie
+
+G @root @collapsed @reset: Reanimation
+  P: Reanimationsbeginn => laufende Laienreanimation übernommen @sct=89666000[CPR]|i / laufende Reanimation durch Ersthelfende übernommen @sct=89666000[CPR]|i / Kreislaufstillstand bei Eintreffen, Reanimation begonnen @sct=89666000[CPR]|i / Kreislaufstillstand im Verlauf, Reanimation begonnen @sct=89666000[CPR]|i
+  P: Rhythmusanalysen => keine Rhythmusanalyse dokumentiert|-
+
+  G @repeat(initial=0,add="Rhythmusanalyse hinzufügen",empty="Rhythmusanalysen") @reset: Rhythmusanalyse|-
+    P: Rhythmusanalyse => Rhythmusanalyse um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:}|i*
+    P<Rhythmusanalyse>: Rhythmus => Asystolie @sct=427485008[ECG: asystole]|a / pulslose elektrische Aktivität @sct=426975008[ECG: pulseless electrical activity]|a / Kammerflimmern @sct=164896001[ECG: ventricular fibrillation]|a / pulslose ventrikuläre Tachykardie @sct=164895002[ECG: ventricular tachycardia]|a
+    P<defibrillierbarer_rhythmus>: Defibrillation => Defibrillation mit {:energie=energie*:} @sct=428909008[Biphasic defibrillation procedure]|i
+    P: Ergänzung zur Rhythmusanalyse => {:freitext*:}|-
+
+  P: ROSC => ROSC nach {:dauer=rosc_dauer*:} @sct=711410007[Signs of return of spontaneous circulation]|i
+  P: Erneuter Kreislaufstillstand @sct=410429000[Cardiac arrest]|a
+  P: Ergänzung zur Reanimation => {:freitext*:}|-

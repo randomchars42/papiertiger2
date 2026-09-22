@@ -1,0 +1,93 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "pocus_tvt": {
+      "title": "POCUS tiefe Beinvenen",
+      "kind": "neutral",
+      "phrases": [
+        "pocus_tvt_eintrag_kompressionssonographie",
+        "pocus_tvt_eintrag_tiefe_venenthrombose",
+        "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_kompressionssonographie"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_tiefe_venenthrombose"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen"
+        }
+      ],
+      "default": false,
+      "reset": true
+    }
+  },
+  "phrases": {
+    "pocus_tvt_eintrag_kompressionssonographie": {
+      "title": "Kompressionssonographie",
+      "kind": "intervention",
+      "default": "pocus_tvt_eintrag_kompressionssonographie_wert_point_of_care_ultraschall_der_tiefen_beinvenen_durchgefuehrt",
+      "values": {
+        "pocus_tvt_eintrag_kompressionssonographie_wert_point_of_care_ultraschall_der_tiefen_beinvenen_durchgefuehrt": {
+          "kind": "intervention",
+          "text": "Point-of-Care-Ultraschall der tiefen Beinvenen durchgeführt",
+          "snomed": "870384002",
+          "snomedDisplay": "Point of care ultrasound"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_tiefe_venenthrombose": {
+      "title": "Tiefe Venenthrombose",
+      "kind": "neutral",
+      "default": "pocus_tvt_eintrag_tiefe_venenthrombose_wert_kein_sonographischer_hinweis_auf_tiefe_venenthrombose",
+      "values": {
+        "pocus_tvt_eintrag_tiefe_venenthrombose_wert_kein_sonographischer_hinweis_auf_tiefe_venenthrombose": {
+          "kind": "normal",
+          "text": "kein sonographischer Hinweis auf tiefe Venenthrombose",
+          "snomed": "1141709008",
+          "snomedDisplay": "No deep vein thrombosis"
+        },
+        "pocus_tvt_eintrag_tiefe_venenthrombose_wert_tiefe_venenthrombose_links": {
+          "kind": "abnormal",
+          "text": "tiefe Venenthrombose links",
+          "snomed": "128053003",
+          "snomedDisplay": "Deep venous thrombosis"
+        },
+        "pocus_tvt_eintrag_tiefe_venenthrombose_wert_tiefe_venenthrombose_rechts": {
+          "kind": "abnormal",
+          "text": "tiefe Venenthrombose rechts",
+          "snomed": "128053003",
+          "snomedDisplay": "Deep venous thrombosis"
+        },
+        "pocus_tvt_eintrag_tiefe_venenthrombose_wert_tiefe_venenthrombose_beidseits": {
+          "kind": "abnormal",
+          "text": "tiefe Venenthrombose beidseits",
+          "snomed": "128053003",
+          "snomedDisplay": "Deep venous thrombosis"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen": {
+      "title": "Ergänzung zum POCUS der tiefen Beinvenen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

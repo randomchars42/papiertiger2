@@ -69,7 +69,22 @@
         "x_eintrag_blutung",
         "x_eintrag_weitere_x_auffaelligkeit"
       ],
-      "reset": true
+      "items": [
+        {
+          "type": "phrase",
+          "id": "x_eintrag_blutung"
+        },
+        {
+          "type": "phrase",
+          "id": "x_eintrag_weitere_x_auffaelligkeit"
+        },
+        {
+          "type": "group",
+          "id": "x_gruppe_blutung"
+        }
+      ],
+      "reset": true,
+      "inline": true
     },
     "x_gruppe_blutung": {
       "title": "Blutung",
@@ -81,6 +96,32 @@
         "x_eintrag_tourniquet",
         "x_eintrag_ergebnis_des_tourniquets",
         "x_eintrag_ergaenzung_zur_blutung"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "x_eintrag_blutungslokalisation"
+        },
+        {
+          "type": "phrase",
+          "id": "x_eintrag_kompression"
+        },
+        {
+          "type": "phrase",
+          "id": "x_eintrag_ergebnis_der_kompression"
+        },
+        {
+          "type": "phrase",
+          "id": "x_eintrag_tourniquet"
+        },
+        {
+          "type": "phrase",
+          "id": "x_eintrag_ergebnis_des_tourniquets"
+        },
+        {
+          "type": "phrase",
+          "id": "x_eintrag_ergaenzung_zur_blutung"
+        }
       ],
       "reset": true,
       "repeatable": {

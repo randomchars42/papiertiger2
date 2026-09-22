@@ -1,0 +1,134 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "dauermedikation_eingabe_arzneimittel": {
+      "type": "text",
+      "label": "Arzneimittel",
+      "placeholder": "Wirkstoff oder Präparat",
+      "prefix": ""
+    },
+    "dauermedikation_eingabe_dosierung": {
+      "type": "text",
+      "label": "Dosierung",
+      "placeholder": "Dosis und Einnahmeschema",
+      "prefix": ""
+    }
+  },
+  "groups": {
+    "dauermedikation": {
+      "title": "Dauermedikation",
+      "children": [
+        "dauermedikation_gruppe_arzneimittel"
+      ],
+      "phrases": [
+        "dauermedikation_eintrag_dauermedikationsstatus"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "dauermedikation_eintrag_dauermedikationsstatus"
+        },
+        {
+          "type": "group",
+          "id": "dauermedikation_gruppe_arzneimittel"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    },
+    "dauermedikation_gruppe_arzneimittel": {
+      "title": "Arzneimittel",
+      "kind": "neutral",
+      "phrases": [
+        "dauermedikation_eintrag_arzneimittel",
+        "dauermedikation_eintrag_dosierung_der_dauermedikation",
+        "dauermedikation_eintrag_indikation_der_dauermedikation"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "dauermedikation_eintrag_arzneimittel"
+        },
+        {
+          "type": "phrase",
+          "id": "dauermedikation_eintrag_dosierung_der_dauermedikation"
+        },
+        {
+          "type": "phrase",
+          "id": "dauermedikation_eintrag_indikation_der_dauermedikation"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Arzneimittel hinzufügen",
+        "empty": "dauermedikation_eintrag_dauermedikationsstatus"
+      }
+    }
+  },
+  "phrases": {
+    "dauermedikation_eintrag_dauermedikationsstatus": {
+      "title": "Dauermedikationsstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "dauermedikation_eintrag_dauermedikationsstatus_wert_keine_dauermedikation": {
+          "kind": "normal",
+          "text": "keine Dauermedikation"
+        },
+        "dauermedikation_eintrag_dauermedikationsstatus_wert_dauermedikation_unbekannt": {
+          "kind": "neutral",
+          "text": "Dauermedikation unbekannt"
+        }
+      }
+    },
+    "dauermedikation_eintrag_arzneimittel": {
+      "title": "Arzneimittel",
+      "kind": "neutral",
+      "default": "dauermedikation_eintrag_arzneimittel_wert_value",
+      "values": {
+        "dauermedikation_eintrag_arzneimittel_wert_value": {
+          "kind": "neutral",
+          "text": "{:arzneimittel*:}"
+        }
+      },
+      "attributes": {
+        "arzneimittel": "dauermedikation_eingabe_arzneimittel"
+      }
+    },
+    "dauermedikation_eintrag_dosierung_der_dauermedikation": {
+      "title": "Dosierung der Dauermedikation",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung": {
+          "kind": "neutral",
+          "text": "Dosierung: {:dosierung*:}"
+        }
+      },
+      "attributes": {
+        "dosierung": "dauermedikation_eingabe_dosierung"
+      },
+      "suggestions": {
+        "dauermedikation_eintrag_arzneimittel_wert_value": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung"
+      }
+    },
+    "dauermedikation_eintrag_indikation_der_dauermedikation": {
+      "title": "Indikation der Dauermedikation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "dauermedikation_eintrag_indikation_der_dauermedikation_wert_indikation": {
+          "kind": "neutral",
+          "text": "Indikation: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

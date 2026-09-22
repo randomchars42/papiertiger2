@@ -4,7 +4,7 @@ I: gemeinsam
 
 E blutungslokalisation: choice label="Lokalisation" => am Kopf|- / am Hals|- / am Torso|- / an der Schulter|- / am Oberarm|- / am Ellenbogen|- / am Unterarm|- / an der Hand|- / an der Hüfte|- / am Oberschenkel|- / am Unterschenkel|- / am Fuß|-
 
-G @root @reset: x
+G @root @reset @inline: x
   P: Blutung => keine relevante Blutung|n*
   P: Weitere x-Auffälligkeit => {:freitext*:}|a
 

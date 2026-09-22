@@ -12,19 +12,29 @@ export type TextDefinition =
     | {
           text: string;
           snomed?: string;
+          snomedDisplay?: string;
       };
 
 export type ValueDefinition = {
     text: string;
     snomed?: string;
+    snomedDisplay?: string;
     kind: ItemKind;
+    points?: number;
+};
+
+export type ConditionDefinition = {
+    values: string[];
+    negated: boolean;
 };
 
 export type PhraseDefinition = {
     title: string;
     default: string | "" | null;
     values: Record<string, ValueDefinition>;
+    prompt?: boolean;
     suggestions?: Record<string, string | null>;
+    condition?: ConditionDefinition & { suggestion: string | null };
     attributes?: Record<string, string>;
     note?: string;
     kind?: ItemKind;
@@ -36,10 +46,42 @@ export type RepeatableDefinition = {
     empty?: string;
 };
 
+export type ScoreOptionDefinition = {
+    valueId: string;
+    text: string;
+    kind: ItemKind;
+    points: number;
+};
+
+export type ScoreCriterionDefinition = {
+    phraseId: string;
+    title: string;
+    options: ScoreOptionDefinition[];
+};
+
+export type ScoreDefinition = {
+    id: string;
+    label: string;
+    minimum: number;
+    maximum: number;
+    criteria: ScoreCriterionDefinition[];
+    target: {
+        phraseId: string;
+        valueId: string;
+        attributeId: string;
+    };
+};
+
+export type GroupItemDefinition = {
+    type: "phrase" | "group";
+    id: string;
+};
+
 export type GroupDefinition = {
     title: TextDefinition;
     children?: string[];
     phrases?: string[];
+    items?: GroupItemDefinition[];
     sets?: string[];
     default?: boolean;
     content?: string;
@@ -48,7 +90,10 @@ export type GroupDefinition = {
     summary?: boolean;
     reset?: boolean;
     collapsed?: boolean;
+    inline?: boolean;
     repeatable?: RepeatableDefinition;
+    condition?: ConditionDefinition;
+    score?: ScoreDefinition;
 };
 
 export type SetDefinition = {
@@ -154,11 +199,20 @@ export type PhraseOverride = {
     valueId: string | null;
 };
 
+export type ExternalSuggestion = {
+    valueId: string;
+    attributes: Record<string, AttributeValue>;
+    provenance: string[];
+};
+
 export type ScopeState = {
     activeSets: string[];
+    completedPrompts: string[];
     phraseOverrides: Record<string, PhraseOverride>;
     groupOverrides: Record<string, boolean>;
     attributes: Record<string, Record<string, AttributeValue>>;
+    externalSuggestions: Record<string, ExternalSuggestion>;
+    acceptedProvenance: Record<string, string[]>;
 };
 
 export type DocumentState = ScopeState & {
@@ -195,6 +249,7 @@ export type ResolvedPhrase = {
     attributes: Record<string, AttributeValue>;
     coding?: SnomedCoding;
     kind: ItemKind;
+    externalSuggestion?: ExternalSuggestion;
 };
 
 export type ResolvedDocument = {
@@ -218,7 +273,14 @@ export type StructuredItem = {
 
 export type StructuredSummaryItem = Pick<
     StructuredItem,
-    "id" | "instanceId" | "valueId" | "text" | "kind"
+    | "id"
+    | "instanceId"
+    | "valueId"
+    | "text"
+    | "kind"
+    | "source"
+    | "provenance"
+    | "attributes"
 >;
 
 export type StructuredDocument = {

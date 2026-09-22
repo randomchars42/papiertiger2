@@ -1,0 +1,15 @@
+# Wiederholbare Allergien und Unverträglichkeiten
+N: allergie
+I: gemeinsam
+
+E ausloeser: text label="Auslöser" placeholder="Stoff oder Präparat" prefix=""
+E reaktion: text label="Reaktion" placeholder="beobachtete Reaktion" prefix=""
+
+G @root @collapsed @reset: Allergien
+  P: Allergiestatus => keine bekannten Allergien @sct=716186003[No known allergy]|n / Allergiestatus unbekannt|-
+
+  G @repeat(initial=0,add="Allergie hinzufügen",empty="Allergiestatus") @reset: Allergie|a
+    P: Allergie => Allergie gegen {:ausloeser=ausloeser*:} @sct=609328004[Allergic disposition]|a*
+    P<Allergie>: Allergische Reaktion => allergische Reaktion: {:reaktion=reaktion*:}|a
+    P<Allergie>: Schweregrad der Allergie => leichte allergische Reaktion|a / mittelschwere allergische Reaktion|a / schwere allergische Reaktion|a / Anaphylaxie|a
+    P: Ergänzung zur Allergie => {:freitext*:}|-

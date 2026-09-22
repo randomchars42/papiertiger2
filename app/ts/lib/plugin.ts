@@ -1,5 +1,15 @@
 import { getConfig } from "./config.js";
 
+export type PluginMessage = {
+    type: string;
+    payload: unknown;
+};
+
+export type ToolStatus = {
+    badge?: string;
+    attention?: boolean;
+};
+
 export type Plugin = {
     init?: () => Promise<void>;
     display?: (
@@ -8,6 +18,8 @@ export type Plugin = {
     ) => Promise<void>;
     getValue?: (id: string) => Promise<unknown>;
     getStructuredValue?: (id: string) => Promise<unknown>;
+    receive?: (message: PluginMessage) => Promise<void> | void;
+    getToolStatus?: (id: string) => Promise<ToolStatus>;
     dispose?: (parentID: string) => void;
 };
 

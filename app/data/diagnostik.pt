@@ -1,0 +1,25 @@
+# Diagnostische Untersuchungen und Befunde
+N: diagnostik
+I: gemeinsam, ekg, pocus
+
+E region: text label="Untersuchungsregion" placeholder="z. B. Thorax, CCT, linkes Sprunggelenk" prefix=""
+E ergebnis: text label="Ergebnis" placeholder="wesentlicher Befund" prefix=""
+
+G @root @reset: Diagnostik
+  G @collapsed: Labor und patientennahe Tests
+    P: Blutuntersuchung => Blutuntersuchung durchgeführt @sct=396550006[Blood test]|i
+    P: Blutgasanalyse => Blutgasanalyse durchgeführt @sct=167018008[Blood gas measurement]|i
+    P: Blutkulturen => Blutkulturen abgenommen @sct=30088009[Blood culture]|i
+    P: Urinstatus => Urinstatus durchgeführt @sct=27171005[Urinalysis]|i
+    P: Schwangerschaftstest => Schwangerschaftstest negativ @sct=250425007[Pregnancy test negative]|n / Schwangerschaftstest positiv @sct=250423000[Pregnancy test positive]|a
+    P: Laborergebnis => Laborergebnis: {:ergebnis=ergebnis*:}|-
+
+  G @collapsed: Bildgebung
+    P: Röntgen => Röntgenuntersuchung von {:region=region*:} @sct=312254007[Plain X-ray imaging - action]|i
+    P: Computertomographie => Computertomographie von {:region=region*:} @sct=77477000[Computed tomography]|i
+    P: Magnetresonanztomographie => Magnetresonanztomographie von {:region=region*:} @sct=113091000[Magnetic resonance imaging]|i
+    P: Sonographie => Sonographie von {:region=region*:} @sct=278292003[Ultrasound imaging - action]|i
+    P: Bildgebungsergebnis => Ergebnis der Bildgebung: {:ergebnis=ergebnis*:}|-
+
+  U: ekg, pocus
+  P: Weitere Diagnostik => {:freitext*:}|-

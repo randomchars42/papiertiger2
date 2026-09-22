@@ -1,0 +1,8 @@
+# Kompressionssonographie bei Verdacht auf tiefe Venenthrombose
+N: pocus_tvt
+I: gemeinsam
+
+G @root @inactive @reset: POCUS tiefe Beinvenen|-
+  P: Kompressionssonographie => Point-of-Care-Ultraschall der tiefen Beinvenen durchgeführt @sct=870384002[Point of care ultrasound]|i*
+  P: Tiefe Venenthrombose => kein sonographischer Hinweis auf tiefe Venenthrombose @sct=1141709008[No deep vein thrombosis]|n* / tiefe Venenthrombose links @sct=128053003[Deep venous thrombosis]|a / tiefe Venenthrombose rechts @sct=128053003[Deep venous thrombosis]|a / tiefe Venenthrombose beidseits @sct=128053003[Deep venous thrombosis]|a
+  P: Ergänzung zum POCUS der tiefen Beinvenen => {:freitext*:}|-

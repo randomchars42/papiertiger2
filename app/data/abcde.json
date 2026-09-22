@@ -3,7 +3,10 @@
   "imports": [
     "x",
     "a",
-    "b"
+    "b",
+    "c",
+    "d",
+    "e"
   ],
   "groups": {
     "abcde": {
@@ -11,7 +14,36 @@
       "children": [
         "x",
         "a",
-        "b"
+        "b",
+        "c",
+        "d",
+        "e"
+      ],
+      "items": [
+        {
+          "type": "group",
+          "id": "x"
+        },
+        {
+          "type": "group",
+          "id": "a"
+        },
+        {
+          "type": "group",
+          "id": "b"
+        },
+        {
+          "type": "group",
+          "id": "c"
+        },
+        {
+          "type": "group",
+          "id": "d"
+        },
+        {
+          "type": "group",
+          "id": "e"
+        }
       ],
       "summary": true,
       "reset": true

@@ -9,9 +9,9 @@ E versuchsanzahl: number label="Versuche" min=1 step=1
 C verlegter_atemweg: Atemweg durch Zunge verlegt / Atemweg zugeschwollen / Atemweg durch Blutung verlegt / Atemweg vollständig verlegt
 C atemwegsproblem: verlegter_atemweg / Atemweg wird nicht effektiv freigehalten
 
-G @root: A
-  P: Zustand des Atemwegs => Atemweg frei @sct=248553004|n* / Atemweg durch Zunge verlegt @sct=425227004|a / Atemweg zugeschwollen|a / Atemweg durch Blutung verlegt @sct=427480003|a / Atemweg vollständig verlegt @sct=248555006|a
-  P<verlegter_atemweg>: Gefährdung des Atemwegs => Atemweg nicht gefährdet @sct=1145305006|n* / Atemweg wird nicht effektiv freigehalten @sct=67750007|a
+G @root @inline: A
+  P: Zustand des Atemwegs => Atemweg frei @sct=248553004[No obstruction of airway]|n* / Atemweg durch Zunge verlegt @sct=425227004[Obstruction of airway caused by tongue]|a / Atemweg zugeschwollen|a / Atemweg durch Blutung verlegt @sct=427480003[Obstruction of airway caused by blood]|a / Atemweg vollständig verlegt @sct=248555006[Total airway obstruction]|a
+  P<verlegter_atemweg>: Freihalten des Atemwegs => Atemweg wird effektiv freigehalten @sct=1145305006[Able to clear airway effectively]|n* / Atemweg wird nicht effektiv freigehalten @sct=67750007[Ineffective airway clearance]|a
   P<Atemweg zugeschwollen>: Schwellung der Uvula|a
   P<Atemweg zugeschwollen>: Schwellung der Zunge|a
 
@@ -40,4 +40,4 @@ G @root: A
 
   S: A instabil|a
     Zustand des Atemwegs = Atemweg vollständig verlegt
-    Gefährdung des Atemwegs = Atemweg wird nicht effektiv freigehalten
+    Freihalten des Atemwegs = Atemweg wird nicht effektiv freigehalten

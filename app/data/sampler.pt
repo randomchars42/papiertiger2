@@ -1,0 +1,88 @@
+# SAMPLER
+N: sampler
+I: gemeinsam, schmerz, allergie, dauermedikation
+
+E ort: choice label="Lokalisation" => im Thorax|- / im Oberbauch|- / im Unterbauch|- / im Rücken|- / im Kopf|- / im Arm|- / im Bein|- / diffus|-
+E nrs: number label="NRS" min=0 max=10 step=1
+E seit: duration label="Beginn" prefix=" seit " units=minute,hour,day,week,month,year default=hour
+E dauer: duration label="Dauer" prefix=" für " units=minute,hour,day,week,month,year default=hour
+E qualitaet: choice label="Qualität" => drückend|- / stechend|- / brennend|- / ziehend|- / kolikartig|- / dumpf|-
+E symptom_seit: duration label="Beginn" prefix=" seit " units=minute,hour,day,week,month,year default=hour
+E seite: choice label="Seite" => rechten|- / linken|-
+
+G @root: SAMPLER
+  G @inline: Symptome
+    P: Atemnot @sct=267036007[Dyspnoea]|a
+    P: Synkope @sct=271594007[Syncope]|a
+    P: Herzklopfen @sct=80313002[Palpitations]|a
+    P: Herzrasen|a
+    P: Fieber @sct=386661006[Fever]|a
+    P: Husten @sct=49727002[Cough]|a
+    P: Übelkeit @sct=422587007[Nausea]|a
+    P: Erbrechen @sct=422400008[Vomiting]|a
+    P: Algurie|a
+    P: Pollakisurie|a
+    P: Schwindel @sct=404640003[Dizziness]|a
+    P: Krampfanfall @sct=91175000[Seizure]|a
+    P: Schwäche @sct=13791008[Asthenia]|a
+    P: Ergänzung zum Symptom => {:freitext*:}|-
+    G @repeat(initial=0,add="Schmerz hinzufügen") @reset @inline: Schmerz|a
+      P: Schmerz* => Brustschmerz @sct=29857009[Chest pain]|a / Bauchschmerz @sct=21522001[Abdominal pain]|a / Kopfschmerz @sct=25064002[Headache]|a / Rückenschmerz|a / Schulterschmerz|a / Hüftschmerz|a / Knieschmerz|a / Gelenkschmerz|a / Schmerz @sct=22253000[Pain]|a
+      P<Schmerz>: Schmerzbeginn => Beginn {:beginn=seit*:}|-
+      G<Schmerz> @collapsed @inline: Provokation
+        P: durch Belastung|-
+        P: durch Bewegung|-
+        P: durch Rotation|-
+        P: durch Trauma|-
+        P: durch Atembewegung|-
+        P: sonstige Provokation => durch {:freitext:}|-
+        P: nicht provozierbar|-
+      P<durch Trauma>: Trauma => {:freitext:}|-
+      G<Schmerz> @collapsed @inline: Linderung
+        P: durch Ruhe|-
+        P: durch Dunkelheit|-
+        P: durch Wärme|-
+        P: durch Kälte|-
+        P: sonstige Linderung => durch {:freitext:}|-
+        P: keine|-
+      P<Schmerz>: Schmerzqualität => Qualität: {:qualitaet=qualitaet*:}|-
+      P<Schmerz>: Schmerzlokalisation => Lokalisation: {:ort=ort*:}|-
+      G<Schmerz> @collapsed @inline: Ausstrahlung
+        P: in den Rücken|-
+        P: zwischen die Schulterblätter|-
+        P: in den {:seite:} Arm|- 
+        P: in den Hals|-
+        P: in den Kiefer|-
+        P: in den Unterbauch|-
+        P: in die Flanke|-
+        P: ins Genital|-
+        P: {:freitext:}|-
+      P<Schmerz>: Schmerzstärke => NRS {:wert=nrs*:}|-
+      P<Schmerz>: Dauer => Dauer {:dauer*:}|-
+      P<Schmerz>: Verlauf => zunehmend|- / rückläufig|- / wellenförmig|- / spontanes Sistieren|- / Sistieren unter Analgesie|- / {:freitext:}|-
+      P: Ergänzung zum Schmerz => {:freitext*:}|-
+
+  U: allergie
+
+  U: dauermedikation
+
+  G @inline: Vorbestehende Erkrankungen
+    P: u.a.|-
+
+  G @inline: Letzte
+    P<Brustschmerz / Synkope / Atemnot / Herzklopfen / Herzrasen>: letzte Koronarangiographie|-
+
+  G @inline: Ereignisvorgeschichte
+    P<!Atemnot>: keine Atemnot|a
+    P<!Synkope>: keine Synkope|a
+    P<!Herzklopfen>: kein Herzklopfen|a
+    P<!Herzrasen>: kein Herzrasen|a
+    P<!Fieber>: kein Fieber|a
+    P<!Husten>: kein Husten|a
+    P<!Übelkeit>: keine Übelkeit|a
+    P<!Erbrechen>: kein Erbrechen|a
+    P<!Algurie>: keine Algurie|a
+    P<!Pollakisurie>: keine Pollakisurie|a
+    P<!Schwindel>: kein Schwindel|a
+    P<!Krampfanfall>: kein Krampfanfall|a
+    P<!Schwäche>: keine Schwäche|a

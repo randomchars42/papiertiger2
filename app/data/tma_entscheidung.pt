@@ -1,0 +1,16 @@
+# Telemedizinische Einschätzung, Eskalation und Übergabe
+N: tma_entscheidung
+I: gemeinsam
+
+E arbeitshypothese: text label="Arbeitshypothese" placeholder="klinische Arbeitshypothese" prefix=""
+E ziel: text label="Versorgungsziel" placeholder="Klinik, Fachgebiet oder Praxis" prefix=""
+E news2: number label="NEWS2-Gesamtwert" min=0 max=20 step=1
+
+G @root @reset: Telemedizinische Entscheidung
+  P: Arbeitshypothese => Arbeitshypothese: {:hypothese=arbeitshypothese*:}|-
+  P: NEWS2-Gesamtwert => NEWS2 {:wert=news2*:} @sct=1104051000000101[Royal College of Physicians NEWS2 (National Early Warning Score 2) total score]|-
+  P: Dringlichkeit => keine akute Eskalation erforderlich|n / zeitnahe ärztliche Präsenzbeurteilung erforderlich|a / sofortige ärztliche Präsenzbeurteilung erforderlich|a / Notfall, Rettungsdienst alarmieren|a
+  P: Versorgungsentscheidung => Verbleib vor Ort mit Verlaufskontrolle|- / hausärztliche Weiterbehandlung @sct=183561008[Referral to general practitioner]|i / fachärztliche Weiterbehandlung @sct=103696004[Patient referral to specialist]|i / stationäre Aufnahme @sct=32485007[Hospital admission]|i / Verlegung nach {:ziel=ziel*:} @sct=429202003[Transfer of care to hospital]|i
+  P: Übergabe => strukturierte Übergabe erfolgt|i
+  P: Sicherheitsnetz => Warnzeichen und Eskalationsweg erläutert|i
+  P: Ergänzung zur telemedizinischen Entscheidung => {:freitext*:}|-

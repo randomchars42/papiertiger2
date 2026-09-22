@@ -1,0 +1,24 @@
+# Fokussierter pädiatrischer Status
+N: paed_status
+I: gemeinsam
+
+G @root @inactive @reset: Pädiatrischer Status|-
+  P: Allgemeine Aktivität => altersentsprechend aktiv|n* / schläfrig @sct=79519003[Drowsiness]|a / lethargisch @sct=214264003[Lethargy]|a / agitiert @sct=47295007[Psychomotor agitation]|a
+  P: Hydratation => klinisch ausreichend hydriert|n* / klinische Dehydratation @sct=34095006[Dehydration]|a
+  P: Nahrungsaufnahme => Nahrungsaufnahme altersentsprechend|n* / Trinkschwäche @sct=299698007[Poor feeding]|a
+
+  G @collapsed: Symptome
+    P: Fieber => kein Fieber|n* / Fieber @sct=386661006[Fever]|a
+    P: Husten => kein Husten @sct=161922009[No cough]|n* / Husten @sct=49727002[Cough]|a
+    P: Erbrechen => kein Erbrechen @sct=162062008[No vomiting]|n* / Erbrechen @sct=422400008[Vomiting]|a
+    P: Diarrhö => keine Diarrhö|n* / Diarrhö @sct=62315008[Diarrhoea]|a
+    P: Exanthem => kein Exanthem|n* / Exanthem @sct=271807003[Rash]|a / Urtikaria @sct=126485001[Urticaria]|a / Petechien @sct=271813007[Petechiae]|a
+    P: Krampfanfall => kein Krampfanfall|n* / Krampfanfall @sct=91175000[Seizure]|a
+
+  G @collapsed: Untersuchung
+    P: Schleimhäute => Schleimhäute feucht|n* / Schleimhäute trocken @sct=123640000[Mucous membrane dryness]|a
+    P: Hautturgor => Hautturgor unauffällig|n* / Hautturgor vermindert @sct=425244000[Decreased skin turgor]|a
+    P: Rekapillarisierung => Rekapillarisierung regelrecht @sct=45332005[Normal capillary filling]|n* / Rekapillarisierung verlängert @sct=50427001[Increased capillary filling time]|a
+    P: Abdomen => Abdomen weich @sct=249543005[Abdomen soft]|n* / abdomineller Druckschmerz @sct=43478001[Abdominal tenderness]|a / Abwehrspannung @sct=249545003[Abdominal guarding]|a
+
+  P: Ergänzung zum pädiatrischen Status => {:freitext*:}|-

@@ -1,0 +1,401 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "apgar_eingabe_minute": {
+      "type": "number",
+      "label": "Lebensminute",
+      "suffix": " min",
+      "min": 1,
+      "max": 60,
+      "step": 1
+    },
+    "apgar_eingabe_gesamt": {
+      "type": "number",
+      "label": "APGAR-Gesamtwert",
+      "min": 0,
+      "max": 10,
+      "step": 1
+    }
+  },
+  "groups": {
+    "apgar": {
+      "title": "APGAR",
+      "children": [
+        "apgar_gruppe_apgar_beurteilung"
+      ],
+      "phrases": [
+        "apgar_eintrag_apgar_beurteilungen"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_apgar_beurteilungen"
+        },
+        {
+          "type": "group",
+          "id": "apgar_gruppe_apgar_beurteilung"
+        }
+      ],
+      "reset": true
+    },
+    "apgar_gruppe_apgar_beurteilung": {
+      "title": "APGAR-Beurteilung",
+      "kind": "neutral",
+      "phrases": [
+        "apgar_eintrag_zeitpunkt_der_apgar_beurteilung",
+        "apgar_eintrag_hautfarbe",
+        "apgar_eintrag_herzfrequenz",
+        "apgar_eintrag_reflexe",
+        "apgar_eintrag_muskeltonus",
+        "apgar_eintrag_atmung",
+        "apgar_eintrag_apgar_gesamtwert",
+        "apgar_eintrag_ergaenzung_zur_apgar_beurteilung"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_zeitpunkt_der_apgar_beurteilung"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_hautfarbe"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_herzfrequenz"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_reflexe"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_muskeltonus"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_atmung"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_apgar_gesamtwert"
+        },
+        {
+          "type": "phrase",
+          "id": "apgar_eintrag_ergaenzung_zur_apgar_beurteilung"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 1,
+        "add": "APGAR-Beurteilung hinzufügen",
+        "empty": "apgar_eintrag_apgar_beurteilungen"
+      },
+      "score": {
+        "id": "apgar",
+        "label": "APGAR berechnen",
+        "minimum": 0,
+        "maximum": 10,
+        "criteria": [
+          {
+            "phraseId": "apgar_eintrag_hautfarbe",
+            "title": "Hautfarbe",
+            "options": [
+              {
+                "valueId": "apgar_eintrag_hautfarbe_wert_stamm_rosig_extremitaeten_rosig",
+                "text": "Stamm rosig, Extremitäten rosig",
+                "kind": "neutral",
+                "points": 2
+              },
+              {
+                "valueId": "apgar_eintrag_hautfarbe_wert_stamm_rosig_extremitaeten_blau",
+                "text": "Stamm rosig, Extremitäten blau",
+                "kind": "neutral",
+                "points": 1
+              },
+              {
+                "valueId": "apgar_eintrag_hautfarbe_wert_vollstaendig_blass_oder_blau",
+                "text": "vollständig blass oder blau",
+                "kind": "neutral",
+                "points": 0
+              }
+            ]
+          },
+          {
+            "phraseId": "apgar_eintrag_herzfrequenz",
+            "title": "Herzfrequenz",
+            "options": [
+              {
+                "valueId": "apgar_eintrag_herzfrequenz_wert_herzfrequenz_ueber_100_pro_minute",
+                "text": "Herzfrequenz über 100 pro Minute",
+                "kind": "normal",
+                "points": 2
+              },
+              {
+                "valueId": "apgar_eintrag_herzfrequenz_wert_herzfrequenz_unter_100_pro_minute",
+                "text": "Herzfrequenz unter 100 pro Minute",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "apgar_eintrag_herzfrequenz_wert_keine_herzfrequenz",
+                "text": "keine Herzfrequenz",
+                "kind": "abnormal",
+                "points": 0
+              }
+            ]
+          },
+          {
+            "phraseId": "apgar_eintrag_reflexe",
+            "title": "Reflexe",
+            "options": [
+              {
+                "valueId": "apgar_eintrag_reflexe_wert_kraeftige_reaktion",
+                "text": "kräftige Reaktion",
+                "kind": "normal",
+                "points": 2
+              },
+              {
+                "valueId": "apgar_eintrag_reflexe_wert_grimassieren_oder_schwache_reaktion",
+                "text": "Grimassieren oder schwache Reaktion",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "apgar_eintrag_reflexe_wert_keine_reaktion",
+                "text": "keine Reaktion",
+                "kind": "abnormal",
+                "points": 0
+              }
+            ]
+          },
+          {
+            "phraseId": "apgar_eintrag_muskeltonus",
+            "title": "Muskeltonus",
+            "options": [
+              {
+                "valueId": "apgar_eintrag_muskeltonus_wert_aktive_bewegung",
+                "text": "aktive Bewegung",
+                "kind": "normal",
+                "points": 2
+              },
+              {
+                "valueId": "apgar_eintrag_muskeltonus_wert_geringe_beugung_der_extremitaeten",
+                "text": "geringe Beugung der Extremitäten",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "apgar_eintrag_muskeltonus_wert_schlaff",
+                "text": "schlaff",
+                "kind": "abnormal",
+                "points": 0
+              }
+            ]
+          },
+          {
+            "phraseId": "apgar_eintrag_atmung",
+            "title": "Atmung",
+            "options": [
+              {
+                "valueId": "apgar_eintrag_atmung_wert_regelmaessige_atmung_kraeftiges_schreien",
+                "text": "regelmäßige Atmung, kräftiges Schreien",
+                "kind": "normal",
+                "points": 2
+              },
+              {
+                "valueId": "apgar_eintrag_atmung_wert_langsame_oder_unregelmaessige_atmung_schwaches_schreien",
+                "text": "langsame oder unregelmäßige Atmung, schwaches Schreien",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "apgar_eintrag_atmung_wert_keine_atmung",
+                "text": "keine Atmung",
+                "kind": "abnormal",
+                "points": 0
+              }
+            ]
+          }
+        ],
+        "target": {
+          "phraseId": "apgar_eintrag_apgar_gesamtwert",
+          "valueId": "apgar_eintrag_apgar_gesamtwert_wert_apgar",
+          "attributeId": "wert"
+        }
+      }
+    }
+  },
+  "phrases": {
+    "apgar_eintrag_apgar_beurteilungen": {
+      "title": "APGAR-Beurteilungen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_apgar_beurteilungen_wert_keine_apgar_beurteilung_dokumentiert": {
+          "kind": "neutral",
+          "text": "keine APGAR-Beurteilung dokumentiert"
+        }
+      }
+    },
+    "apgar_eintrag_zeitpunkt_der_apgar_beurteilung": {
+      "title": "Zeitpunkt der APGAR-Beurteilung",
+      "kind": "neutral",
+      "default": "apgar_eintrag_zeitpunkt_der_apgar_beurteilung_wert_apgar_in_der_lebensminute",
+      "values": {
+        "apgar_eintrag_zeitpunkt_der_apgar_beurteilung_wert_apgar_in_der_lebensminute": {
+          "kind": "neutral",
+          "text": "APGAR in der {:minute*:}. Lebensminute"
+        }
+      },
+      "attributes": {
+        "minute": "apgar_eingabe_minute"
+      }
+    },
+    "apgar_eintrag_hautfarbe": {
+      "title": "Hautfarbe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_hautfarbe_wert_stamm_rosig_extremitaeten_rosig": {
+          "kind": "neutral",
+          "text": "Stamm rosig, Extremitäten rosig",
+          "points": 2
+        },
+        "apgar_eintrag_hautfarbe_wert_stamm_rosig_extremitaeten_blau": {
+          "kind": "neutral",
+          "text": "Stamm rosig, Extremitäten blau",
+          "points": 1
+        },
+        "apgar_eintrag_hautfarbe_wert_vollstaendig_blass_oder_blau": {
+          "kind": "neutral",
+          "text": "vollständig blass oder blau",
+          "points": 0
+        }
+      }
+    },
+    "apgar_eintrag_herzfrequenz": {
+      "title": "Herzfrequenz",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_herzfrequenz_wert_herzfrequenz_ueber_100_pro_minute": {
+          "kind": "normal",
+          "text": "Herzfrequenz über 100 pro Minute",
+          "points": 2
+        },
+        "apgar_eintrag_herzfrequenz_wert_herzfrequenz_unter_100_pro_minute": {
+          "kind": "abnormal",
+          "text": "Herzfrequenz unter 100 pro Minute",
+          "points": 1
+        },
+        "apgar_eintrag_herzfrequenz_wert_keine_herzfrequenz": {
+          "kind": "abnormal",
+          "text": "keine Herzfrequenz",
+          "points": 0
+        }
+      }
+    },
+    "apgar_eintrag_reflexe": {
+      "title": "Reflexe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_reflexe_wert_kraeftige_reaktion": {
+          "kind": "normal",
+          "text": "kräftige Reaktion",
+          "points": 2
+        },
+        "apgar_eintrag_reflexe_wert_grimassieren_oder_schwache_reaktion": {
+          "kind": "abnormal",
+          "text": "Grimassieren oder schwache Reaktion",
+          "points": 1
+        },
+        "apgar_eintrag_reflexe_wert_keine_reaktion": {
+          "kind": "abnormal",
+          "text": "keine Reaktion",
+          "points": 0
+        }
+      }
+    },
+    "apgar_eintrag_muskeltonus": {
+      "title": "Muskeltonus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_muskeltonus_wert_aktive_bewegung": {
+          "kind": "normal",
+          "text": "aktive Bewegung",
+          "points": 2
+        },
+        "apgar_eintrag_muskeltonus_wert_geringe_beugung_der_extremitaeten": {
+          "kind": "abnormal",
+          "text": "geringe Beugung der Extremitäten",
+          "points": 1
+        },
+        "apgar_eintrag_muskeltonus_wert_schlaff": {
+          "kind": "abnormal",
+          "text": "schlaff",
+          "points": 0
+        }
+      }
+    },
+    "apgar_eintrag_atmung": {
+      "title": "Atmung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_atmung_wert_regelmaessige_atmung_kraeftiges_schreien": {
+          "kind": "normal",
+          "text": "regelmäßige Atmung, kräftiges Schreien",
+          "points": 2
+        },
+        "apgar_eintrag_atmung_wert_langsame_oder_unregelmaessige_atmung_schwaches_schreien": {
+          "kind": "abnormal",
+          "text": "langsame oder unregelmäßige Atmung, schwaches Schreien",
+          "points": 1
+        },
+        "apgar_eintrag_atmung_wert_keine_atmung": {
+          "kind": "abnormal",
+          "text": "keine Atmung",
+          "snomed": "1023001",
+          "snomedDisplay": "Apnoea",
+          "points": 0
+        }
+      }
+    },
+    "apgar_eintrag_apgar_gesamtwert": {
+      "title": "APGAR-Gesamtwert",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_apgar_gesamtwert_wert_apgar": {
+          "kind": "neutral",
+          "text": "APGAR {:wert*:}",
+          "snomed": "249228009",
+          "snomedDisplay": "Total apgar score"
+        }
+      },
+      "attributes": {
+        "wert": "apgar_eingabe_gesamt"
+      }
+    },
+    "apgar_eintrag_ergaenzung_zur_apgar_beurteilung": {
+      "title": "Ergänzung zur APGAR-Beurteilung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "apgar_eintrag_ergaenzung_zur_apgar_beurteilung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

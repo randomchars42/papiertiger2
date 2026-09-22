@@ -1,0 +1,11 @@
+# Fokussierter Point-of-Care-Ultraschall des Abdomens
+N: pocus_abdomen
+I: gemeinsam
+
+G @root @inactive @reset: POCUS Abdomen|-
+  P: Abdomensonographie => Point-of-Care-Ultraschall des Abdomens durchgeführt @sct=870384002[Point of care ultrasound]|i*
+  P: Freie Flüssigkeit => keine freie intraabdominelle Flüssigkeit|n* / freie intraabdominelle Flüssigkeit|a / Aszites @sct=389026000[Ascites]|a
+  P: Gallenblase => keine Gallensteine @sct=413350009:{246090004=235919008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Gallstone; current; subject of record]|n* / Gallensteine @sct=235919008[Gallstone]|a / sonographische Zeichen einer Cholezystitis|a
+  P: Harnstau => kein Harnstau @sct=413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Hydronephrosis; current; subject of record]|n* / Harnstau links @sct=43064006[Hydronephrosis]|a / Harnstau rechts @sct=43064006[Hydronephrosis]|a / Harnstau beidseits @sct=43064006[Hydronephrosis]|a
+  P: Bauchaorta => Bauchaorta ohne Aneurysma @sct=413350009:{246090004=233985008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Abdominal aortic aneurysm; current; subject of record]|n* / Bauchaortenaneurysma @sct=233985008[Abdominal aortic aneurysm]|a
+  P: Ergänzung zum POCUS Abdomen => {:freitext*:}|-

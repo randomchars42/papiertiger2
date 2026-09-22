@@ -1,0 +1,14 @@
+# Wiederholbare Dauermedikation
+N: dauermedikation
+I: gemeinsam
+
+E arzneimittel: text label="Arzneimittel" placeholder="Wirkstoff oder Präparat" prefix=""
+E dosierung: text label="Dosierung" placeholder="Dosis und Einnahmeschema" prefix=""
+
+G @root @collapsed @reset: Dauermedikation
+  P: Dauermedikationsstatus => keine Dauermedikation|n / Dauermedikation unbekannt|-
+
+  G @repeat(initial=0,add="Arzneimittel hinzufügen",empty="Dauermedikationsstatus") @reset: Arzneimittel|-
+    P: Arzneimittel => {:arzneimittel=arzneimittel*:}|-*
+    P<Arzneimittel>: Dosierung der Dauermedikation => Dosierung: {:dosierung=dosierung*:}|-
+    P: Indikation der Dauermedikation => Indikation: {:freitext*:}|-

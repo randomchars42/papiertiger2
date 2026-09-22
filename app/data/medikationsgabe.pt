@@ -1,0 +1,17 @@
+# Wiederholbare Medikamentengaben
+N: medikationsgabe
+I: gemeinsam
+
+E wirkstoff: text label="Wirkstoff" placeholder="Wirkstoff oder Präparat" prefix=""
+E dosis: number label="Dosis" min=0 step=0.1
+E einheit: choice label="Einheit" => mg|- / µg (Mikrogramm)|- / g|- / ml|- / I.E. (Internationale Einheit)|-
+E applikationsweg: choice label="Applikationsweg" => i.v.|- / i.o.|- / p.o.|- / i.m.|- / s.c.|- / intranasal|- / inhalativ|- / rektal|-
+
+G @root @collapsed @reset: Medikamentengaben
+  P: Medikamentengaben => keine Medikamentengabe dokumentiert|-
+
+  G @repeat(initial=0,add="Medikamentengabe hinzufügen",empty="Medikamentengaben") @reset: Medikamentengabe|i
+    P: Medikamentengabe => {:wirkstoff=wirkstoff*:} {:dosis=dosis*:} {:einheit=einheit*:} {:weg=applikationsweg*:} um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=18629005[Administration of medicine]|i*
+    P<Medikamentengabe>: Wirkung der Medikamentengabe => klinische Besserung nach Medikamentengabe|i / keine erkennbare Wirkung nach Medikamentengabe|a / unerwünschte Wirkung nach Medikamentengabe @sct=62014003[Adverse drug reaction]|a
+    P<unerwünschte Wirkung nach Medikamentengabe>: Unerwünschte Wirkung => unerwünschte Wirkung: {:freitext*:}|a
+    P: Ergänzung zur Medikamentengabe => {:freitext*:}|-

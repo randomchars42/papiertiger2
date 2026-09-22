@@ -28,6 +28,25 @@ const validateDocuments = (value) => {
     if (!(value.default in value.documents)) {
         throw new Error(`Das Standarddokument "${value.default}" fehlt.`);
     }
+    if (value.tools !== undefined &&
+        (!Array.isArray(value.tools) ||
+            value.tools.some((tool) => !isRecord(tool) ||
+                typeof tool.plugin !== "string" ||
+                !isRecord(tool.params) ||
+                typeof tool.params.id !== "string"))) {
+        throw new Error("Die Werkzeugdefinition ist ungültig.");
+    }
+    return value;
+};
+const toolRequest = (value) => {
+    if (!isRecord(value) ||
+        typeof value.plugin !== "string" ||
+        typeof value.id !== "string" ||
+        typeof value.label !== "string" ||
+        !isRecord(value.params) ||
+        typeof value.params.id !== "string") {
+        return null;
+    }
     return value;
 };
 const element = (tag, className, text) => {
@@ -91,12 +110,37 @@ const run = async () => {
     label.append(select);
     const copyText = button("Dokument kopieren", "copy-text");
     const copyData = button("Daten kopieren", "copy-data");
+    const toolButtons = new Map();
+    for (const tool of catalog.tools ?? []) {
+        const toolId = tool.params.id;
+        const toolLabel = typeof tool.params.label === "string" ? tool.params.label : toolId;
+        const toolButton = button(toolLabel, "open-tool");
+        toolButton.dataset.toolPlugin = tool.plugin;
+        toolButton.dataset.toolId = toolId;
+        toolButton.dataset.toolLabel = toolLabel;
+        toolButton.setAttribute("aria-pressed", "false");
+        toolButtons.set(`${tool.plugin}:${toolId}`, toolButton);
+        toolbar.append(toolButton);
+    }
     const status = element("span", "status");
     status.setAttribute("role", "status");
     status.setAttribute("aria-live", "polite");
-    toolbar.append(label, copyText, copyData, status);
+    toolbar.prepend(label, copyText, copyData);
+    toolbar.append(status);
+    const body = element("div", "document-shell__body");
+    const toolSurface = element("aside", "tool-surface");
+    toolSurface.hidden = true;
+    toolSurface.setAttribute("aria-label", "Werkzeuge");
+    const toolHeader = element("header", "tool-surface__header");
+    const toolTitle = element("h2", "tool-surface__title", "Werkzeug");
+    const closeToolButton = button("Schließen", "close-tool");
+    closeToolButton.classList.add("control--icon");
+    toolHeader.append(toolTitle, closeToolButton);
+    const toolContent = element("div", "tool-surface__content");
+    toolSurface.append(toolHeader, toolContent);
     const content = element("div", "document-shell__content");
-    shell.append(toolbar, content);
+    body.append(toolSurface, content);
+    shell.append(toolbar, body);
     host.replaceChildren(shell);
     const queryDocument = new URL(window.location.href).searchParams.get("document");
     let currentId = queryDocument !== null && queryDocument in catalog.documents
@@ -104,12 +148,86 @@ const run = async () => {
         : catalog.default;
     let currentBlocks = [];
     let revision = 0;
+    let toolRevision = 0;
+    let activeTool = null;
+    let toolReturnFocus = null;
     select.value = currentId;
+    const markActiveToolButton = (pluginName, id) => {
+        for (const [key, toolButton] of toolButtons) {
+            toolButton.setAttribute("aria-pressed", String(key === `${pluginName ?? ""}:${id ?? ""}`));
+        }
+    };
+    const closeTool = (restoreFocus = false) => {
+        toolRevision += 1;
+        if (activeTool !== null) {
+            activeTool.plugin.dispose?.(activeTool.parentId);
+        }
+        activeTool = null;
+        toolContent.replaceChildren();
+        toolSurface.hidden = true;
+        shell.classList.remove("document-shell--tool-open");
+        markActiveToolButton();
+        if (restoreFocus && toolReturnFocus?.isConnected === true) {
+            toolReturnFocus.focus();
+        }
+        toolReturnFocus = null;
+    };
+    const openTool = async (request) => {
+        toolRevision += 1;
+        const currentToolRevision = toolRevision;
+        if (activeTool !== null) {
+            activeTool.plugin.dispose?.(activeTool.parentId);
+        }
+        activeTool = null;
+        toolContent.replaceChildren();
+        toolTitle.textContent = request.label;
+        toolSurface.hidden = false;
+        shell.classList.add("document-shell--tool-open");
+        markActiveToolButton(request.plugin, request.id);
+        const parent = element("div", "tool-surface__plugin");
+        parent.id = `Tool__${currentToolRevision}`;
+        toolContent.append(parent);
+        const plugin = await loadPlugin(request.plugin);
+        if (currentToolRevision !== toolRevision)
+            return;
+        if (plugin.display === undefined) {
+            throw new Error(`Plugin "${request.plugin}" kann nicht angezeigt werden.`);
+        }
+        await plugin.display(parent.id, request.params);
+        if (currentToolRevision !== toolRevision) {
+            plugin.dispose?.(parent.id);
+            return;
+        }
+        activeTool = {
+            pluginName: request.plugin,
+            id: request.id,
+            plugin,
+            parentId: parent.id,
+        };
+        closeToolButton.focus();
+    };
+    const refreshToolStatus = async () => {
+        await Promise.all((catalog.tools ?? []).map(async (definition) => {
+            const key = `${definition.plugin}:${definition.params.id}`;
+            const toolButton = toolButtons.get(key);
+            if (toolButton === undefined)
+                return;
+            const plugin = await loadPlugin(definition.plugin);
+            const toolStatus = await plugin.getToolStatus?.(definition.params.id);
+            const label = toolButton.dataset.toolLabel ?? definition.params.id;
+            toolButton.textContent =
+                toolStatus?.badge === undefined
+                    ? label
+                    : `${label} (${toolStatus.badge})`;
+            toolButton.classList.toggle("control--attention", toolStatus?.attention === true);
+        }));
+    };
     const renderDocument = async (id) => {
         const definition = catalog.documents[id];
         if (definition === undefined)
             return;
         currentId = id;
+        closeTool();
         revision += 1;
         const currentRevision = revision;
         status.textContent = "";
@@ -155,7 +273,32 @@ const run = async () => {
         const target = event.target;
         if (!(target instanceof Element))
             return;
-        const action = target.closest("button[data-document-action]")?.dataset.documentAction;
+        const actionButton = target.closest("button[data-document-action]");
+        const action = actionButton?.dataset.documentAction;
+        if (action === "open-tool" && actionButton !== null) {
+            const pluginName = actionButton.dataset.toolPlugin;
+            const id = actionButton.dataset.toolId;
+            if (pluginName === undefined || id === undefined)
+                return;
+            if (activeTool?.pluginName === pluginName && activeTool.id === id) {
+                closeTool(true);
+                return;
+            }
+            const definition = (catalog.tools ?? []).find((candidate) => candidate.plugin === pluginName && candidate.params.id === id);
+            if (definition === undefined)
+                return;
+            toolReturnFocus = actionButton;
+            const label = typeof definition.params.label === "string"
+                ? definition.params.label
+                : id;
+            void openTool({
+                plugin: pluginName,
+                id,
+                label,
+                params: definition.params,
+            }).catch(showError);
+            return;
+        }
         if (action !== "copy-text" && action !== "copy-data")
             return;
         void (async () => {
@@ -177,6 +320,53 @@ const run = async () => {
             }
         })();
     });
+    closeToolButton.addEventListener("click", () => closeTool(true));
+    shell.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || activeTool === null)
+            return;
+        event.preventDefault();
+        closeTool(true);
+    });
+    shell.addEventListener("papiertiger:open-tool", (event) => {
+        const customEvent = event;
+        const request = toolRequest(customEvent.detail);
+        if (request === null)
+            return;
+        customEvent.stopPropagation();
+        toolReturnFocus =
+            document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
+        void openTool(request).catch(showError);
+    });
+    shell.addEventListener("papiertiger:plugin-message", (event) => {
+        const customEvent = event;
+        if (!isRecord(customEvent.detail) ||
+            typeof customEvent.detail.type !== "string") {
+            return;
+        }
+        const message = customEvent.detail;
+        customEvent.stopPropagation();
+        const receivers = new Set(currentBlocks.map((block) => block.plugin));
+        void (async () => {
+            try {
+                await Promise.all([...receivers].map(async (plugin) => {
+                    await plugin.receive?.({
+                        type: message.type,
+                        payload: message.payload,
+                    });
+                }));
+            }
+            catch (error) {
+                console.error(error);
+                status.textContent = "Ergebnis konnte nicht übernommen werden";
+            }
+        })();
+    });
+    shell.addEventListener("papiertiger:tool-status", () => {
+        void refreshToolStatus().catch((error) => console.error(error));
+    });
     await renderDocument(currentId);
+    await refreshToolStatus();
 };
 void run().catch(showError);

@@ -62,6 +62,9 @@ export const parseValue = (
                 coding: {
                     system: "http://snomed.info/sct",
                     code: value.snomed,
+                    ...(value.snomedDisplay === undefined
+                        ? {}
+                        : { display: value.snomedDisplay }),
                 },
                 ...("kind" in value ? { kind: value.kind } : {}),
             };
@@ -72,6 +75,9 @@ export const parseValue = (
             coding: {
                 system: "http://snomed.info/sct",
                 expression: value.snomed,
+                ...(value.snomedDisplay === undefined
+                    ? {}
+                    : { display: value.snomedDisplay }),
             },
             ...("kind" in value ? { kind: value.kind } : {}),
         };

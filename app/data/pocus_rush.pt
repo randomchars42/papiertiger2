@@ -1,0 +1,20 @@
+# Point-of-Care-Ultraschall für Schock und Dyspnoe
+N: pocus_rush
+I: gemeinsam
+
+G @root @inactive @reset: POCUS Herz, Thorax und Kreislauf|-
+  P: POCUS-Untersuchung => Point-of-Care-Ultraschall durchgeführt @sct=870384002[Point of care ultrasound]|i*
+
+  G @collapsed: Herz
+    P: Perikarderguss => kein Perikarderguss @sct=413350009:{246090004=373945007},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pericardial effusion; current; subject of record]|n* / Perikarderguss @sct=373945007[Pericardial effusion]|a
+    P: Rechtsventrikel => rechter Ventrikel nicht dilatiert|n* / rechter Ventrikel dilatiert @sct=253522006[Right cardiac ventricular dilatation]|a
+    P: Herzaktivität => Herzaktivität nachweisbar|n* / keine Herzaktivität, Asystolie @sct=397829000[Asystole]|a
+
+  G @collapsed: Thorax
+    P: Lungengleiten => Lungengleiten beidseits nachweisbar|n* / Lungengleiten links aufgehoben|a / Lungengleiten rechts aufgehoben|a
+    P: Pneumothorax => kein sonographischer Hinweis auf Pneumothorax @sct=413350009:{246090004=36118008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pneumothorax; current; subject of record]|n* / Pneumothorax links @sct=109364007[Left pneumothorax]|a / Pneumothorax rechts @sct=109363001[Right pneumothorax]|a
+    P: B-Linien => keine vermehrten B-Linien|n* / vermehrte B-Linien @sct=1217292008[Lung B-lines]|a
+    P: Pleuraerguss => kein Pleuraerguss @sct=413350009:{246090004=60046008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pleural effusion; current; subject of record]|n* / Pleuraerguss links @sct=1366511008[Left pleural effusion]|a / Pleuraerguss rechts @sct=1366512001[Right pleural effusion]|a / Pleuraerguss beidseits @sct=60046008[Pleural effusion]|a
+    P: Lungenkonsolidierung => keine Lungenkonsolidierung @sct=413350009:{246090004=95436008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Lung consolidation; current; subject of record]|n* / Lungenkonsolidierung @sct=95436008[Lung consolidation]|a
+
+  P: Ergänzung zum POCUS Herz und Thorax => {:freitext*:}|-

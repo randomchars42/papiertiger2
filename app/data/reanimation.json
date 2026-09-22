@@ -1,0 +1,270 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "reanimation_eingabe_energie": {
+      "type": "number",
+      "label": "Energie",
+      "suffix": " J",
+      "min": 1,
+      "max": 500,
+      "step": 1
+    },
+    "reanimation_eingabe_rosc_dauer": {
+      "type": "number",
+      "label": "Dauer bis ROSC",
+      "suffix": " min",
+      "min": 0,
+      "max": 300,
+      "step": 1
+    }
+  },
+  "groups": {
+    "reanimation": {
+      "title": "Reanimation",
+      "children": [
+        "reanimation_gruppe_rhythmusanalyse"
+      ],
+      "phrases": [
+        "reanimation_eintrag_reanimationsbeginn",
+        "reanimation_eintrag_rhythmusanalysen",
+        "reanimation_eintrag_rosc",
+        "reanimation_eintrag_erneuter_kreislaufstillstand",
+        "reanimation_eintrag_ergaenzung_zur_reanimation"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_reanimationsbeginn"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_rhythmusanalysen"
+        },
+        {
+          "type": "group",
+          "id": "reanimation_gruppe_rhythmusanalyse"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_rosc"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_erneuter_kreislaufstillstand"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_ergaenzung_zur_reanimation"
+        }
+      ],
+      "reset": true,
+      "collapsed": true
+    },
+    "reanimation_gruppe_rhythmusanalyse": {
+      "title": "Rhythmusanalyse",
+      "kind": "neutral",
+      "phrases": [
+        "reanimation_eintrag_rhythmusanalyse",
+        "reanimation_eintrag_rhythmus",
+        "reanimation_eintrag_defibrillation",
+        "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse"
+      ],
+      "items": [
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_rhythmusanalyse"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_rhythmus"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_defibrillation"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse"
+        }
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Rhythmusanalyse hinzufügen",
+        "empty": "reanimation_eintrag_rhythmusanalysen"
+      }
+    }
+  },
+  "phrases": {
+    "reanimation_eintrag_reanimationsbeginn": {
+      "title": "Reanimationsbeginn",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_reanimationsbeginn_wert_laufende_laienreanimation_uebernommen": {
+          "kind": "intervention",
+          "text": "laufende Laienreanimation übernommen",
+          "snomed": "89666000",
+          "snomedDisplay": "CPR"
+        },
+        "reanimation_eintrag_reanimationsbeginn_wert_laufende_reanimation_durch_ersthelfende_uebernommen": {
+          "kind": "intervention",
+          "text": "laufende Reanimation durch Ersthelfende übernommen",
+          "snomed": "89666000",
+          "snomedDisplay": "CPR"
+        },
+        "reanimation_eintrag_reanimationsbeginn_wert_kreislaufstillstand_bei_eintreffen_reanimation_begonnen": {
+          "kind": "intervention",
+          "text": "Kreislaufstillstand bei Eintreffen, Reanimation begonnen",
+          "snomed": "89666000",
+          "snomedDisplay": "CPR"
+        },
+        "reanimation_eintrag_reanimationsbeginn_wert_kreislaufstillstand_im_verlauf_reanimation_begonnen": {
+          "kind": "intervention",
+          "text": "Kreislaufstillstand im Verlauf, Reanimation begonnen",
+          "snomed": "89666000",
+          "snomedDisplay": "CPR"
+        }
+      }
+    },
+    "reanimation_eintrag_rhythmusanalysen": {
+      "title": "Rhythmusanalysen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_rhythmusanalysen_wert_keine_rhythmusanalyse_dokumentiert": {
+          "kind": "neutral",
+          "text": "keine Rhythmusanalyse dokumentiert"
+        }
+      }
+    },
+    "reanimation_eintrag_rhythmusanalyse": {
+      "title": "Rhythmusanalyse",
+      "kind": "intervention",
+      "default": "reanimation_eintrag_rhythmusanalyse_wert_rhythmusanalyse_um",
+      "values": {
+        "reanimation_eintrag_rhythmusanalyse_wert_rhythmusanalyse_um": {
+          "kind": "intervention",
+          "text": "Rhythmusanalyse um {:zeitpunkt*:}"
+        }
+      },
+      "attributes": {
+        "zeitpunkt": "gemeinsam_eingabe_ereigniszeitpunkt"
+      }
+    },
+    "reanimation_eintrag_rhythmus": {
+      "title": "Rhythmus",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "reanimation_eintrag_rhythmus_wert_asystolie": {
+          "kind": "abnormal",
+          "text": "Asystolie",
+          "snomed": "427485008",
+          "snomedDisplay": "ECG: asystole"
+        },
+        "reanimation_eintrag_rhythmus_wert_pulslose_elektrische_aktivitaet": {
+          "kind": "abnormal",
+          "text": "pulslose elektrische Aktivität",
+          "snomed": "426975008",
+          "snomedDisplay": "ECG: pulseless electrical activity"
+        },
+        "reanimation_eintrag_rhythmus_wert_kammerflimmern": {
+          "kind": "abnormal",
+          "text": "Kammerflimmern",
+          "snomed": "164896001",
+          "snomedDisplay": "ECG: ventricular fibrillation"
+        },
+        "reanimation_eintrag_rhythmus_wert_pulslose_ventrikulaere_tachykardie": {
+          "kind": "abnormal",
+          "text": "pulslose ventrikuläre Tachykardie",
+          "snomed": "164895002",
+          "snomedDisplay": "ECG: ventricular tachycardia"
+        }
+      },
+      "suggestions": {
+        "reanimation_eintrag_rhythmusanalyse_wert_rhythmusanalyse_um": null
+      }
+    },
+    "reanimation_eintrag_defibrillation": {
+      "title": "Defibrillation",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "reanimation_eintrag_defibrillation_wert_defibrillation_mit": {
+          "kind": "intervention",
+          "text": "Defibrillation mit {:energie*:}",
+          "snomed": "428909008",
+          "snomedDisplay": "Biphasic defibrillation procedure"
+        }
+      },
+      "attributes": {
+        "energie": "reanimation_eingabe_energie"
+      },
+      "suggestions": {
+        "reanimation_eintrag_rhythmus_wert_kammerflimmern": "reanimation_eintrag_defibrillation_wert_defibrillation_mit",
+        "reanimation_eintrag_rhythmus_wert_pulslose_ventrikulaere_tachykardie": "reanimation_eintrag_defibrillation_wert_defibrillation_mit"
+      }
+    },
+    "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse": {
+      "title": "Ergänzung zur Rhythmusanalyse",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "reanimation_eintrag_rosc": {
+      "title": "ROSC",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_rosc_wert_rosc_nach": {
+          "kind": "intervention",
+          "text": "ROSC nach {:dauer*:}",
+          "snomed": "711410007",
+          "snomedDisplay": "Signs of return of spontaneous circulation"
+        }
+      },
+      "attributes": {
+        "dauer": "reanimation_eingabe_rosc_dauer"
+      }
+    },
+    "reanimation_eintrag_erneuter_kreislaufstillstand": {
+      "title": "Erneuter Kreislaufstillstand",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_erneuter_kreislaufstillstand_wert_erneuter_kreislaufstillstand": {
+          "kind": "abnormal",
+          "text": "Erneuter Kreislaufstillstand",
+          "snomed": "410429000",
+          "snomedDisplay": "Cardiac arrest"
+        }
+      }
+    },
+    "reanimation_eintrag_ergaenzung_zur_reanimation": {
+      "title": "Ergänzung zur Reanimation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_ergaenzung_zur_reanimation_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}
