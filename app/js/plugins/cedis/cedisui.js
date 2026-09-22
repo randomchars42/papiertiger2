@@ -1,5 +1,3 @@
-import { normalise } from "./cedislib.js";
-const RESULT_LIMIT = 40;
 const element = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className !== undefined)
@@ -15,82 +13,30 @@ const actionButton = (label, action, data = {}, className = "control") => {
     Object.assign(button.dataset, data);
     return button;
 };
-const region = (parent, name) => {
-    const node = parent.querySelector(`[data-region="${name}"]`);
-    if (node === null)
-        throw new Error(`CEDIS region "${name}" was not found`);
-    return node;
+const entriesByCode = (catalog) => new Map(catalog.entries.map((entry) => [entry.code, entry]));
+const categoryNames = (catalog) => new Map(catalog.categories.map((category) => [category.code, category.label]));
+const selectionRow = (entry, category, index, count) => {
+    const row = element("div", "cedis-choice");
+    row.append(element("span", "cedis-code", entry.code), element("span", "cedis-choice__label", entry.label), element("span", "status", category));
+    const tools = element("span", "group__tools");
+    const up = actionButton("↑", "move-up", { code: entry.code }, "control control--icon");
+    up.setAttribute("aria-label", `${entry.label} nach oben verschieben`);
+    up.disabled = index === 0;
+    const down = actionButton("↓", "move-down", { code: entry.code }, "control control--icon");
+    down.setAttribute("aria-label", `${entry.label} nach unten verschieben`);
+    down.disabled = index === count - 1;
+    const remove = actionButton("×", "remove-code", { code: entry.code }, "control control--icon control--danger");
+    remove.setAttribute("aria-label", `${entry.label} entfernen`);
+    tools.append(up, down, remove);
+    row.append(tools);
+    return row;
 };
-const categoryNames = (catalog) => new Map(catalog.categories.map((category) => [
-    category.code,
-    category.label,
-]));
-const renderSelection = (parent, catalog, selectedCode) => {
-    parent.replaceChildren();
-    const selected = catalog.entries.find((entry) => entry.code === selectedCode);
-    if (selected === undefined) {
-        parent.append(element("span", "group__summary-empty", "Noch kein PCL-Code ausgewählt"));
-        return;
-    }
-    const categories = categoryNames(catalog);
-    parent.append(element("strong", undefined, "Auswahl:"), element("span", "cedis-code", selected.code), element("span", undefined, selected.label), element("span", "status", categories.get(selected.category) ?? selected.category), actionButton("Auswahl löschen", "clear-selection"));
-};
-const renderTags = (parent, tags, query) => {
-    parent.replaceChildren();
-    for (const tag of tags) {
-        const button = actionButton(tag, "search-tag", { query: tag }, "choice choice--neutral choice--small");
-        button.setAttribute("aria-pressed", String(normalise(query) === normalise(tag)));
-        parent.append(button);
-    }
-};
-const resultStatus = (catalog, results, query) => {
-    if (normalise(query) === "") {
-        return `${catalog.entries.length} Codes · Bereich wählen oder suchen`;
-    }
-    if (results.length === 1)
-        return "1 passender Code";
-    if (results.length > RESULT_LIMIT) {
-        return `${results.length} passende Codes · erste ${RESULT_LIMIT} angezeigt`;
-    }
-    return `${results.length} passende Codes`;
-};
-const renderResult = (result, categories, selectedCode) => {
-    const { entry } = result;
-    const item = element("article", "group group--neutral cedis-result");
-    item.setAttribute("role", "listitem");
-    const header = element("header", "group__header");
-    const select = actionButton(entry.label, "select-code", { code: entry.code }, "choice choice--neutral cedis-result__select");
-    select.replaceChildren(element("span", "cedis-code", entry.code), element("span", undefined, entry.label), element("span", "status cedis-result__category", categories.get(entry.category) ?? entry.category));
-    select.setAttribute("aria-pressed", String(entry.code === selectedCode));
-    select.setAttribute("aria-label", `${entry.code} ${entry.label} auswählen`);
-    header.append(select);
-    const tags = element("div", "group__tools cedis-result__tags");
-    const visibleTags = [
-        ...result.matchedTags,
-        ...entry.tags.filter((tag) => !result.matchedTags.includes(tag)),
-    ].slice(0, 5);
-    for (const tag of visibleTags) {
-        tags.append(actionButton(tag, "search-tag", { query: tag }, "choice choice--neutral choice--small"));
-    }
-    if (tags.childElementCount > 0)
-        header.append(tags);
-    item.append(header);
-    return item;
-};
-const renderResults = (parent, catalog, results, query, selectedCode) => {
-    parent.replaceChildren();
-    if (normalise(query) === "") {
-        parent.append(element("p", "group__content", "Ein Suchbegriff oder Bereich zeigt passende PCL-Codes."));
-        return;
-    }
-    if (results.length === 0) {
-        parent.append(element("p", "group__content", "Kein Treffer. Suche nach Symptom, Körperteil, Synonym oder dreistelligem Code."));
-        return;
-    }
-    const categories = categoryNames(catalog);
-    for (const result of results.slice(0, RESULT_LIMIT)) {
-        parent.append(renderResult(result, categories, selectedCode));
-    }
+const suggestionRow = (suggestion, entry, category) => {
+    const row = element("div", "cedis-choice");
+    const select = actionButton(`${entry.code} · ${entry.label}`, "add-code", { code: entry.code }, "choice choice--neutral cedis-choice__select");
+    select.setAttribute("aria-label", `${entry.code} ${entry.label} übernehmen`);
+    row.append(select, element("span", "status cedis-choice__context", `${category} · aus ${suggestion.sources.join(", ")}`));
+    return row;
 };
 const renderSources = (catalog) => {
     const details = element("details", "group group--neutral cedis-sources");
@@ -111,59 +57,68 @@ const renderSources = (catalog) => {
     details.append(content);
     return details;
 };
-export const renderSearch = (parent, catalog, results, tags, query, selectedCode) => {
-    renderSelection(region(parent, "selection"), catalog, selectedCode);
-    renderTags(region(parent, "tags"), tags, query);
-    region(parent, "result-status").textContent = resultStatus(catalog, results, query);
-    renderResults(region(parent, "results"), catalog, results, query, selectedCode);
-};
-export const renderModule = (parent, rootId, catalog, results, tags, query, selectedCode) => {
+export const renderSummary = (parent, rootId, catalog, state) => {
     parent.replaceChildren();
-    parent.classList.add("cedis-module");
+    parent.className = "cedis-module cedis-module--summary";
     parent.dataset.rootId = rootId;
-    const toolbar = element("div", "toolbar");
-    toolbar.append(element("h2", "group__heading", "CEDIS-PCL-Code"), element("span", "status", `Version ${catalog.version}`));
-    parent.append(toolbar);
-    const documentNode = element("article", "document");
-    const selection = element("aside", "group__summary cedis-selection");
-    selection.dataset.region = "selection";
-    selection.setAttribute("aria-live", "polite");
-    documentNode.append(selection);
-    const search = element("div", "inline-editor cedis-search");
-    const label = element("label", "group__heading", "PCL durchsuchen");
-    label.htmlFor = `${rootId}__search`;
-    const input = element("input", "editor-input cedis-search__input");
-    input.id = `${rootId}__search`;
-    input.type = "search";
-    input.value = query;
-    input.autocomplete = "off";
-    input.spellcheck = false;
-    input.placeholder = "z. B. Atemnot, Schulter oder 003";
-    input.dataset.input = "cedis-search";
-    input.setAttribute("aria-controls", `${rootId}__results`);
-    search.append(label, input, actionButton("Suche löschen", "clear-search"));
-    documentNode.append(search);
-    const tagGroup = element("section", "group group--neutral");
-    const tagHeader = element("header", "group__header");
-    tagHeader.append(element("h3", "group__heading", "Suchbegriffe"));
-    const tagList = element("div", "phrases");
-    tagList.dataset.region = "tags";
-    tagGroup.append(tagHeader, tagList);
-    documentNode.append(tagGroup);
-    const resultGroup = element("section", "group group--neutral");
-    const resultHeader = element("header", "group__header");
-    resultHeader.append(element("h3", "group__heading", "Treffer"));
-    const status = element("span", "status");
-    status.dataset.region = "result-status";
-    status.setAttribute("role", "status");
-    status.setAttribute("aria-live", "polite");
-    resultHeader.append(status);
-    const resultList = element("div", "group__body cedis-results");
-    resultList.id = `${rootId}__results`;
-    resultList.dataset.region = "results";
-    resultList.setAttribute("role", "list");
-    resultGroup.append(resultHeader, resultList);
-    documentNode.append(resultGroup, renderSources(catalog));
+    const documentNode = element("article", "document cedis-summary");
+    const header = element("header", "group__header");
+    header.append(element("h2", "group__heading", "CEDIS PCL"));
+    header.append(actionButton(state.selectedCodes.length === 0 ? "Auswählen" : "Bearbeiten", "open-editor"));
+    documentNode.append(header);
+    const entries = entriesByCode(catalog);
+    const selected = element("div", "phrases cedis-summary__choices");
+    for (const code of state.selectedCodes) {
+        const entry = entries.get(code);
+        if (entry === undefined)
+            continue;
+        selected.append(element("span", "phrase phrase--neutral phrase--included cedis-summary__choice", `${entry.code} ${entry.label}`));
+    }
+    if (selected.childElementCount === 0) {
+        selected.append(element("span", "group__summary-empty", state.suggestions.length === 0
+            ? "Keine Auswahl"
+            : `${state.suggestions.length} Vorschläge verfügbar`));
+    }
+    documentNode.append(selected);
     parent.append(documentNode);
-    renderSearch(parent, catalog, results, tags, query, selectedCode);
+};
+export const renderEditor = (parent, rootId, catalog, state) => {
+    parent.replaceChildren();
+    parent.className = "cedis-module cedis-module--editor";
+    parent.dataset.rootId = rootId;
+    const entries = entriesByCode(catalog);
+    const categories = categoryNames(catalog);
+    const selectedGroup = element("section", "group group--neutral");
+    const selectedHeader = element("header", "group__header");
+    selectedHeader.append(element("h3", "group__heading", "Ausgewählt und geordnet"));
+    const selected = element("div", "group__body cedis-choice-list");
+    for (const [index, code] of state.selectedCodes.entries()) {
+        const entry = entries.get(code);
+        if (entry === undefined)
+            continue;
+        selected.append(selectionRow(entry, categories.get(entry.category) ?? entry.category, index, state.selectedCodes.length));
+    }
+    if (selected.childElementCount === 0) {
+        selected.append(element("p", "group__content", "Noch kein PCL-Eintrag ausgewählt."));
+    }
+    selectedGroup.append(selectedHeader, selected);
+    const suggestionGroup = element("section", "group group--neutral");
+    const suggestionHeader = element("header", "group__header");
+    suggestionHeader.append(element("h3", "group__heading", "Aus Symptomen vorgeschlagen"));
+    const suggestions = element("div", "group__body cedis-choice-list");
+    for (const suggestion of state.suggestions) {
+        if (state.selectedCodes.includes(suggestion.code))
+            continue;
+        const entry = entries.get(suggestion.code);
+        if (entry === undefined)
+            continue;
+        suggestions.append(suggestionRow(suggestion, entry, categories.get(entry.category) ?? entry.category));
+    }
+    if (suggestions.childElementCount === 0) {
+        suggestions.append(element("p", "group__content", state.suggestions.length === 0
+            ? "Die ausgewählten Symptome liefern noch keine PCL-Vorschläge."
+            : "Alle vorgeschlagenen Einträge wurden übernommen."));
+    }
+    suggestionGroup.append(suggestionHeader, suggestions);
+    parent.append(selectedGroup, suggestionGroup, renderSources(catalog));
 };

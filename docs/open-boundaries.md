@@ -60,8 +60,16 @@ Eine wiederholbare Gruppe besitzt unabhängige Instanzen. Verschachtelte
 wiederholbare Gruppen und automatische Erzeugung mehrerer Instanzen aus einer
 anderen Auswahl sind noch nicht unterstützt.
 
-## CEDIS als Dokumentblock
+## Fachliche Qualität der CEDIS-Zuordnungen
 
-Das CEDIS-Plug-in ist implementiert, der Katalog bleibt ein externer JSON-
-Datenbestand. Welche Dokumente CEDIS standardmäßig enthalten und wie seine
-Auswahl mit Textblock-Phrasen interagiert, ist noch nicht festgelegt.
+Der Symptomkatalog deckt jeden gebündelten CEDIS-PCL-Code mindestens einmal
+ab. Diese Vollständigkeit ist technisch prüfbar; die klinische Qualität einer
+Beziehung `equivalent`, `related`, `broader` oder `narrower` bleibt jedoch eine
+redaktionelle Entscheidung. Zuordnungen werden ausdrücklich am Wert gepflegt
+und nicht aus SNOMED CT hergeleitet.
+
+Mehrdeutige Zuordnungen dürfen mehrere PCL-Einträge vorschlagen. Das
+CEDIS-Werkzeug verlangt deshalb weiterhin eine explizite Auswahl und lässt die
+Reihenfolge durch den Benutzer festlegen. Eine spätere automatische Priorität
+bräuchte eine eigene fachliche Regel und wird nicht aus Quellreihenfolge oder
+Kodierung abgeleitet.

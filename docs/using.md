@@ -7,9 +7,9 @@ betroffenen Eintrag.
 ## Dokument wählen
 
 Die Auswahl **Dokument** bestimmt Reihenfolge und Art der dargestellten Blöcke.
-Ein Dokument kann mehrere Textblöcke und künftig auch andere Plug-ins wie CEDIS
-enthalten. Die Blöcke teilen sich absichtlich den Textblock-Zustand, damit sie
-aufeinander reagieren können.
+Ein Dokument kann mehrere Textblöcke und andere Plug-ins wie CEDIS enthalten.
+Die Blöcke teilen sich absichtlich den Textblock-Zustand, damit sie aufeinander
+reagieren können.
 
 Ein Dokumentwechsel baut die sichtbaren Blöcke neu auf. Der aktuelle Zustand
 wird derzeit nicht dauerhaft gespeichert.
@@ -30,6 +30,12 @@ Eine Gruppe mit Rechner besitzt eine Schaltfläche wie **GCS berechnen** oder
 übernehmen** Kriterien und Summe unmittelbar als aktive Einträge im
 zugehörigen Textbaustein. Eine bestehende Auswahl dieser Einträge wird dabei
 durch die ausdrücklich übernommene Rechnerauswahl ersetzt.
+
+**CEDIS PCL** zeigt im Dokument die Anzahl der aus den Symptomen abgeleiteten
+Vorschläge beziehungsweise die bestätigte geordnete Auswahl. **Auswählen**
+öffnet das Seitenwerkzeug. Dort können ausschließlich die vorgeschlagenen
+PCL-Einträge übernommen, entfernt und mit Pfeiltasten geordnet werden. Ein
+Vorschlag wird nie automatisch zur Auswahl.
 
 ## Einträge bedienen
 
@@ -54,6 +60,19 @@ aufgenommen.
   stellt Standards und aktive Vorgaben wieder her.
 - Ein vorgeschlagener Eintrag wird erst nach Bestätigung Bestandteil der
   Ausgabe.
+
+Beim Eintrag **Symptom** öffnet **Symptom hinzufügen** eine kompakte
+Inline-Zeile. Ohne Suchtext zeigt sie nur die zur aktiven Linse gehörenden,
+häufigsten Werte in Quellreihenfolge. Die Suche berücksichtigt unabhängig von
+der Linse den ganzen Katalog einschließlich der Aliase. Passt kein Wert, kann
+der eingegebene Text ausdrücklich als Freitext übernommen werden; für CEDIS
+wird dann lediglich **Unbekannt** vorgeschlagen.
+
+Die aktive **Linse** kann sowohl in der Kopfzeile als auch unmittelbar neben
+der Symptomsuche gewechselt werden. Beide Auswahlen bleiben synchron. Der
+Standard steht als `symptomLens` in `app/ts/config.ts` und lässt sich für ein
+Lesezeichen mit demselben URL-Parameter überschreiben, beispielsweise
+`?symptomLens=kernteam`.
 
 ## Inline-Eingaben
 

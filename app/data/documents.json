@@ -13,6 +13,13 @@
           }
         },
         {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
+          }
+        },
+        {
           "plugin": "textblock",
           "params": {
             "id": "sampler",
@@ -114,6 +121,13 @@
           }
         },
         {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
+          }
+        },
+        {
           "plugin": "textblock",
           "params": {
             "id": "sampler",
@@ -172,6 +186,13 @@
           "params": {
             "id": "vorstellung",
             "controls": false
+          }
+        },
+        {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
           }
         },
         {
@@ -243,6 +264,13 @@
           }
         },
         {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
+          }
+        },
+        {
           "plugin": "textblock",
           "params": {
             "id": "sampler",
@@ -304,6 +332,13 @@
           }
         },
         {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
+          }
+        },
+        {
           "plugin": "textblock",
           "params": {
             "id": "sampler",
@@ -341,6 +376,13 @@
           "params": {
             "id": "vorstellung",
             "controls": false
+          }
+        },
+        {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
           }
         },
         {
@@ -458,6 +500,14 @@
       "params": {
         "id": "updates",
         "label": "Neuigkeiten"
+      }
+    },
+    {
+      "plugin": "cedis",
+      "params": {
+        "id": "cedis",
+        "label": "CEDIS PCL",
+        "mode": "editor"
       }
     }
   ]

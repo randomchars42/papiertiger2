@@ -1,9 +1,11 @@
 # Auf der Seite auswählbare Dokumente
 T: dokumente
 W: updates updates label="Neuigkeiten"
+W: cedis cedis label="CEDIS PCL" mode=editor
 
 D*: Rettungsdienst
   B: textblock ankunft controls=false
+  B: cedis cedis mode=summary
   B: textblock sampler controls=false
   B: textblock abcde controls=false
   B: textblock vitalparameter controls=false
@@ -21,6 +23,7 @@ D: Erstbefund
 
 D: Notaufnahme
   B: textblock vorstellung controls=false
+  B: cedis cedis mode=summary
   B: textblock sampler controls=false
   B: textblock abcde controls=false
   B: textblock vitalparameter controls=false
@@ -31,6 +34,7 @@ D: Notaufnahme
 
 D: Notaufnahme – Unfallchirurgie
   B: textblock vorstellung controls=false
+  B: cedis cedis mode=summary
   B: textblock sampler controls=false
   B: textblock abcde controls=false
   B: textblock vitalparameter controls=false
@@ -42,6 +46,7 @@ D: Notaufnahme – Unfallchirurgie
 
 D: Neurologie
   B: textblock vorstellung controls=false
+  B: cedis cedis mode=summary
   B: textblock sampler controls=false
   B: textblock vitalparameter controls=false
   B: textblock neurostatus controls=false
@@ -52,6 +57,7 @@ D: Neurologie
 D: Telemedizinische Akutversorgung
   B: textblock tma_kontext controls=false
   B: textblock vorstellung controls=false
+  B: cedis cedis mode=summary
   B: textblock sampler controls=false
   B: textblock vitalparameter controls=false
   B: textblock status controls=false
@@ -59,6 +65,7 @@ D: Telemedizinische Akutversorgung
 
 D: Pädiatrische Praxis
   B: textblock vorstellung controls=false
+  B: cedis cedis mode=summary
   B: textblock sampler controls=false
   B: textblock paed_pat controls=false
   B: textblock vitalparameter controls=false

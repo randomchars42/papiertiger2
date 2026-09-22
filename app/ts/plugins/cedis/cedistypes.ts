@@ -43,9 +43,21 @@ export type CedisSelection = {
     category: string;
 };
 
+export type CedisSuggestion = {
+    code: string;
+    sources: string[];
+    relations: string[];
+};
+
+export type CedisStructuredValue = {
+    system: string;
+    version: string;
+    selections: CedisSelection[];
+};
+
 export type CedisState = {
-    query: string;
-    selectedCode: string | null;
+    selectedCodes: string[];
+    suggestions: CedisSuggestion[];
 };
 
 export type CedisSearchDocument = {

@@ -1,69 +1,57 @@
 import * as baselib from "@lib/base.js";
 import { getConfig } from "@lib/config.js";
-import { createIndex, relatedTags, searchCatalog, validateCatalog, } from "./cedislib.js";
-import { renderModule, renderSearch } from "./cedisui.js";
+import { validateCatalog } from "./cedislib.js";
+import { renderEditor, renderSummary } from "./cedisui.js";
 const modules = new Map();
 const states = new Map();
 let dataRequest = null;
+const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const requestData = () => {
     if (dataRequest !== null)
         return dataRequest;
-    dataRequest = (async () => {
-        const value = await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/cedis.json`, "json");
-        const catalog = validateCatalog(value);
-        return { catalog, index: createIndex(catalog) };
-    })();
+    dataRequest = (async () => validateCatalog(await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/cedis.json`, "json")))();
     return dataRequest;
 };
 const stateFor = (id) => {
     let state = states.get(id);
     if (state !== undefined)
         return state;
-    state = { query: "", selectedCode: null };
+    state = { selectedCodes: [], suggestions: [] };
     states.set(id, state);
     return state;
 };
-const selectedEntry = (catalog, state) => catalog.entries.find((entry) => entry.code === state.selectedCode) ?? null;
-const structuredSelection = (catalog, entry) => {
-    if (entry === null)
-        return null;
-    return {
-        system: catalog.system,
-        version: catalog.version,
-        code: entry.code,
-        display: entry.label,
-        category: entry.category,
-    };
-};
-const updateSearch = async (module) => {
+const render = async (module) => {
     const parent = document.getElementById(module.parentId);
     if (parent === null)
         return;
-    const data = await requestData();
+    const catalog = await requestData();
     const state = stateFor(module.rootId);
-    const results = searchCatalog(data.index, state.query);
-    renderSearch(parent, data.catalog, results, relatedTags(data.index, results, state.query), state.query, state.selectedCode);
+    if (module.mode === "editor")
+        renderEditor(parent, module.rootId, catalog, state);
+    else
+        renderSummary(parent, module.rootId, catalog, state);
 };
-const setQuery = async (module, query) => {
-    const state = stateFor(module.rootId);
-    state.query = query;
-    const parent = document.getElementById(module.parentId);
-    const input = parent?.querySelector('[data-input="cedis-search"]');
-    if (input !== null && input !== undefined)
-        input.value = query;
-    await updateSearch(module);
-    input?.focus();
+const renderRoot = async (rootId) => {
+    await Promise.all([...modules.values()]
+        .filter((module) => module.rootId === rootId)
+        .map(render));
 };
-const notifyChange = async (module) => {
-    const parent = document.getElementById(module.parentId);
-    if (parent === null)
-        return;
-    const { catalog } = await requestData();
-    const entry = selectedEntry(catalog, stateFor(module.rootId));
-    parent.dispatchEvent(new CustomEvent("cedis:change", {
-        bubbles: true,
-        detail: structuredSelection(catalog, entry),
-    }));
+const notifyStatus = (rootId) => {
+    for (const module of modules.values()) {
+        if (module.rootId !== rootId)
+            continue;
+        document.getElementById(module.parentId)?.dispatchEvent(new CustomEvent("papiertiger:tool-status", { bubbles: true }));
+        break;
+    }
+};
+const moveCode = (codes, code, offset) => {
+    const index = codes.indexOf(code);
+    const target = index + offset;
+    if (index < 0 || target < 0 || target >= codes.length)
+        return codes;
+    const next = [...codes];
+    [next[index], next[target]] = [next[target], next[index]];
+    return next;
 };
 const handleClick = async (module, event) => {
     const target = event.target;
@@ -73,102 +61,131 @@ const handleClick = async (module, event) => {
     const parent = document.getElementById(module.parentId);
     if (button === null || parent === null || !parent.contains(button))
         return;
-    const state = stateFor(module.rootId);
     const action = button.dataset.action;
-    if (action === "search-tag") {
-        await setQuery(module, button.dataset.query ?? "");
-    }
-    else if (action === "clear-search") {
-        await setQuery(module, "");
-    }
-    else if (action === "select-code") {
-        const { catalog } = await requestData();
-        const code = button.dataset.code ?? "";
-        if (!catalog.entries.some((entry) => entry.code === code)) {
-            return;
-        }
-        state.selectedCode = code;
-        await updateSearch(module);
-        await notifyChange(module);
-    }
-    else if (action === "clear-selection") {
-        state.selectedCode = null;
-        await updateSearch(module);
-        await notifyChange(module);
-    }
-};
-const handleInput = (module, event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLInputElement) ||
-        target.dataset.input !== "cedis-search") {
+    const state = stateFor(module.rootId);
+    const code = button.dataset.code;
+    if (action === "open-editor") {
+        parent.dispatchEvent(new CustomEvent("papiertiger:open-tool", {
+            bubbles: true,
+            detail: {
+                plugin: "cedis",
+                id: module.rootId,
+                label: "CEDIS PCL",
+                params: { id: module.rootId, mode: "editor" },
+            },
+        }));
         return;
     }
-    stateFor(module.rootId).query = target.value;
-    void updateSearch(module);
-};
-const handleKeydown = (module, event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLInputElement) ||
-        target.dataset.input !== "cedis-search") {
+    if (code === undefined)
+        return;
+    if (action === "add-code" && !state.selectedCodes.includes(code)) {
+        state.selectedCodes.push(code);
+    }
+    else if (action === "remove-code") {
+        state.selectedCodes = state.selectedCodes.filter((candidate) => candidate !== code);
+    }
+    else if (action === "move-up") {
+        state.selectedCodes = moveCode(state.selectedCodes, code, -1);
+    }
+    else if (action === "move-down") {
+        state.selectedCodes = moveCode(state.selectedCodes, code, 1);
+    }
+    else {
         return;
     }
-    if (event.key === "ArrowDown") {
-        const parent = document.getElementById(module.parentId);
-        const first = parent?.querySelector('.cedis-result button[data-action="select-code"]');
-        if (first !== null && first !== undefined) {
-            event.preventDefault();
-            first.focus();
-        }
-    }
-    else if (event.key === "Escape" && target.value !== "") {
-        event.preventDefault();
-        void setQuery(module, "");
-    }
+    await renderRoot(module.rootId);
+    notifyStatus(module.rootId);
 };
 const attachEvents = (parent, module) => {
-    parent.addEventListener("click", (event) => {
-        void handleClick(module, event);
-    });
-    parent.addEventListener("input", (event) => {
-        handleInput(module, event);
-    });
-    parent.addEventListener("keydown", (event) => {
-        handleKeydown(module, event);
-    });
+    parent.addEventListener("click", (event) => void handleClick(module, event));
+};
+const selection = (catalog, code) => {
+    const entry = catalog.entries.find((candidate) => candidate.code === code);
+    if (entry === undefined)
+        return null;
+    return {
+        system: catalog.system,
+        version: catalog.version,
+        code: entry.code,
+        display: entry.label,
+        category: entry.category,
+    };
 };
 export const init = async () => {
     await requestData();
 };
-export const display = async (parentID, params) => {
-    const parent = document.getElementById(parentID);
+export const display = async (parentId, params) => {
+    const parent = document.getElementById(parentId);
     if (parent === null)
-        throw new Error(`Parent "${parentID}" was not found`);
+        throw new Error(`Parent "${parentId}" was not found`);
     const rootId = typeof params.id === "string" ? params.id : "cedis";
-    let module = modules.get(parentID);
+    const mode = params.mode === "editor" ? "editor" : "summary";
+    let module = modules.get(parentId);
     if (module === undefined) {
-        module = { parentId: parentID, rootId };
-        modules.set(parentID, module);
+        module = { parentId, rootId, mode };
+        modules.set(parentId, module);
         attachEvents(parent, module);
     }
     else {
         module.rootId = rootId;
+        module.mode = mode;
     }
-    const data = await requestData();
-    const state = stateFor(rootId);
-    const results = searchCatalog(data.index, state.query);
-    renderModule(parent, rootId, data.catalog, results, relatedTags(data.index, results, state.query), state.query, state.selectedCode);
+    await render(module);
 };
 export const getSelection = async (id) => {
-    const { catalog } = await requestData();
-    return selectedEntry(catalog, stateFor(id));
+    const catalog = await requestData();
+    const entries = new Map(catalog.entries.map((entry) => [entry.code, entry]));
+    return stateFor(id).selectedCodes.flatMap((code) => {
+        const entry = entries.get(code);
+        return entry === undefined ? [] : [entry];
+    });
 };
 export const getValue = async (id) => {
     const selected = await getSelection(id);
-    return selected === null ? "" : `${selected.code}|${selected.label}`;
+    return selected.length === 0
+        ? ""
+        : `CEDIS PCL: ${selected.map((entry) => `${entry.code} ${entry.label}`).join("; ")}`;
 };
 export const getStructuredValue = async (id) => {
-    const { catalog } = await requestData();
-    return structuredSelection(catalog, selectedEntry(catalog, stateFor(id)));
+    const catalog = await requestData();
+    const selections = stateFor(id).selectedCodes.flatMap((code) => {
+        const selected = selection(catalog, code);
+        return selected === null ? [] : [selected];
+    });
+    return selections.length === 0
+        ? null
+        : { system: catalog.system, version: catalog.version, selections };
+};
+export const receive = async (message) => {
+    if (message.type !== "cedis-suggestions" || !isRecord(message.payload))
+        return;
+    const rootId = typeof message.payload.id === "string" ? message.payload.id : "cedis";
+    if (!Array.isArray(message.payload.suggestions))
+        return;
+    const catalog = await requestData();
+    const knownCodes = new Set(catalog.entries.map((entry) => entry.code));
+    const suggestions = message.payload.suggestions.filter((candidate) => isRecord(candidate) &&
+        typeof candidate.code === "string" &&
+        knownCodes.has(candidate.code) &&
+        Array.isArray(candidate.sources) &&
+        candidate.sources.every((source) => typeof source === "string") &&
+        Array.isArray(candidate.relations) &&
+        candidate.relations.every((relation) => typeof relation === "string"));
+    stateFor(rootId).suggestions = suggestions;
+    await renderRoot(rootId);
+    notifyStatus(rootId);
+};
+export const getToolStatus = async (id) => {
+    const state = stateFor(id);
+    const pending = state.suggestions.filter((suggestion) => !state.selectedCodes.includes(suggestion.code)).length;
+    return {
+        ...(state.selectedCodes.length > 0
+            ? { badge: String(state.selectedCodes.length) }
+            : pending > 0
+                ? { badge: String(pending) }
+                : {}),
+        attention: pending > 0,
+    };
 };
 export const dispose = (parentId) => {
     modules.delete(parentId);

@@ -42,7 +42,7 @@ app/ts/plugins/textblock/
     Paketladen, Zustandsänderungen, Auflösung, Inline-Editoren, Ausgabe
 
 app/ts/plugins/cedis/
-    Suche und Auswahl im separaten CEDIS-Terminologiekatalog
+    geordnete Bestätigung der aus Textblöcken vorgeschlagenen CEDIS-Einträge
 
 app/ts/plugins/score/
     additive Rechner aus kompilierten Textblock-Metadaten
@@ -83,6 +83,20 @@ Mehrere sichtbare Textblockmodule verwenden absichtlich dieselben geladenen
 Definitionen und denselben Dokumentzustand. So kann ein gesetzter Wert in einem
 Block Vorschläge in einem anderen Block beeinflussen. Dokument- und Plug-in-
 Reihenfolge bleiben trotzdem im Dokumentkatalog definiert.
+
+Große Wertkataloge werden vom Compiler vorab normalisiert und beim Laden in
+eine kataloggestützte Phrase eingefügt. Suchtext und stabile IDs entstehen
+beim Build; der Browser filtert nur noch fertige Zeichenketten. Die aktive
+Symptomlinse ist davon getrennt: Sie verändert die initial sichtbare Teilmenge,
+nicht Katalog, Auswahl oder Ausgabe. Kopfzeile und Inline-Auswahl verwenden
+denselben Zustand; Konfiguration und URL können den Anfangswert setzen.
+
+Aufgenommene Symptomwerte liefern ihre expliziten CEDIS-Zuordnungen als
+Vorschläge an das CEDIS-Plug-in. Dieses hält eine eigene, vom Benutzer
+bestätigte und geordnete Liste. Weder ein Symptom noch eine SNOMED-Kodierung
+wählt automatisch einen PCL-Eintrag aus. Der Dokumentblock zeigt die knappe
+Zusammenfassung, während das gleichnamige Werkzeug Auswahl und Reihenfolge
+bearbeitet.
 
 ## Zustandsmodell
 
