@@ -29,7 +29,7 @@ G @root: SAMPLER
     G @repeat(initial=0,add="Schmerz hinzufügen") @reset @inline: Schmerz|a
       P: Schmerz* => Brustschmerz @sct=29857009[Chest pain]|a / Bauchschmerz @sct=21522001[Abdominal pain]|a / Kopfschmerz @sct=25064002[Headache]|a / Rückenschmerz|a / Schulterschmerz|a / Hüftschmerz|a / Knieschmerz|a / Gelenkschmerz|a / Schmerz @sct=22253000[Pain]|a
       P<Schmerz>: Schmerzbeginn => Beginn {:beginn=seit*:}|-
-      G<Schmerz> @collapsed @inline: Provokation
+      G<Schmerz> @collapsed @inline @autocollapse: Provokation
         P: durch Belastung|-
         P: durch Bewegung|-
         P: durch Rotation|-
@@ -38,7 +38,7 @@ G @root: SAMPLER
         P: sonstige Provokation => durch {:freitext:}|-
         P: nicht provozierbar|-
       P<durch Trauma>: Trauma => {:freitext:}|-
-      G<Schmerz> @collapsed @inline: Linderung
+      G<Schmerz> @collapsed @inline @autocollapse: Linderung
         P: durch Ruhe|-
         P: durch Dunkelheit|-
         P: durch Wärme|-
@@ -47,7 +47,7 @@ G @root: SAMPLER
         P: keine|-
       P<Schmerz>: Schmerzqualität => Qualität: {:qualitaet=qualitaet*:}|-
       P<Schmerz>: Schmerzlokalisation => Lokalisation: {:ort=ort*:}|-
-      G<Schmerz> @collapsed @inline: Ausstrahlung
+      G<Schmerz> @collapsed @inline @autocollapse: Ausstrahlung
         P: in den Rücken|-
         P: zwischen die Schulterblätter|-
         P: in den {:seite:} Arm|- 

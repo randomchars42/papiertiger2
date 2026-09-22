@@ -742,6 +742,7 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
         "summary",
         "collapsed",
         "inline",
+        "autocollapse",
         "inactive",
         "repeat",
         "score",
@@ -779,6 +780,13 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             compiled_group["sets"] = [definition["id"] for definition in group["sets"]]
         if "inactive" in annotations:
             compiled_group["default"] = False
+        if "autocollapse" in annotations:
+            if "inline" not in annotations or "collapsed" not in annotations:
+                fail(source, group["line"], "@autocollapse requires @inline and @collapsed")
+            parent = group["parent"]
+            if parent is None or "inline" not in parent["annotations"]:
+                fail(source, group["line"], "@autocollapse requires a directly enclosing @inline group")
+            compiled_group["autoCollapse"] = True
         if group["conditions"]:
             if "repeat" in annotations:
                 fail(source, group["line"], "a repeatable group cannot be conditional")

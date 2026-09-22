@@ -47,6 +47,10 @@ type Module = {
     collapseOverrides: Record<string, boolean>;
     status: string;
     controls: boolean;
+    suggestionKeys: Set<string>;
+    suggestionHighlights: Map<string, number>;
+    suggestionsReady: boolean;
+    autoCollapseTimers: Map<string, number>;
 };
 
 type ScoreResultSelection = {
@@ -64,6 +68,19 @@ const loadedPackages = new Set<string>();
 const packageRequests = new Map<string, Promise<PackageDefinition>>();
 let resolved: ResolvedDocument = { phrases: {} };
 let instanceCounter = 0;
+const suggestionHighlightDuration = 1_600;
+const autoCollapseDelay = 1_800;
+const autoCollapseCompletionActions = new Set([
+    "phrase",
+    "choose-value",
+    "exclude-phrase",
+    "reset-phrase",
+    "choose-attribute",
+    "clear-attribute",
+    "toggle-set",
+    "reset-group",
+    "close-editor",
+]);
 
 const requestPackage = (id: string): Promise<PackageDefinition> => {
     let request = packageRequests.get(id);
@@ -165,9 +182,38 @@ const initialiseRepeatables = (groupId: string): void => {
 
 const renderAll = (): void => {
     resolved = resolveDocument(definitions, state);
+    const now = performance.now();
+    const currentSuggestions = new Set(
+        Object.values(resolved.phrases)
+            .filter(
+                (phrase) =>
+                    phrase.visible &&
+                    !phrase.included &&
+                    phrase.source === "suggestion",
+            )
+            .map((phrase) => phrase.key),
+    );
     for (const module of modules.values()) {
         const parent = document.getElementById(module.parentId);
         if (parent === null) continue;
+        if (module.suggestionsReady) {
+            for (const key of currentSuggestions) {
+                if (!module.suggestionKeys.has(key)) {
+                    module.suggestionHighlights.set(
+                        key,
+                        now + suggestionHighlightDuration,
+                    );
+                }
+            }
+        } else {
+            module.suggestionsReady = true;
+        }
+        module.suggestionKeys = currentSuggestions;
+        for (const [key, expires] of module.suggestionHighlights) {
+            if (!currentSuggestions.has(key) || expires <= now) {
+                module.suggestionHighlights.delete(key);
+            }
+        }
         renderModule(
             parent,
             module.rootId,
@@ -175,6 +221,7 @@ const renderAll = (): void => {
             state,
             resolved,
             module.openEditor,
+            new Set(module.suggestionHighlights.keys()),
             module.collapseOverrides,
             module.status,
             module.controls,
@@ -275,7 +322,6 @@ const setOverride = (
 ): void => {
     const scope = scopeFor(instanceId);
     scope.phraseOverrides[phraseId] = { valueId, included };
-    delete scope.externalSuggestions[phraseId];
     if (provenance === undefined) {
         delete scope.acceptedProvenance[phraseId];
     } else {
@@ -370,21 +416,7 @@ const selectValue = (
     valueId: string,
     instanceId?: string,
 ): void => {
-    const scope = scopeFor(instanceId);
-    const suggestion = scope.externalSuggestions[phraseId];
-    if (suggestion?.valueId === valueId) {
-        scope.attributes[phraseId] = {
-            ...(scope.attributes[phraseId] ?? {}),
-            ...suggestion.attributes,
-        };
-    }
-    setOverride(
-        phraseId,
-        valueId,
-        true,
-        instanceId,
-        suggestion?.valueId === valueId ? suggestion.provenance : undefined,
-    );
+    setOverride(phraseId, valueId, true, instanceId);
     completePrompt(phraseId, instanceId);
     const missing = missingAttribute(phraseId, valueId, instanceId);
     if (missing !== undefined) {
@@ -627,7 +659,6 @@ const resetStaticGroup = (groupId: string): void => {
     for (const phraseId of group.phrases ?? []) {
         delete state.phraseOverrides[phraseId];
         delete state.attributes[phraseId];
-        delete state.externalSuggestions[phraseId];
         delete state.acceptedProvenance[phraseId];
         resetPrompt(phraseId);
     }
@@ -676,6 +707,91 @@ const requireData = (button: HTMLButtonElement, key: string): string => {
 const instanceData = (button: HTMLButtonElement): string | undefined =>
     button.dataset.instanceId;
 
+type AutoCollapseContext = {
+    groupId: string;
+    instanceId?: string;
+};
+
+const groupContainsPhrase = (groupId: string, phraseId: string): boolean =>
+    groupItems(definitions.groups[groupId]).some((item) =>
+        item.type === "phrase"
+            ? item.id === phraseId
+            : groupContainsPhrase(item.id, phraseId),
+    );
+
+const editorIsInsideGroup = (
+    module: Module,
+    groupId: string,
+    instanceId?: string,
+): boolean =>
+    module.openEditor !== null &&
+    module.openEditor.instanceId === instanceId &&
+    groupContainsPhrase(groupId, module.openEditor.phraseId);
+
+const cancelAutoCollapse = (
+    module: Module,
+    groupId: string,
+    instanceId?: string,
+): void => {
+    const key = phraseKey(groupId, instanceId);
+    const timer = module.autoCollapseTimers.get(key);
+    if (timer !== undefined) window.clearTimeout(timer);
+    module.autoCollapseTimers.delete(key);
+};
+
+const clearAutoCollapseTimers = (module: Module, instanceId?: string): void => {
+    for (const [key, timer] of module.autoCollapseTimers) {
+        if (instanceId !== undefined && !key.startsWith(`${instanceId}:`)) continue;
+        window.clearTimeout(timer);
+        module.autoCollapseTimers.delete(key);
+    }
+};
+
+const autoCollapseContext = (
+    button: HTMLButtonElement,
+    parent: HTMLElement,
+): AutoCollapseContext | null => {
+    let node = button.closest<HTMLElement>(".group[data-group-id]");
+    while (node !== null && parent.contains(node)) {
+        const groupId = node.dataset.groupId;
+        if (groupId !== undefined && definitions.groups[groupId]?.autoCollapse) {
+            return {
+                groupId,
+                ...(node.dataset.instanceId === undefined
+                    ? {}
+                    : { instanceId: node.dataset.instanceId }),
+            };
+        }
+        node = node.parentElement?.closest<HTMLElement>(
+            ".group[data-group-id]",
+        ) ?? null;
+    }
+    return null;
+};
+
+const scheduleAutoCollapse = (
+    module: Module,
+    groupId: string,
+    instanceId?: string,
+): void => {
+    cancelAutoCollapse(module, groupId, instanceId);
+    if (editorIsInsideGroup(module, groupId, instanceId)) return;
+    const key = phraseKey(groupId, instanceId);
+    const timer = window.setTimeout(() => {
+        module.autoCollapseTimers.delete(key);
+        if (editorIsInsideGroup(module, groupId, instanceId)) return;
+        if (
+            instanceId !== undefined &&
+            state.instanceStates[instanceId] === undefined
+        ) {
+            return;
+        }
+        module.collapseOverrides[key] = true;
+        renderAll();
+    }, autoCollapseDelay);
+    module.autoCollapseTimers.set(key, timer);
+};
+
 const handleClick = async (module: Module, event: Event): Promise<void> => {
     const target = event.target;
     if (!(target instanceof Element)) return;
@@ -686,6 +802,14 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
 
     const action = requireData(button, "action");
     const instanceId = instanceData(button);
+    const collapseContext = autoCollapseContext(button, parent);
+    if (collapseContext !== null) {
+        cancelAutoCollapse(
+            module,
+            collapseContext.groupId,
+            collapseContext.instanceId,
+        );
+    }
     module.status = "";
 
     if (action === "phrase") {
@@ -712,27 +836,11 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         const scope = scopeFor(instanceId);
         delete scope.phraseOverrides[phraseId];
         delete scope.attributes[phraseId];
-        delete scope.externalSuggestions[phraseId];
         delete scope.acceptedProvenance[phraseId];
         resetPrompt(phraseId, instanceId);
         module.openEditor = null;
     } else if (action === "attribute") {
         const phraseId = requireData(button, "phraseId");
-        const scope = scopeFor(instanceId);
-        const suggestion = scope.externalSuggestions[phraseId];
-        if (suggestion !== undefined) {
-            scope.attributes[phraseId] = {
-                ...(scope.attributes[phraseId] ?? {}),
-                ...suggestion.attributes,
-            };
-            setOverride(
-                phraseId,
-                suggestion.valueId,
-                true,
-                instanceId,
-                suggestion.provenance,
-            );
-        }
         openAttribute(
             module,
             phraseId,
@@ -893,6 +1001,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         module.openEditor = null;
     } else if (action === "reset-group") {
         const groupId = requireData(button, "groupId");
+        clearAutoCollapseTimers(module);
         if (instanceId === undefined) resetStaticGroup(groupId);
         else resetInstance(instanceId);
         module.openEditor = null;
@@ -908,6 +1017,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         state.groupInstances[groupId] = (state.groupInstances[groupId] ?? []).filter(
             (id) => id !== removedId,
         );
+        clearAutoCollapseTimers(module, removedId);
         delete state.instanceStates[removedId];
         module.openEditor = null;
     } else if (action === "close-editor") {
@@ -931,6 +1041,16 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
 
     renderAll();
     if (openNextPrompt(module)) renderAll();
+    if (
+        collapseContext !== null &&
+        autoCollapseCompletionActions.has(action)
+    ) {
+        scheduleAutoCollapse(
+            module,
+            collapseContext.groupId,
+            collapseContext.instanceId,
+        );
+    }
     focusOpenAttribute(module);
 };
 
@@ -1018,7 +1138,13 @@ export const display = async (
         collapseOverrides: {},
         status: "",
         controls: params.controls !== false,
+        suggestionKeys: new Set(),
+        suggestionHighlights: new Map(),
+        suggestionsReady: false,
+        autoCollapseTimers: new Map(),
     };
+    const previous = modules.get(parentId);
+    if (previous !== undefined) clearAutoCollapseTimers(previous);
     modules.set(parentId, module);
     parent.addEventListener("click", (event) => void handleClick(module, event));
     parent.addEventListener("input", (event) => handleInput(module, event));
@@ -1099,17 +1225,25 @@ export const receive = (message: PluginMessage): void => {
     const provenance = [groupId, ...verified.map((entry) => entry.option.valueId)];
     scope.groupOverrides[groupId] = true;
     for (const { criterion, option } of verified) {
-        scope.externalSuggestions[criterion.phraseId] = {
-            valueId: option.valueId,
-            attributes: {},
-            provenance: [groupId, option.valueId],
-        };
+        setOverride(
+            criterion.phraseId,
+            option.valueId,
+            true,
+            instanceId as string | undefined,
+            [groupId, option.valueId],
+        );
     }
-    scope.externalSuggestions[score.target.phraseId] = {
-        valueId: score.target.valueId,
-        attributes: { [score.target.attributeId]: total },
-        provenance,
+    scope.attributes[score.target.phraseId] = {
+        ...(scope.attributes[score.target.phraseId] ?? {}),
+        [score.target.attributeId]: total,
     };
+    setOverride(
+        score.target.phraseId,
+        score.target.valueId,
+        true,
+        instanceId as string | undefined,
+        provenance,
+    );
     renderAll();
 };
 

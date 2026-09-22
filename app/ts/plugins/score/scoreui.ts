@@ -46,7 +46,7 @@ export const renderModule = (
         element(
             "p",
             "group__content",
-            "Alle Kriterien auswählen. Das Ergebnis wird zunächst nur als Vorschlag an den Textbaustein übergeben.",
+            "Alle Kriterien auswählen. Mit Übernehmen werden Kriterien und Gesamtwert als aktive Einträge in den Textbaustein übernommen.",
         ),
     );
 
@@ -83,7 +83,7 @@ export const renderModule = (
     );
     output.setAttribute("aria-live", "polite");
     const apply = actionButton(
-        "Als Vorschlag übernehmen",
+        "In Textbaustein übernehmen",
         "apply-score",
         {},
         "control control--primary",

@@ -27,7 +27,7 @@ export const scoreTotal = (module) => {
 };
 export const renderModule = (parent, module) => {
     const article = element("article", "document score-module");
-    article.append(element("p", "group__content", "Alle Kriterien auswählen. Das Ergebnis wird zunächst nur als Vorschlag an den Textbaustein übergeben."));
+    article.append(element("p", "group__content", "Alle Kriterien auswählen. Mit Übernehmen werden Kriterien und Gesamtwert als aktive Einträge in den Textbaustein übernommen."));
     for (const criterion of module.score.criteria) {
         const fieldset = element("fieldset", "score-criterion");
         fieldset.append(element("legend", "score-criterion__title", criterion.title));
@@ -47,7 +47,7 @@ export const renderModule = (parent, module) => {
     const result = element("section", "score-result");
     const output = element("output", "score-result__value", total === null ? "Gesamt: –" : `Gesamt: ${total}`);
     output.setAttribute("aria-live", "polite");
-    const apply = actionButton("Als Vorschlag übernehmen", "apply-score", {}, "control control--primary");
+    const apply = actionButton("In Textbaustein übernehmen", "apply-score", {}, "control control--primary");
     apply.disabled = total === null;
     result.append(output, apply);
     if (module.status !== "") {

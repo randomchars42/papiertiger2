@@ -18,17 +18,18 @@ wird derzeit nicht dauerhaft gespeichert.
 
 Werkzeuge öffnen sich auf breiten Bildschirmen links neben dem Dokument. Bei
 weniger Platz werden sie als schließbare Seitenfläche über den Inhalt gezogen.
-Sie verändern den Dokumenttext nicht unmittelbar.
+Das bloße Öffnen verändert den Dokumenttext nicht; eine ausdrücklich
+bezeichnete Übernahmeaktion kann aktive Einträge setzen.
 
 **Neuigkeiten** zeigt mit der Anwendung ausgelieferte Hinweise. Nur der
 Gelesen-Status wird lokal im Browser gespeichert; klinischer Dokumentzustand
 bleibt davon getrennt.
 
 Eine Gruppe mit Rechner besitzt eine Schaltfläche wie **GCS berechnen** oder
-**APGAR berechnen**. Nach vollständiger Auswahl übergibt **Als Vorschlag
-übernehmen** Kriterien und Summe an den zugehörigen Textbaustein. Die
-gestrichelten Vorschläge werden einzeln bestätigt und gelangen vorher weder in
-Text- noch Datenausgabe.
+**APGAR berechnen**. Nach vollständiger Auswahl setzt **In Textbaustein
+übernehmen** Kriterien und Summe unmittelbar als aktive Einträge im
+zugehörigen Textbaustein. Eine bestehende Auswahl dieser Einträge wird dabei
+durch die ausdrücklich übernommene Rechnerauswahl ersetzt.
 
 ## Einträge bedienen
 

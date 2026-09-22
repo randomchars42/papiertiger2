@@ -99,7 +99,7 @@ const handleClick = (module: ScoreModuleState, event: Event): void => {
             },
         }),
     );
-    module.status = `${total} als Vorschlag übergeben`;
+    module.status = `${total} übernommen`;
     renderModule(parent, module);
 };
 

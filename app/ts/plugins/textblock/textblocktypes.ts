@@ -91,6 +91,7 @@ export type GroupDefinition = {
     reset?: boolean;
     collapsed?: boolean;
     inline?: boolean;
+    autoCollapse?: boolean;
     repeatable?: RepeatableDefinition;
     condition?: ConditionDefinition;
     score?: ScoreDefinition;
@@ -199,19 +200,12 @@ export type PhraseOverride = {
     valueId: string | null;
 };
 
-export type ExternalSuggestion = {
-    valueId: string;
-    attributes: Record<string, AttributeValue>;
-    provenance: string[];
-};
-
 export type ScopeState = {
     activeSets: string[];
     completedPrompts: string[];
     phraseOverrides: Record<string, PhraseOverride>;
     groupOverrides: Record<string, boolean>;
     attributes: Record<string, Record<string, AttributeValue>>;
-    externalSuggestions: Record<string, ExternalSuggestion>;
     acceptedProvenance: Record<string, string[]>;
 };
 
@@ -249,7 +243,6 @@ export type ResolvedPhrase = {
     attributes: Record<string, AttributeValue>;
     coding?: SnomedCoding;
     kind: ItemKind;
-    externalSuggestion?: ExternalSuggestion;
 };
 
 export type ResolvedDocument = {

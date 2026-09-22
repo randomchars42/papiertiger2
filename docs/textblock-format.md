@@ -44,6 +44,7 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@summary` | fasst auffällige aufgenommene Einträge zusammen |
 | `@collapsed` | initial visuell eingeklappt |
 | `@inline` | setzt die Überschrift platzsparend neben den Gruppeninhalt |
+| `@autocollapse` | klappt eine verschachtelte Inline-Gruppe nach der Auswahl wieder ein |
 | `@inactive` | initial nicht aktiv; bleibt als Vorschlag sichtbar |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
@@ -52,17 +53,40 @@ Der optionale Gruppentyp verwendet dieselben Kurzzeichen wie Werte, zum
 Beispiel `Orientierung|n` oder `Blutung|a`.
 
 `@inline` verändert ausschließlich die Darstellung; Auswahlzustand, Ausgabe
-und Gruppeneinschluss bleiben unverändert. Bei wiederholbaren Inline-Gruppen
-stehen Zurücksetzen und Entfernen als kompakte Symbolschaltflächen `↺` und `×`
-im Kopf. Sie behalten vollständige zugängliche Namen und einen Tooltip; ein
-`<abbr>` wird nicht verwendet, weil die Symbole keine Abkürzungen sind.
+und Gruppeneinschluss bleiben unverändert. Bei Inline-Gruppen sowie bei
+eingeklappten Gruppen stehen Zurücksetzen und gegebenenfalls Entfernen als
+kompakte Symbolschaltflächen `↺` und `×` im Kopf. Sie behalten vollständige
+zugängliche Namen und einen Tooltip; ein `<abbr>` wird nicht verwendet, weil
+die Symbole keine Abkürzungen sind.
 
 Direkt verschachtelte Inline-Gruppen werden in denselben umbrechenden Zeilenfluss
 eingefügt. Eine verschachtelte Gruppe ohne `@inline` beginnt dagegen auf einer
 eigenen Zeile. Damit kann die Quelldefinition ausdrücklich zwischen vollständig
-fortlaufender und blockweiser Darstellung wählen. Phrasen und Untergruppen
-behalten dabei ihre Reihenfolge aus der `.pt`-Quelle; eine Inline-Gruppe wird
-nicht mehr gesammelt hinter die Phrasen ihrer Elterngruppe verschoben.
+fortlaufender und blockweiser Darstellung wählen. Untergruppen und
+zusammenhängende Phrasenabschnitte behalten dabei ihre Reihenfolge aus der
+`.pt`-Quelle; eine Inline-Gruppe wird nicht gesammelt hinter die Phrasen ihrer
+Elterngruppe verschoben. Innerhalb eines solchen Phrasenabschnitts stehen in die
+Ausgabe aufgenommene Phrasen vor noch nicht aufgenommenen Phrasen. Die jeweilige
+Quellreihenfolge innerhalb beider Zustände bleibt stabil.
+
+Inline-Überschriften sind bewusst zurückhaltend. Direkt verschachtelte
+Inline-Gruppen erhalten eine schmale, an beiden Enden begrenzte Unterlinie, die
+ihren Inhalt im fortlaufenden Zeilenfluss zusammenfasst. Enthält eine Gruppe
+mindestens eine in die Ausgabe aufgenommene Phrase, wird auch ihre Überschrift
+hervorgehoben. Dies gilt ebenso für eingeklappte Gruppen, deren Standardwerte
+bereits in der Ausgabe stehen.
+
+`@autocollapse` ist eine optionale Ergänzung für eine direkt in eine andere
+`@inline`-Gruppe eingebettete Gruppe und erfordert zusätzlich `@inline` und
+`@collapsed`. Nach einer abgeschlossenen Auswahl klappt die Gruppe nach 1,8
+Sekunden ohne weitere Bedienung wieder ein. Jede weitere Auswahl innerhalb der
+Gruppe startet die Frist neu, sodass mehrere Werte nacheinander gewählt werden
+können. Solange ein Phrasen- oder Attributeditor der Gruppe geöffnet ist, läuft
+keine Frist. Reines Aufklappen startet sie ebenfalls nicht. Im eingeklappten
+Zustand verschwinden nur die noch nicht aufgenommenen Auswahlmöglichkeiten;
+bereits in die Ausgabe aufgenommene Phrasen bleiben neben der Überschrift
+sichtbar und bearbeitbar. Diese reduzierte Darstellung gilt nur für
+`@autocollapse`, nicht allgemein für `@collapsed`.
 
 Eine importierte Wurzelgruppe wird mit `U:` eingefügt:
 
@@ -83,11 +107,15 @@ G @repeat(initial=0,add="Blutung hinzufügen",empty="Blutung") @reset: Blutung|a
 | Option | Bedeutung |
 |---|---|
 | `initial` | anfängliche Instanzzahl, Standard `0` |
-| `add` | Beschriftung der Schaltfläche; erforderlich |
+| `add` | zugängliche Beschriftung und Tooltip der Hinzufügen-Schaltfläche; erforderlich |
 | `empty` | Titel der Phrase, die ohne Instanz den leeren/normalen Zustand vertritt |
 
 Jede Instanz erhält eigenen Zustand und eigene Attribute. Verschachtelte
 wiederholbare Gruppen werden derzeit nicht unterstützt.
+
+Die sichtbare Hinzufügen-Schaltfläche verwendet analog zu einer inaktiven
+Gruppe den kompakten Gruppentitel mit `+`, beispielsweise `Schmerz +`. Der
+ausführlichere `add`-Text bleibt als zugänglicher Name und Tooltip erhalten.
 
 ### Additive Scores
 
@@ -108,8 +136,9 @@ gekennzeichnet. Phrasen ganz ohne `@points` gehören nicht zum Rechner.
 
 Der Compiler prüft vollständige Punktangaben, das Zahlenattribut sowie die aus
 den Kriterien abgeleiteten Minimal- und Maximalwerte gegen den Editor. Das
-Rechnerergebnis erscheint mit seinen Kriterien zunächst als Vorschlag. Erst
-eine Bestätigung übernimmt einen vorgeschlagenen Eintrag in die Ausgabe.
+Textblock-Plug-in prüft ein übergebenes Rechnerergebnis erneut. **In
+Textbaustein übernehmen** setzt die gewählten Kriterien und den Gesamtwert
+unmittelbar als aktive Benutzerauswahl mit Rechnerprovenienz.
 
 ### Abhängige Gruppen
 
@@ -125,7 +154,11 @@ G @repeat(initial=0,add="Schmerz hinzufügen"): Schmerz
 erfüllt ist. Ist sie nicht erfüllt, erscheint die Gruppe weder in der
 Oberfläche noch in Text-, Daten- oder Zusammenfassungsausgaben; ihr vorhandener
 Zustand bleibt erhalten. Innerhalb einer wiederholbaren Gruppe wird die
-Bedingung ausschließlich gegen die Werte derselben Instanz geprüft.
+Bedingung ausschließlich gegen die Werte derselben Instanz geprüft. Eine
+Bedingung außerhalb der Wiederholung berücksichtigt dagegen aufgenommene Werte
+aus allen Instanzen. So kann beispielsweise `P<Brustschmerz>:` außerhalb einer
+wiederholbaren Schmerzgruppe erscheinen, sobald mindestens eine Instanz den
+Wert `Brustschmerz` enthält.
 
 Die wiederholbare Gruppe selbst kann nicht bedingt sein. Eine bedingte Gruppe
 innerhalb einer Wiederholung ist dagegen zulässig.
@@ -218,6 +251,11 @@ Eine Bedingung kann referenzieren:
 Bei einer einwertigen Zielphrase wird dieser Wert vorgeschlagen. Bei genau zwei
 Werten mit einem Standard wird der andere Wert vorgeschlagen. Andernfalls wird
 die Phrase ohne vorgewählten Wert vorgeschlagen.
+
+Ein Vorschlag bleibt bis zu seiner Annahme außerhalb der Ausgabe und erhält
+deshalb keine dauerhafte Fläche oder Umrandung. Sein erstmaliges Erscheinen wird
+mit einem ruhigen 1,6-sekündigen Puls hervorgehoben; bei reduzierter Bewegung
+entfällt diese Animation.
 
 Eine Phrase mit erforderlichen Attributen gilt erst nach deren Vervollständigung
 als aktiver Auslöser.

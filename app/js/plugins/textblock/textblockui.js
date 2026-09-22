@@ -1,5 +1,5 @@
 import { isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
+import { groupHasIncludedPhrase, groupItems, includedPhrasesInGroup, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 const element = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className !== undefined)
@@ -152,13 +152,23 @@ const renderAttributeEditor = (phraseId, attributeId, instanceId, definitions, s
     node.append(actionButton("Leeren", "clear-attribute", scopedData({ phraseId, attributeId }, instanceId)), actionButton("Fertig", "close-editor", {}, "control control--primary"));
     return node;
 };
-const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved, openEditor) => {
+const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions) => {
     const phrase = resolved.phrases[phraseKey(phraseId, instanceId)];
     if (phrase === undefined || !phrase.visible)
         return;
     const classes = ["phrase", `phrase--${phrase.kind}`];
-    if (!phrase.included)
+    if (phrase.included) {
+        classes.push("phrase--included");
+    }
+    else if (phrase.source === "suggestion") {
         classes.push("phrase--suggestion");
+    }
+    else {
+        classes.push("phrase--available");
+    }
+    if (highlightedSuggestions.has(phrase.key)) {
+        classes.push("phrase--new-suggestion");
+    }
     if (phrase.touched)
         classes.push("phrase--touched");
     if (phrase.source === "set")
@@ -192,22 +202,31 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
         parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
-const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, collapseOverrides) => {
+const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides) => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
     container.dataset.repeatableGroupId = groupId;
     for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
-        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, collapseOverrides, instanceId, index);
+        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, instanceId, index);
     }
-    container.append(actionButton(group.repeatable?.add ?? `${parseValue(group.title).text} hinzufügen`, "add-group-instance", { groupId }, `control repeatable__add repeatable__add--${group.kind ?? "neutral"}`));
+    const title = parseValue(group.title).text;
+    const addLabel = group.repeatable?.add ?? `${title} hinzufügen`;
+    const addButton = actionButton(title, "add-group-instance", { groupId }, `group__toggle repeatable__add repeatable__add--${group.kind ?? "neutral"}`);
+    const indicator = element("span", "group__indicator", "+");
+    indicator.setAttribute("aria-hidden", "true");
+    addButton.append(indicator);
+    addButton.setAttribute("aria-label", addLabel);
+    addButton.title = addLabel;
+    container.append(addButton);
     parent.append(container);
 };
-function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, collapseOverrides, instanceId, instanceIndex) {
+function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, instanceId, instanceIndex) {
     const group = definitions.groups[groupId];
     if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
         return;
     const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const included = groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId);
     const collapsible = group.collapsed !== undefined;
     const collapsed = collapseOverrides[phraseKey(groupId, instanceId)] ??
         group.collapsed ??
@@ -217,6 +236,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         `group--${group.kind ?? "neutral"}`,
         isInstanceRoot ? "group--instance" : "",
         group.inline === true ? "group--inline" : "",
+        included ? "group--included" : "",
         enabled ? "" : "group--inactive",
         collapsed ? "group--collapsed" : "",
     ]
@@ -232,10 +252,17 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     const headingButton = actionButton(title, collapsible ? "toggle-collapse" : "toggle-group", scopedData({ groupId }, instanceId), "group__toggle");
     headingButton.setAttribute("aria-expanded", String(collapsible ? !collapsed : enabled));
     headingButton.title = group.note ?? "";
+    const indicator = collapsed ? "›" : !enabled ? "+" : group.inline ? ":" : "";
+    if (indicator !== "") {
+        const indicatorNode = element("span", "group__indicator", indicator);
+        indicatorNode.setAttribute("aria-hidden", "true");
+        headingButton.append(indicatorNode);
+    }
     heading.append(headingButton);
     header.append(heading);
     const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
+    const compactTools = group.inline === true || collapsed;
     if (group.score !== undefined) {
         tools.append(actionButton(group.score.label, "open-score", scopedData({ groupId }, instanceId), "control control--primary group__score"));
     }
@@ -246,12 +273,12 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         tools.append(button);
     }
     if (group.reset === true || isInstanceRoot) {
-        tools.append(group.inline === true
+        tools.append(compactTools
             ? iconActionButton("↺", "Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset")
             : actionButton("↺ Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset"));
     }
     if (isInstanceRoot && instanceId !== undefined) {
-        tools.append(group.inline === true
+        tools.append(compactTools
             ? iconActionButton("×", "Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger")
             : actionButton("Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger"));
     }
@@ -280,31 +307,65 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         if (group.content !== undefined && group.content !== "") {
             body.append(element("p", "group__content", group.content));
         }
-        let phrases = null;
+        let phraseIds = [];
+        const renderPhrases = () => {
+            if (phraseIds.length === 0)
+                return;
+            const phrases = element("div", "phrases");
+            const orderedPhraseIds = phraseIds
+                .map((id, index) => ({ id, index }))
+                .sort((left, right) => {
+                const leftIncluded = resolved.phrases[phraseKey(left.id, instanceId)]?.included ===
+                    true;
+                const rightIncluded = resolved.phrases[phraseKey(right.id, instanceId)]?.included ===
+                    true;
+                return (Number(rightIncluded) - Number(leftIncluded) ||
+                    left.index - right.index);
+            });
+            for (const { id } of orderedPhraseIds) {
+                renderPhrase(phrases, id, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions);
+            }
+            body.append(phrases);
+            phraseIds = [];
+        };
         for (const item of groupItems(group)) {
             if (item.type === "phrase") {
-                if (phrases === null) {
-                    phrases = element("div", "phrases");
-                    body.append(phrases);
-                }
-                renderPhrase(phrases, item.id, instanceId, definitions, state, resolved, openEditor);
+                phraseIds.push(item.id);
                 continue;
             }
-            phrases = null;
+            renderPhrases();
             const child = item.id;
             if (definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined) {
-                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, collapseOverrides);
+                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides);
             }
             else {
-                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, collapseOverrides, instanceId);
+                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, instanceId);
             }
         }
+        renderPhrases();
         section.append(body);
+    }
+    else if (enabled && group.autoCollapse === true) {
+        const includedPhrases = includedPhrasesInGroup(groupId, definitions, state, resolved, instanceId);
+        if (includedPhrases.length > 0) {
+            const body = element("div", "group__body group__body--included-only");
+            const phrases = element("div", "phrases");
+            for (const phrase of includedPhrases) {
+                renderPhrase(phrases, phrase.id, phrase.instanceId, definitions, state, resolved, openEditor, highlightedSuggestions);
+            }
+            body.append(phrases);
+            section.append(body);
+        }
+    }
+    if (group.inline === true) {
+        const end = element("span", "group__inline-end");
+        end.setAttribute("aria-hidden", "true");
+        section.append(end);
     }
     parent.append(section);
 }
-export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, collapseOverrides, status, controls = true) => {
+export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, status, controls = true) => {
     parent.replaceChildren();
     parent.classList.add("textblock-module");
     parent.dataset.rootId = rootId;
@@ -318,6 +379,6 @@ export const renderModule = (parent, rootId, definitions, state, resolved, openE
         parent.append(toolbar);
     }
     const documentNode = element("article", "document");
-    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, collapseOverrides);
+    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides);
     parent.append(documentNode);
 };

@@ -63,7 +63,8 @@ Textblöcke fordern ein kontextbezogenes Werkzeug über ein aufsteigendes
 Anwendungsereignis an. Ein Rechner sendet sein Ergebnis als typisierte Nachricht
 an die Anwendung zurück; diese leitet es an die sichtbaren Dokument-Plug-ins.
 Das Textblock-Plug-in prüft Werte und Summe erneut gegen seine geladene
-Definition, bevor es externe Vorschläge speichert.
+Definition, bevor es sie als aktive Benutzerauswahl mit Rechnerprovenienz
+speichert.
 
 ## Textblock-Pakete
 
@@ -89,8 +90,7 @@ Die Laufzeit hält voneinander getrennt:
 | Attribute | Editorwerte je Phrase |
 | Gruppeninstanzen | Identität wiederholbarer Vorkommen |
 | Instanzzustände | Werte und Attribute einer einzelnen Wiederholung |
-| externe Vorschläge | noch nicht angenommene Werte und Attribute eines Werkzeugs |
-| angenommene Herkunft | Provenienz eines bestätigten Werkzeugvorschlags |
+| angenommene Herkunft | Provenienz eines aktiv übernommenen Werkzeugwerts |
 
 Die Auflösung berechnet daraus für jede sichtbare Phrase Wert, Textteile,
 semantischen Typ, Quelle, Provenienz und Vollständigkeit. Vorschläge verändern

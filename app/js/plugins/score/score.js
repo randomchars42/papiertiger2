@@ -78,7 +78,7 @@ const handleClick = (module, event) => {
             },
         },
     }));
-    module.status = `${total} als Vorschlag übergeben`;
+    module.status = `${total} übernommen`;
     renderModule(parent, module);
 };
 export const display = async (parentId, params) => {

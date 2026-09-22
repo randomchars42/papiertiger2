@@ -4,7 +4,9 @@ import {
     parseValue,
 } from "./textblocklib.js";
 import {
+    groupHasIncludedPhrase,
     groupItems,
+    includedPhrasesInGroup,
     isGroupConditionMet,
     isGroupEnabled,
     phraseKey,
@@ -383,12 +385,22 @@ const renderPhrase = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
+    highlightedSuggestions: ReadonlySet<string>,
 ): void => {
     const phrase = resolved.phrases[phraseKey(phraseId, instanceId)];
     if (phrase === undefined || !phrase.visible) return;
 
     const classes = ["phrase", `phrase--${phrase.kind}`];
-    if (!phrase.included) classes.push("phrase--suggestion");
+    if (phrase.included) {
+        classes.push("phrase--included");
+    } else if (phrase.source === "suggestion") {
+        classes.push("phrase--suggestion");
+    } else {
+        classes.push("phrase--available");
+    }
+    if (highlightedSuggestions.has(phrase.key)) {
+        classes.push("phrase--new-suggestion");
+    }
     if (phrase.touched) classes.push("phrase--touched");
     if (phrase.source === "set") classes.push("phrase--set");
     const phraseNode = element("span", classes.join(" "));
@@ -449,6 +461,7 @@ const renderRepeatable = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
+    highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
 ): void => {
     const group = definitions.groups[groupId];
@@ -463,19 +476,26 @@ const renderRepeatable = (
             state,
             resolved,
             openEditor,
+            highlightedSuggestions,
             collapseOverrides,
             instanceId,
             index,
         );
     }
-    container.append(
-        actionButton(
-            group.repeatable?.add ?? `${parseValue(group.title).text} hinzufügen`,
-            "add-group-instance",
-            { groupId },
-            `control repeatable__add repeatable__add--${group.kind ?? "neutral"}`,
-        ),
+    const title = parseValue(group.title).text;
+    const addLabel = group.repeatable?.add ?? `${title} hinzufügen`;
+    const addButton = actionButton(
+        title,
+        "add-group-instance",
+        { groupId },
+        `group__toggle repeatable__add repeatable__add--${group.kind ?? "neutral"}`,
     );
+    const indicator = element("span", "group__indicator", "+");
+    indicator.setAttribute("aria-hidden", "true");
+    addButton.append(indicator);
+    addButton.setAttribute("aria-label", addLabel);
+    addButton.title = addLabel;
+    container.append(addButton);
     parent.append(container);
 };
 
@@ -487,6 +507,7 @@ function renderGroup(
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
+    highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
     instanceId?: string,
     instanceIndex?: number,
@@ -495,6 +516,13 @@ function renderGroup(
     if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return;
     const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const included = groupHasIncludedPhrase(
+        groupId,
+        definitions,
+        state,
+        resolved,
+        instanceId,
+    );
     const collapsible = group.collapsed !== undefined;
     const collapsed =
         collapseOverrides[phraseKey(groupId, instanceId)] ??
@@ -507,6 +535,7 @@ function renderGroup(
             `group--${group.kind ?? "neutral"}`,
             isInstanceRoot ? "group--instance" : "",
             group.inline === true ? "group--inline" : "",
+            included ? "group--included" : "",
             enabled ? "" : "group--inactive",
             collapsed ? "group--collapsed" : "",
         ]
@@ -535,11 +564,18 @@ function renderGroup(
         String(collapsible ? !collapsed : enabled),
     );
     headingButton.title = group.note ?? "";
+    const indicator = collapsed ? "›" : !enabled ? "+" : group.inline ? ":" : "";
+    if (indicator !== "") {
+        const indicatorNode = element("span", "group__indicator", indicator);
+        indicatorNode.setAttribute("aria-hidden", "true");
+        headingButton.append(indicatorNode);
+    }
     heading.append(headingButton);
     header.append(heading);
 
     const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
+    const compactTools = group.inline === true || collapsed;
     if (group.score !== undefined) {
         tools.append(
             actionButton(
@@ -563,7 +599,7 @@ function renderGroup(
     }
     if (group.reset === true || isInstanceRoot) {
         tools.append(
-            group.inline === true
+            compactTools
                 ? iconActionButton(
                       "↺",
                       "Zurücksetzen",
@@ -581,7 +617,7 @@ function renderGroup(
     }
     if (isInstanceRoot && instanceId !== undefined) {
         tools.append(
-            group.inline === true
+            compactTools
                 ? iconActionButton(
                       "×",
                       "Entfernen",
@@ -636,25 +672,45 @@ function renderGroup(
         if (group.content !== undefined && group.content !== "") {
             body.append(element("p", "group__content", group.content));
         }
-        let phrases: HTMLDivElement | null = null;
-        for (const item of groupItems(group)) {
-            if (item.type === "phrase") {
-                if (phrases === null) {
-                    phrases = element("div", "phrases");
-                    body.append(phrases);
-                }
+        let phraseIds: string[] = [];
+        const renderPhrases = (): void => {
+            if (phraseIds.length === 0) return;
+            const phrases = element("div", "phrases");
+            const orderedPhraseIds = phraseIds
+                .map((id, index) => ({ id, index }))
+                .sort((left, right) => {
+                    const leftIncluded =
+                        resolved.phrases[phraseKey(left.id, instanceId)]?.included ===
+                        true;
+                    const rightIncluded =
+                        resolved.phrases[phraseKey(right.id, instanceId)]?.included ===
+                        true;
+                    return (
+                        Number(rightIncluded) - Number(leftIncluded) ||
+                        left.index - right.index
+                    );
+                });
+            for (const { id } of orderedPhraseIds) {
                 renderPhrase(
                     phrases,
-                    item.id,
+                    id,
                     instanceId,
                     definitions,
                     state,
                     resolved,
                     openEditor,
+                    highlightedSuggestions,
                 );
+            }
+            body.append(phrases);
+            phraseIds = [];
+        };
+        for (const item of groupItems(group)) {
+            if (item.type === "phrase") {
+                phraseIds.push(item.id);
                 continue;
             }
-            phrases = null;
+            renderPhrases();
             const child = item.id;
             if (
                 definitions.groups[child].repeatable !== undefined &&
@@ -668,6 +724,7 @@ function renderGroup(
                     state,
                     resolved,
                     openEditor,
+                    highlightedSuggestions,
                     collapseOverrides,
                 );
             } else {
@@ -679,12 +736,45 @@ function renderGroup(
                     state,
                     resolved,
                     openEditor,
+                    highlightedSuggestions,
                     collapseOverrides,
                     instanceId,
                 );
             }
         }
+        renderPhrases();
         section.append(body);
+    } else if (enabled && group.autoCollapse === true) {
+        const includedPhrases = includedPhrasesInGroup(
+            groupId,
+            definitions,
+            state,
+            resolved,
+            instanceId,
+        );
+        if (includedPhrases.length > 0) {
+            const body = element("div", "group__body group__body--included-only");
+            const phrases = element("div", "phrases");
+            for (const phrase of includedPhrases) {
+                renderPhrase(
+                    phrases,
+                    phrase.id,
+                    phrase.instanceId,
+                    definitions,
+                    state,
+                    resolved,
+                    openEditor,
+                    highlightedSuggestions,
+                );
+            }
+            body.append(phrases);
+            section.append(body);
+        }
+    }
+    if (group.inline === true) {
+        const end = element("span", "group__inline-end");
+        end.setAttribute("aria-hidden", "true");
+        section.append(end);
     }
     parent.append(section);
 }
@@ -696,6 +786,7 @@ export const renderModule = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
+    highlightedSuggestions: ReadonlySet<string>,
     collapseOverrides: Readonly<Record<string, boolean>>,
     status: string,
     controls = true,
@@ -727,6 +818,7 @@ export const renderModule = (
         state,
         resolved,
         openEditor,
+        highlightedSuggestions,
         collapseOverrides,
     );
     parent.append(documentNode);

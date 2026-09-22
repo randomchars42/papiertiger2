@@ -379,6 +379,7 @@
           "id": "sampler_eintrag_nicht_provozierbar"
         }
       ],
+      "autoCollapse": true,
       "condition": {
         "values": [
           "sampler_eintrag_schmerz_wert_brustschmerz",
@@ -432,6 +433,7 @@
           "id": "sampler_eintrag_keine"
         }
       ],
+      "autoCollapse": true,
       "condition": {
         "values": [
           "sampler_eintrag_schmerz_wert_brustschmerz",
@@ -500,6 +502,7 @@
           "id": "sampler_eintrag_freitext"
         }
       ],
+      "autoCollapse": true,
       "condition": {
         "values": [
           "sampler_eintrag_schmerz_wert_brustschmerz",
