@@ -5,11 +5,114 @@ I: gemeinsam
 E ausloeser: text label="Auslöser" placeholder="Stoff oder Präparat" prefix=""
 E reaktion: text label="Reaktion" placeholder="beobachtete Reaktion" prefix=""
 
+# Häufige oder im Akutkontext besonders relevante Allergien. Die Reihenfolge
+# entspricht der erwarteten Nutzungshäufigkeit; die Suche berücksichtigt auch
+# Handelsnamen, Stoffklassen und gebräuchliche Patientenangaben.
+V penicillin: Allergie gegen Penicillin|a
+  @sct=91936005[Allergy to penicillin]
+  @alias=Penicillinallergie; Betalaktam; Beta-Laktam
+
+V amoxicillin: Allergie gegen Amoxicillin|a
+  @sct=294505008[Amoxicillin allergy]
+  @alias=Amoxi; Aminopenicillin
+
+V cephalosporin: Allergie gegen Cephalosporine|a
+  @sct=294532003[Cephalosporin allergy]
+  @alias=Cefalosporin; Cefuroxim; Ceftriaxon; Cefazolin
+
+V sulfonamid: Allergie gegen Sulfonamide|a
+  @sct=91939003[Sulfonamide allergy]
+  @alias=Sulfonamidallergie; Sulfa; Cotrimoxazol; Sulfamethoxazol
+
+V makrolid: Allergie gegen Makrolide|a
+  @sct=860907004[Allergy to macrolide]
+  @alias=Makrolidantibiotikum; Azithromycin; Clarithromycin; Erythromycin
+
+V metamizol: Allergie gegen Metamizol|a
+  @sct=830172001[Allergy to metamizole]
+  @alias=Novalgin; Novaminsulfon; Dipyrone
+
+V nsar: Allergie gegen NSAR|a
+  @sct=293610009[Non-steroidal anti-inflammatory drug allergy]
+  @alias=NSAID; nichtsteroidales Antirheumatikum; Ibuprofen; Diclofenac; Naproxen; Coxib
+
+V acetylsalicylsaeure: Allergie gegen Acetylsalicylsäure|a
+  @sct=293586001[Aspirin allergy]
+  @alias=ASS; Aspirin
+
+V kontrastmittel: Allergie gegen Kontrastmittel|a
+  @sct=293637006[Contrast media allergy]
+  @alias=Röntgenkontrastmittel; iodhaltiges Kontrastmittel; KM; Iodallergie
+
+V latex: Allergie gegen Naturlatex|a
+  @sct=1003755004[Hevea brasiliensis latex protein allergy]
+  @alias=Latex; Latexallergie; Naturkautschuk; Gummi
+
+V chlorhexidin: Allergie gegen Chlorhexidin|a
+  @sct=294431008[Chlorhexidine allergy]
+  @alias=CHX; Hautdesinfektionsmittel; Schleimhautantiseptikum
+
+V lokalanaesthetikum: Allergie gegen Lokalanästhetika|a
+  @sct=293718005[Local anaesthetic drug allergy]
+  @alias=Lokalanästhesie; Lidocain; Xylocain; Mepivacain; Articain
+
+V morphin: Allergie gegen Morphin|a
+  @sct=293601001[Morphine allergy]
+  @alias=Morphium; Morphinallergie; Opioid
+
+V fentanyl: Allergie gegen Fentanyl|a
+  @sct=293605005[Fentanyl allergy]
+  @alias=Fentanylallergie; Opioid
+
+V protamin: Allergie gegen Protamin|a
+  @sct=294278007[Protamine allergy]
+  @alias=Protaminallergie
+
+V erdnuss: Allergie gegen Erdnuss|a
+  @sct=91935009[Peanut allergy]
+  @alias=Erdnussallergie; Peanut
+
+V nuss: Allergie gegen Nüsse|a
+  @sct=91934008[Allergy to nut]
+  @alias=Nussallergie; Baumnuss; Haselnuss; Walnuss; Cashew; Mandel; Pistazie
+
+V kuhmilchprotein: Allergie gegen Kuhmilchprotein|a
+  @sct=782555009[Cow's milk protein allergy]
+  @alias=Milcheiweiß; Milcheiweiss; Kuhmilch; Casein
+
+V eiprotein: Allergie gegen Hühnereiprotein|a
+  @sct=213020009[Allergy to egg protein]
+  @alias=Hühnerei; Hühnereiweiß; Eiweiß; Eiallergie
+
+V fisch: Allergie gegen Fisch|a
+  @sct=417532002[Allergy to fish]
+  @alias=Fischallergie
+
+V schalentiere: Allergie gegen Schalentiere|a
+  @sct=300913006[Shellfish allergy]
+  @alias=Krustentiere; Garnele; Shrimp; Krabbe; Hummer; Muschel
+
+V weizen: Allergie gegen Weizen|a
+  @sct=420174000[Allergy to wheat]
+  @alias=Weizenallergie; Weizenprotein
+
+V bienengift: Allergie gegen Bienengift|a
+  @sct=424213003[Allergy to bee venom]
+  @alias=Biene; Bienenstich; Insektengift
+
+V wespengift: Allergie gegen Wespengift|a
+  @sct=423058007[Allergy to wasp venom]
+  @alias=Wespe; Wespenstich; Insektengift
+
+V freitext: Allergie gegen {:ausloeser=ausloeser*:}|a
+  @sct=609328004[Allergic disposition]
+  @freetext
+
 G @root @collapsed @reset: Allergien
   P: Allergiestatus => keine bekannten Allergien @sct=716186003[No known allergy]|n / Allergiestatus unbekannt|-
 
   G @repeat(initial=0,add="Allergie hinzufügen",empty="Allergiestatus") @reset: Allergie|a
-    P: Allergie => Allergie gegen {:ausloeser=ausloeser*:} @sct=609328004[Allergic disposition]|a*
+    P: Allergie* => @values(allergie)
     P<Allergie>: Allergische Reaktion => allergische Reaktion: {:reaktion=reaktion*:}|a
     P<Allergie>: Schweregrad der Allergie => leichte allergische Reaktion|a / mittelschwere allergische Reaktion|a / schwere allergische Reaktion|a / Anaphylaxie|a
     P: Ergänzung zur Allergie => {:freitext*:}|-

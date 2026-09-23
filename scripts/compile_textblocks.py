@@ -847,7 +847,16 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             ]
         phrases = phrase_titles.get(reference, [])
         if len(phrases) == 1:
-            return phrases[0]["values"]
+            phrase = phrases[0]
+            if phrase["catalog"] == namespace:
+                return [*source["catalog_values"], *phrase["values"]]
+            if phrase["catalog"] is not None:
+                fail(
+                    source,
+                    line,
+                    "conditions on an imported catalog phrase need stable package.value references",
+                )
+            return phrase["values"]
         if len(phrases) > 1:
             fail(source, line, f"ambiguous condition phrase '{reference}'")
         values = values_by_text.get(reference, [])

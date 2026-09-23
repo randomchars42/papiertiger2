@@ -9,8 +9,6 @@ E dauer: duration label="Dauer" prefix=" für " units=minute,hour,day,week,month
 E qualitaet: choice label="Qualität" => drückend|- / stechend|- / brennend|- / ziehend|- / kolikartig|- / dumpf|-
 E symptom_seit: duration label="Beginn" prefix=" seit " units=minute,hour,day,week,month,year default=hour
 E seite: choice label="Seite" => rechten|- / linken|-
-E ausloeser: text label="Auslöser" placeholder="Stoff oder Präparat" prefix=""
-E reaktion: text label="Reaktion" placeholder="beobachtete Reaktion" prefix=""
 
 C schmerz: symptome.brustschmerz / symptome.bauchschmerz / symptome.kopfschmerz / symptome.rueckenschmerz / symptome.schulter_arm_schmerz / symptome.bein_hueft_knieschmerz / symptome.gelenkschwellung
 
@@ -51,14 +49,7 @@ G @root: SAMPLER
     P: Verlauf => zunehmend|- / rückläufig|- / wellenförmig|- / spontanes Sistieren|- / Sistieren unter Analgesie|- / {:freitext:}|-
     P: Freitext => {:freitext*:}|-
 
-  G @collapsed @reset: Allergien
-    P: Allergiestatus => keine bekannten Allergien @sct=716186003[No known allergy]|n / Allergiestatus unbekannt|-
-
-    G @repeat(initial=0,add="Allergie hinzufügen",empty="Allergiestatus") @reset: Allergie|a
-        P: Allergie => Allergie gegen {:ausloeser=ausloeser*:} @sct=609328004[Allergic disposition]|a*
-        P<Allergie>: Allergische Reaktion => allergische Reaktion: {:reaktion=reaktion*:}|a
-        P<Allergie>: Schweregrad der Allergie => leichte allergische Reaktion|a / mittelschwere allergische Reaktion|a / schwere allergische Reaktion|a / Anaphylaxie|a
-        P: Ergänzung zur Allergie => {:freitext*:}|-
+  U: allergie
 
   U: dauermedikation
 

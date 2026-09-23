@@ -139,18 +139,6 @@
         }
       },
       "label": "Seite"
-    },
-    "sampler_eingabe_ausloeser": {
-      "type": "text",
-      "label": "Auslöser",
-      "placeholder": "Stoff oder Präparat",
-      "prefix": ""
-    },
-    "sampler_eingabe_reaktion": {
-      "type": "text",
-      "label": "Reaktion",
-      "placeholder": "beobachtete Reaktion",
-      "prefix": ""
     }
   },
   "groups": {
@@ -158,9 +146,9 @@
       "title": "SAMPLER",
       "children": [
         "sampler_gruppe_symptom",
-        "sampler_gruppe_allergien",
         "sampler_gruppe_letzte",
         "sampler_gruppe_ereignisvorgeschichte",
+        "allergie",
         "dauermedikation",
         "vorerkrankungen"
       ],
@@ -171,7 +159,7 @@
         },
         {
           "type": "group",
-          "id": "sampler_gruppe_allergien"
+          "id": "allergie"
         },
         {
           "type": "group",
@@ -442,61 +430,6 @@
       },
       "collapsed": true,
       "inline": true
-    },
-    "sampler_gruppe_allergien": {
-      "title": "Allergien",
-      "children": [
-        "sampler_gruppe_allergie"
-      ],
-      "phrases": [
-        "sampler_eintrag_allergiestatus"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_allergiestatus"
-        },
-        {
-          "type": "group",
-          "id": "sampler_gruppe_allergie"
-        }
-      ],
-      "reset": true,
-      "collapsed": true
-    },
-    "sampler_gruppe_allergie": {
-      "title": "Allergie",
-      "kind": "abnormal",
-      "phrases": [
-        "sampler_eintrag_allergie",
-        "sampler_eintrag_allergische_reaktion",
-        "sampler_eintrag_schweregrad_der_allergie",
-        "sampler_eintrag_ergaenzung_zur_allergie"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_allergie"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_allergische_reaktion"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_schweregrad_der_allergie"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_ergaenzung_zur_allergie"
-        }
-      ],
-      "reset": true,
-      "repeatable": {
-        "initial": 0,
-        "add": "Allergie hinzufügen",
-        "empty": "sampler_eintrag_allergiestatus"
-      }
     },
     "sampler_gruppe_letzte": {
       "title": "Letzte",
@@ -995,96 +928,6 @@
       "default": "",
       "values": {
         "sampler_eintrag_freitext_wert_value": {
-          "kind": "neutral",
-          "text": "{:freitext*:}"
-        }
-      },
-      "attributes": {
-        "freitext": "gemeinsam_eingabe_freitext"
-      }
-    },
-    "sampler_eintrag_allergiestatus": {
-      "title": "Allergiestatus",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "sampler_eintrag_allergiestatus_wert_keine_bekannten_allergien": {
-          "kind": "normal",
-          "text": "keine bekannten Allergien",
-          "snomed": "716186003",
-          "snomedDisplay": "No known allergy"
-        },
-        "sampler_eintrag_allergiestatus_wert_allergiestatus_unbekannt": {
-          "kind": "neutral",
-          "text": "Allergiestatus unbekannt"
-        }
-      }
-    },
-    "sampler_eintrag_allergie": {
-      "title": "Allergie",
-      "kind": "abnormal",
-      "default": "sampler_eintrag_allergie_wert_allergie_gegen",
-      "values": {
-        "sampler_eintrag_allergie_wert_allergie_gegen": {
-          "kind": "abnormal",
-          "text": "Allergie gegen {:ausloeser*:}",
-          "snomed": "609328004",
-          "snomedDisplay": "Allergic disposition"
-        }
-      },
-      "attributes": {
-        "ausloeser": "sampler_eingabe_ausloeser"
-      }
-    },
-    "sampler_eintrag_allergische_reaktion": {
-      "title": "Allergische Reaktion",
-      "kind": "abnormal",
-      "default": null,
-      "values": {
-        "sampler_eintrag_allergische_reaktion_wert_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "allergische Reaktion: {:reaktion*:}"
-        }
-      },
-      "attributes": {
-        "reaktion": "sampler_eingabe_reaktion"
-      },
-      "suggestions": {
-        "sampler_eintrag_allergie_wert_allergie_gegen": "sampler_eintrag_allergische_reaktion_wert_allergische_reaktion"
-      }
-    },
-    "sampler_eintrag_schweregrad_der_allergie": {
-      "title": "Schweregrad der Allergie",
-      "kind": "abnormal",
-      "default": null,
-      "values": {
-        "sampler_eintrag_schweregrad_der_allergie_wert_leichte_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "leichte allergische Reaktion"
-        },
-        "sampler_eintrag_schweregrad_der_allergie_wert_mittelschwere_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "mittelschwere allergische Reaktion"
-        },
-        "sampler_eintrag_schweregrad_der_allergie_wert_schwere_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "schwere allergische Reaktion"
-        },
-        "sampler_eintrag_schweregrad_der_allergie_wert_anaphylaxie": {
-          "kind": "abnormal",
-          "text": "Anaphylaxie"
-        }
-      },
-      "suggestions": {
-        "sampler_eintrag_allergie_wert_allergie_gegen": null
-      }
-    },
-    "sampler_eintrag_ergaenzung_zur_allergie": {
-      "title": "Ergänzung zur Allergie",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "sampler_eintrag_ergaenzung_zur_allergie_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }

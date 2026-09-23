@@ -86,6 +86,11 @@ C schmerz: symptome.brustschmerz / symptome.bauchschmerz
 P<!symptome.fieber>: kein Fieber|n
 ```
 
+Verweist eine Bedingung stattdessen auf den Titel einer Phrase, die den lokalen
+Katalog ihres Pakets verwendet, umfasst sie sämtliche Werte dieses Katalogs.
+Damit können gemeinsame Folgefragen nach jeder Katalogauswahl sichtbar werden.
+Für importierte Kataloge sind weiterhin explizite `paket.wert`-Referenzen nötig.
+
 Der Compiler fügt die Katalogwerte in die Laufzeitphrase ein. Auswahl,
 Wiederholung, Bedingungen und Ausgabe verwenden danach das normale
 Textblock-Zustandsmodell.
