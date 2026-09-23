@@ -13,6 +13,11 @@ import {
     summarizeGroup,
 } from "./textblockstate.js";
 import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
+import {
+    matchesSearchTokens,
+    normaliseSearch,
+    searchTokens,
+} from "@lib/search.js";
 import type {
     AttributeValue,
     Definitions,
@@ -101,15 +106,6 @@ const instanceLabel = (
     return "";
 };
 
-const normaliseSearch = (value: string): string =>
-    value
-        .toLocaleLowerCase("de-DE")
-        .replaceAll("ß", "ss")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, " ")
-        .trim();
-
 const CATALOG_RESULT_LIMIT = 24;
 
 export const renderPhraseEditor = (
@@ -130,40 +126,45 @@ export const renderPhraseEditor = (
             ? undefined
             : definitions.catalogs[phrase.catalog];
     if (catalog !== undefined) {
-        editor.classList.add("symptom-picker");
-        const search = element("input", "editor-input symptom-picker__search");
+        editor.classList.add("catalog-picker");
+        const search = element("input", "editor-input catalog-picker__search");
         search.type = "search";
         search.value = query;
         search.autocomplete = "off";
         search.spellcheck = false;
-        search.placeholder = "Symptom suchen …";
+        search.placeholder = `${resolved.title} suchen …`;
         search.dataset.input = "catalog-search";
         search.dataset.phraseId = phraseId;
         if (instanceId !== undefined) search.dataset.instanceId = instanceId;
         search.setAttribute("aria-label", `${resolved.title} suchen`);
+        editor.append(search);
 
-        const lens = element("select", "symptom-picker__lens");
-        lens.dataset.input = "symptom-lens";
-        lens.setAttribute("aria-label", "Symptomlinse auswählen");
-        for (const definition of symptomLenses()) {
-            const option = element("option", undefined, definition.label);
-            option.value = definition.id;
-            lens.append(option);
+        if (catalog.lenses.length > 0) {
+            const lens = element("select", "catalog-picker__lens");
+            lens.dataset.input = "symptom-lens";
+            lens.setAttribute("aria-label", "Symptomlinse auswählen");
+            for (const definition of symptomLenses()) {
+                const option = element("option", undefined, definition.label);
+                option.value = definition.id;
+                lens.append(option);
+            }
+            lens.value = getSymptomLens();
+            editor.append(lens);
         }
-        lens.value = getSymptomLens();
-        editor.append(search, lens);
     }
 
-    const normalisedQuery = normaliseSearch(query);
-    const tokens = normalisedQuery === "" ? [] : normalisedQuery.split(" ");
+    const tokens = searchTokens(query);
     const candidates = Object.entries(phrase.values).filter(([, value]) => {
         if (value.freeText === true) return false;
         if (catalog === undefined) return true;
         if (tokens.length === 0) {
-            return value.lenses?.includes(getSymptomLens()) === true;
+            return (
+                catalog.lenses.length === 0 ||
+                value.lenses?.includes(getSymptomLens()) === true
+            );
         }
         const searchable = value.search ?? normaliseSearch(parseValue(value).text);
-        return tokens.every((token) => searchable.includes(token));
+        return matchesSearchTokens(searchable, tokens);
     });
     const visible =
         catalog === undefined
@@ -188,7 +189,7 @@ export const renderPhraseEditor = (
         editor.append(
             element(
                 "span",
-                "status symptom-picker__status",
+                "status catalog-picker__status",
                 `${visible.length} von ${candidates.length} · Suche verfeinern`,
             ),
         );
@@ -196,7 +197,7 @@ export const renderPhraseEditor = (
     const freeText = Object.entries(phrase.values).find(
         ([, value]) => value.freeText === true,
     );
-    if (catalog !== undefined && normalisedQuery !== "" && freeText !== undefined) {
+    if (catalog !== undefined && tokens.length > 0 && freeText !== undefined) {
         editor.append(
             actionButton(
                 `„${query.trim()}“ als Freitext`,

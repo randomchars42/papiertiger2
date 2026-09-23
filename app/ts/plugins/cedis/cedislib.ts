@@ -7,15 +7,9 @@ import type {
     CedisSearchResult,
     CedisSource,
 } from "./cedistypes.js";
+import { normaliseSearch } from "@lib/search.js";
 
-export const normalise = (value: string): string =>
-    value
-        .toLocaleLowerCase("de-DE")
-        .replaceAll("ß", "ss")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, " ")
-        .trim();
+export const normalise = normaliseSearch;
 
 const isStringArray = (value: unknown): value is string[] =>
     Array.isArray(value) &&

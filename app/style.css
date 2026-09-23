@@ -734,12 +734,12 @@ select:focus-visible {
     text-align: center;
 }
 
-.symptom-picker__search {
+.catalog-picker__search {
     flex: 1 1 14rem;
     width: auto;
 }
 
-.symptom-picker__lens {
+.catalog-picker__lens {
     min-height: 2.125rem;
     max-width: min(18rem, 100%);
     padding: 0.25rem 1.8rem 0.25rem 0.45rem;
@@ -748,7 +748,7 @@ select:focus-visible {
     background: var(--surface);
 }
 
-.symptom-picker__status {
+.catalog-picker__status {
     flex: 0 1 auto;
 }
 
@@ -940,7 +940,7 @@ select:focus-visible {
         min-height: 2.375rem;
     }
 
-    .symptom-picker__lens {
+    .catalog-picker__lens {
         min-height: 2.375rem;
     }
 }

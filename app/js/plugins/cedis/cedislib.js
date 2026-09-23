@@ -1,10 +1,5 @@
-export const normalise = (value) => value
-    .toLocaleLowerCase("de-DE")
-    .replaceAll("ß", "ss")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
+import { normaliseSearch } from "@lib/search.js";
+export const normalise = normaliseSearch;
 const isStringArray = (value) => Array.isArray(value) &&
     value.every((item) => typeof item === "string");
 const isCategory = (value) => {

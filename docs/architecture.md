@@ -89,10 +89,12 @@ Reihenfolge bleiben trotzdem im Dokumentkatalog definiert.
 
 Große Wertkataloge werden vom Compiler vorab normalisiert und beim Laden in
 eine kataloggestützte Phrase eingefügt. Suchtext und stabile IDs entstehen
-beim Build; der Browser filtert nur noch fertige Zeichenketten. Die aktive
-Symptomlinse ist davon getrennt: Sie verändert die initial sichtbare Teilmenge,
-nicht Katalog, Auswahl oder Ausgabe. Kopfzeile und Inline-Auswahl verwenden
-denselben Zustand; Konfiguration und URL können den Anfangswert setzen.
+beim Build; der Browser filtert nur noch fertige Zeichenketten und rendert
+höchstens die erste Ergebnisgruppe. Kataloge ohne Linsen zeigen initial ihre
+Einträge in Quellreihenfolge. Bei Katalogen mit Linsen verändert die aktive
+Linse nur die initial sichtbare Teilmenge, nicht Katalog, Auswahl oder Ausgabe.
+Kopfzeile und Inline-Auswahl verwenden denselben Zustand; Konfiguration und URL
+können den Anfangswert der Symptomlinse setzen.
 
 Aufgenommene Symptomwerte liefern ihre expliziten CEDIS-Zuordnungen als
 Vorschläge an das CEDIS-Plug-in. Dieses hält eine eigene, vom Benutzer

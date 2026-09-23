@@ -31,8 +31,11 @@ doppelte IDs sind Fehler.
 
 Ein Paket kann einen wiederverwendbaren Wertkatalog mit stabilen, expliziten
 Eintrags-IDs enthalten. Die Quellreihenfolge ist zugleich die bevorzugte
-Anzeigereihenfolge. Linsen filtern nur die initial sichtbaren Werte; eine Suche
-durchsucht immer den vollständigen Katalog.
+Anzeigereihenfolge. Ein Katalog benötigt keine Linse; dann werden initial seine
+ersten Werte in Quellreihenfolge gezeigt. Falls Linsen definiert sind, filtern
+sie nur die initial sichtbaren Werte. Eine Suche durchsucht immer den
+vollständigen Katalog. Ihr Eingabefeld und ihre Beschriftung werden aus der
+verwendenden Phrase abgeleitet.
 
 ```pt
 N: symptome
