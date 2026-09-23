@@ -802,6 +802,7 @@ function renderGroup(
         group.collapsed !== undefined || collapseOverrides[collapseKey] !== undefined;
     const collapsed =
         collapseOverrides[collapseKey] ?? group.collapsed ?? false;
+    const optional = group.default === false;
     const section = element(
         "section",
         [
@@ -829,16 +830,16 @@ function renderGroup(
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
         title,
-        collapsible ? "toggle-collapse" : "toggle-group",
+        !enabled || !collapsible ? "toggle-group" : "toggle-collapse",
         scopedData({ groupId }, instanceId),
         "group__toggle",
     );
     headingButton.setAttribute(
         "aria-expanded",
-        String(collapsible ? !collapsed : enabled),
+        String(enabled && (collapsible ? !collapsed : true)),
     );
     headingButton.title = group.note ?? "";
-    const indicator = collapsed ? "›" : !enabled ? "+" : group.inline ? ":" : "";
+    const indicator = !enabled ? "+" : collapsed ? "›" : group.inline ? ":" : "";
     if (indicator !== "") {
         const indicatorNode = element("span", "group__indicator", indicator);
         indicatorNode.setAttribute("aria-hidden", "true");
@@ -870,6 +871,17 @@ function renderGroup(
         );
         button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
+    }
+    if (optional && enabled && collapsible) {
+        tools.append(
+            iconActionButton(
+                "−",
+                `${title} deaktivieren`,
+                "toggle-group",
+                scopedData({ groupId }, instanceId),
+                "control group__disable",
+            ),
+        );
     }
     if (group.reset === true || isInstanceRoot) {
         tools.append(

@@ -120,6 +120,13 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 Der optionale Gruppentyp verwendet dieselben Kurzzeichen wie Werte, zum
 Beispiel `Orientierung|n` oder `Blutung|a`.
 
+`@inactive` und `@collapsed` können gemeinsam verwendet werden. Solange die
+Gruppe inaktiv ist, hat die Aktivierung mit `+` Vorrang vor dem visuellen
+Einklappen. Nach der Aktivierung bleibt die Gruppe entsprechend `@collapsed`
+eingeklappt und kann separat geöffnet werden; `−` deaktiviert sie wieder. Die
+Zustände bleiben unabhängig: Deaktivieren verändert weder den visuellen
+Einklappzustand noch die gespeicherten Auswahlen der Untergruppen.
+
 `@inline` verändert ausschließlich die Darstellung; Auswahlzustand, Ausgabe
 und Gruppeneinschluss bleiben unverändert. Bei Inline-Gruppen sowie bei
 eingeklappten Gruppen stehen Zurücksetzen und gegebenenfalls Entfernen als
