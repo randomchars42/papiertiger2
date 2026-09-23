@@ -24,12 +24,17 @@
         "dauermedikation_gruppe_arzneimittel"
       ],
       "phrases": [
-        "dauermedikation_eintrag_dauermedikationsstatus"
+        "dauermedikation_eintrag_dauermedikationsstatus",
+        "dauermedikation_eintrag_quelle_der_dauermedikation"
       ],
       "items": [
         {
           "type": "phrase",
           "id": "dauermedikation_eintrag_dauermedikationsstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "dauermedikation_eintrag_quelle_der_dauermedikation"
         },
         {
           "type": "group",
@@ -85,16 +90,92 @@
         }
       }
     },
+    "dauermedikation_eintrag_quelle_der_dauermedikation": {
+      "title": "Quelle der Dauermedikation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "dauermedikation_eintrag_quelle_der_dauermedikation_wert_laut_pflegeueberleitungsbogen": {
+          "kind": "neutral",
+          "text": "laut Pflegeüberleitungsbogen"
+        },
+        "dauermedikation_eintrag_quelle_der_dauermedikation_wert_laut_arztbrief": {
+          "kind": "neutral",
+          "text": "laut Arztbrief"
+        },
+        "dauermedikation_eintrag_quelle_der_dauermedikation_wert_laut_bundeseinheitlichem_medikationsplan": {
+          "kind": "neutral",
+          "text": "laut bundeseinheitlichem Medikationsplan"
+        },
+        "dauermedikation_eintrag_quelle_der_dauermedikation_wert_nach_vorliegendem_bild": {
+          "kind": "neutral",
+          "text": "nach vorliegendem Bild"
+        }
+      }
+    },
     "dauermedikation_eintrag_arzneimittel": {
       "title": "Arzneimittel",
       "kind": "neutral",
-      "default": "dauermedikation_eintrag_arzneimittel_wert_value",
+      "default": "",
       "values": {
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_apixaban": {
+          "kind": "abnormal",
+          "text": "Antikoagulation mit Apixaban"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_rivaroxaban": {
+          "kind": "abnormal",
+          "text": "Antikoagulation mit Rivaroxaban"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_edoxaban": {
+          "kind": "abnormal",
+          "text": "Antikoagulation mit Edoxaban"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_phenprocoumon": {
+          "kind": "abnormal",
+          "text": "Antikoagulation mit Phenprocoumon"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_niedermolekularem_heparin": {
+          "kind": "abnormal",
+          "text": "Antikoagulation mit niedermolekularem Heparin"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_acetylsalicylsaeure": {
+          "kind": "abnormal",
+          "text": "Acetylsalicylsäure"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_clopidogrel": {
+          "kind": "abnormal",
+          "text": "Clopidogrel"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_metoprolol": {
+          "kind": "neutral",
+          "text": "Metoprolol"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_bisoprolol": {
+          "kind": "neutral",
+          "text": "Bisoprolol"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_candesartan": {
+          "kind": "neutral",
+          "text": "Candesartan"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_ramipril": {
+          "kind": "neutral",
+          "text": "Ramipril"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_risperidon": {
+          "kind": "neutral",
+          "text": "Risperidon"
+        },
+        "dauermedikation_eintrag_arzneimittel_wert_melperon": {
+          "kind": "neutral",
+          "text": "Melperon"
+        },
         "dauermedikation_eintrag_arzneimittel_wert_value": {
           "kind": "neutral",
           "text": "{:arzneimittel*:}"
         }
       },
+      "prompt": true,
       "attributes": {
         "arzneimittel": "dauermedikation_eingabe_arzneimittel"
       }
@@ -113,6 +194,19 @@
         "dosierung": "dauermedikation_eingabe_dosierung"
       },
       "suggestions": {
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_apixaban": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_rivaroxaban": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_edoxaban": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_phenprocoumon": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_antikoagulation_mit_niedermolekularem_heparin": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_acetylsalicylsaeure": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_clopidogrel": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_metoprolol": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_bisoprolol": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_candesartan": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_ramipril": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_risperidon": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
+        "dauermedikation_eintrag_arzneimittel_wert_melperon": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung",
         "dauermedikation_eintrag_arzneimittel_wert_value": "dauermedikation_eintrag_dosierung_der_dauermedikation_wert_dosierung"
       }
     },
