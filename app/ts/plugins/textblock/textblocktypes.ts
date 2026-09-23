@@ -30,6 +30,7 @@ export type ValueDefinition = {
     aliases?: string[];
     search?: string;
     lenses?: string[];
+    tags?: string[];
     cedis?: CedisMapping[];
     freeText?: boolean;
 };
@@ -112,9 +113,8 @@ export type GroupDefinition = {
     kind?: ItemKind;
     summary?: boolean;
     reset?: boolean;
-    collapsed?: boolean;
-    inline?: boolean;
-    autoCollapse?: boolean;
+    subgroups?: "flow" | "break";
+    autoCompact?: boolean;
     repeatable?: RepeatableDefinition;
     condition?: ConditionDefinition;
     score?: ScoreDefinition;

@@ -3,6 +3,8 @@ import * as config from "@lib/config.js";
 declare module "@lib/config.js" {
     interface ConfigSchema {
         dataURL: string;
+        autoCompactSeconds: number;
+        /** @deprecated URL compatibility for existing bookmarks. */
         autoCollapseSeconds: number;
         symptomLens: string;
     }
@@ -14,6 +16,7 @@ export const configure = (): void => {
         logLevel: "debug",
         baseURL: "./",
         dataURL: "./data",
+        autoCompactSeconds: 12,
         autoCollapseSeconds: 12,
         symptomLens: "rettungsdienst",
         languageURL: "./language",
@@ -25,6 +28,7 @@ export const configure = (): void => {
         logLevel: "error",
         baseURL: "./",
         dataURL: "./data/",
+        autoCompactSeconds: 12,
         autoCollapseSeconds: 12,
         symptomLens: "rettungsdienst",
         languageURL: "./language",

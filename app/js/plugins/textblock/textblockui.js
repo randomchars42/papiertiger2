@@ -259,7 +259,7 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
         parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
-const renderCollapsedContents = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId) => {
+const renderCompactContents = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId) => {
     const group = definitions.groups[groupId];
     let phraseIds = [];
     const renderPhrases = () => {
@@ -284,22 +284,24 @@ const renderCollapsedContents = (parent, groupId, level, definitions, state, res
         const child = definitions.groups[childId];
         if (child.repeatable !== undefined && instanceId === undefined) {
             for (const [index, childInstanceId] of (state.groupInstances[childId] ?? []).entries()) {
-                renderCollapsedGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, childInstanceId, index);
+                renderCompactGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, childInstanceId, index);
             }
         }
         else {
-            renderCollapsedGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId);
+            renderCompactGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId);
         }
     }
     renderPhrases();
 };
-function renderCollapsedGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId, instanceIndex) {
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId) ||
-        !isGroupEnabled(groupId, definitions, state, instanceId) ||
-        !groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId)) {
-        return;
-    }
+function renderCompactGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId, instanceIndex) {
     const group = definitions.groups[groupId];
+    const conditionMet = isGroupConditionMet(groupId, definitions, resolved, instanceId);
+    const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const included = groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId);
+    const activeHeading = (group.condition !== undefined && conditionMet) ||
+        (group.default === false && enabled);
+    if (!conditionMet || !enabled || (!included && !activeHeading))
+        return;
     const nextPath = [
         ...path,
         { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
@@ -308,10 +310,11 @@ function renderCollapsedGroup(parent, groupId, level, definitions, state, resolv
         "group",
         `group--${group.kind ?? "neutral"}`,
         instanceIndex === undefined ? "" : "group--instance",
-        group.inline === true ? "group--inline" : "",
+        "group--nested",
+        `group--subgroups-${group.subgroups ?? "break"}`,
         "group--included",
-        "group--collapsed",
-        "group--collapsed-summary",
+        "group--compact",
+        "group--compact-summary",
     ]
         .filter(Boolean)
         .join(" "));
@@ -334,17 +337,17 @@ function renderCollapsedGroup(parent, groupId, level, definitions, state, resolv
     heading.append(headingButton);
     header.append(heading);
     section.append(header);
-    const body = element("div", "group__body group__body--included-only");
-    renderCollapsedContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, nextPath, instanceId);
+    const body = element("div", "group__body group__body--compact-only");
+    renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, nextPath, instanceId);
     section.append(body);
     parent.append(section);
 }
-const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries) => {
+const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries) => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
     container.dataset.repeatableGroupId = groupId;
     for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
-        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries, instanceId, index);
+        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, index);
     }
     const title = parseValue(group.title).text;
     const addLabel = group.repeatable?.add ?? `${title} hinzufügen`;
@@ -357,25 +360,25 @@ const renderRepeatable = (parent, groupId, level, definitions, state, resolved, 
     container.append(addButton);
     parent.append(container);
 };
-function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries, instanceId, instanceIndex) {
+function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, instanceIndex) {
     const group = definitions.groups[groupId];
     if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
         return;
     const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
     const included = groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId);
-    const collapseKey = phraseKey(groupId, instanceId);
-    const collapsible = group.collapsed !== undefined || collapseOverrides[collapseKey] !== undefined;
-    const collapsed = collapseOverrides[collapseKey] ?? group.collapsed ?? false;
+    const compactKey = phraseKey(groupId, instanceId);
+    const compact = compactOverrides[compactKey] ?? (level > 1);
     const optional = group.default === false;
     const section = element("section", [
         "group",
         `group--${group.kind ?? "neutral"}`,
         isInstanceRoot ? "group--instance" : "",
-        group.inline === true ? "group--inline" : "",
+        level === 1 ? "group--root" : "group--nested",
+        `group--subgroups-${group.subgroups ?? "break"}`,
         included ? "group--included" : "",
         enabled ? "" : "group--inactive",
-        collapsed ? "group--collapsed" : "",
+        compact ? "group--compact" : "",
     ]
         .filter(Boolean)
         .join(" "));
@@ -386,10 +389,10 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     const heading = element(`h${Math.min(6, Math.max(1, level))}`, "group__heading");
     const baseTitle = parseValue(group.title).text;
     const title = instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
-    const headingButton = actionButton(title, !enabled || !collapsible ? "toggle-group" : "toggle-collapse", scopedData({ groupId }, instanceId), "group__toggle");
-    headingButton.setAttribute("aria-expanded", String(enabled && (collapsible ? !collapsed : true)));
+    const headingButton = actionButton(title, !enabled ? "toggle-group" : "toggle-compact", scopedData({ groupId }, instanceId), "group__toggle");
+    headingButton.setAttribute("aria-expanded", String(enabled && !compact));
     headingButton.title = group.note ?? "";
-    const indicator = !enabled ? "+" : collapsed ? "›" : group.inline ? ":" : "";
+    const indicator = !enabled ? "+" : compact ? "›" : "";
     if (indicator !== "") {
         const indicatorNode = element("span", "group__indicator", indicator);
         indicatorNode.setAttribute("aria-hidden", "true");
@@ -399,37 +402,31 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     header.append(heading);
     const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
-    const compactTools = group.inline === true || collapsed;
-    if (group.score !== undefined) {
+    if (!compact && group.score !== undefined) {
         tools.append(actionButton(group.score.label, "open-score", scopedData({ groupId }, instanceId), "control control--primary group__score"));
     }
-    for (const setId of group.sets ?? []) {
+    for (const setId of compact ? [] : (group.sets ?? [])) {
         const set = definitions.sets[setId];
         const button = actionButton(set.title, "toggle-set", scopedData({ setId }, instanceId), `set set--${set.kind ?? "neutral"}`);
         button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
     }
-    if (optional && enabled && collapsible) {
+    if (optional && enabled && !compact) {
         tools.append(iconActionButton("−", `${title} deaktivieren`, "toggle-group", scopedData({ groupId }, instanceId), "control group__disable"));
     }
-    if (group.reset === true || isInstanceRoot) {
-        tools.append(compactTools
+    if ((group.reset === true || isInstanceRoot) && (!compact || level === 1)) {
+        tools.append(compact
             ? iconActionButton("↺", "Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset")
             : actionButton("↺ Zurücksetzen", "reset-group", scopedData({ groupId }, instanceId), "control group__reset"));
     }
-    if (isInstanceRoot && instanceId !== undefined) {
-        tools.append(compactTools
-            ? iconActionButton("×", "Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger")
-            : actionButton("Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger"));
+    if (isInstanceRoot && instanceId !== undefined && !compact) {
+        tools.append(actionButton("Entfernen", "remove-group-instance", { groupId, instanceId }, "control control--danger"));
     }
     if (tools.childElementCount > 0)
         header.append(tools);
     section.append(header);
-    if (enabled && !collapsed) {
-        const hasCollapsibleChildren = (group.children ?? []).some((childId) => definitions.groups[childId].collapsed !== undefined);
-        const body = element("div", hasCollapsibleChildren
-            ? "group__body group__body--collapsible-children"
-            : "group__body");
+    if (enabled && !compact) {
+        const body = element("div", "group__body");
         if (group.summary === true && instanceId === undefined) {
             const summary = element("aside", "group__summary");
             summary.append(element("strong", "group__summary-label", "Auffällig:"));
@@ -477,20 +474,19 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             const child = item.id;
             if (definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined) {
-                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries);
+                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries);
             }
             else {
-                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries, instanceId);
+                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId);
             }
         }
         renderPhrases();
         section.append(body);
     }
-    else if (enabled &&
-        (group.autoCollapse === true || showIncludedWhenCollapsed)) {
+    else if (enabled) {
         if (included) {
-            const body = element("div", "group__body group__body--included-only");
-            renderCollapsedContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, [
+            const body = element("div", "group__body group__body--compact-only");
+            renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, [
                 {
                     groupId,
                     ...(instanceId === undefined ? {} : { instanceId }),
@@ -499,14 +495,9 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             section.append(body);
         }
     }
-    if (group.inline === true) {
-        const end = element("span", "group__inline-end");
-        end.setAttribute("aria-hidden", "true");
-        section.append(end);
-    }
     parent.append(section);
 }
-export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, status, controls = true, pickerQueries = {}) => {
+export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, status, controls = true, pickerQueries = {}) => {
     parent.replaceChildren();
     parent.classList.add("textblock-module");
     parent.dataset.rootId = rootId;
@@ -520,6 +511,6 @@ export const renderModule = (parent, rootId, definitions, state, resolved, openE
         parent.append(toolbar);
     }
     const documentNode = element("article", "document");
-    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries);
+    renderGroup(documentNode, rootId, 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries);
     parent.append(documentNode);
 };

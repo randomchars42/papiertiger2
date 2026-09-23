@@ -13,18 +13,6 @@ const packageRequests = new Map();
 let resolved = { phrases: {} };
 let instanceCounter = 0;
 const suggestionHighlightDuration = 1_600;
-const autoCollapseCompletionActions = new Set([
-    "phrase",
-    "choose-value",
-    "choose-freetext",
-    "exclude-phrase",
-    "reset-phrase",
-    "choose-attribute",
-    "clear-attribute",
-    "toggle-set",
-    "reset-group",
-    "close-editor",
-]);
 const requestPackage = (id) => {
     let request = packageRequests.get(id);
     if (request !== undefined)
@@ -145,7 +133,7 @@ const renderAll = () => {
                 module.suggestionHighlights.delete(key);
             }
         }
-        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.suggestionHighlights.keys()), module.collapseOverrides, module.autoCollapseAllDelay !== null, module.status, module.controls, module.pickerQueries);
+        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.suggestionHighlights.keys()), module.compactOverrides, module.status, module.controls, module.pickerQueries);
     }
     const suggestions = new Map();
     for (const phrase of Object.values(resolved.phrases)) {
@@ -199,10 +187,9 @@ const nextPromptInGroup = (module, groupId, instanceId) => {
         return null;
     }
     const group = definitions.groups[groupId];
-    const collapsed = module.collapseOverrides[phraseKey(groupId, instanceId)] ??
-        group.collapsed ??
-        false;
-    if (collapsed)
+    const compact = module.compactOverrides[phraseKey(groupId, instanceId)] ??
+        (groupId !== module.rootId);
+    if (compact)
         return null;
     const scope = scopeFor(instanceId);
     for (const item of groupItems(group)) {
@@ -538,10 +525,14 @@ const requireData = (button, key) => {
     return value;
 };
 const instanceData = (button) => button.dataset.instanceId;
-const configuredAutoCollapseDelay = () => {
-    const seconds = getConfig("autoCollapseSeconds");
+const configuredAutoCompactDelay = () => {
+    const url = new URL(window.location.href);
+    const seconds = !url.searchParams.has("autoCompactSeconds") &&
+        url.searchParams.has("autoCollapseSeconds")
+        ? getConfig("autoCollapseSeconds")
+        : getConfig("autoCompactSeconds");
     if (!Number.isFinite(seconds) || seconds < 0) {
-        throw new Error('Die Konfiguration "autoCollapseSeconds" muss eine nicht negative Zahl sein.');
+        throw new Error('Die Konfiguration "autoCompactSeconds" muss eine nicht negative Zahl sein.');
     }
     return seconds === 0 ? null : seconds * 1_000;
 };
@@ -551,90 +542,71 @@ const groupContainsPhrase = (groupId, phraseId) => groupItems(definitions.groups
 const editorIsInsideGroup = (module, groupId, instanceId) => module.openEditor !== null &&
     module.openEditor.instanceId === instanceId &&
     groupContainsPhrase(groupId, module.openEditor.phraseId);
-const cancelAutoCollapse = (module, groupId, instanceId) => {
+const cancelAutoCompact = (module, groupId, instanceId) => {
     const key = phraseKey(groupId, instanceId);
-    const timer = module.autoCollapseTimers.get(key);
+    const timer = module.autoCompactTimers.get(key);
     if (timer !== undefined)
         window.clearTimeout(timer);
-    module.autoCollapseTimers.delete(key);
+    module.autoCompactTimers.delete(key);
 };
-const clearAutoCollapseTimers = (module, instanceId) => {
-    for (const [key, timer] of module.autoCollapseTimers) {
+const clearAutoCompactTimers = (module, instanceId) => {
+    for (const [key, timer] of module.autoCompactTimers) {
         if (instanceId !== undefined && !key.startsWith(`${instanceId}:`))
             continue;
         window.clearTimeout(timer);
-        module.autoCollapseTimers.delete(key);
-    }
-    if (instanceId === undefined) {
-        module.autoCollapseActive.clear();
-    }
-    else {
-        for (const key of module.autoCollapseActive) {
-            if (key.startsWith(`${instanceId}:`)) {
-                module.autoCollapseActive.delete(key);
-            }
-        }
+        module.autoCompactTimers.delete(key);
     }
 };
 const closestParentGroup = (node) => node.parentElement?.closest(".group[data-group-id]") ?? null;
-const isNestedInlineGroup = (node) => {
-    const groupId = node.dataset.groupId;
-    const parentGroupId = closestParentGroup(node)?.dataset.groupId;
-    return (groupId !== undefined &&
-        parentGroupId !== undefined &&
-        definitions.groups[groupId]?.inline === true &&
-        definitions.groups[parentGroupId]?.inline === true);
-};
-const collapseInlineSiblings = (module, node) => {
-    if (!isNestedInlineGroup(node))
+const compactFlowSiblings = (module, node) => {
+    const parentGroup = closestParentGroup(node);
+    const parentGroupId = parentGroup?.dataset.groupId;
+    if (parentGroup === null ||
+        parentGroupId === undefined ||
+        definitions.groups[parentGroupId]?.subgroups !== "flow") {
         return;
-    const groupId = node.dataset.groupId;
-    const parentGroupId = closestParentGroup(node)?.dataset.groupId;
-    if (groupId === undefined || parentGroupId === undefined)
-        return;
-    const instanceId = node.dataset.instanceId;
-    for (const item of groupItems(definitions.groups[parentGroupId])) {
-        if (item.type !== "group" || item.id === groupId)
+    }
+    for (const sibling of parentGroup.querySelectorAll(".group[data-group-id]")) {
+        if (sibling === node || closestParentGroup(sibling) !== parentGroup)
             continue;
-        const sibling = definitions.groups[item.id];
-        if (sibling.inline !== true || sibling.collapsed === undefined)
+        const groupId = sibling.dataset.groupId;
+        if (groupId === undefined)
             continue;
-        const key = phraseKey(item.id, instanceId);
-        cancelAutoCollapse(module, item.id, instanceId);
-        module.autoCollapseActive.delete(key);
-        module.collapseOverrides[key] = true;
+        const instanceId = sibling.dataset.instanceId;
+        cancelAutoCompact(module, groupId, instanceId);
+        module.compactOverrides[phraseKey(groupId, instanceId)] = true;
     }
 };
-const autoCollapseContexts = (module, target, parent) => {
-    const contexts = [];
+const autoCompactContext = (module, target, parent) => {
+    if (module.autoCompactDelay === null)
+        return null;
     let node = target.closest(".group[data-group-id]");
     while (node !== null && parent.contains(node)) {
         const groupId = node.dataset.groupId;
-        if (groupId !== undefined &&
-            !isNestedInlineGroup(node) &&
-            module.autoCollapseAllDelay !== null) {
-            contexts.push({
+        if (groupId !== undefined && definitions.groups[groupId]?.autoCompact === true) {
+            return {
                 groupId,
                 ...(node.dataset.instanceId === undefined
                     ? {}
                     : { instanceId: node.dataset.instanceId }),
-            });
+            };
         }
         node = node.parentElement?.closest(".group[data-group-id]") ?? null;
     }
-    return contexts;
+    return null;
 };
-const cancelAutoCollapseForTarget = (module, target) => {
+const cancelAutoCompactForTarget = (module, target) => {
     if (!(target instanceof Element))
         return;
     const parent = document.getElementById(module.parentId);
     if (parent === null || !parent.contains(target))
         return;
-    for (const context of autoCollapseContexts(module, target, parent)) {
-        cancelAutoCollapse(module, context.groupId, context.instanceId);
+    const context = autoCompactContext(module, target, parent);
+    if (context !== null) {
+        cancelAutoCompact(module, context.groupId, context.instanceId);
     }
 };
-const parseCollapsedGroupPath = (value) => {
+const parseCompactGroupPath = (value) => {
     const path = JSON.parse(value);
     if (!Array.isArray(path) ||
         path.length === 0 ||
@@ -657,43 +629,41 @@ const animateExpandedGroup = (module, groupId, instanceId) => {
         if (group === undefined)
             return;
         group.classList.add("group--expanding");
-        window.setTimeout(() => group.classList.remove("group--expanding"), 200);
+        window.setTimeout(() => group.classList.remove("group--expanding"), 560);
     });
 };
-const scheduleAutoCollapse = (module, groupId, instanceId) => {
-    cancelAutoCollapse(module, groupId, instanceId);
+const scheduleAutoCompact = (module, groupId, instanceId) => {
+    cancelAutoCompact(module, groupId, instanceId);
     if (editorIsInsideGroup(module, groupId, instanceId))
         return;
     const key = phraseKey(groupId, instanceId);
-    const delay = module.autoCollapseAllDelay;
+    if (module.compactOverrides[key] ?? (groupId !== module.rootId))
+        return;
+    const delay = module.autoCompactDelay;
     if (delay === null)
         return;
     const timer = window.setTimeout(() => {
-        module.autoCollapseTimers.delete(key);
+        module.autoCompactTimers.delete(key);
         if (editorIsInsideGroup(module, groupId, instanceId))
             return;
         if (instanceId !== undefined &&
             state.instanceStates[instanceId] === undefined) {
-            module.autoCollapseActive.delete(key);
             return;
         }
-        module.autoCollapseActive.delete(key);
-        module.collapseOverrides[key] = true;
+        module.compactOverrides[key] = true;
         renderAll();
     }, delay);
-    module.autoCollapseTimers.set(key, timer);
+    module.autoCompactTimers.set(key, timer);
 };
-const restartAutoCollapseForTarget = (module, target) => {
+const restartAutoCompactForTarget = (module, target) => {
     if (!(target instanceof Element))
         return;
     const parent = document.getElementById(module.parentId);
     if (parent === null || !parent.contains(target))
         return;
-    for (const context of autoCollapseContexts(module, target, parent)) {
-        const key = phraseKey(context.groupId, context.instanceId);
-        if (module.autoCollapseActive.has(key)) {
-            scheduleAutoCollapse(module, context.groupId, context.instanceId);
-        }
+    const context = autoCompactContext(module, target, parent);
+    if (context !== null) {
+        scheduleAutoCompact(module, context.groupId, context.instanceId);
     }
 };
 const handleClick = async (module, event) => {
@@ -707,9 +677,9 @@ const handleClick = async (module, event) => {
     event.preventDefault();
     const action = requireData(button, "action");
     const instanceId = instanceData(button);
-    const collapseContexts = autoCollapseContexts(module, button, parent);
-    for (const context of collapseContexts) {
-        cancelAutoCollapse(module, context.groupId, context.instanceId);
+    const compactContext = autoCompactContext(module, button, parent);
+    if (compactContext !== null) {
+        cancelAutoCompact(module, compactContext.groupId, compactContext.instanceId);
     }
     module.status = "";
     let expandedGroup = null;
@@ -841,43 +811,51 @@ const handleClick = async (module, event) => {
     else if (action === "toggle-group") {
         const groupId = requireData(button, "groupId");
         const scope = scopeFor(instanceId);
-        scope.groupOverrides[groupId] = !isGroupEnabled(groupId, definitions, state, instanceId);
-        module.openEditor = null;
-    }
-    else if (action === "toggle-collapse") {
-        const groupId = requireData(button, "groupId");
-        const key = phraseKey(groupId, instanceId);
-        const collapsed = module.collapseOverrides[key] ??
-            definitions.groups[groupId].collapsed ??
-            false;
-        const groupNode = button.closest(".group[data-group-id]");
-        if (collapsed && groupNode !== null) {
-            collapseInlineSiblings(module, groupNode);
+        const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+        scope.groupOverrides[groupId] = !enabled;
+        if (!enabled) {
+            const groupNode = button.closest(".group[data-group-id]");
+            if (groupNode !== null)
+                compactFlowSiblings(module, groupNode);
+            module.compactOverrides[phraseKey(groupId, instanceId)] = false;
             expandedGroup = {
                 groupId,
                 ...(instanceId === undefined ? {} : { instanceId }),
             };
         }
-        module.collapseOverrides[key] = !collapsed;
+        module.openEditor = null;
+    }
+    else if (action === "toggle-compact") {
+        const groupId = requireData(button, "groupId");
+        const key = phraseKey(groupId, instanceId);
+        const compact = module.compactOverrides[key] ?? (groupId !== module.rootId);
+        const groupNode = button.closest(".group[data-group-id]");
+        if (compact && groupNode !== null) {
+            compactFlowSiblings(module, groupNode);
+            expandedGroup = {
+                groupId,
+                ...(instanceId === undefined ? {} : { instanceId }),
+            };
+        }
+        module.compactOverrides[key] = !compact;
         module.openEditor = null;
     }
     else if (action === "open-group-path") {
-        const path = parseCollapsedGroupPath(requireData(button, "groupPath"));
+        const path = parseCompactGroupPath(requireData(button, "groupPath"));
         const groupNode = button.closest(".group[data-group-id]");
         if (groupNode !== null)
-            collapseInlineSiblings(module, groupNode);
+            compactFlowSiblings(module, groupNode);
         for (const context of path) {
             const key = phraseKey(context.groupId, context.instanceId);
-            cancelAutoCollapse(module, context.groupId, context.instanceId);
-            module.autoCollapseActive.delete(key);
-            module.collapseOverrides[key] = false;
+            cancelAutoCompact(module, context.groupId, context.instanceId);
+            module.compactOverrides[key] = false;
         }
         expandedGroup = path[path.length - 1] ?? null;
         module.openEditor = null;
     }
     else if (action === "reset-group") {
         const groupId = requireData(button, "groupId");
-        clearAutoCollapseTimers(module);
+        clearAutoCompactTimers(module);
         if (instanceId === undefined)
             resetStaticGroup(groupId);
         else
@@ -887,6 +865,8 @@ const handleClick = async (module, event) => {
     else if (action === "add-group-instance") {
         const groupId = requireData(button, "groupId");
         const addedId = addGroupInstance(groupId);
+        module.compactOverrides[phraseKey(groupId, addedId)] = false;
+        expandedGroup = { groupId, instanceId: addedId };
         if (!openFirstRequiredInGroup(module, groupId, addedId)) {
             module.openEditor = null;
         }
@@ -895,7 +875,7 @@ const handleClick = async (module, event) => {
         const groupId = requireData(button, "groupId");
         const removedId = requireData(button, "instanceId");
         state.groupInstances[groupId] = (state.groupInstances[groupId] ?? []).filter((id) => id !== removedId);
-        clearAutoCollapseTimers(module, removedId);
+        clearAutoCompactTimers(module, removedId);
         delete state.instanceStates[removedId];
         module.openEditor = null;
     }
@@ -920,23 +900,13 @@ const handleClick = async (module, event) => {
     renderAll();
     if (openNextPrompt(module))
         renderAll();
-    const primaryCollapseContext = collapseContexts[0];
-    if (primaryCollapseContext !== undefined &&
-        autoCollapseCompletionActions.has(action)) {
-        module.autoCollapseActive.add(phraseKey(primaryCollapseContext.groupId, primaryCollapseContext.instanceId));
-    }
-    if (action === "toggle-collapse" && primaryCollapseContext !== undefined) {
-        const primaryKey = phraseKey(primaryCollapseContext.groupId, primaryCollapseContext.instanceId);
-        if (module.collapseOverrides[primaryKey] === true) {
-            module.autoCollapseActive.delete(primaryKey);
-        }
-    }
     if (action !== "open-score") {
-        for (const context of collapseContexts) {
-            if (!module.autoCollapseActive.has(phraseKey(context.groupId, context.instanceId))) {
-                continue;
-            }
-            scheduleAutoCollapse(module, context.groupId, context.instanceId);
+        const timerContext = expandedGroup !== null &&
+            definitions.groups[expandedGroup.groupId]?.autoCompact === true
+            ? expandedGroup
+            : compactContext;
+        if (timerContext !== null) {
+            scheduleAutoCompact(module, timerContext.groupId, timerContext.instanceId);
         }
     }
     focusOpenEditor(module);
@@ -986,7 +956,7 @@ const updateFromInput = (field) => {
     return true;
 };
 const handleInput = (module, event) => {
-    cancelAutoCollapseForTarget(module, event.target);
+    cancelAutoCompactForTarget(module, event.target);
     const target = event.target;
     if (target instanceof HTMLInputElement &&
         target.dataset.input === "catalog-search") {
@@ -1012,7 +982,7 @@ const handleInput = (module, event) => {
         module.status = "";
 };
 const handleChange = (module, event) => {
-    cancelAutoCollapseForTarget(module, event.target);
+    cancelAutoCompactForTarget(module, event.target);
     if (event.target instanceof HTMLSelectElement &&
         event.target.dataset.input === "symptom-lens") {
         setSymptomLens(event.target.value);
@@ -1025,7 +995,7 @@ const handleChange = (module, event) => {
 };
 const handleKeydown = (module, event) => {
     const target = event.target;
-    cancelAutoCollapseForTarget(module, target);
+    cancelAutoCompactForTarget(module, target);
     if (event.key !== "Enter" ||
         event.isComposing ||
         !(target instanceof HTMLInputElement) ||
@@ -1057,30 +1027,29 @@ export const display = async (parentId, params) => {
         parentId,
         rootId,
         openEditor: null,
-        collapseOverrides: {},
+        compactOverrides: {},
         status: "",
         controls: params.controls !== false,
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
         suggestionsReady: false,
-        autoCollapseTimers: new Map(),
-        autoCollapseActive: new Set(),
-        autoCollapseAllDelay: configuredAutoCollapseDelay(),
+        autoCompactTimers: new Map(),
+        autoCompactDelay: configuredAutoCompactDelay(),
         pickerQueries: {},
     };
     const previous = modules.get(parentId);
     if (previous !== undefined)
-        clearAutoCollapseTimers(previous);
+        clearAutoCompactTimers(previous);
     modules.set(parentId, module);
     parent.addEventListener("click", (event) => void handleClick(module, event));
     parent.addEventListener("input", (event) => handleInput(module, event));
     parent.addEventListener("change", (event) => handleChange(module, event));
     parent.addEventListener("keydown", (event) => handleKeydown(module, event));
-    parent.addEventListener("pointerdown", (event) => cancelAutoCollapseForTarget(module, event.target));
-    parent.addEventListener("pointerup", (event) => restartAutoCollapseForTarget(module, event.target));
-    parent.addEventListener("pointercancel", (event) => restartAutoCollapseForTarget(module, event.target));
-    parent.addEventListener("focusin", (event) => cancelAutoCollapseForTarget(module, event.target));
-    parent.addEventListener("focusout", (event) => restartAutoCollapseForTarget(module, event.target));
+    parent.addEventListener("pointerdown", (event) => cancelAutoCompactForTarget(module, event.target));
+    parent.addEventListener("pointerup", (event) => restartAutoCompactForTarget(module, event.target));
+    parent.addEventListener("pointercancel", (event) => restartAutoCompactForTarget(module, event.target));
+    parent.addEventListener("focusin", (event) => cancelAutoCompactForTarget(module, event.target));
+    parent.addEventListener("focusout", (event) => restartAutoCompactForTarget(module, event.target));
     renderAll();
     if (openNextPrompt(module))
         renderAll();

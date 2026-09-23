@@ -160,7 +160,7 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
             raise CompileError(path, line, f"invalid group annotation near '{value[index:]}'")
         name = match.group(1)
         index += match.end()
-        argument: dict[str, Any] | bool = True
+        argument: dict[str, Any] | str | bool = True
         if index < len(value) and value[index] == "(":
             start = index + 1
             index += 1
@@ -185,7 +185,12 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
                 index += 1
             if depth:
                 raise CompileError(path, line, f"unclosed @{name}(...) annotation")
-            argument = parse_options(value[start : index - 1], path, line, ",")
+            raw_argument = value[start : index - 1].strip()
+            argument = (
+                raw_argument
+                if name == "subgroups"
+                else parse_options(raw_argument, path, line, ",")
+            )
         if name in annotations:
             raise CompileError(path, line, f"duplicate @{name} annotation")
         annotations[name] = argument
@@ -272,17 +277,23 @@ def parse_catalog_metadata(
         definition["snomed"] = coding.group(1)
         definition["snomed_display"] = coding.group(2).strip()
         return
-    if name in {"alias", "lens"}:
-        key = "aliases" if name == "alias" else "lenses"
+    if name in {"alias", "lens", "tag"}:
+        key = {
+            "alias": "aliases",
+            "lens": "lenses",
+            "tag": "tags",
+        }[name]
         if definition[key]:
             fail(source, line, f"duplicate @{name}")
         entries = [entry.strip() for entry in body.split(";") if entry.strip()]
         if not entries:
             fail(source, line, f"@{name} needs at least one entry")
-        if name == "lens" and any(
+        if len(set(entries)) != len(entries):
+            fail(source, line, f"@{name} contains a duplicate entry")
+        if name in {"lens", "tag"} and any(
             re.fullmatch(r"[a-z][a-z0-9_]*", entry) is None for entry in entries
         ):
-            fail(source, line, "@lens entries must be lowercase identifiers")
+            fail(source, line, f"@{name} entries must be lowercase identifiers")
         definition[key] = entries
         return
     if name == "cedis":
@@ -426,6 +437,7 @@ def parse_source(path: Path) -> dict[str, Any]:
                     "aliases": [],
                     "cedis": [],
                     "lenses": [],
+                    "tags": [],
                     "free_text": False,
                 }
             )
@@ -691,7 +703,10 @@ def search_text(*values: str) -> str:
     )
 
 
-def compile_source(source: dict[str, Any]) -> dict[str, Any]:
+def compile_source(
+    source: dict[str, Any],
+    catalog_tags: dict[tuple[str, str], list[str]] | None = None,
+) -> dict[str, Any]:
     namespace = source["namespace"]
     identifiers: dict[str, tuple[str, int]] = {}
 
@@ -792,6 +807,7 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
                 "text": value["text"],
                 "aliases": value["aliases"],
                 "lenses": value["lenses"],
+                "tags": value["tags"],
                 "search": search_text(value["raw_text"], *value["aliases"]),
             }
             if value["snomed"] is not None:
@@ -864,6 +880,17 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             return values
         if len(values) > 1:
             fail(source, line, f"ambiguous condition value '{reference}'")
+        tag_query = re.fullmatch(
+            r"@tag\(([a-z][a-z0-9_]*)\.([a-z][a-z0-9_]*)\)", reference
+        )
+        if tag_query is not None:
+            package, tag = tag_query.groups()
+            if package != namespace and package not in source["imports"]:
+                fail(source, line, f"catalog package '{package}' is not imported")
+            matches = (catalog_tags or {}).get((package, tag), [])
+            if not matches:
+                fail(source, line, f"catalog tag '{package}.{tag}' matches no values")
+            return [{"id": value_id} for value_id in matches]
         external = re.fullmatch(
             r"([a-z][a-z0-9_]*)\.([a-z][a-z0-9_]*)", reference
         )
@@ -978,9 +1005,8 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
         "root",
         "reset",
         "summary",
-        "collapsed",
-        "inline",
-        "autocollapse",
+        "subgroups",
+        "autocompact",
         "inactive",
         "repeat",
         "score",
@@ -988,10 +1014,18 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
     compiled_groups: dict[str, Any] = {}
     for group in source["groups"]:
         annotations = group["annotations"]
+        for deprecated in ("inline", "collapsed", "autocollapse"):
+            if deprecated in annotations:
+                fail(
+                    source,
+                    group["line"],
+                    f"@{deprecated} is obsolete; use @subgroups(flow|break), "
+                    "@autocompact, and the universal compact rule",
+                )
         unknown = set(annotations) - known_annotations
         if unknown:
             fail(source, group["line"], f"unknown group annotation '@{sorted(unknown)[0]}'")
-        for boolean_annotation in known_annotations - {"repeat", "score"}:
+        for boolean_annotation in known_annotations - {"repeat", "score", "subgroups"}:
             if boolean_annotation in annotations and annotations[boolean_annotation] is not True:
                 fail(source, group["line"], f"@{boolean_annotation} takes no arguments")
         compiled_group: dict[str, Any] = {"title": group["title"]}
@@ -1018,20 +1052,20 @@ def compile_source(source: dict[str, Any]) -> dict[str, Any]:
             compiled_group["sets"] = [definition["id"] for definition in group["sets"]]
         if "inactive" in annotations:
             compiled_group["default"] = False
-        if "autocollapse" in annotations:
-            if "inline" not in annotations or "collapsed" not in annotations:
-                fail(source, group["line"], "@autocollapse requires @inline and @collapsed")
-            parent = group["parent"]
-            if parent is None or "inline" not in parent["annotations"]:
-                fail(source, group["line"], "@autocollapse requires a directly enclosing @inline group")
-            compiled_group["autoCollapse"] = True
+        if "subgroups" in annotations:
+            subgroup_layout = annotations["subgroups"]
+            if subgroup_layout not in {"flow", "break"}:
+                fail(source, group["line"], "@subgroups expects 'flow' or 'break'")
+            compiled_group["subgroups"] = subgroup_layout
+        if "autocompact" in annotations:
+            compiled_group["autoCompact"] = True
         if group["conditions"]:
             if "repeat" in annotations:
                 fail(source, group["line"], "a repeatable group cannot be conditional")
             compiled_group["condition"] = compile_condition(
                 group["conditions"], group["line"]
             )
-        for annotation in ("summary", "reset", "collapsed", "inline"):
+        for annotation in ("summary", "reset"):
             if annotation in annotations:
                 compiled_group[annotation] = True
         if "repeat" in annotations:
@@ -1253,6 +1287,46 @@ def output_path(source_path: Path) -> Path:
     return source_path.with_suffix(".json")
 
 
+def catalog_tag_index(
+    sources: list[dict[str, Any]], data_directory: Path
+) -> dict[tuple[str, str], list[str]]:
+    index: dict[tuple[str, str], list[str]] = {}
+    selected_names = {source["namespace"] for source in sources}
+
+    for source in sources:
+        namespace = source["namespace"]
+        for value in source["catalog_values"]:
+            value_id = f"{namespace}_wert_{value['name']}"
+            for tag in value["tags"]:
+                index.setdefault((namespace, tag), []).append(value_id)
+
+    external_imports = {
+        imported
+        for source in sources
+        for imported in source["imports"]
+        if imported not in selected_names
+    }
+    for imported in external_imports:
+        path = data_directory / f"{imported}.json"
+        try:
+            package = json.loads(path.read_text(encoding="utf-8"))
+            values = package.get("catalogs", {}).get(imported, {}).get("values", {})
+        except (FileNotFoundError, AttributeError, json.JSONDecodeError):
+            continue
+        if not isinstance(values, dict):
+            continue
+        for value_id, value in values.items():
+            if not isinstance(value_id, str) or not isinstance(value, dict):
+                continue
+            tags = value.get("tags", [])
+            if not isinstance(tags, list):
+                continue
+            for tag in tags:
+                if isinstance(tag, str):
+                    index.setdefault((imported, tag), []).append(value_id)
+    return index
+
+
 def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path) -> None:
     cache = dict(packages)
     snomed_displays: dict[str, tuple[str, str]] = {}
@@ -1434,6 +1508,12 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                     or not isinstance(value.get("text"), str)
                     or not isinstance(value.get("kind"), str)
                     or not isinstance(value.get("lenses"), list)
+                    or not isinstance(value.get("tags"), list)
+                    or any(
+                        not isinstance(tag, str)
+                        or re.fullmatch(r"[a-z][a-z0-9_]*", tag) is None
+                        for tag in value["tags"]
+                    )
                     or any(lens not in lens_ids for lens in value["lenses"])
                 ):
                     raise CompileError(
@@ -1640,14 +1720,23 @@ def main() -> int:
     generated: list[tuple[Path, str, dict[str, Any]]] = []
     packages: dict[str, dict[str, Any]] = {}
     try:
+        parsed: list[tuple[Path, dict[str, Any] | None]] = []
         for path in paths:
             resolved = path if path.is_absolute() else root / path
             if resolved.suffix != ".pt":
                 raise CompileError(resolved, 0, "source filename must end in .pt")
+            parsed.append(
+                (resolved, None if is_document_source(resolved) else parse_source(resolved))
+            )
+        tags = catalog_tag_index(
+            [source for _, source in parsed if source is not None],
+            root / "app" / "data",
+        )
+        for resolved, source in parsed:
             package = (
                 compile_documents(resolved)
-                if is_document_source(resolved)
-                else compile_source(parse_source(resolved))
+                if source is None
+                else compile_source(source, tags)
             )
             target = output_path(resolved)
             generated.append((target, encoded(package), package))

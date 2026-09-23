@@ -542,12 +542,12 @@ const renderPhrase = (
     }
 };
 
-type CollapsedGroupPathEntry = {
+type CompactGroupPathEntry = {
     groupId: string;
     instanceId?: string;
 };
 
-const renderCollapsedContents = (
+const renderCompactContents = (
     parent: HTMLElement,
     groupId: string,
     level: number,
@@ -557,7 +557,7 @@ const renderCollapsedContents = (
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
     pickerQueries: Readonly<Record<string, string>>,
-    path: readonly CollapsedGroupPathEntry[],
+    path: readonly CompactGroupPathEntry[],
     instanceId?: string,
 ): void => {
     const group = definitions.groups[groupId];
@@ -596,7 +596,7 @@ const renderCollapsedContents = (
             for (const [index, childInstanceId] of (
                 state.groupInstances[childId] ?? []
             ).entries()) {
-                renderCollapsedGroup(
+                renderCompactGroup(
                     parent,
                     childId,
                     level,
@@ -612,7 +612,7 @@ const renderCollapsedContents = (
                 );
             }
         } else {
-            renderCollapsedGroup(
+            renderCompactGroup(
                 parent,
                 childId,
                 level,
@@ -630,7 +630,7 @@ const renderCollapsedContents = (
     renderPhrases();
 };
 
-function renderCollapsedGroup(
+function renderCompactGroup(
     parent: HTMLElement,
     groupId: string,
     level: number,
@@ -640,19 +640,29 @@ function renderCollapsedGroup(
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
     pickerQueries: Readonly<Record<string, string>>,
-    path: readonly CollapsedGroupPathEntry[],
+    path: readonly CompactGroupPathEntry[],
     instanceId?: string,
     instanceIndex?: number,
 ): void {
-    if (
-        !isGroupConditionMet(groupId, definitions, resolved, instanceId) ||
-        !isGroupEnabled(groupId, definitions, state, instanceId) ||
-        !groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId)
-    ) {
-        return;
-    }
-
     const group = definitions.groups[groupId];
+    const conditionMet = isGroupConditionMet(
+        groupId,
+        definitions,
+        resolved,
+        instanceId,
+    );
+    const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const included = groupHasIncludedPhrase(
+        groupId,
+        definitions,
+        state,
+        resolved,
+        instanceId,
+    );
+    const activeHeading =
+        (group.condition !== undefined && conditionMet) ||
+        (group.default === false && enabled);
+    if (!conditionMet || !enabled || (!included && !activeHeading)) return;
     const nextPath = [
         ...path,
         { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
@@ -663,10 +673,11 @@ function renderCollapsedGroup(
             "group",
             `group--${group.kind ?? "neutral"}`,
             instanceIndex === undefined ? "" : "group--instance",
-            group.inline === true ? "group--inline" : "",
+            "group--nested",
+            `group--subgroups-${group.subgroups ?? "break"}`,
             "group--included",
-            "group--collapsed",
-            "group--collapsed-summary",
+            "group--compact",
+            "group--compact-summary",
         ]
             .filter(Boolean)
             .join(" "),
@@ -703,8 +714,8 @@ function renderCollapsedGroup(
     header.append(heading);
     section.append(header);
 
-    const body = element("div", "group__body group__body--included-only");
-    renderCollapsedContents(
+    const body = element("div", "group__body group__body--compact-only");
+    renderCompactContents(
         body,
         groupId,
         level + 1,
@@ -730,8 +741,7 @@ const renderRepeatable = (
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
-    collapseOverrides: Readonly<Record<string, boolean>>,
-    showIncludedWhenCollapsed: boolean,
+    compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
 ): void => {
     const group = definitions.groups[groupId];
@@ -747,8 +757,7 @@ const renderRepeatable = (
             resolved,
             openEditor,
             highlightedSuggestions,
-            collapseOverrides,
-            showIncludedWhenCollapsed,
+            compactOverrides,
             pickerQueries,
             instanceId,
             index,
@@ -780,8 +789,7 @@ function renderGroup(
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
-    collapseOverrides: Readonly<Record<string, boolean>>,
-    showIncludedWhenCollapsed: boolean,
+    compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
     instanceId?: string,
     instanceIndex?: number,
@@ -797,11 +805,8 @@ function renderGroup(
         resolved,
         instanceId,
     );
-    const collapseKey = phraseKey(groupId, instanceId);
-    const collapsible =
-        group.collapsed !== undefined || collapseOverrides[collapseKey] !== undefined;
-    const collapsed =
-        collapseOverrides[collapseKey] ?? group.collapsed ?? false;
+    const compactKey = phraseKey(groupId, instanceId);
+    const compact = compactOverrides[compactKey] ?? (level > 1);
     const optional = group.default === false;
     const section = element(
         "section",
@@ -809,10 +814,11 @@ function renderGroup(
             "group",
             `group--${group.kind ?? "neutral"}`,
             isInstanceRoot ? "group--instance" : "",
-            group.inline === true ? "group--inline" : "",
+            level === 1 ? "group--root" : "group--nested",
+            `group--subgroups-${group.subgroups ?? "break"}`,
             included ? "group--included" : "",
             enabled ? "" : "group--inactive",
-            collapsed ? "group--collapsed" : "",
+            compact ? "group--compact" : "",
         ]
             .filter(Boolean)
             .join(" "),
@@ -830,16 +836,16 @@ function renderGroup(
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
         title,
-        !enabled || !collapsible ? "toggle-group" : "toggle-collapse",
+        !enabled ? "toggle-group" : "toggle-compact",
         scopedData({ groupId }, instanceId),
         "group__toggle",
     );
     headingButton.setAttribute(
         "aria-expanded",
-        String(enabled && (collapsible ? !collapsed : true)),
+        String(enabled && !compact),
     );
     headingButton.title = group.note ?? "";
-    const indicator = !enabled ? "+" : collapsed ? "›" : group.inline ? ":" : "";
+    const indicator = !enabled ? "+" : compact ? "›" : "";
     if (indicator !== "") {
         const indicatorNode = element("span", "group__indicator", indicator);
         indicatorNode.setAttribute("aria-hidden", "true");
@@ -850,8 +856,7 @@ function renderGroup(
 
     const scope = scopeState(state, instanceId);
     const tools = element("div", "group__tools");
-    const compactTools = group.inline === true || collapsed;
-    if (group.score !== undefined) {
+    if (!compact && group.score !== undefined) {
         tools.append(
             actionButton(
                 group.score.label,
@@ -861,7 +866,7 @@ function renderGroup(
             ),
         );
     }
-    for (const setId of group.sets ?? []) {
+    for (const setId of compact ? [] : (group.sets ?? [])) {
         const set = definitions.sets[setId];
         const button = actionButton(
             set.title,
@@ -872,7 +877,7 @@ function renderGroup(
         button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
     }
-    if (optional && enabled && collapsible) {
+    if (optional && enabled && !compact) {
         tools.append(
             iconActionButton(
                 "−",
@@ -883,9 +888,9 @@ function renderGroup(
             ),
         );
     }
-    if (group.reset === true || isInstanceRoot) {
+    if ((group.reset === true || isInstanceRoot) && (!compact || level === 1)) {
         tools.append(
-            compactTools
+            compact
                 ? iconActionButton(
                       "↺",
                       "Zurücksetzen",
@@ -901,37 +906,21 @@ function renderGroup(
                   ),
         );
     }
-    if (isInstanceRoot && instanceId !== undefined) {
+    if (isInstanceRoot && instanceId !== undefined && !compact) {
         tools.append(
-            compactTools
-                ? iconActionButton(
-                      "×",
-                      "Entfernen",
-                      "remove-group-instance",
-                      { groupId, instanceId },
-                      "control control--danger",
-                  )
-                : actionButton(
-                      "Entfernen",
-                      "remove-group-instance",
-                      { groupId, instanceId },
-                      "control control--danger",
-                  ),
+            actionButton(
+                "Entfernen",
+                "remove-group-instance",
+                { groupId, instanceId },
+                "control control--danger",
+            ),
         );
     }
     if (tools.childElementCount > 0) header.append(tools);
     section.append(header);
 
-    if (enabled && !collapsed) {
-        const hasCollapsibleChildren = (group.children ?? []).some(
-            (childId) => definitions.groups[childId].collapsed !== undefined,
-        );
-        const body = element(
-            "div",
-            hasCollapsibleChildren
-                ? "group__body group__body--collapsible-children"
-                : "group__body",
-        );
+    if (enabled && !compact) {
+        const body = element("div", "group__body");
         if (group.summary === true && instanceId === undefined) {
             const summary = element("aside", "group__summary");
             summary.append(element("strong", "group__summary-label", "Auffällig:"));
@@ -1012,8 +1001,7 @@ function renderGroup(
                     resolved,
                     openEditor,
                     highlightedSuggestions,
-                    collapseOverrides,
-                    showIncludedWhenCollapsed,
+                    compactOverrides,
                     pickerQueries,
                 );
             } else {
@@ -1026,8 +1014,7 @@ function renderGroup(
                     resolved,
                     openEditor,
                     highlightedSuggestions,
-                    collapseOverrides,
-                    showIncludedWhenCollapsed,
+                    compactOverrides,
                     pickerQueries,
                     instanceId,
                 );
@@ -1035,13 +1022,10 @@ function renderGroup(
         }
         renderPhrases();
         section.append(body);
-    } else if (
-        enabled &&
-        (group.autoCollapse === true || showIncludedWhenCollapsed)
-    ) {
+    } else if (enabled) {
         if (included) {
-            const body = element("div", "group__body group__body--included-only");
-            renderCollapsedContents(
+            const body = element("div", "group__body group__body--compact-only");
+            renderCompactContents(
                 body,
                 groupId,
                 level + 1,
@@ -1062,11 +1046,6 @@ function renderGroup(
             section.append(body);
         }
     }
-    if (group.inline === true) {
-        const end = element("span", "group__inline-end");
-        end.setAttribute("aria-hidden", "true");
-        section.append(end);
-    }
     parent.append(section);
 }
 
@@ -1078,8 +1057,7 @@ export const renderModule = (
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
-    collapseOverrides: Readonly<Record<string, boolean>>,
-    showIncludedWhenCollapsed: boolean,
+    compactOverrides: Readonly<Record<string, boolean>>,
     status: string,
     controls = true,
     pickerQueries: Readonly<Record<string, string>> = {},
@@ -1112,8 +1090,7 @@ export const renderModule = (
         resolved,
         openEditor,
         highlightedSuggestions,
-        collapseOverrides,
-        showIncludedWhenCollapsed,
+        compactOverrides,
         pickerQueries,
     );
     parent.append(documentNode);

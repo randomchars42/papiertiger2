@@ -81,8 +81,11 @@ export const validateDefinitions = (definitions) => {
         }
         for (const [valueId, value] of Object.entries(catalog.values)) {
             if (!Array.isArray(value.lenses) ||
-                value.lenses.some((lens) => !lensIds.has(lens))) {
-                throw new Error(`Invalid lenses in catalog value "${valueId}"`);
+                value.lenses.some((lens) => !lensIds.has(lens)) ||
+                !Array.isArray(value.tags) ||
+                value.tags.some((tag) => typeof tag !== "string" ||
+                    !/^[a-z][a-z0-9_]*$/.test(tag))) {
+                throw new Error(`Invalid metadata in catalog value "${valueId}"`);
             }
         }
     }
@@ -159,19 +162,14 @@ export const validateDefinitions = (definitions) => {
         if (group.kind !== undefined && !itemKinds.has(group.kind)) {
             throw new Error(`Invalid kind in group "${id}"`);
         }
-        if (group.collapsed !== undefined && typeof group.collapsed !== "boolean") {
-            throw new Error(`Invalid collapsed state in group "${id}"`);
+        if (group.subgroups !== undefined &&
+            group.subgroups !== "flow" &&
+            group.subgroups !== "break") {
+            throw new Error(`Invalid subgroup layout in group "${id}"`);
         }
-        if (group.inline !== undefined && typeof group.inline !== "boolean") {
-            throw new Error(`Invalid inline state in group "${id}"`);
-        }
-        if (group.autoCollapse !== undefined &&
-            typeof group.autoCollapse !== "boolean") {
-            throw new Error(`Invalid auto-collapse state in group "${id}"`);
-        }
-        if (group.autoCollapse === true &&
-            (group.inline !== true || group.collapsed !== true)) {
-            throw new Error(`Auto-collapsing group "${id}" must be inline and initially collapsed`);
+        if (group.autoCompact !== undefined &&
+            typeof group.autoCompact !== "boolean") {
+            throw new Error(`Invalid auto-compact state in group "${id}"`);
         }
         if (group.score !== undefined) {
             const score = group.score;
