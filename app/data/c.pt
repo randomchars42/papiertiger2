@@ -3,23 +3,27 @@ N: c
 I: gemeinsam
 
 E rekapillarisierungszeit: number label="Rekapillarisierungszeit" suffix=" s" min=0 max=30 step=1
-E herzfrequenz: number label="Herzfrequenz" suffix=" / min" min=0 max=300 step=1
-E systolisch: number label="Systolischer Blutdruck" suffix=" mmHg" min=0 max=300 step=1
-E diastolisch: number label="Diastolischer Blutdruck" suffix=" mmHg" min=0 max=200 step=1
+E pulsfrequenz: number label="Pulsfrequenz" suffix=" / min" min=0 max=300 step=1
 
 C perfusionsstoerung: Rekapillarisierung verlängert / Haut blass / Haut marmoriert / Haut kaltschweißig / Puls schwach / kein zentraler Puls tastbar
 G @root @reset @inline: C
-  G @inline: Perfusion
+  G: Haut
     P: Rekapillarisierung => Rekapillarisierung regelrecht @sct=45332005[Normal capillary filling]|n* / Rekapillarisierung verlängert @sct=50427001[Increased capillary filling time]|a
     P: Rekapillarisierungszeit => Rekapillarisierungszeit {:wert=rekapillarisierungszeit*:}|-
-    P: Hautkolorit => Haut rosig|n* / Haut blass|a / Haut marmoriert @sct=406128001[Mottling of skin]|a / Haut zyanotisch @sct=3415004[Cyanosis]|a
-    P: Hauttemperatur => Haut warm @sct=102599008[Warm skin]|n* / Haut kühl @sct=427733005[Cool skin]|a / Haut kaltschweißig @sct=83547004[Cold sweat]|a
-
-  G @collapsed: Puls und Blutdruck
+    P: Hautkolorit => Haut rosig|n* / Haut blass|a / Haut zyanotisch @sct=3415004[Cyanosis]|a
+    P: Marmorierung => Haut marmoriert @sct=406128001[Mottling of skin]|a
+    P: Kaltschweißigkeit => Haut kaltschweißig @sct=83547004[Cold sweat]|a
+    P: Hauttemperatur => Haut warm @sct=102599008[Warm skin]|n* / Haut kühl @sct=427733005[Cool skin]|a
+  G: Puls
     P: Pulsqualität => Puls kräftig @sct=12146004[Normal pulse]|n* / Puls schwach @sct=315225007[Weak arterial pulse]|a / kein zentraler Puls tastbar|a
     P: Pulsrhythmus => Puls rhythmisch|n* / Puls arrhythmisch @sct=698247007[Cardiac arrhythmia]|a
-    P: Herzfrequenz => Herzfrequenz {:wert=herzfrequenz*:}|-
-    P: Blutdruck => Blutdruck {:systolisch=systolisch*:}/{:diastolisch=diastolisch*:} mmHg|-
+    P: Pulsfrequenz => Pulsfrequenz {:wert=pulsfrequenz*:}|-
+    P: Pulsdefizit =>  kein Pulsdefizit*|n / Pulsdefizit|a
     P: Halsvenen => Halsvenen nicht gestaut @sct=413350009:{246090004=271653008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Jugular venous engorgement; current; subject of record]|n* / Halsvenen gestaut @sct=271653008[Jugular venous engorgement]|a
+  G @collapsed: Trauma
+    P: Bauchdecke => Bauchdecke weich*|n / Abwehrspannung|a
+    P: Blutungsräume => große Blutungsräume unauffällig*|n / Einblutung in {:freitext:}|a
+    P: Becken => Becken in vorsichtiger Palpation stabil*|n / Becken instabil|a
+    P<Becken instabil>: Kompression mittels Beckenschlinge angelegt
 
   P: Weitere C-Auffälligkeit => {:freitext*:}|a
