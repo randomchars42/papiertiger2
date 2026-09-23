@@ -98,6 +98,26 @@ G @root @summary @reset: ABCDE
 angegebenen Reihenfolge ein. Definitionen werden nicht kopiert oder
 überschrieben; doppelte IDs und Importzyklen sind Fehler.
 
+## Untergruppen anordnen und kompakt halten
+
+Direkte Phrasen stehen bei jeder Untergruppe automatisch neben ihrer
+Überschrift. Der Elternknoten entscheidet nur, wie seine Gruppen-Kinder
+angeordnet werden:
+
+```pt
+G @root @subgroups(break): Dokument
+  G @subgroups(flow) @autocompact: Ankunft
+    G @inactive: Auffindeort
+      P: in der Wohnstätte|-
+  G @repeat(initial=0,add="Symptom hinzufügen") @autocompact: Symptom|a
+```
+
+`flow` erzeugt einen umbrechenden Akkordeonfluss, `break` eine eigene Zeile pro
+Untergruppe und ist der Standard. Die Modulwurzel beginnt erweitert,
+Untergruppen beginnen kompakt. Kompaktwerden ändert weder Auswahl noch Ausgabe;
+aufgenommene Phrasen bleiben sichtbar. `@autocompact` setzt lediglich eine
+Inaktivitätsfrist für den ganzen Teilbaum.
+
 ## Einen großen Auswahlkatalog pflegen
 
 Ein großer, durchsuchbarer Auswahlvorrat wird als Wertkatalog im selben
@@ -112,6 +132,7 @@ V schwindel: Schwindel|a
   @alias=Drehschwindel; Vertigo; Benommenheit
   @cedis=403[Schwindel] equivalent
   @lens=neurologie
+  @tag=schwindel; neurologisch
 ```
 
 Die Quellreihenfolge dient als einfache Rangfolge. Ist eine Häufigkeit
@@ -119,6 +140,18 @@ hinreichend bekannt, stehen häufige Werte zuerst; eine zusätzliche numerische
 Gewichtung ist nicht erforderlich. Linsen bestimmen nur die kompakte
 Vorauswahl. Werte ohne passende Linse bleiben über ihre Bezeichnung und
 Aliase auffindbar.
+
+Tags bündeln stabile Katalogwerte für Bedingungen, ohne eine lange Liste im
+verbrauchenden Paket zu wiederholen:
+
+```pt
+C neurologisch: @tag(symptome.neurologisch)
+P<neurologisch>: neurologische Zusatzanamnese|-
+```
+
+Die Abfrage nennt immer Paket und Tag. Der Compiler löst sie in konkrete
+Wert-IDs auf und meldet leere Treffer als Fehler. Freitextwerte werden nicht aus
+ihrem später eingegebenen Text klassifiziert.
 
 CEDIS-Code, CEDIS-Originalbezeichnung und Beziehung werden direkt am Wert
 geführt. Der Compiler gleicht alle drei Angaben mit dem gebündelten Katalog ab

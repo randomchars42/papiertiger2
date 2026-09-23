@@ -49,6 +49,7 @@ V schwindel: Schwindel|a
   @alias=Drehschwindel; Vertigo; Benommenheit
   @cedis=403[Schwindel] equivalent
   @lens=rettungsdienst; kernteam
+  @tag=neurologisch
 
 V freitext: {:freitext=gemeinsam.freitext*:}|a
   @freetext
@@ -63,6 +64,7 @@ V freitext: {:freitext=gemeinsam.freitext*:}|a
 | `@alias=` | mit Semikolon getrennte Suchbegriffe |
 | `@cedis=` | CEDIS-Code, Originalbezeichnung und Beziehung |
 | `@lens=` | mit Semikolon getrennte Linsen-IDs |
+| `@tag=` | mit Semikolon getrennte, paketlokale Bedingungs-Tags |
 | `@freetext` | markiert genau einen Freitextwert des Katalogs |
 
 CEDIS-Beziehungen sind `equivalent`, `related`, `broader` oder `narrower`.
@@ -86,6 +88,24 @@ C schmerz: symptome.brustschmerz / symptome.bauchschmerz
 P<!symptome.fieber>: kein Fieber|n
 ```
 
+Mehrere Katalogwerte lassen sich über ein Tag gemeinsam referenzieren:
+
+```pt
+# in symptome.pt
+V brustschmerz: Brustschmerz|a
+  @tag=schmerz; thorax
+
+# in einem importierenden Paket
+C schmerz: @tag(symptome.schmerz)
+P<schmerz>: Schmerzstärke => NRS {:wert=nrs*:}|-
+```
+
+Ein Wert darf mehrere Tags tragen. Die Abfrage ist immer mit Paket und Tag
+qualifiziert; das Paket muss lokal sein oder direkt importiert werden. Der
+Compiler ersetzt die Abfrage durch die gegenwärtigen stabilen Wert-IDs und
+bricht ab, wenn kein Wert passt. Die Laufzeit benötigt dadurch keine eigene
+Tag-Semantik. Freitext wird nicht anhand seiner Eingabe automatisch getaggt.
+
 Verweist eine Bedingung stattdessen auf den Titel einer Phrase, die den lokalen
 Katalog ihres Pakets verwendet, umfasst sie sämtliche Werte dieses Katalogs.
 Damit können gemeinsame Folgefragen nach jeder Katalogauswahl sichtbar werden.
@@ -98,9 +118,9 @@ Textblock-Zustandsmodell.
 ## Gruppen
 
 ```pt
-G @root @reset: Untersuchung
-  G: Befunde
-    G @collapsed: Untergruppe|n
+G @root @reset @subgroups(flow) @autocompact: Ankunft
+  G @inactive: Auffindeort
+    P: in der Wohnstätte|-
 ```
 
 Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
@@ -110,9 +130,9 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@root` | Wurzel des Pakets |
 | `@reset` | separat zurücksetzbar |
 | `@summary` | fasst auffällige aufgenommene Einträge zusammen |
-| `@collapsed` | initial visuell eingeklappt |
-| `@inline` | setzt die Überschrift platzsparend neben den Gruppeninhalt |
-| `@autocollapse` | markiert eine verschachtelte Inline-Gruppe für die reduzierte Akkordeonansicht |
+| `@subgroups(flow)` | ordnet direkte Untergruppen in einem umbrechenden Zeilenfluss an |
+| `@subgroups(break)` | gibt jeder direkten Untergruppe eine eigene Zeile; dies ist der Standard |
+| `@autocompact` | setzt für die Gruppe und ihren Teilbaum eine Inaktivitätsfrist |
 | `@inactive` | initial nicht aktiv; bleibt als Vorschlag sichtbar |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
@@ -120,50 +140,46 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 Der optionale Gruppentyp verwendet dieselben Kurzzeichen wie Werte, zum
 Beispiel `Orientierung|n` oder `Blutung|a`.
 
-`@inactive` und `@collapsed` können gemeinsam verwendet werden. Solange die
-Gruppe inaktiv ist, hat die Aktivierung mit `+` Vorrang vor dem visuellen
-Einklappen. Nach der Aktivierung bleibt die Gruppe entsprechend `@collapsed`
-eingeklappt und kann separat geöffnet werden; `−` deaktiviert sie wieder. Die
-Zustände bleiben unabhängig: Deaktivieren verändert weder den visuellen
-Einklappzustand noch die gespeicherten Auswahlen der Untergruppen.
+Gruppeneinschluss, Offenlegung und Untergruppenlayout sind voneinander
+unabhängig. `@inactive` verändert nur den Einschluss. `@subgroups(...)` und der
+kompakte Zustand verändern nur die Darstellung und niemals Text- oder
+Datenausgabe.
 
-`@inline` verändert ausschließlich die Darstellung; Auswahlzustand, Ausgabe
-und Gruppeneinschluss bleiben unverändert. Bei Inline-Gruppen sowie bei
-eingeklappten Gruppen stehen Zurücksetzen und gegebenenfalls Entfernen als
-kompakte Symbolschaltflächen `↺` und `×` im Kopf. Sie behalten vollständige
-zugängliche Namen und einen Tooltip; ein `<abbr>` wird nicht verwendet, weil
-die Symbole keine Abkürzungen sind.
+Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
+gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
+kompakt. Das gilt auch für die importierte Wurzel eines anderen Pakets. Neu
+aktivierte Gruppen und neu hinzugefügte Wiederholungen öffnen sich dagegen
+sofort. Eine kompakte Gruppe zeigt weiterhin alle aufgenommenen Phrasen. Auch
+Überschriften erfüllter bedingter oder ausdrücklich aktivierter Untergruppen
+bleiben als Bedienelemente sichtbar und öffnen den vollständigen Pfad. Die
+früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind daher
+nicht mehr Teil des Formats.
 
-Direkt verschachtelte Inline-Gruppen werden in denselben umbrechenden Zeilenfluss
-eingefügt. Eine verschachtelte Gruppe ohne `@inline` beginnt dagegen auf einer
-eigenen Zeile. Damit kann die Quelldefinition ausdrücklich zwischen vollständig
-fortlaufender und blockweiser Darstellung wählen. Untergruppen und
-zusammenhängende Phrasenabschnitte behalten dabei ihre Reihenfolge aus der
-`.pt`-Quelle; eine Inline-Gruppe wird nicht gesammelt hinter die Phrasen ihrer
-Elterngruppe verschoben. Innerhalb eines solchen Phrasenabschnitts stehen in die
-Ausgabe aufgenommene Phrasen vor noch nicht aufgenommenen Phrasen. Die jeweilige
-Quellreihenfolge innerhalb beider Zustände bleibt stabil.
+Eine aktive kompakte Überschrift erweitert die Gruppe; eine aktive erweiterte
+Überschrift macht sie kompakt. Eine zunächst inaktive Überschrift aktiviert die
+Gruppe mit `+` und öffnet sie. Deaktivieren geschieht nur im erweiterten Zustand
+über `−`. Dabei bleiben Auswahlen und Attribute erhalten. Zurücksetzen und das
+Entfernen einer Wiederholung sind bei Untergruppen ebenfalls nur erweitert
+sichtbar; die Wurzel darf ihre Rücksetzfunktion auch kompakt zeigen.
 
-Inline-Überschriften sind bewusst zurückhaltend. Direkt verschachtelte
-Inline-Gruppen erhalten eine schmale, an beiden Enden begrenzte Unterlinie, die
-ihren Inhalt im fortlaufenden Zeilenfluss zusammenfasst. Enthält eine Gruppe
-mindestens eine in die Ausgabe aufgenommene Phrase, wird auch ihre Überschrift
-hervorgehoben. Dies gilt ebenso für eingeklappte Gruppen, deren Standardwerte
-bereits in der Ausgabe stehen.
+Die Überschrift einer Untergruppe und ihre direkten Phrasen bilden ohne weitere
+Annotation einen gemeinsamen umbrechenden Fluss. `@subgroups(flow)` und
+`@subgroups(break)` steuern ausschließlich die direkten Gruppen-Kinder, nicht
+die Phrasen. Bei `flow` bilden diese Untergruppen zusätzlich ein Akkordeon:
+Öffnen einer Untergruppe macht ihre offenen Geschwister kompakt. Bei `break`
+beginnt jede Untergruppe auf einer eigenen, deutlicher markierten Zeile. Im
+kompakten Zustand sehen beide Layouts gleich aus und fließen in die Zeile der
+Elterngruppe zurück. Reihenfolge und Gruppenzugehörigkeit bleiben aus der
+`.pt`-Quelle erhalten.
 
-`@autocollapse` ist eine optionale Ergänzung für eine direkt in eine andere
-`@inline`-Gruppe eingebettete Gruppe und erfordert zusätzlich `@inline` und
-`@collapsed`. Solche Untergruppen verwenden keinen individuellen Zeitgeber,
-sondern bilden ein Akkordeon: Beim Öffnen werden offene, einklappbare
-Inline-Geschwister geschlossen. Dadurch kann eine Auswahl nicht zeitversetzt
-ein anderes Bedienelement unter dem Finger verschieben.
-
-Im eingeklappten Zustand verschwinden nur die noch nicht aufgenommenen
-Auswahlmöglichkeiten. Bereits aufgenommene Phrasen bleiben sichtbar und
-bearbeitbar. Enthalten sie weitere Untergruppen, bleiben deren Überschriften als
-Bedienelemente in ihrer Hierarchie erhalten und öffnen den vollständigen Pfad
-zur Auswahl. Diese reduzierte Darstellung gilt bei ausgeschalteter globaler
-Automatik nur für `@autocollapse`, nicht allgemein für `@collapsed`.
+`@autocompact` markiert eine Zeitgebergrenze. Bedienung in der Gruppe oder einem
+beliebig tiefen Kind setzt ausschließlich die nächstgelegene solche Frist
+zurück. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
+die Grenze offen. Nach **Fertig** oder **Enter** läuft die Frist erneut. Die
+Dauer wird über `autoCompactSeconds` konfiguriert; `0` schaltet die Automatik
+aus. Das ältere URL-Argument `autoCollapseSeconds` bleibt als Übergangs-Alias
+erhalten. Die Expansion ist sichtbar animiert und respektiert reduzierte
+Bewegung.
 
 Eine importierte Wurzelgruppe wird mit `U:` eingefügt:
 

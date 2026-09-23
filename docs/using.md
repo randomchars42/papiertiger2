@@ -97,30 +97,28 @@ werden.
 leer mit **Fertig** abgeschlossen, bleibt die unvollständige Phrase außerhalb
 der Ausgabe.
 
-## Automatisches Einklappen konfigurieren
+## Automatisches Kompaktwerden konfigurieren
 
-`autoCollapseSeconds` in `app/ts/config.ts` aktiviert das automatische
-Einklappen für ganze Gruppen. Die Voreinstellung beträgt 12 Sekunden. `0`
-schaltet die globale Option aus; ein gleichnamiger URL-Parameter überschreibt
-die lokale Umgebungskonfiguration, beispielsweise
-`?autoCollapseSeconds=20` oder `?autoCollapseSeconds=0`.
+`autoCompactSeconds` in `app/ts/config.ts` bestimmt die Inaktivitätsfrist der
+mit `@autocompact` markierten Gruppen. Die Voreinstellung beträgt 12 Sekunden.
+`0` schaltet die Automatik aus; ein gleichnamiger URL-Parameter überschreibt
+die lokale Umgebungskonfiguration, beispielsweise `?autoCompactSeconds=20`
+oder `?autoCompactSeconds=0`. Bestehende Lesezeichen mit
+`autoCollapseSeconds` funktionieren als Übergang weiter.
 
-Direkt ineinander verschachtelte Inline-Gruppen verwenden bewusst keinen
-eigenen Zeitgeber: Sie verhalten sich wie ein Akkordeon. Beim Öffnen einer
-solchen Gruppe werden offene, einklappbare Inline-Geschwister geschlossen. So
-verschieben nicht mehrere unabhängig ablaufende Fristen das nächste Ziel unter
-dem Finger.
+Die Frist gehört einer ganzen markierten Gruppe einschließlich ihrer
+Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie
+neu. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
+die Gruppe offen. Nach **Fertig** oder **Enter** beginnt die Frist erneut.
 
-Automatisch eingeklappte Gruppen zeigen ihre aktiven Einträge weiterhin in
-einer reduzierten Ansicht. Dabei bleiben die Überschriften aktiver Untergruppen
-als aufklappbare Bedienelemente erhalten; nur noch nicht aufgenommene
-Auswahlmöglichkeiten werden verborgen. Jede weitere Bedienung innerhalb der
-Gruppe oder einer Untergruppe setzt eine bereits laufende Frist zurück. Zeiger-
-und Fokusaktivität pausieren sie während der Bedienung. Solange ein
-Inline-Editor geöffnet ist, bleiben die betroffene Gruppe und ihre bereits
-herunterzählenden Obergruppen offen; nach **Fertig** oder **Enter** beginnt die
-jeweilige Frist neu. Das Aufklappen wird kurz animiert; bei systemweit
-reduzierter Bewegung entfällt die Animation.
+Kompakte Gruppen zeigen ihre aufgenommenen Einträge weiterhin. Überschriften
+erfüllter bedingter oder ausdrücklich aktivierter Untergruppen bleiben als
+Bedienelemente erhalten und öffnen den vollständigen Pfad. Noch nicht
+aufgenommene Auswahlmöglichkeiten werden verborgen. Untergruppen, die über
+`@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein zeitgeberfreies
+Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt. Die Expansion wird
+bewusst etwas länger animiert; bei systemweit reduzierter Bewegung entfällt die
+Animation.
 
 ## Vorschläge und Vorgaben
 

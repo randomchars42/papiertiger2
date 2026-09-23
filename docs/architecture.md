@@ -26,11 +26,17 @@ Zur Laufzeit ist die Anwendung statisch und frameworkfrei. Alle Pakete werden
 Die Laufzeitkonfiguration wird in `app/ts/config.ts` je Umgebung gesetzt. Beim
 Start übernimmt `initialiseConfig()` gleichnamige URL-Parameter mit passendem
 Grundtyp als letzte Konfigurationsschicht. So kann beispielsweise
-`autoCollapseSeconds` lokal vorbelegt und für einen konkreten Aufruf per URL
-überschrieben werden. Der Zeitgeber gehört jeweils der ganzen bedienten Gruppe;
-verschachtelte Inline-Gruppen bilden stattdessen ein zeitgeberfreies Akkordeon.
-Die reduzierte Darstellung eingeklappter Gruppen bildet aktive Untergruppen
-rekursiv samt ihrer wieder aufklappbaren Überschriften ab.
+`autoCompactSeconds` lokal vorbelegt und für einen konkreten Aufruf per URL
+überschrieben werden. `autoCollapseSeconds` bleibt nur als Übergangs-Alias für
+bestehende URLs erhalten. Der Zeitgeber gehört der nächstgelegenen
+`@autocompact`-Grenze einschließlich ihres gesamten Teilbaums.
+
+Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt: Die
+gerenderte Modulwurzel startet erweitert, jede Untergruppe kompakt;
+`@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
+`flow` schließt offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte
+Darstellung bildet aufgenommene Phrasen sowie erfüllte bedingte oder ausdrücklich
+aktivierte Untergruppen rekursiv mit wieder aufklappbaren Überschriften ab.
 
 ## Komponenten
 
@@ -95,6 +101,11 @@ Einträge in Quellreihenfolge. Bei Katalogen mit Linsen verändert die aktive
 Linse nur die initial sichtbare Teilmenge, nicht Katalog, Auswahl oder Ausgabe.
 Kopfzeile und Inline-Auswahl verwenden denselben Zustand; Konfiguration und URL
 können den Anfangswert der Symptomlinse setzen.
+
+Paketlokale Katalog-Tags werden ebenfalls ausschließlich beim Build aufgelöst.
+Eine Bedingungsabfrage wie `@tag(symptome.schmerz)` wird in die stabilen IDs der
+gegenwärtig markierten Werte übersetzt. Die Laufzeitbedingungen bleiben dadurch
+reine Wert-ID-Mengen und erhalten keine zweite Abfragesprache.
 
 Aufgenommene Symptomwerte liefern ihre expliziten CEDIS-Zuordnungen als
 Vorschläge an das CEDIS-Plug-in. Dieses hält eine eigene, vom Benutzer
