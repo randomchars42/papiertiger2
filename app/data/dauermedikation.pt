@@ -8,6 +8,7 @@ E dosierung: text label="Dosierung" placeholder="Dosis und Einnahmeschema" prefi
 G @root @collapsed @reset: Dauermedikation
   P: Dauermedikationsstatus => keine Dauermedikation|n / Dauermedikation unbekannt|-
   P: Quelle der Dauermedikation => laut Pflegeüberleitungsbogen|- / laut Arztbrief|- / laut bundeseinheitlichem Medikationsplan|- / nach vorliegendem Bild|-
+  P: Umfang der Dauermedikation => u. a.|-
 
   G @repeat(initial=0,add="Arzneimittel hinzufügen",empty="Dauermedikationsstatus") @reset: Arzneimittel|-
     P: Arzneimittel* => Antikoagulation mit Apixaban|a / Antikoagulation mit Rivaroxaban|a / Antikoagulation mit Edoxaban|a / Antikoagulation mit Phenprocoumon|a / Antikoagulation mit niedermolekularem Heparin|a / Acetylsalicylsäure|a / Clopidogrel|a / Metoprolol|- / Bisoprolol|- / Candesartan|- / Ramipril|- / Risperidon|- / Melperon|- / {:arzneimittel=arzneimittel*:}|-

@@ -5,6 +5,7 @@
     "schmerz",
     "allergie",
     "dauermedikation",
+    "vorerkrankungen",
     "symptome"
   ],
   "editors": {
@@ -158,10 +159,10 @@
       "children": [
         "sampler_gruppe_symptom",
         "sampler_gruppe_allergien",
-        "sampler_gruppe_vorbestehende_erkrankungen",
         "sampler_gruppe_letzte",
         "sampler_gruppe_ereignisvorgeschichte",
-        "dauermedikation"
+        "dauermedikation",
+        "vorerkrankungen"
       ],
       "items": [
         {
@@ -178,7 +179,7 @@
         },
         {
           "type": "group",
-          "id": "sampler_gruppe_vorbestehende_erkrankungen"
+          "id": "vorerkrankungen"
         },
         {
           "type": "group",
@@ -496,18 +497,6 @@
         "add": "Allergie hinzufügen",
         "empty": "sampler_eintrag_allergiestatus"
       }
-    },
-    "sampler_gruppe_vorbestehende_erkrankungen": {
-      "title": "Vorbestehende Erkrankungen",
-      "phrases": [
-        "sampler_eintrag_u_a"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_u_a"
-        }
-      ]
     },
     "sampler_gruppe_letzte": {
       "title": "Letzte",
@@ -1102,17 +1091,6 @@
       },
       "attributes": {
         "freitext": "gemeinsam_eingabe_freitext"
-      }
-    },
-    "sampler_eintrag_u_a": {
-      "title": "u.a.",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "sampler_eintrag_u_a_wert_u_a": {
-          "kind": "neutral",
-          "text": "u.a."
-        }
       }
     },
     "sampler_eintrag_letzte_koronarangiographie": {

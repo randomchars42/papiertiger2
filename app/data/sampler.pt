@@ -1,6 +1,6 @@
 # SAMPLER
 N: sampler
-I: gemeinsam, schmerz, allergie, dauermedikation, symptome
+I: gemeinsam, schmerz, allergie, dauermedikation, vorerkrankungen, symptome
 
 E ort: choice label="Lokalisation" => im Thorax|- / im Oberbauch|- / im Unterbauch|- / im Rücken|- / im Kopf|- / im Arm|- / im Bein|- / diffus|-
 E nrs: number label="NRS" min=0 max=10 step=1
@@ -62,8 +62,7 @@ G @root: SAMPLER
 
   U: dauermedikation
 
-  G: Vorbestehende Erkrankungen
-    P: u.a.|-
+  U: vorerkrankungen
 
   G: Letzte
     P<symptome.brustschmerz / symptome.synkope / symptome.atemnot / symptome.herzklopfen>: letzte Koronarangiographie|-
