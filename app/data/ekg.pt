@@ -1,17 +1,61 @@
-# Wiederholbare EKG-Befunde
+# EKG-Befund auf Grundlage der alten Papiertiger-Fassung
 N: ekg
 I: gemeinsam
 
-E herzfrequenz: number label="Kammerfrequenz" suffix=" / min" min=0 max=300 step=1
+E kammerfrequenz: number label="Kammerfrequenz" suffix=" / min" min=0 max=300 step=1
+E vorhoffrequenz: number label="Vorhoffrequenz" suffix=" / min" min=0 max=600 step=1
 E ableitungen: text label="Ableitungen" placeholder="z. B. II, III, aVF" prefix=""
+E pq_zeit: number label="PQ-Intervall" suffix=" ms" min=0 max=1000 step=1
+E pr_zeit: number label="PR-Intervall" suffix=" ms" min=0 max=1000 step=1
+E qrs_zeit: number label="QRS-Dauer" suffix=" ms" min=0 max=1000 step=1
+E qt_zeit: number label="QT-Intervall" suffix=" ms" min=0 max=1000 step=1
+E qtc_zeit: number label="QTc-Intervall" suffix=" ms" min=0 max=1000 step=1
+
+C sgarbossa_relevant: Schrittmacherrhythmus / Linksschenkelblock
 
 G @root @collapsed @reset: EKG
   P: EKG-Untersuchungen => kein EKG dokumentiert|-
 
   G @repeat(initial=0,add="EKG hinzufügen",empty="EKG-Untersuchungen") @reset: EKG|-
-    P: EKG-Ableitung => 12-Kanal-EKG um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=268400002[12 lead ECG]|i*
-    P<EKG-Ableitung>: Rhythmus => Sinusrhythmus @sct=426783006[ECG: sinus rhythm]|n / Vorhofflimmern @sct=164889003[ECG: atrial fibrillation]|a / Vorhofflattern @sct=164890007[ECG: atrial flutter]|a / regelmäßige Schmalkomplextachykardie @sct=426761007[ECG: supraventricular tachycardia]|a / unregelmäßige Schmalkomplextachykardie|a / Breitkomplextachykardie @sct=164895002[ECG: ventricular tachycardia]|a / Schrittmacherrhythmus @sct=426453001[ECG: paced rhythm]|-
-    P<EKG-Ableitung>: Kammerfrequenz => Kammerfrequenz {:wert=herzfrequenz*:}|-
-    P<EKG-Ableitung>: ST-Strecken => keine signifikanten ST-Streckenveränderungen|n / ST-Streckenhebungen in {:ableitungen=ableitungen*:} @sct=76388001[ST segment elevation]|a / ST-Streckensenkungen in {:ableitungen=ableitungen*:} @sct=26141007[ST segment depression]|a
-    P: EKG-Beurteilung => unauffälliges EKG @sct=164854000[ECG normal]|n / Sinustachykardie @sct=427084000[ECG: sinus tachycardia]|a / Vorhofflimmern @sct=164889003[ECG: atrial fibrillation]|a / Vorhofflattern @sct=164890007[ECG: atrial flutter]|a / AV-Block @sct=233917008[Atrioventricular block]|a / Schenkelblock @sct=6374002[Bundle branch block]|a / STEMI @sct=401303003[Acute ST segment elevation myocardial infarction]|a
+    P: EKG-Ableitung => 12-Kanal-EKG initial um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=268400002[12 lead ECG]|i* / 12-Kanal-EKG im Verlauf um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=268400002[12 lead ECG]|i
+    P: Zusatzableitungen => zusätzlich V7–V9 abgeleitet|- / zusätzlich rV3–rV6 abgeleitet|- / zusätzlich V7–V9 und rV3–rV6 abgeleitet|-
+
+    G @inline: Rhythmus und Frequenz
+      P: Grundrhythmus => Sinusrhythmus @sct=426783006[ECG: sinus rhythm]|n / Vorhofflimmern @sct=164889003[ECG: atrial fibrillation]|a / Vorhofflattern @sct=164890007[ECG: atrial flutter]|a
+      P: Schrittmacheraktivität => Schrittmacherrhythmus @sct=426453001[ECG: paced rhythm]|-
+      P: Frequenz- und Komplexmuster => regelmäßige Schmalkomplextachykardie @sct=426761007[ECG: supraventricular tachycardia]|a / unregelmäßige Schmalkomplextachykardie|a / regelmäßige Breitkomplextachykardie|a / unregelmäßige Breitkomplextachykardie|a / Schmalkomplexbradykardie|a / Breitkomplexbradykardie|a
+      P: AV-Dissoziation => AV-Dissoziation|a
+      P: Kammerfrequenz => Kammerfrequenz {:wert=kammerfrequenz*:}|-
+      P: Vorhoffrequenz => Vorhoffrequenz {:wert=vorhoffrequenz*:}|-
+
+    G @collapsed: Elektrische Achse
+      P: Lagetyp => überdrehter Linkslagetyp|a / Linkslagetyp|n / Indifferenzlagetyp|n / Steillagetyp|n / Rechtslagetyp|a / überdrehter Rechtslagetyp|a / Sagittaltyp bei SIQIII-Konfiguration|a / Sagittaltyp bei SISIISIII-Konfiguration|a
+
+    G @collapsed: Brustwandableitungen
+      P: R/S-Umschlag => R/S-Umschlag in V2 vollzogen|- / R/S-Umschlag in V3 vollzogen|- / R/S-Umschlag in V4 vollzogen|- / R/S-Umschlag in V5 vollzogen|- / R/S-Umschlag in V6 vollzogen|- / kein R/S-Umschlag bis V6|a
+      P: rsR'-Konfiguration => rsR'-Konfiguration in V1|a / rsR'-Konfiguration in V2|a
+      P: R-Progression => unauffällige R-Progression in den Brustwandableitungen|n / zögerliche R-Progression in den Brustwandableitungen|a / gestörte R-Progression in den Brustwandableitungen|a / R-Verlust in den Brustwandableitungen|a
+      P: S-Persistenz => keine S-Persistenz bis V6|n / S-Persistenz bis V6|a
+
+    G @collapsed: Repolarisation
+      P: ST-Strecken => keine signifikanten ST-Streckenveränderungen|n / ST-Streckenhebungen in {:ableitungen=ableitungen*:} @sct=76388001[ST segment elevation]|a / ST-Streckensenkungen in {:ableitungen=ableitungen*:} @sct=26141007[ST segment depression]|a
+      P: T-Wellen => T-Negativierungen in {:ableitungen=ableitungen*:}|a / Wellens-Zeichen|a
+      P<sgarbossa_relevant>: Modifizierte Sgarbossa-Kriterien => modifizierte Sgarbossa-Kriterien nicht erfüllt|n / modifizierte Sgarbossa-Kriterien erfüllt|a
+
+    G @collapsed: Intervalle
+      P: Überleitungszeiten => Überleitungszeiten unauffällig|n
+      P: PQ-Intervall => PQ-Intervall {:wert=pq_zeit*:}|-
+      P: PR-Intervall => PR-Intervall {:wert=pr_zeit*:}|-
+      P: QRS-Dauer => QRS-Dauer {:wert=qrs_zeit*:}|-
+      P: QT-Intervall => QT-Intervall {:wert=qt_zeit*:}|-
+      P: QTc-Intervall => QTc-Intervall {:wert=qtc_zeit*:}|-
+
+    G @collapsed: Beurteilung
+      P: Gesamtbeurteilung => unauffälliges EKG @sct=164854000[ECG normal]|n / ansonsten unauffälliges EKG|n
+      P: Frequenzbeurteilung => Sinustachykardie @sct=427084000[ECG: sinus tachycardia]|a / Tachyarrhythmia absoluta|a / Bradyarrhythmia absoluta|a
+      P: Rhythmusbeurteilung => Vorhofflimmern @sct=164889003[ECG: atrial fibrillation]|a / Vorhofflattern @sct=164890007[ECG: atrial flutter]|a
+      P: AV-Block => AV-Block I. Grades|a / AV-Block II. Grades, Typ Mobitz I|a / AV-Block II. Grades, Typ Mobitz II|a / AV-Block III. Grades|a
+      P: Schenkel- und Faszikelblock => Rechtsschenkelblock|a / inkompletter Rechtsschenkelblock|a / Linksschenkelblock|a / inkompletter Linksschenkelblock|a / linksanteriorer Hemiblock|a / bifaszikulärer Block|a
+      P: Infarktbeurteilung => ST-Streckenhebungsinfarkt (STEMI) @sct=401303003[Acute ST segment elevation myocardial infarction]|a
+
     P: Ergänzung zum EKG => {:freitext*:}|-
