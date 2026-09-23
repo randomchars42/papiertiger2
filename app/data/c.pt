@@ -5,7 +5,6 @@ I: gemeinsam
 E rekapillarisierungszeit: number label="Rekapillarisierungszeit" suffix=" s" min=0 max=30 step=1
 E pulsfrequenz: number label="Pulsfrequenz" suffix=" / min" min=0 max=300 step=1
 
-C perfusionsstoerung: Rekapillarisierung verlängert / Haut blass / Haut marmoriert / Haut kaltschweißig / Puls schwach / kein zentraler Puls tastbar
 G @root @reset @inline: C
   G: Haut
     P: Rekapillarisierung => Rekapillarisierung regelrecht @sct=45332005[Normal capillary filling]|n* / Rekapillarisierung verlängert @sct=50427001[Increased capillary filling time]|a
@@ -24,6 +23,6 @@ G @root @reset @inline: C
     P: Bauchdecke => Bauchdecke weich*|n / Abwehrspannung|a
     P: Blutungsräume => große Blutungsräume unauffällig*|n / Einblutung in {:freitext:}|a
     P: Becken => Becken in vorsichtiger Palpation stabil*|n / Becken instabil|a
-    P<Becken instabil>: Kompression mittels Beckenschlinge angelegt
+    P<Becken instabil>: Kompression mittels Beckenschlinge angelegt|i
 
   P: Weitere C-Auffälligkeit => {:freitext*:}|a
