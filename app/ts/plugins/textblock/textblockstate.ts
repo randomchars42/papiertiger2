@@ -786,21 +786,6 @@ export const groupHasIncludedPhrase = (
         instanceId,
     ).some((phrase) => phrase.included);
 
-export const includedPhrasesInGroup = (
-    groupId: string,
-    definitions: Definitions,
-    state: DocumentState,
-    resolved: ResolvedDocument,
-    instanceId?: string,
-): ResolvedPhrase[] =>
-    collectGroupPhrases(
-        groupId,
-        definitions,
-        state,
-        resolved,
-        instanceId,
-    ).filter((phrase) => phrase.included);
-
 export const summarizeGroup = (
     groupId: string,
     definitions: Definitions,

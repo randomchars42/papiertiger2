@@ -104,7 +104,7 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@summary` | fasst auffällige aufgenommene Einträge zusammen |
 | `@collapsed` | initial visuell eingeklappt |
 | `@inline` | setzt die Überschrift platzsparend neben den Gruppeninhalt |
-| `@autocollapse` | klappt eine verschachtelte Inline-Gruppe nach der Auswahl wieder ein |
+| `@autocollapse` | markiert eine verschachtelte Inline-Gruppe für die reduzierte Akkordeonansicht |
 | `@inactive` | initial nicht aktiv; bleibt als Vorschlag sichtbar |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
@@ -138,15 +138,17 @@ bereits in der Ausgabe stehen.
 
 `@autocollapse` ist eine optionale Ergänzung für eine direkt in eine andere
 `@inline`-Gruppe eingebettete Gruppe und erfordert zusätzlich `@inline` und
-`@collapsed`. Nach einer abgeschlossenen Auswahl klappt die Gruppe nach 1,8
-Sekunden ohne weitere Bedienung wieder ein. Jede weitere Auswahl innerhalb der
-Gruppe startet die Frist neu, sodass mehrere Werte nacheinander gewählt werden
-können. Solange ein Phrasen- oder Attributeditor der Gruppe geöffnet ist, läuft
-keine Frist. Reines Aufklappen startet sie ebenfalls nicht. Im eingeklappten
-Zustand verschwinden nur die noch nicht aufgenommenen Auswahlmöglichkeiten;
-bereits in die Ausgabe aufgenommene Phrasen bleiben neben der Überschrift
-sichtbar und bearbeitbar. Diese reduzierte Darstellung gilt nur für
-`@autocollapse`, nicht allgemein für `@collapsed`.
+`@collapsed`. Solche Untergruppen verwenden keinen individuellen Zeitgeber,
+sondern bilden ein Akkordeon: Beim Öffnen werden offene, einklappbare
+Inline-Geschwister geschlossen. Dadurch kann eine Auswahl nicht zeitversetzt
+ein anderes Bedienelement unter dem Finger verschieben.
+
+Im eingeklappten Zustand verschwinden nur die noch nicht aufgenommenen
+Auswahlmöglichkeiten. Bereits aufgenommene Phrasen bleiben sichtbar und
+bearbeitbar. Enthalten sie weitere Untergruppen, bleiben deren Überschriften als
+Bedienelemente in ihrer Hierarchie erhalten und öffnen den vollständigen Pfad
+zur Auswahl. Diese reduzierte Darstellung gilt bei ausgeschalteter globaler
+Automatik nur für `@autocollapse`, nicht allgemein für `@collapsed`.
 
 Eine importierte Wurzelgruppe wird mit `U:` eingefügt:
 

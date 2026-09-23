@@ -96,19 +96,27 @@ der Ausgabe.
 ## Automatisches Einklappen konfigurieren
 
 `autoCollapseSeconds` in `app/ts/config.ts` aktiviert das automatische
-Einklappen für alle Gruppen. `0` lässt diese globale Option aus; positive Werte
-geben die Wartezeit in Sekunden an. Ein gleichnamiger URL-Parameter
-überschreibt die lokale Umgebungskonfiguration, beispielsweise
-`?autoCollapseSeconds=4`. Explizit mit `@autocollapse` markierte Gruppen
-behalten bei ausgeschalteter globaler Option ihr eigenes Verhalten. Automatisch
-eingeklappte Gruppen zeigen ihre aktiven Einträge weiterhin in einer reduzierten
-Ansicht; nur noch nicht aufgenommene Auswahlmöglichkeiten werden verborgen. Jede
-weitere Bedienung innerhalb der Gruppe oder einer Untergruppe setzt deren
-bereits laufende Fristen zurück, startet aber nicht allein durch die
-Verschachtelung neue Fristen für sämtliche Obergruppen. Solange ein
+Einklappen für ganze Gruppen. Die Voreinstellung beträgt 12 Sekunden. `0`
+schaltet die globale Option aus; ein gleichnamiger URL-Parameter überschreibt
+die lokale Umgebungskonfiguration, beispielsweise
+`?autoCollapseSeconds=20` oder `?autoCollapseSeconds=0`.
+
+Direkt ineinander verschachtelte Inline-Gruppen verwenden bewusst keinen
+eigenen Zeitgeber: Sie verhalten sich wie ein Akkordeon. Beim Öffnen einer
+solchen Gruppe werden offene, einklappbare Inline-Geschwister geschlossen. So
+verschieben nicht mehrere unabhängig ablaufende Fristen das nächste Ziel unter
+dem Finger.
+
+Automatisch eingeklappte Gruppen zeigen ihre aktiven Einträge weiterhin in
+einer reduzierten Ansicht. Dabei bleiben die Überschriften aktiver Untergruppen
+als aufklappbare Bedienelemente erhalten; nur noch nicht aufgenommene
+Auswahlmöglichkeiten werden verborgen. Jede weitere Bedienung innerhalb der
+Gruppe oder einer Untergruppe setzt eine bereits laufende Frist zurück. Zeiger-
+und Fokusaktivität pausieren sie während der Bedienung. Solange ein
 Inline-Editor geöffnet ist, bleiben die betroffene Gruppe und ihre bereits
 herunterzählenden Obergruppen offen; nach **Fertig** oder **Enter** beginnt die
-jeweilige Frist neu.
+jeweilige Frist neu. Das Aufklappen wird kurz animiert; bei systemweit
+reduzierter Bewegung entfällt die Animation.
 
 ## Vorschläge und Vorgaben
 

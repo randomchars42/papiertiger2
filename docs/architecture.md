@@ -27,7 +27,10 @@ Die Laufzeitkonfiguration wird in `app/ts/config.ts` je Umgebung gesetzt. Beim
 Start übernimmt `initialiseConfig()` gleichnamige URL-Parameter mit passendem
 Grundtyp als letzte Konfigurationsschicht. So kann beispielsweise
 `autoCollapseSeconds` lokal vorbelegt und für einen konkreten Aufruf per URL
-überschrieben werden.
+überschrieben werden. Der Zeitgeber gehört jeweils der ganzen bedienten Gruppe;
+verschachtelte Inline-Gruppen bilden stattdessen ein zeitgeberfreies Akkordeon.
+Die reduzierte Darstellung eingeklappter Gruppen bildet aktive Untergruppen
+rekursiv samt ihrer wieder aufklappbaren Überschriften ab.
 
 ## Komponenten
 

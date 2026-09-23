@@ -1,5 +1,5 @@
 import { isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { groupHasIncludedPhrase, groupItems, includedPhrasesInGroup, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
+import { groupHasIncludedPhrase, groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
 const element = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -262,6 +262,86 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
         parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
+const renderCollapsedContents = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId) => {
+    const group = definitions.groups[groupId];
+    let phraseIds = [];
+    const renderPhrases = () => {
+        if (phraseIds.length === 0)
+            return;
+        const phrases = element("div", "phrases");
+        for (const phraseId of phraseIds) {
+            renderPhrase(phrases, phraseId, instanceId, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries);
+        }
+        parent.append(phrases);
+        phraseIds = [];
+    };
+    for (const item of groupItems(group)) {
+        if (item.type === "phrase") {
+            if (resolved.phrases[phraseKey(item.id, instanceId)]?.included === true) {
+                phraseIds.push(item.id);
+            }
+            continue;
+        }
+        renderPhrases();
+        const childId = item.id;
+        const child = definitions.groups[childId];
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            for (const [index, childInstanceId] of (state.groupInstances[childId] ?? []).entries()) {
+                renderCollapsedGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, childInstanceId, index);
+            }
+        }
+        else {
+            renderCollapsedGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId);
+        }
+    }
+    renderPhrases();
+};
+function renderCollapsedGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, path, instanceId, instanceIndex) {
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId) ||
+        !isGroupEnabled(groupId, definitions, state, instanceId) ||
+        !groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId)) {
+        return;
+    }
+    const group = definitions.groups[groupId];
+    const nextPath = [
+        ...path,
+        { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
+    ];
+    const section = element("section", [
+        "group",
+        `group--${group.kind ?? "neutral"}`,
+        instanceIndex === undefined ? "" : "group--instance",
+        group.inline === true ? "group--inline" : "",
+        "group--included",
+        "group--collapsed",
+        "group--collapsed-summary",
+    ]
+        .filter(Boolean)
+        .join(" "));
+    section.dataset.groupId = groupId;
+    if (instanceId !== undefined)
+        section.dataset.instanceId = instanceId;
+    const header = element("header", "group__header");
+    const heading = element(`h${Math.min(6, Math.max(1, level))}`, "group__heading");
+    const baseTitle = parseValue(group.title).text;
+    const title = instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
+    const headingButton = actionButton(title, "open-group-path", scopedData({
+        groupId,
+        groupPath: JSON.stringify(nextPath),
+    }, instanceId), "group__toggle");
+    headingButton.setAttribute("aria-expanded", "false");
+    headingButton.title = group.note ?? "";
+    const indicator = element("span", "group__indicator", "›");
+    indicator.setAttribute("aria-hidden", "true");
+    headingButton.append(indicator);
+    heading.append(headingButton);
+    header.append(heading);
+    section.append(header);
+    const body = element("div", "group__body group__body--included-only");
+    renderCollapsedContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, nextPath, instanceId);
+    section.append(body);
+    parent.append(section);
+}
 const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, collapseOverrides, showIncludedWhenCollapsed, pickerQueries) => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
@@ -407,14 +487,14 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     }
     else if (enabled &&
         (group.autoCollapse === true || showIncludedWhenCollapsed)) {
-        const includedPhrases = includedPhrasesInGroup(groupId, definitions, state, resolved, instanceId);
-        if (includedPhrases.length > 0) {
+        if (included) {
             const body = element("div", "group__body group__body--included-only");
-            const phrases = element("div", "phrases");
-            for (const phrase of includedPhrases) {
-                renderPhrase(phrases, phrase.id, phrase.instanceId, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries);
-            }
-            body.append(phrases);
+            renderCollapsedContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, [
+                {
+                    groupId,
+                    ...(instanceId === undefined ? {} : { instanceId }),
+                },
+            ], instanceId);
             section.append(body);
         }
     }
