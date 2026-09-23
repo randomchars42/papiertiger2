@@ -463,11 +463,20 @@ const closeEditor = (module) => {
             };
 };
 const isTouchDevice = () => window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
-const focusOpenAttribute = (module) => {
+const focusOpenEditor = (module) => {
     const editor = module.openEditor;
+    const parent = document.getElementById(module.parentId);
+    if (editor?.type === "phrase") {
+        if (definitions.phrases[editor.phraseId]?.catalog === undefined)
+            return;
+        const search = [...(parent?.querySelectorAll('input[data-input="catalog-search"]') ?? [])].find((field) => field.dataset.phraseId === editor.phraseId &&
+            field.dataset.instanceId === editor.instanceId);
+        search?.focus();
+        search?.setSelectionRange(search.value.length, search.value.length);
+        return;
+    }
     if (isTouchDevice() || editor?.type !== "attribute")
         return;
-    const parent = document.getElementById(module.parentId);
     const input = [...(parent?.querySelectorAll('input[data-input="attribute"]') ?? [])].find((field) => field.dataset.phraseId === editor.phraseId &&
         field.dataset.attributeId === editor.attributeId &&
         field.dataset.instanceId === editor.instanceId);
@@ -930,7 +939,7 @@ const handleClick = async (module, event) => {
             scheduleAutoCollapse(module, context.groupId, context.instanceId);
         }
     }
-    focusOpenAttribute(module);
+    focusOpenEditor(module);
     if (expandedGroup !== null) {
         animateExpandedGroup(module, expandedGroup.groupId, expandedGroup.instanceId);
     }
@@ -1075,6 +1084,7 @@ export const display = async (parentId, params) => {
     renderAll();
     if (openNextPrompt(module))
         renderAll();
+    focusOpenEditor(module);
 };
 export const getValue = async (id) => {
     await ensureGroup(id);

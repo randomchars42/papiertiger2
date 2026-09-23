@@ -68,6 +68,10 @@ der Linse den ganzen Katalog einschließlich der Aliase. Passt kein Wert, kann
 der eingegebene Text ausdrücklich als Freitext übernommen werden; für CEDIS
 wird dann lediglich **Unbekannt** vorgeschlagen.
 
+Durchsuchbare Katalogauswahlen wie **Symptom** und **Allergie** setzen den
+Eingabefokus beim Öffnen direkt in ihr Suchfeld. So kann ohne zusätzlichen
+Klick sofort getippt werden.
+
 Die aktive **Linse** kann sowohl in der Kopfzeile als auch unmittelbar neben
 der Symptomsuche gewechselt werden. Beide Auswahlen bleiben synchron. Der
 Standard steht als `symptomLens` in `app/ts/config.ts` und lässt sich für ein

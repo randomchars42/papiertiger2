@@ -675,10 +675,23 @@ const closeEditor = (module: Module): void => {
 const isTouchDevice = (): boolean =>
     window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
 
-const focusOpenAttribute = (module: Module): void => {
+const focusOpenEditor = (module: Module): void => {
     const editor = module.openEditor;
-    if (isTouchDevice() || editor?.type !== "attribute") return;
     const parent = document.getElementById(module.parentId);
+    if (editor?.type === "phrase") {
+        if (definitions.phrases[editor.phraseId]?.catalog === undefined) return;
+        const search = [...(parent?.querySelectorAll<HTMLInputElement>(
+            'input[data-input="catalog-search"]',
+        ) ?? [])].find(
+            (field) =>
+                field.dataset.phraseId === editor.phraseId &&
+                field.dataset.instanceId === editor.instanceId,
+        );
+        search?.focus();
+        search?.setSelectionRange(search.value.length, search.value.length);
+        return;
+    }
+    if (isTouchDevice() || editor?.type !== "attribute") return;
     const input = [...(parent?.querySelectorAll<HTMLInputElement>(
         'input[data-input="attribute"]',
     ) ?? [])].find(
@@ -1275,7 +1288,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
             scheduleAutoCollapse(module, context.groupId, context.instanceId);
         }
     }
-    focusOpenAttribute(module);
+    focusOpenEditor(module);
     if (expandedGroup !== null) {
         animateExpandedGroup(
             module,
@@ -1464,6 +1477,7 @@ export const display = async (
     );
     renderAll();
     if (openNextPrompt(module)) renderAll();
+    focusOpenEditor(module);
 };
 
 export const getValue = async (id: string): Promise<string> => {
