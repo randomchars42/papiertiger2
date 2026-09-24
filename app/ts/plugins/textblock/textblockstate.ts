@@ -8,6 +8,7 @@ import {
 } from "./textblocklib.js";
 import type {
     AttributeValue,
+    ConditionDefinition,
     Definitions,
     DocumentState,
     EditorDefinition,
@@ -310,6 +311,9 @@ export const validateDefinitions = (definitions: Definitions): void => {
         }
         if (group.condition !== undefined) {
             validateCondition(group.condition, id);
+        }
+        if (group.reveal !== undefined) {
+            validateCondition(group.reveal, `${id} reveal`);
         }
         for (const child of group.children ?? []) {
             if (!(child in definitions.groups)) {
@@ -722,6 +726,14 @@ export const isGroupConditionMet = (
 ): boolean => {
     const condition = definitions.groups[groupId]?.condition;
     if (condition === undefined) return true;
+    return isConditionMet(condition, resolved, instanceId);
+};
+
+export const isConditionMet = (
+    condition: ConditionDefinition,
+    resolved: ResolvedDocument,
+    instanceId?: string,
+): boolean => {
     const hasMatch = Object.values(resolved.phrases).some(
         (phrase) =>
             (instanceId === undefined || phrase.instanceId === instanceId) &&

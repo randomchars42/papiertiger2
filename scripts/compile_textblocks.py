@@ -188,7 +188,7 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
             raw_argument = value[start : index - 1].strip()
             argument = (
                 raw_argument
-                if name == "subgroups"
+                if name in {"subgroups", "reveal"}
                 else parse_options(raw_argument, path, line, ",")
             )
         if name in annotations:
@@ -1007,6 +1007,7 @@ def compile_source(
         "summary",
         "subgroups",
         "autocompact",
+        "reveal",
         "inactive",
         "repeat",
         "score",
@@ -1025,7 +1026,7 @@ def compile_source(
         unknown = set(annotations) - known_annotations
         if unknown:
             fail(source, group["line"], f"unknown group annotation '@{sorted(unknown)[0]}'")
-        for boolean_annotation in known_annotations - {"repeat", "score", "subgroups"}:
+        for boolean_annotation in known_annotations - {"repeat", "score", "subgroups", "reveal"}:
             if boolean_annotation in annotations and annotations[boolean_annotation] is not True:
                 fail(source, group["line"], f"@{boolean_annotation} takes no arguments")
         compiled_group: dict[str, Any] = {"title": group["title"]}
@@ -1059,6 +1060,16 @@ def compile_source(
             compiled_group["subgroups"] = subgroup_layout
         if "autocompact" in annotations:
             compiled_group["autoCompact"] = True
+        if "reveal" in annotations:
+            reveal = annotations["reveal"]
+            if not isinstance(reveal, str):
+                fail(source, group["line"], "@reveal needs a condition in parentheses")
+            references = split_top_level(reveal, " / ")
+            if not references or any(not reference for reference in references):
+                fail(source, group["line"], "@reveal needs a condition")
+            compiled_group["reveal"] = compile_condition(
+                references, group["line"]
+            )
         if group["conditions"]:
             if "repeat" in annotations:
                 fail(source, group["line"], "a repeatable group cannot be conditional")
@@ -1630,6 +1641,9 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                         0,
                         f"repeatable group '{group_id}' cannot be conditional",
                     )
+            reveal = group.get("reveal")
+            if reveal is not None:
+                validate_condition(reveal, f"{group_id} reveal")
             items = group.get("items")
             if items is not None:
                 if not isinstance(items, list):

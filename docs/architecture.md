@@ -130,7 +130,10 @@ Die Laufzeit hält voneinander getrennt:
 
 Die Auflösung berechnet daraus für jede sichtbare Phrase Wert, Textteile,
 semantischen Typ, Quelle, Provenienz und Vollständigkeit. Vorschläge verändern
-diesen abgeleiteten Zustand, nicht automatisch die Benutzereingaben.
+diesen abgeleiteten Zustand, nicht automatisch die Benutzereingaben. Neu
+entstandene Vorschläge und erfüllte `@reveal(...)`-Bedingungen erzeugen nur einen
+flüchtigen UI-Zustand: Der Zielpfad bleibt bis zur ersten Bedienung erweitert.
+Dieser Zustand gehört weder zum Dokument noch zur strukturierten Ausgabe.
 
 ## Kodierung und strukturierte Ausgabe
 

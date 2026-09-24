@@ -133,6 +133,7 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@subgroups(flow)` | ordnet direkte Untergruppen in einem umbrechenden Zeilenfluss an |
 | `@subgroups(break)` | gibt jeder direkten Untergruppe eine eigene Zeile; dies ist der Standard |
 | `@autocompact` | setzt für die Gruppe und ihren Teilbaum eine Inaktivitätsfrist |
+| `@reveal(...)` | öffnet die Gruppe vorübergehend, sobald die angegebene Bedingung neu erfüllt ist |
 | `@inactive` | initial nicht aktiv; bleibt als Vorschlag sichtbar |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
@@ -144,6 +145,22 @@ Gruppeneinschluss, Offenlegung und Untergruppenlayout sind voneinander
 unabhängig. `@inactive` verändert nur den Einschluss. `@subgroups(...)` und der
 kompakte Zustand verändern nur die Darstellung und niemals Text- oder
 Datenausgabe.
+
+`@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und
+`P<...>`, verändert aber weder Sichtbarkeit noch Einschluss. Beim Übergang der
+Bedingung von nicht erfüllt zu erfüllt wird der vollständige Pfad zur
+Zielgruppe erweitert und bis zur ersten Bedienung in diesem Pfad offengehalten:
+
+```pt
+C hinweise_noetig: Kritischer Befund
+
+G @reveal(hinweise_noetig): Hinweise
+  P: ärztliche Rücksprache empfohlen|-
+```
+
+Wird die Bedingung später erneut falsch und wieder wahr, kann die Gruppe erneut
+offengelegt werden. Eine bereits erfüllte Bedingung gilt beim ersten Rendern
+ebenfalls als Offenlegungsereignis.
 
 Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
 gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
@@ -348,7 +365,9 @@ die Phrase ohne vorgewählten Wert vorgeschlagen.
 Ein Vorschlag bleibt bis zu seiner Annahme außerhalb der Ausgabe und erhält
 deshalb keine dauerhafte Fläche oder Umrandung. Sein erstmaliges Erscheinen wird
 mit einem ruhigen 1,6-sekündigen Puls hervorgehoben; bei reduzierter Bewegung
-entfällt diese Animation.
+entfällt diese Animation. Ein neu entstandener Vorschlag öffnet außerdem immer
+seinen vollständigen Gruppenpfad und hält ihn bis zur ersten Bedienung in diesem
+Pfad offen; dafür ist kein `@reveal(...)` an einer übergeordneten Gruppe nötig.
 
 Eine Phrase mit erforderlichen Attributen gilt erst nach deren Vervollständigung
 als aktiver Auslöser.

@@ -124,7 +124,13 @@ Animation.
 
 Eine Auswahl kann weitere Einträge sichtbar machen. Diese Vorschläge sind
 farblich entsprechend ihrem eigenen Typ markiert, aber abgeschwächt und noch
-nicht in die Ausgabe aufgenommen.
+nicht in die Ausgabe aufgenommen. Ein neu entstandener Vorschlag öffnet seinen
+Gruppenpfad und hält ihn bis zur ersten Bedienung dort offen. Danach gelten
+wieder die normalen Akkordeon- und Inaktivitätsregeln. Autoren können dieselbe
+vorübergehende Offenlegung für besondere Bedingungen mit `@reveal(...)` an der
+Zielgruppe auslösen. Werden gleichzeitig mehrere Geschwister offengelegt,
+dürfen sie während dieser Aufmerksamkeitsspanne ausnahmsweise nebeneinander
+offen sein.
 
 Eine Vorgabe setzt mehrere Phrasen gemeinsam, zum Beispiel den Beispielsatz
 „Pneumonie“. Anschließende manuelle Änderungen haben Vorrang. Herkunft,

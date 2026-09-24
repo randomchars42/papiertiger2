@@ -14,6 +14,7 @@ import {
     createDocumentState,
     createScopeState,
     groupItems,
+    isConditionMet,
     isGroupConditionMet,
     isGroupEnabled,
     isPackage,
@@ -50,6 +51,9 @@ type Module = {
     controls: boolean;
     suggestionKeys: Set<string>;
     suggestionHighlights: Map<string, number>;
+    acknowledgedSuggestions: Set<string>;
+    revealHolds: Map<string, string[]>;
+    revealConditionStates: Map<string, boolean>;
     suggestionsReady: boolean;
     autoCompactTimers: Map<string, number>;
     autoCompactDelay: number | null;
@@ -187,6 +191,7 @@ const renderAll = (): void => {
     for (const module of modules.values()) {
         const parent = document.getElementById(module.parentId);
         if (parent === null) continue;
+        const revealedPaths: AutoCompactContext[][] = [];
         if (module.suggestionsReady) {
             for (const key of currentSuggestions) {
                 if (!module.suggestionKeys.has(key)) {
@@ -194,12 +199,26 @@ const renderAll = (): void => {
                         key,
                         now + suggestionHighlightDuration,
                     );
+                    const phrase = resolved.phrases[key];
+                    if (
+                        phrase !== undefined &&
+                        !module.acknowledgedSuggestions.has(key)
+                    ) {
+                        const path = holdOpenForSuggestion(module, phrase);
+                        if (path !== null) revealedPaths.push(path);
+                    }
                 }
             }
         } else {
             module.suggestionsReady = true;
         }
+        for (const key of module.suggestionKeys) {
+            if (!currentSuggestions.has(key)) {
+                module.revealHolds.delete(suggestionHoldKey(key));
+            }
+        }
         module.suggestionKeys = currentSuggestions;
+        revealedPaths.push(...refreshExplicitReveals(module));
         for (const [key, expires] of module.suggestionHighlights) {
             if (!currentSuggestions.has(key) || expires <= now) {
                 module.suggestionHighlights.delete(key);
@@ -218,6 +237,12 @@ const renderAll = (): void => {
             module.controls,
             module.pickerQueries,
         );
+        for (const path of revealedPaths) {
+            const group = path[path.length - 1];
+            if (group !== undefined) {
+                animateExpandedGroup(module, group.groupId, group.instanceId);
+            }
+        }
     }
     const suggestions = new Map<
         string,
@@ -788,6 +813,189 @@ const instanceGroup = (instanceId: string): string | undefined =>
         instanceIds.includes(instanceId),
     )?.[0];
 
+const groupPathToPhrase = (
+    groupId: string,
+    phraseId: string,
+    targetInstanceId?: string,
+    instanceId?: string,
+): AutoCompactContext[] | null => {
+    const context: AutoCompactContext = {
+        groupId,
+        ...(instanceId === undefined ? {} : { instanceId }),
+    };
+    for (const item of groupItems(definitions.groups[groupId])) {
+        if (item.type === "phrase") {
+            if (item.id === phraseId && instanceId === targetInstanceId) {
+                return [context];
+            }
+            continue;
+        }
+        const child = definitions.groups[item.id];
+        let childInstanceId = instanceId;
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            if (
+                targetInstanceId === undefined ||
+                !(state.groupInstances[item.id] ?? []).includes(targetInstanceId)
+            ) {
+                continue;
+            }
+            childInstanceId = targetInstanceId;
+        }
+        const childPath = groupPathToPhrase(
+            item.id,
+            phraseId,
+            targetInstanceId,
+            childInstanceId,
+        );
+        if (childPath !== null) return [context, ...childPath];
+    }
+    return null;
+};
+
+const allGroupPaths = (
+    groupId: string,
+    instanceId?: string,
+    prefix: readonly AutoCompactContext[] = [],
+): AutoCompactContext[][] => {
+    const context: AutoCompactContext = {
+        groupId,
+        ...(instanceId === undefined ? {} : { instanceId }),
+    };
+    const path = [...prefix, context];
+    const paths = [path];
+    for (const item of groupItems(definitions.groups[groupId])) {
+        if (item.type === "phrase") continue;
+        const child = definitions.groups[item.id];
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            for (const childInstanceId of state.groupInstances[item.id] ?? []) {
+                paths.push(...allGroupPaths(item.id, childInstanceId, path));
+            }
+        } else {
+            paths.push(...allGroupPaths(item.id, instanceId, path));
+        }
+    }
+    return paths;
+};
+
+const suggestionHoldKey = (key: string): string => `suggestion:${key}`;
+
+const conditionHoldKey = (groupKey: string): string =>
+    `condition:${groupKey}`;
+
+const holdOpen = (
+    module: Module,
+    holdKey: string,
+    path: readonly AutoCompactContext[],
+): void => {
+    module.revealHolds.set(
+        holdKey,
+        path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId)),
+    );
+    for (const { groupId, instanceId } of path) {
+        cancelAutoCompact(module, groupId, instanceId);
+        module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+    }
+};
+
+const holdOpenForSuggestion = (
+    module: Module,
+    phrase: ResolvedDocument["phrases"][string],
+): AutoCompactContext[] | null => {
+    const path = groupPathToPhrase(
+        module.rootId,
+        phrase.id,
+        phrase.instanceId,
+    );
+    if (path === null) return null;
+    holdOpen(module, suggestionHoldKey(phrase.key), path);
+    return path;
+};
+
+const refreshExplicitReveals = (module: Module): AutoCompactContext[][] => {
+    const revealed: AutoCompactContext[][] = [];
+    if (!Object.values(definitions.groups).some((group) => group.reveal !== undefined)) {
+        return revealed;
+    }
+    const present = new Set<string>();
+    for (const path of allGroupPaths(module.rootId)) {
+        const context = path[path.length - 1];
+        if (context === undefined) continue;
+        const condition = definitions.groups[context.groupId].reveal;
+        if (condition === undefined) continue;
+        const groupKey = phraseKey(context.groupId, context.instanceId);
+        const holdKey = conditionHoldKey(groupKey);
+        present.add(holdKey);
+        const met = isConditionMet(condition, resolved, context.instanceId);
+        const previous = module.revealConditionStates.get(holdKey);
+        module.revealConditionStates.set(holdKey, met);
+        if (!met) {
+            module.revealHolds.delete(holdKey);
+        } else if (previous !== true) {
+            holdOpen(module, holdKey, path);
+            revealed.push(path);
+        }
+    }
+    for (const key of module.revealConditionStates.keys()) {
+        if (present.has(key)) continue;
+        module.revealConditionStates.delete(key);
+        module.revealHolds.delete(key);
+    }
+    return revealed;
+};
+
+const groupIsHeldOpen = (
+    module: Module,
+    groupId: string,
+    instanceId?: string,
+): boolean => {
+    const key = phraseKey(groupId, instanceId);
+    return [...module.revealHolds.values()].some((path) =>
+        path.includes(key),
+    );
+};
+
+const elementGroupPath = (target: Element, parent: HTMLElement): string[] => {
+    const path: string[] = [];
+    let node = target.closest<HTMLElement>(".group[data-group-id]");
+    while (node !== null && parent.contains(node)) {
+        const groupId = node.dataset.groupId;
+        if (groupId !== undefined) {
+            path.unshift(phraseKey(groupId, node.dataset.instanceId));
+        }
+        node = node.parentElement?.closest<HTMLElement>(
+            ".group[data-group-id]",
+        ) ?? null;
+    }
+    return path;
+};
+
+const isPathPrefix = (prefix: readonly string[], path: readonly string[]): boolean =>
+    prefix.length <= path.length &&
+    prefix.every((key, index) => path[index] === key);
+
+const releaseRevealHoldsForTarget = (
+    module: Module,
+    target: EventTarget | null,
+): void => {
+    if (!(target instanceof Element)) return;
+    const parent = document.getElementById(module.parentId);
+    if (parent === null || !parent.contains(target)) return;
+    const targetPath = elementGroupPath(target, parent);
+    for (const [holdKey, heldPath] of module.revealHolds) {
+        if (
+            isPathPrefix(heldPath, targetPath) ||
+            isPathPrefix(targetPath, heldPath)
+        ) {
+            module.revealHolds.delete(holdKey);
+            if (holdKey.startsWith("suggestion:")) {
+                module.acknowledgedSuggestions.add(
+                    holdKey.slice("suggestion:".length),
+                );
+            }
+        }
+    }
+};
+
 const editorIsInsideGroup = (
     module: Module,
     groupId: string,
@@ -936,6 +1144,7 @@ const scheduleAutoCompact = (
 ): void => {
     cancelAutoCompact(module, groupId, instanceId);
     if (editorIsInsideGroup(module, groupId, instanceId)) return;
+    if (groupIsHeldOpen(module, groupId, instanceId)) return;
     const key = phraseKey(groupId, instanceId);
     if (module.compactOverrides[key] ?? (groupId !== module.rootId)) return;
     const delay = module.autoCompactDelay;
@@ -943,6 +1152,7 @@ const scheduleAutoCompact = (
     const timer = window.setTimeout(() => {
         module.autoCompactTimers.delete(key);
         if (editorIsInsideGroup(module, groupId, instanceId)) return;
+        if (groupIsHeldOpen(module, groupId, instanceId)) return;
         if (
             instanceId !== undefined &&
             state.instanceStates[instanceId] === undefined
@@ -1335,6 +1545,7 @@ const updateFromInput = (field: EventTarget | null): boolean => {
 };
 
 const handleInput = (module: Module, event: Event): void => {
+    releaseRevealHoldsForTarget(module, event.target);
     cancelAutoCompactForTarget(module, event.target);
     const target = event.target;
     if (
@@ -1374,6 +1585,7 @@ const handleInput = (module: Module, event: Event): void => {
 };
 
 const handleChange = (module: Module, event: Event): void => {
+    releaseRevealHoldsForTarget(module, event.target);
     cancelAutoCompactForTarget(module, event.target);
     if (
         event.target instanceof HTMLSelectElement &&
@@ -1389,6 +1601,7 @@ const handleChange = (module: Module, event: Event): void => {
 
 const handleKeydown = (module: Module, event: KeyboardEvent): void => {
     const target = event.target;
+    releaseRevealHoldsForTarget(module, target);
     cancelAutoCompactForTarget(module, target);
     if (
         event.key !== "Enter" ||
@@ -1431,6 +1644,9 @@ export const display = async (
         controls: params.controls !== false,
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
+        acknowledgedSuggestions: new Set(),
+        revealHolds: new Map(),
+        revealConditionStates: new Map(),
         suggestionsReady: false,
         autoCompactTimers: new Map(),
         autoCompactDelay: configuredAutoCompactDelay(),
@@ -1443,9 +1659,10 @@ export const display = async (
     parent.addEventListener("input", (event) => handleInput(module, event));
     parent.addEventListener("change", (event) => handleChange(module, event));
     parent.addEventListener("keydown", (event) => handleKeydown(module, event));
-    parent.addEventListener("pointerdown", (event) =>
-        cancelAutoCompactForTarget(module, event.target),
-    );
+    parent.addEventListener("pointerdown", (event) => {
+        releaseRevealHoldsForTarget(module, event.target);
+        cancelAutoCompactForTarget(module, event.target);
+    });
     parent.addEventListener("pointerup", (event) =>
         restartAutoCompactForTarget(module, event.target),
     );

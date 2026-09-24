@@ -218,6 +218,9 @@ export const validateDefinitions = (definitions) => {
         if (group.condition !== undefined) {
             validateCondition(group.condition, id);
         }
+        if (group.reveal !== undefined) {
+            validateCondition(group.reveal, `${id} reveal`);
+        }
         for (const child of group.children ?? []) {
             if (!(child in definitions.groups)) {
                 throw new Error(`Unknown child group "${child}" in group "${id}"`);
@@ -516,6 +519,9 @@ export const isGroupConditionMet = (groupId, definitions, resolved, instanceId) 
     const condition = definitions.groups[groupId]?.condition;
     if (condition === undefined)
         return true;
+    return isConditionMet(condition, resolved, instanceId);
+};
+export const isConditionMet = (condition, resolved, instanceId) => {
     const hasMatch = Object.values(resolved.phrases).some((phrase) => (instanceId === undefined || phrase.instanceId === instanceId) &&
         phrase.included &&
         phrase.valueId !== null &&

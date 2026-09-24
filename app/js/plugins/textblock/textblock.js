@@ -1,7 +1,7 @@
 import * as baselib from "@lib/base.js";
 import { getConfig } from "@lib/config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { createDocumentState, createScopeState, groupItems, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
+import { createDocumentState, createScopeState, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
 import { setSymptomLens } from "@lib/symptomlens.js";
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -117,23 +117,43 @@ const renderAll = () => {
         const parent = document.getElementById(module.parentId);
         if (parent === null)
             continue;
+        const revealedPaths = [];
         if (module.suggestionsReady) {
             for (const key of currentSuggestions) {
                 if (!module.suggestionKeys.has(key)) {
                     module.suggestionHighlights.set(key, now + suggestionHighlightDuration);
+                    const phrase = resolved.phrases[key];
+                    if (phrase !== undefined &&
+                        !module.acknowledgedSuggestions.has(key)) {
+                        const path = holdOpenForSuggestion(module, phrase);
+                        if (path !== null)
+                            revealedPaths.push(path);
+                    }
                 }
             }
         }
         else {
             module.suggestionsReady = true;
         }
+        for (const key of module.suggestionKeys) {
+            if (!currentSuggestions.has(key)) {
+                module.revealHolds.delete(suggestionHoldKey(key));
+            }
+        }
         module.suggestionKeys = currentSuggestions;
+        revealedPaths.push(...refreshExplicitReveals(module));
         for (const [key, expires] of module.suggestionHighlights) {
             if (!currentSuggestions.has(key) || expires <= now) {
                 module.suggestionHighlights.delete(key);
             }
         }
         renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.suggestionHighlights.keys()), module.compactOverrides, module.status, module.controls, module.pickerQueries);
+        for (const path of revealedPaths) {
+            const group = path[path.length - 1];
+            if (group !== undefined) {
+                animateExpandedGroup(module, group.groupId, group.instanceId);
+            }
+        }
     }
     const suggestions = new Map();
     for (const phrase of Object.values(resolved.phrases)) {
@@ -542,6 +562,141 @@ const groupContainsPhrase = (groupId, phraseId) => groupItems(definitions.groups
 const groupContainsGroup = (groupId, childId) => groupId === childId ||
     groupItems(definitions.groups[groupId]).some((item) => item.type === "group" && groupContainsGroup(item.id, childId));
 const instanceGroup = (instanceId) => Object.entries(state.groupInstances).find(([, instanceIds]) => instanceIds.includes(instanceId))?.[0];
+const groupPathToPhrase = (groupId, phraseId, targetInstanceId, instanceId) => {
+    const context = {
+        groupId,
+        ...(instanceId === undefined ? {} : { instanceId }),
+    };
+    for (const item of groupItems(definitions.groups[groupId])) {
+        if (item.type === "phrase") {
+            if (item.id === phraseId && instanceId === targetInstanceId) {
+                return [context];
+            }
+            continue;
+        }
+        const child = definitions.groups[item.id];
+        let childInstanceId = instanceId;
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            if (targetInstanceId === undefined ||
+                !(state.groupInstances[item.id] ?? []).includes(targetInstanceId)) {
+                continue;
+            }
+            childInstanceId = targetInstanceId;
+        }
+        const childPath = groupPathToPhrase(item.id, phraseId, targetInstanceId, childInstanceId);
+        if (childPath !== null)
+            return [context, ...childPath];
+    }
+    return null;
+};
+const allGroupPaths = (groupId, instanceId, prefix = []) => {
+    const context = {
+        groupId,
+        ...(instanceId === undefined ? {} : { instanceId }),
+    };
+    const path = [...prefix, context];
+    const paths = [path];
+    for (const item of groupItems(definitions.groups[groupId])) {
+        if (item.type === "phrase")
+            continue;
+        const child = definitions.groups[item.id];
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            for (const childInstanceId of state.groupInstances[item.id] ?? []) {
+                paths.push(...allGroupPaths(item.id, childInstanceId, path));
+            }
+        }
+        else {
+            paths.push(...allGroupPaths(item.id, instanceId, path));
+        }
+    }
+    return paths;
+};
+const suggestionHoldKey = (key) => `suggestion:${key}`;
+const conditionHoldKey = (groupKey) => `condition:${groupKey}`;
+const holdOpen = (module, holdKey, path) => {
+    module.revealHolds.set(holdKey, path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId)));
+    for (const { groupId, instanceId } of path) {
+        cancelAutoCompact(module, groupId, instanceId);
+        module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+    }
+};
+const holdOpenForSuggestion = (module, phrase) => {
+    const path = groupPathToPhrase(module.rootId, phrase.id, phrase.instanceId);
+    if (path === null)
+        return null;
+    holdOpen(module, suggestionHoldKey(phrase.key), path);
+    return path;
+};
+const refreshExplicitReveals = (module) => {
+    const revealed = [];
+    if (!Object.values(definitions.groups).some((group) => group.reveal !== undefined)) {
+        return revealed;
+    }
+    const present = new Set();
+    for (const path of allGroupPaths(module.rootId)) {
+        const context = path[path.length - 1];
+        if (context === undefined)
+            continue;
+        const condition = definitions.groups[context.groupId].reveal;
+        if (condition === undefined)
+            continue;
+        const groupKey = phraseKey(context.groupId, context.instanceId);
+        const holdKey = conditionHoldKey(groupKey);
+        present.add(holdKey);
+        const met = isConditionMet(condition, resolved, context.instanceId);
+        const previous = module.revealConditionStates.get(holdKey);
+        module.revealConditionStates.set(holdKey, met);
+        if (!met) {
+            module.revealHolds.delete(holdKey);
+        }
+        else if (previous !== true) {
+            holdOpen(module, holdKey, path);
+            revealed.push(path);
+        }
+    }
+    for (const key of module.revealConditionStates.keys()) {
+        if (present.has(key))
+            continue;
+        module.revealConditionStates.delete(key);
+        module.revealHolds.delete(key);
+    }
+    return revealed;
+};
+const groupIsHeldOpen = (module, groupId, instanceId) => {
+    const key = phraseKey(groupId, instanceId);
+    return [...module.revealHolds.values()].some((path) => path.includes(key));
+};
+const elementGroupPath = (target, parent) => {
+    const path = [];
+    let node = target.closest(".group[data-group-id]");
+    while (node !== null && parent.contains(node)) {
+        const groupId = node.dataset.groupId;
+        if (groupId !== undefined) {
+            path.unshift(phraseKey(groupId, node.dataset.instanceId));
+        }
+        node = node.parentElement?.closest(".group[data-group-id]") ?? null;
+    }
+    return path;
+};
+const isPathPrefix = (prefix, path) => prefix.length <= path.length &&
+    prefix.every((key, index) => path[index] === key);
+const releaseRevealHoldsForTarget = (module, target) => {
+    if (!(target instanceof Element))
+        return;
+    const parent = document.getElementById(module.parentId);
+    if (parent === null || !parent.contains(target))
+        return;
+    const targetPath = elementGroupPath(target, parent);
+    for (const [holdKey, heldPath] of module.revealHolds) {
+        if (isPathPrefix(heldPath, targetPath) ||
+            isPathPrefix(targetPath, heldPath)) {
+            module.revealHolds.delete(holdKey);
+            if (holdKey.startsWith("suggestion:")) {
+                module.acknowledgedSuggestions.add(holdKey.slice("suggestion:".length));
+            }
+        }
+    }
+};
 const editorIsInsideGroup = (module, groupId, instanceId) => {
     const editor = module.openEditor;
     if (editor === null)
@@ -650,6 +805,8 @@ const scheduleAutoCompact = (module, groupId, instanceId) => {
     cancelAutoCompact(module, groupId, instanceId);
     if (editorIsInsideGroup(module, groupId, instanceId))
         return;
+    if (groupIsHeldOpen(module, groupId, instanceId))
+        return;
     const key = phraseKey(groupId, instanceId);
     if (module.compactOverrides[key] ?? (groupId !== module.rootId))
         return;
@@ -659,6 +816,8 @@ const scheduleAutoCompact = (module, groupId, instanceId) => {
     const timer = window.setTimeout(() => {
         module.autoCompactTimers.delete(key);
         if (editorIsInsideGroup(module, groupId, instanceId))
+            return;
+        if (groupIsHeldOpen(module, groupId, instanceId))
             return;
         if (instanceId !== undefined &&
             state.instanceStates[instanceId] === undefined) {
@@ -970,6 +1129,7 @@ const updateFromInput = (field) => {
     return true;
 };
 const handleInput = (module, event) => {
+    releaseRevealHoldsForTarget(module, event.target);
     cancelAutoCompactForTarget(module, event.target);
     const target = event.target;
     if (target instanceof HTMLInputElement &&
@@ -996,6 +1156,7 @@ const handleInput = (module, event) => {
         module.status = "";
 };
 const handleChange = (module, event) => {
+    releaseRevealHoldsForTarget(module, event.target);
     cancelAutoCompactForTarget(module, event.target);
     if (event.target instanceof HTMLSelectElement &&
         event.target.dataset.input === "symptom-lens") {
@@ -1009,6 +1170,7 @@ const handleChange = (module, event) => {
 };
 const handleKeydown = (module, event) => {
     const target = event.target;
+    releaseRevealHoldsForTarget(module, target);
     cancelAutoCompactForTarget(module, target);
     if (event.key !== "Enter" ||
         event.isComposing ||
@@ -1046,6 +1208,9 @@ export const display = async (parentId, params) => {
         controls: params.controls !== false,
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
+        acknowledgedSuggestions: new Set(),
+        revealHolds: new Map(),
+        revealConditionStates: new Map(),
         suggestionsReady: false,
         autoCompactTimers: new Map(),
         autoCompactDelay: configuredAutoCompactDelay(),
@@ -1059,7 +1224,10 @@ export const display = async (parentId, params) => {
     parent.addEventListener("input", (event) => handleInput(module, event));
     parent.addEventListener("change", (event) => handleChange(module, event));
     parent.addEventListener("keydown", (event) => handleKeydown(module, event));
-    parent.addEventListener("pointerdown", (event) => cancelAutoCompactForTarget(module, event.target));
+    parent.addEventListener("pointerdown", (event) => {
+        releaseRevealHoldsForTarget(module, event.target);
+        cancelAutoCompactForTarget(module, event.target);
+    });
     parent.addEventListener("pointerup", (event) => restartAutoCompactForTarget(module, event.target));
     parent.addEventListener("pointercancel", (event) => restartAutoCompactForTarget(module, event.target));
     parent.addEventListener("focusin", (event) => cancelAutoCompactForTarget(module, event.target));

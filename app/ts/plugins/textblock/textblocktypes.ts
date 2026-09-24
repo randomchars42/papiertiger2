@@ -115,6 +115,7 @@ export type GroupDefinition = {
     reset?: boolean;
     subgroups?: "flow" | "break";
     autoCompact?: boolean;
+    reveal?: ConditionDefinition;
     repeatable?: RepeatableDefinition;
     condition?: ConditionDefinition;
     score?: ScoreDefinition;
