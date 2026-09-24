@@ -53,6 +53,7 @@ type Module = {
     suggestionHighlights: Map<string, number>;
     acknowledgedSuggestions: Set<string>;
     revealHolds: Map<string, string[]>;
+    revealRestores: Map<string, { hadOverride: boolean; value?: boolean }>;
     revealConditionStates: Map<string, boolean>;
     suggestionsReady: boolean;
     autoCompactTimers: Map<string, number>;
@@ -214,7 +215,7 @@ const renderAll = (): void => {
         }
         for (const key of module.suggestionKeys) {
             if (!currentSuggestions.has(key)) {
-                module.revealHolds.delete(suggestionHoldKey(key));
+                releaseRevealHold(module, suggestionHoldKey(key), true);
             }
         }
         module.suggestionKeys = currentSuggestions;
@@ -682,6 +683,31 @@ const closeEditor = (module: Module): void => {
               };
 };
 
+const dismissEditor = (module: Module): boolean => {
+    if (module.openEditor === null) return false;
+    closeEditor(module);
+    module.openEditor = null;
+    return true;
+};
+
+const targetIsInsideOpenEditor = (
+    module: Module,
+    target: Element,
+): boolean => {
+    const editor = module.openEditor;
+    if (editor === null) return false;
+    const key = phraseKey(editor.phraseId, editor.instanceId);
+    const inlineEditor = target.closest<HTMLElement>(
+        ".inline-editor[data-editor-for]",
+    );
+    if (inlineEditor?.dataset.editorFor === key) return true;
+    const phrase = target.closest<HTMLElement>(".phrase[data-phrase-id]");
+    return (
+        phrase?.dataset.phraseId === editor.phraseId &&
+        phrase.dataset.instanceId === editor.instanceId
+    );
+};
+
 const isTouchDevice = (): boolean =>
     window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
 
@@ -711,6 +737,26 @@ const focusOpenEditor = (module: Module): void => {
             field.dataset.instanceId === editor.instanceId,
     );
     input?.focus();
+};
+
+const selectInitialInputValue = (target: EventTarget | null): void => {
+    if (
+        !(target instanceof HTMLInputElement) ||
+        target.dataset.input !== "attribute" ||
+        target.dataset.selectOnFocus !== "true"
+    ) {
+        return;
+    }
+    delete target.dataset.selectOnFocus;
+    requestAnimationFrame(() => {
+        if (
+            target.isConnected &&
+            document.activeElement === target &&
+            target.value !== ""
+        ) {
+            target.select();
+        }
+    });
 };
 
 const resetInstance = (instanceId: string): void => {
@@ -887,13 +933,53 @@ const holdOpen = (
     holdKey: string,
     path: readonly AutoCompactContext[],
 ): void => {
-    module.revealHolds.set(
-        holdKey,
-        path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId)),
+    const heldPath = path.map(({ groupId, instanceId }) =>
+        phraseKey(groupId, instanceId),
     );
+    for (const key of heldPath) {
+        if (
+            ![...module.revealHolds.values()].some((held) => held.includes(key))
+        ) {
+            const hadOverride = Object.prototype.hasOwnProperty.call(
+                module.compactOverrides,
+                key,
+            );
+            module.revealRestores.set(key, {
+                hadOverride,
+                ...(hadOverride
+                    ? { value: module.compactOverrides[key] }
+                    : {}),
+            });
+        }
+    }
+    module.revealHolds.set(holdKey, heldPath);
     for (const { groupId, instanceId } of path) {
         cancelAutoCompact(module, groupId, instanceId);
         module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+    }
+};
+
+const releaseRevealHold = (
+    module: Module,
+    holdKey: string,
+    restore: boolean,
+): void => {
+    const path = module.revealHolds.get(holdKey);
+    if (path === undefined) return;
+    module.revealHolds.delete(holdKey);
+    for (const key of path) {
+        const stillHeld = [...module.revealHolds.values()].some((held) =>
+            held.includes(key),
+        );
+        if (stillHeld) continue;
+        const previous = module.revealRestores.get(key);
+        module.revealRestores.delete(key);
+        if (!restore || previous === undefined) continue;
+        if (previous.hadOverride) {
+            module.compactOverrides[key] = previous.value ?? false;
+        } else {
+            delete module.compactOverrides[key];
+        }
     }
 };
 
@@ -929,7 +1015,7 @@ const refreshExplicitReveals = (module: Module): AutoCompactContext[][] => {
         const previous = module.revealConditionStates.get(holdKey);
         module.revealConditionStates.set(holdKey, met);
         if (!met) {
-            module.revealHolds.delete(holdKey);
+            releaseRevealHold(module, holdKey, true);
         } else if (previous !== true) {
             holdOpen(module, holdKey, path);
             revealed.push(path);
@@ -938,7 +1024,7 @@ const refreshExplicitReveals = (module: Module): AutoCompactContext[][] => {
     for (const key of module.revealConditionStates.keys()) {
         if (present.has(key)) continue;
         module.revealConditionStates.delete(key);
-        module.revealHolds.delete(key);
+        releaseRevealHold(module, key, true);
     }
     return revealed;
 };
@@ -986,7 +1072,7 @@ const releaseRevealHoldsForTarget = (
             isPathPrefix(heldPath, targetPath) ||
             isPathPrefix(targetPath, heldPath)
         ) {
-            module.revealHolds.delete(holdKey);
+            releaseRevealHold(module, holdKey, false);
             if (holdKey.startsWith("suggestion:")) {
                 module.acknowledgedSuggestions.add(
                     holdKey.slice("suggestion:".length),
@@ -1181,9 +1267,17 @@ const restartAutoCompactForTarget = (
 const handleClick = async (module: Module, event: Event): Promise<void> => {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    const button = target.closest<HTMLButtonElement>("button[data-action]");
     const parent = document.getElementById(module.parentId);
-    if (button === null || parent === null || !parent.contains(button)) return;
+    if (parent === null || !parent.contains(target)) return;
+    const dismissed =
+        module.openEditor !== null && !targetIsInsideOpenEditor(module, target)
+            ? dismissEditor(module)
+            : false;
+    const button = target.closest<HTMLButtonElement>("button[data-action]");
+    if (button === null || !parent.contains(button)) {
+        if (dismissed) renderAll();
+        return;
+    }
     event.preventDefault();
 
     const action = requireData(button, "action");
@@ -1646,6 +1740,7 @@ export const display = async (
         suggestionHighlights: new Map(),
         acknowledgedSuggestions: new Set(),
         revealHolds: new Map(),
+        revealRestores: new Map(),
         revealConditionStates: new Map(),
         suggestionsReady: false,
         autoCompactTimers: new Map(),
@@ -1669,9 +1764,10 @@ export const display = async (
     parent.addEventListener("pointercancel", (event) =>
         restartAutoCompactForTarget(module, event.target),
     );
-    parent.addEventListener("focusin", (event) =>
-        cancelAutoCompactForTarget(module, event.target),
-    );
+    parent.addEventListener("focusin", (event) => {
+        selectInitialInputValue(event.target);
+        cancelAutoCompactForTarget(module, event.target);
+    });
     parent.addEventListener("focusout", (event) =>
         restartAutoCompactForTarget(module, event.target),
     );
@@ -1779,3 +1875,14 @@ export const dispose = (parentId: string): void => {
 };
 
 document.addEventListener("papiertiger:symptom-lens-change", renderAll);
+document.addEventListener("click", (event) => {
+    const path = event.composedPath();
+    let dismissed = false;
+    for (const module of modules.values()) {
+        if (module.openEditor === null) continue;
+        const parent = document.getElementById(module.parentId);
+        if (parent !== null && path.includes(parent)) continue;
+        dismissed = dismissEditor(module) || dismissed;
+    }
+    if (dismissed) renderAll();
+});

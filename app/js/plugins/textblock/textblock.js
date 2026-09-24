@@ -137,7 +137,7 @@ const renderAll = () => {
         }
         for (const key of module.suggestionKeys) {
             if (!currentSuggestions.has(key)) {
-                module.revealHolds.delete(suggestionHoldKey(key));
+                releaseRevealHold(module, suggestionHoldKey(key), true);
             }
         }
         module.suggestionKeys = currentSuggestions;
@@ -469,6 +469,25 @@ const closeEditor = (module) => {
                     : { instanceId: editor.instanceId }),
             };
 };
+const dismissEditor = (module) => {
+    if (module.openEditor === null)
+        return false;
+    closeEditor(module);
+    module.openEditor = null;
+    return true;
+};
+const targetIsInsideOpenEditor = (module, target) => {
+    const editor = module.openEditor;
+    if (editor === null)
+        return false;
+    const key = phraseKey(editor.phraseId, editor.instanceId);
+    const inlineEditor = target.closest(".inline-editor[data-editor-for]");
+    if (inlineEditor?.dataset.editorFor === key)
+        return true;
+    const phrase = target.closest(".phrase[data-phrase-id]");
+    return (phrase?.dataset.phraseId === editor.phraseId &&
+        phrase.dataset.instanceId === editor.instanceId);
+};
 const isTouchDevice = () => window.matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
 const focusOpenEditor = (module) => {
     const editor = module.openEditor;
@@ -488,6 +507,21 @@ const focusOpenEditor = (module) => {
         field.dataset.attributeId === editor.attributeId &&
         field.dataset.instanceId === editor.instanceId);
     input?.focus();
+};
+const selectInitialInputValue = (target) => {
+    if (!(target instanceof HTMLInputElement) ||
+        target.dataset.input !== "attribute" ||
+        target.dataset.selectOnFocus !== "true") {
+        return;
+    }
+    delete target.dataset.selectOnFocus;
+    requestAnimationFrame(() => {
+        if (target.isConnected &&
+            document.activeElement === target &&
+            target.value !== "") {
+            target.select();
+        }
+    });
 };
 const resetInstance = (instanceId) => {
     if (state.instanceStates[instanceId] !== undefined) {
@@ -614,10 +648,43 @@ const allGroupPaths = (groupId, instanceId, prefix = []) => {
 const suggestionHoldKey = (key) => `suggestion:${key}`;
 const conditionHoldKey = (groupKey) => `condition:${groupKey}`;
 const holdOpen = (module, holdKey, path) => {
-    module.revealHolds.set(holdKey, path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId)));
+    const heldPath = path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId));
+    for (const key of heldPath) {
+        if (![...module.revealHolds.values()].some((held) => held.includes(key))) {
+            const hadOverride = Object.prototype.hasOwnProperty.call(module.compactOverrides, key);
+            module.revealRestores.set(key, {
+                hadOverride,
+                ...(hadOverride
+                    ? { value: module.compactOverrides[key] }
+                    : {}),
+            });
+        }
+    }
+    module.revealHolds.set(holdKey, heldPath);
     for (const { groupId, instanceId } of path) {
         cancelAutoCompact(module, groupId, instanceId);
         module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+    }
+};
+const releaseRevealHold = (module, holdKey, restore) => {
+    const path = module.revealHolds.get(holdKey);
+    if (path === undefined)
+        return;
+    module.revealHolds.delete(holdKey);
+    for (const key of path) {
+        const stillHeld = [...module.revealHolds.values()].some((held) => held.includes(key));
+        if (stillHeld)
+            continue;
+        const previous = module.revealRestores.get(key);
+        module.revealRestores.delete(key);
+        if (!restore || previous === undefined)
+            continue;
+        if (previous.hadOverride) {
+            module.compactOverrides[key] = previous.value ?? false;
+        }
+        else {
+            delete module.compactOverrides[key];
+        }
     }
 };
 const holdOpenForSuggestion = (module, phrase) => {
@@ -647,7 +714,7 @@ const refreshExplicitReveals = (module) => {
         const previous = module.revealConditionStates.get(holdKey);
         module.revealConditionStates.set(holdKey, met);
         if (!met) {
-            module.revealHolds.delete(holdKey);
+            releaseRevealHold(module, holdKey, true);
         }
         else if (previous !== true) {
             holdOpen(module, holdKey, path);
@@ -658,7 +725,7 @@ const refreshExplicitReveals = (module) => {
         if (present.has(key))
             continue;
         module.revealConditionStates.delete(key);
-        module.revealHolds.delete(key);
+        releaseRevealHold(module, key, true);
     }
     return revealed;
 };
@@ -690,7 +757,7 @@ const releaseRevealHoldsForTarget = (module, target) => {
     for (const [holdKey, heldPath] of module.revealHolds) {
         if (isPathPrefix(heldPath, targetPath) ||
             isPathPrefix(targetPath, heldPath)) {
-            module.revealHolds.delete(holdKey);
+            releaseRevealHold(module, holdKey, false);
             if (holdKey.startsWith("suggestion:")) {
                 module.acknowledgedSuggestions.add(holdKey.slice("suggestion:".length));
             }
@@ -843,10 +910,18 @@ const handleClick = async (module, event) => {
     const target = event.target;
     if (!(target instanceof Element))
         return;
-    const button = target.closest("button[data-action]");
     const parent = document.getElementById(module.parentId);
-    if (button === null || parent === null || !parent.contains(button))
+    if (parent === null || !parent.contains(target))
         return;
+    const dismissed = module.openEditor !== null && !targetIsInsideOpenEditor(module, target)
+        ? dismissEditor(module)
+        : false;
+    const button = target.closest("button[data-action]");
+    if (button === null || !parent.contains(button)) {
+        if (dismissed)
+            renderAll();
+        return;
+    }
     event.preventDefault();
     const action = requireData(button, "action");
     const instanceId = instanceData(button);
@@ -1210,6 +1285,7 @@ export const display = async (parentId, params) => {
         suggestionHighlights: new Map(),
         acknowledgedSuggestions: new Set(),
         revealHolds: new Map(),
+        revealRestores: new Map(),
         revealConditionStates: new Map(),
         suggestionsReady: false,
         autoCompactTimers: new Map(),
@@ -1230,7 +1306,10 @@ export const display = async (parentId, params) => {
     });
     parent.addEventListener("pointerup", (event) => restartAutoCompactForTarget(module, event.target));
     parent.addEventListener("pointercancel", (event) => restartAutoCompactForTarget(module, event.target));
-    parent.addEventListener("focusin", (event) => cancelAutoCompactForTarget(module, event.target));
+    parent.addEventListener("focusin", (event) => {
+        selectInitialInputValue(event.target);
+        cancelAutoCompactForTarget(module, event.target);
+    });
     parent.addEventListener("focusout", (event) => restartAutoCompactForTarget(module, event.target));
     renderAll();
     if (openNextPrompt(module))
@@ -1306,3 +1385,17 @@ export const dispose = (parentId) => {
     modules.delete(parentId);
 };
 document.addEventListener("papiertiger:symptom-lens-change", renderAll);
+document.addEventListener("click", (event) => {
+    const path = event.composedPath();
+    let dismissed = false;
+    for (const module of modules.values()) {
+        if (module.openEditor === null)
+            continue;
+        const parent = document.getElementById(module.parentId);
+        if (parent !== null && path.includes(parent))
+            continue;
+        dismissed = dismissEditor(module) || dismissed;
+    }
+    if (dismissed)
+        renderAll();
+});

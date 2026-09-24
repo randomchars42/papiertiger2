@@ -160,7 +160,9 @@ G @reveal(hinweise_noetig): Hinweise
 
 Wird die Bedingung später erneut falsch und wieder wahr, kann die Gruppe erneut
 offengelegt werden. Eine bereits erfüllte Bedingung gilt beim ersten Rendern
-ebenfalls als Offenlegungsereignis.
+ebenfalls als Offenlegungsereignis. Verschwindet die Bedingung vor der ersten
+Bedienung im offengelegten Pfad, wird dessen vorheriger kompakter Zustand
+wiederhergestellt. Vorschlagsbedingte Offenlegung folgt derselben Regel.
 
 Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
 gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
@@ -199,6 +201,10 @@ Dauer wird über `autoCompactSeconds` konfiguriert; `0` schaltet die Automatik
 aus. Das ältere URL-Argument `autoCollapseSeconds` bleibt als Übergangs-Alias
 erhalten. Die Expansion ist sichtbar animiert und respektiert reduzierte
 Bewegung.
+
+Ein Klick außerhalb einer geöffneten Phrase und ihres Inline-Editors beendet
+die Bearbeitung, bevor die angeklickte Bedienung ausgeführt wird. Nicht leere
+einzeilige Eingaben wählen ihren Inhalt beim ersten Fokus vollständig aus.
 
 Eine importierte Wurzelgruppe wird mit `U:` eingefügt:
 

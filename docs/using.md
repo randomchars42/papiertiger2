@@ -86,12 +86,16 @@ führt eine neue Blutung zuerst durch Lokalisation und danach durch Seite.
 
 Auf Geräten mit Maus und Tastatur wird ein neu geöffnetes Text- oder Zahlenfeld
 fokussiert. Auf Touchgeräten bleibt es zunächst unfokussiert, damit die
-Bildschirmtastatur nicht ungefragt das Layout verschiebt.
+Bildschirmtastatur nicht ungefragt das Layout verschiebt. Beim ersten Fokus ist
+ein bereits vorhandener Wert vollständig ausgewählt, sodass die nächste
+Tastatureingabe ihn ersetzt.
 
 In einem einzeiligen Text-, Zahlen-, Datums- oder Zeitfeld übernimmt **Enter**
 den aktuellen Wert und schließt den Editor. Dies entspricht **Fertig**; bei
 sequenziellen Pflichtangaben kann dadurch direkt der nächste Editor geöffnet
-werden.
+werden. Ein Klick außerhalb der geöffneten Phrase und ihres Editors schließt
+die Bearbeitung ebenfalls; das angeklickte Bedienelement wird anschließend
+normal ausgeführt.
 
 **Leeren** entfernt den Attributwert. Wird ein erforderliches Feld geleert oder
 leer mit **Fertig** abgeschlossen, bleibt die unvollständige Phrase außerhalb
@@ -132,7 +136,8 @@ wieder die normalen Akkordeon- und Inaktivitätsregeln. Autoren können dieselbe
 vorübergehende Offenlegung für besondere Bedingungen mit `@reveal(...)` an der
 Zielgruppe auslösen. Werden gleichzeitig mehrere Geschwister offengelegt,
 dürfen sie während dieser Aufmerksamkeitsspanne ausnahmsweise nebeneinander
-offen sein.
+offen sein. Verschwindet der auslösende Vorschlag oder die Bedingung schon vor
+einer Bedienung, kehrt der Pfad in seinen vorherigen kompakten Zustand zurück.
 
 Eine Vorgabe setzt mehrere Phrasen gemeinsam, zum Beispiel den Beispielsatz
 „Pneumonie“. Anschließende manuelle Änderungen haben Vorrang. Herkunft,

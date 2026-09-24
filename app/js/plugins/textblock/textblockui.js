@@ -113,6 +113,8 @@ const input = (type, phraseId, attributeId, value, instanceId) => {
     field.type = type;
     field.value = value;
     field.dataset.input = "attribute";
+    if (value !== "")
+        field.dataset.selectOnFocus = "true";
     field.dataset.phraseId = phraseId;
     field.dataset.attributeId = attributeId;
     if (instanceId !== undefined)
