@@ -207,14 +207,6 @@ select:focus-visible {
     font-weight: 400;
 }
 
-.group--subgroups-break
-    > .group__body
-    > .group--nested:not(.group--compact)
-    > .group__header {
-    flex: 1 0 100%;
-    justify-content: space-between;
-}
-
 .group__indicator {
     margin-inline-start: 0.2em;
     font-weight: 400;
@@ -288,15 +280,31 @@ select:focus-visible {
     font-weight: 700;
 }
 
+.group__disclosure--trailing {
+    flex: 0 0 auto;
+    align-self: center;
+}
+
 @keyframes group-expand {
     from {
-        opacity: 0.35;
-        transform: translateY(-0.35rem);
+        opacity: 0.45;
+        transform: translateY(-0.2rem);
+    }
+}
+
+@keyframes group-compact {
+    from {
+        opacity: 0.45;
+        transform: translateY(0.2rem);
     }
 }
 
 .group--expanding {
-    animation: group-expand 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    animation: group-expand 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group--compacting {
+    animation: group-compact 780ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .control,

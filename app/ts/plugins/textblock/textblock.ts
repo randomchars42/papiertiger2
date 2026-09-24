@@ -241,7 +241,12 @@ const renderAll = (): void => {
         for (const path of revealedPaths) {
             const group = path[path.length - 1];
             if (group !== undefined) {
-                animateExpandedGroup(module, group.groupId, group.instanceId);
+                animateGroupTransition(
+                    module,
+                    group.groupId,
+                    group.instanceId,
+                    "expanding",
+                );
             }
         }
     }
@@ -945,6 +950,28 @@ const allGroupPaths = (
     return paths;
 };
 
+const groupPathToGroup = (
+    module: Module,
+    groupId: string,
+    instanceId?: string,
+): AutoCompactContext[] | undefined =>
+    allGroupPaths(module.rootId).find((path) => {
+        const context = path[path.length - 1];
+        return context?.groupId === groupId && context.instanceId === instanceId;
+    });
+
+const expandGroupPath = (
+    module: Module,
+    path: readonly AutoCompactContext[],
+): void => {
+    for (const context of path) {
+        cancelAutoCompact(module, context.groupId, context.instanceId);
+        module.compactOverrides[
+            phraseKey(context.groupId, context.instanceId)
+        ] = false;
+    }
+};
+
 const suggestionHoldKey = (key: string): string => `suggestion:${key}`;
 
 const conditionHoldKey = (groupKey: string): string =>
@@ -1173,7 +1200,7 @@ const compactFlowSiblings = (module: Module, node: HTMLElement): void => {
     if (
         parentGroup === null ||
         parentGroupId === undefined ||
-        definitions.groups[parentGroupId]?.subgroups !== "flow"
+        (definitions.groups[parentGroupId]?.subgroups ?? "flow") !== "flow"
     ) {
         return;
     }
@@ -1245,10 +1272,11 @@ const parseCompactGroupPath = (value: string): CompactGroupPathEntry[] => {
     return path as CompactGroupPathEntry[];
 };
 
-const animateExpandedGroup = (
+const animateGroupTransition = (
     module: Module,
     groupId: string,
     instanceId?: string,
+    direction: "expanding" | "compacting" = "expanding",
 ): void => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     window.requestAnimationFrame(() => {
@@ -1261,8 +1289,10 @@ const animateExpandedGroup = (
                 candidate.dataset.instanceId === instanceId,
         );
         if (group === undefined) return;
-        group.classList.add("group--expanding");
-        window.setTimeout(() => group.classList.remove("group--expanding"), 560);
+        group.classList.remove("group--expanding", "group--compacting");
+        const className = `group--${direction}`;
+        group.classList.add(className);
+        window.setTimeout(() => group.classList.remove(className), 940);
     });
 };
 
@@ -1290,6 +1320,7 @@ const scheduleAutoCompact = (
         }
         module.compactOverrides[key] = true;
         renderAll();
+        animateGroupTransition(module, groupId, instanceId, "compacting");
     }, delay);
     module.autoCompactTimers.set(key, timer);
 };
@@ -1305,6 +1336,48 @@ const restartAutoCompactForTarget = (
     if (context !== null) {
         scheduleAutoCompact(module, context.groupId, context.instanceId);
     }
+};
+
+const activatingChildActions = new Set([
+    "phrase",
+    "choose-value",
+    "choose-freetext",
+    "attribute",
+    "choose-attribute",
+    "step-number",
+    "step-duration",
+    "choose-duration-unit",
+    "clear-attribute",
+    "toggle-set",
+]);
+
+const activateInactiveGroupPath = (
+    module: Module,
+    target: Element,
+    parent: HTMLElement,
+): AutoCompactContext | null => {
+    let deepestActivated: AutoCompactContext | null = null;
+    let node = target.closest<HTMLElement>(".group[data-group-id]");
+    while (node !== null && parent.contains(node)) {
+        const groupId = node.dataset.groupId;
+        const instanceId = node.dataset.instanceId;
+        if (
+            groupId !== undefined &&
+            !isGroupEnabled(groupId, definitions, state, instanceId)
+        ) {
+            scopeFor(instanceId).groupOverrides[groupId] = true;
+            cancelAutoCompact(module, groupId, instanceId);
+            module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+            deepestActivated ??= {
+                groupId,
+                ...(instanceId === undefined ? {} : { instanceId }),
+            };
+        }
+        node = node.parentElement?.closest<HTMLElement>(
+            ".group[data-group-id]",
+        ) ?? null;
+    }
+    return deepestActivated;
 };
 
 const handleClick = async (module: Module, event: Event): Promise<void> => {
@@ -1331,9 +1404,20 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
     }
     module.status = "";
     let expandedGroup: AutoCompactContext | null = null;
+    let compactedGroup: AutoCompactContext | null = null;
+    const activatedByChild = activatingChildActions.has(action)
+        ? activateInactiveGroupPath(module, button, parent)
+        : null;
+    if (activatedByChild !== null) expandedGroup = activatedByChild;
 
     if (action === "phrase") {
-        handlePhrase(module, requireData(button, "phraseId"), instanceId);
+        const phraseId = requireData(button, "phraseId");
+        if (
+            activatedByChild === null ||
+            currentPhrase(phraseId, instanceId)?.included !== true
+        ) {
+            handlePhrase(module, phraseId, instanceId);
+        }
     } else if (action === "choose-value") {
         selectValue(
             module,
@@ -1523,6 +1607,23 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
             instanceId,
         );
         scope.groupOverrides[groupId] = !enabled;
+        const context: AutoCompactContext = {
+            groupId,
+            ...(instanceId === undefined ? {} : { instanceId }),
+        };
+        if (enabled) {
+            cancelAutoCompact(module, groupId, instanceId);
+            module.compactOverrides[phraseKey(groupId, instanceId)] = true;
+            compactedGroup = context;
+        } else {
+            const path = groupPathToGroup(module, groupId, instanceId);
+            const groupNode = button.closest<HTMLElement>(
+                ".group[data-group-id]",
+            );
+            if (groupNode !== null) compactFlowSiblings(module, groupNode);
+            if (path !== undefined) expandGroupPath(module, path);
+            expandedGroup = context;
+        }
         module.openEditor = null;
     } else if (action === "toggle-compact") {
         const groupId = requireData(button, "groupId");
@@ -1536,6 +1637,11 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
                 groupId,
                 ...(instanceId === undefined ? {} : { instanceId }),
             };
+        } else if (!compact) {
+            compactedGroup = {
+                groupId,
+                ...(instanceId === undefined ? {} : { instanceId }),
+            };
         }
         module.compactOverrides[key] = !compact;
         module.openEditor = null;
@@ -1543,11 +1649,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         const path = parseCompactGroupPath(requireData(button, "groupPath"));
         const groupNode = button.closest<HTMLElement>(".group[data-group-id]");
         if (groupNode !== null) compactFlowSiblings(module, groupNode);
-        for (const context of path) {
-            const key = phraseKey(context.groupId, context.instanceId);
-            cancelAutoCompact(module, context.groupId, context.instanceId);
-            module.compactOverrides[key] = false;
-        }
+        expandGroupPath(module, path);
         expandedGroup = path[path.length - 1] ?? null;
         module.openEditor = null;
     } else if (action === "reset-group") {
@@ -1635,10 +1737,19 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
     }
     focusOpenEditor(module);
     if (expandedGroup !== null) {
-        animateExpandedGroup(
+        animateGroupTransition(
             module,
             expandedGroup.groupId,
             expandedGroup.instanceId,
+            "expanding",
+        );
+    }
+    if (compactedGroup !== null) {
+        animateGroupTransition(
+            module,
+            compactedGroup.groupId,
+            compactedGroup.instanceId,
+            "compacting",
         );
     }
 };

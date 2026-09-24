@@ -1,4 +1,4 @@
-import { attributePlaceholders, formatAttribute, hasAttributeValue, isDurationValue, parseValue, resolvedStart, } from "./textblocklib.js";
+import { attributePlaceholders, formatAttribute, groupHeading, hasAttributeValue, isDurationValue, parseValue, resolvedStart, } from "./textblocklib.js";
 export const createScopeState = () => ({
     activeSets: [],
     completedPrompts: [],
@@ -626,6 +626,7 @@ const renderGroupTextInternal = (groupId, definitions, state, resolved, instance
     const group = definitions.groups[groupId];
     const baseTitle = parseValue(group.title).text;
     const title = instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
+    const heading = groupHeading(title);
     const phrases = (group.phrases ?? [])
         .map((id) => resolved.phrases[phraseKey(id, instanceId)])
         .filter((phrase) => phrase?.effectiveIncluded === true)
@@ -641,16 +642,16 @@ const renderGroupTextInternal = (groupId, definitions, state, resolved, instance
         ];
     })
         .filter(Boolean);
-    const own = phrases.length > 0 ? `${title}: ${phrases.join("; ")};` : "";
+    const own = phrases.length > 0 ? `${heading} ${phrases.join("; ")};` : "";
     if (own !== "" && children.length > 0)
         return `${own}\n${children.join("\n")}`;
     if (own !== "")
         return own;
     if (children.length > 0)
-        return `${title}\n${children.join("\n")}`;
+        return `${heading}\n${children.join("\n")}`;
     if ((group.phrases ?? []).length > 0)
         return group.content ?? "";
-    return group.content === undefined ? title : `${title}\n${group.content}`;
+    return group.content === undefined ? heading : `${heading}\n${group.content}`;
 };
 export const renderGroupText = (groupId, definitions, state, resolved) => renderGroupTextInternal(groupId, definitions, state, resolved);
 const exportAttributes = (values) => Object.fromEntries(Object.entries(values).map(([id, value]) => [

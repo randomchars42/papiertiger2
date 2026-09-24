@@ -66,6 +66,7 @@ export const parseValue = (value) => {
     };
 };
 export const deSCTIDText = (text) => parseValue(text).text;
+export const groupHeading = (title) => title.trimEnd().endsWith(":") ? title : `${title}:`;
 export const getSCTIDFromText = (text) => parseValue(text).coding?.code ?? "";
 const durationUnits = (editor) => editor.units ?? ["minute", "hour", "day", "week", "month", "year"];
 export const editorDefaultValue = (editor) => {

@@ -1,4 +1,4 @@
-import { isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
+import { groupHeading, isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { groupPhrasePresence, groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
 import { matchesSearchTokens, normaliseSearch, searchTokens, } from "@lib/search.js";
@@ -314,7 +314,7 @@ function renderCompactGroup(parent, groupId, level, definitions, state, resolved
         `group--${group.kind ?? "neutral"}`,
         instanceIndex === undefined ? "" : "group--instance",
         "group--nested",
-        `group--subgroups-${group.subgroups ?? "break"}`,
+        `group--subgroups-${group.subgroups ?? "flow"}`,
         included ? "group--included" : "",
         enabled ? "" : "group--inactive",
         "group--compact",
@@ -329,21 +329,19 @@ function renderCompactGroup(parent, groupId, level, definitions, state, resolved
     const heading = element(`h${Math.min(6, Math.max(1, level))}`, "group__heading");
     const baseTitle = parseValue(group.title).text;
     const title = instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
-    const headingButton = actionButton(title, "toggle-group", scopedData({ groupId }, instanceId), "group__toggle");
+    const headingButton = actionButton(groupHeading(title), "toggle-group", scopedData({ groupId }, instanceId), "group__toggle");
     headingButton.setAttribute("aria-pressed", String(enabled));
     headingButton.title = group.note ?? "";
     heading.append(headingButton);
     header.append(heading);
-    const tools = element("div", "group__tools");
-    tools.append(iconActionButton("…", `${title} öffnen`, "open-group-path", scopedData({
-        groupId,
-        groupPath: JSON.stringify(nextPath),
-    }, instanceId), "control group__disclosure"));
-    header.append(tools);
     section.append(header);
     const body = element("div", "group__body group__body--compact-only");
     renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, nextPath, instanceId);
     section.append(body);
+    section.append(iconActionButton("…", `${title} öffnen`, "open-group-path", scopedData({
+        groupId,
+        groupPath: JSON.stringify(nextPath),
+    }, instanceId), "control group__disclosure group__disclosure--trailing"));
     parent.append(section);
 }
 const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries) => {
@@ -378,7 +376,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         `group--${group.kind ?? "neutral"}`,
         isInstanceRoot ? "group--instance" : "",
         level === 1 ? "group--root" : "group--nested",
-        `group--subgroups-${group.subgroups ?? "break"}`,
+        `group--subgroups-${group.subgroups ?? "flow"}`,
         included ? "group--included" : "",
         enabled ? "" : "group--inactive",
         compact ? "group--compact" : "",
@@ -392,7 +390,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     const heading = element(`h${Math.min(6, Math.max(1, level))}`, "group__heading");
     const baseTitle = parseValue(group.title).text;
     const title = instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
-    const headingButton = actionButton(title, "toggle-group", scopedData({ groupId }, instanceId), "group__toggle");
+    const headingButton = actionButton(groupHeading(title), "toggle-group", scopedData({ groupId }, instanceId), "group__toggle");
     headingButton.setAttribute("aria-pressed", String(enabled));
     headingButton.title = group.note ?? "";
     heading.append(headingButton);
@@ -416,7 +414,9 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     if (isInstanceRoot && instanceId !== undefined && !compact) {
         tools.append(iconActionButton("×", `${title} entfernen`, "remove-group-instance", { groupId, instanceId }, "control control--danger"));
     }
-    tools.append(iconActionButton(compact ? "…" : "−", compact ? `${title} öffnen` : `${title} kompakt anzeigen`, "toggle-compact", scopedData({ groupId }, instanceId), "control group__disclosure"));
+    const disclosure = iconActionButton(compact ? "…" : "−", compact ? `${title} öffnen` : `${title} kompakt anzeigen`, "toggle-compact", scopedData({ groupId }, instanceId), `control group__disclosure${level === 1 ? "" : " group__disclosure--trailing"}`);
+    if (level === 1)
+        tools.append(disclosure);
     if (tools.childElementCount > 0)
         header.append(tools);
     section.append(header);
@@ -480,6 +480,8 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             section.append(body);
         }
     }
+    if (level > 1)
+        section.append(disclosure);
     parent.append(section);
 }
 export const renderModule = (parent, rootId, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, status, controls = true, pickerQueries = {}) => {

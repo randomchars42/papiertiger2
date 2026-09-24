@@ -123,17 +123,20 @@ unterstrichene Überschrift und der umrandete Eintrag bedeuten ausschließlich,
 dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die Reihenfolge bleibt
 auch im Minimum dieselbe wie in der Definition. Untergruppen, die über
 `@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein zeitgeberfreies
-Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt. Die Expansion wird
-bewusst etwas länger animiert; bei systemweit reduzierter Bewegung entfällt die
-Animation.
+Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt. Expansion und
+Kompaktierung werden bewusst langsam genug animiert, um die Layoutänderung zu
+erklären; bei systemweit reduzierter Bewegung entfällt die Animation.
 
 Ein Klick auf eine Gruppenüberschrift schaltet den Einschluss der Gruppe ein
-oder aus, ohne die Auswahl ihrer Kinder zu löschen. **…** öffnet ausschließlich
-die Darstellung; solange sie erweitert ist, steht dort **−** zum sofortigen
-Kompaktwerden. **+** ist allein dem Anlegen einer weiteren Instanz vorbehalten,
-**×** entfernt eine solche Instanz. Nur erweiterte Blöcke der ersten Ebene
-schreiben **↺ Zurücksetzen** aus; verschachtelte Gruppen verwenden das
-zugänglich beschriftete Symbol **↺**.
+oder aus, ohne die Auswahl ihrer Kinder zu löschen. Deaktivieren kompaktiert die
+Gruppe zugleich; Aktivieren öffnet den dafür nötigen Pfad. **…** öffnet
+ausschließlich die Darstellung. Im erweiterten Zustand ersetzt **−** es am Ende
+derselben Inhaltszeile. **+** ist allein dem Anlegen einer weiteren Instanz
+vorbehalten, **×** entfernt eine solche Instanz. Nur erweiterte Blöcke der
+ersten Ebene schreiben **↺ Zurücksetzen** aus; verschachtelte Gruppen verwenden
+das zugänglich beschriftete Symbol **↺**. Wird in einer nur zur Ansicht
+geöffneten inaktiven Gruppe ein Kind ausdrücklich ausgewählt oder bearbeitet,
+aktiviert diese Bedienung den Gruppenpfad mit.
 
 ## Vorschläge und Vorgaben
 

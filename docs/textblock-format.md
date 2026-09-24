@@ -130,8 +130,8 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@root` | Wurzel des Pakets |
 | `@reset` | separat zurücksetzbar |
 | `@summary` | fasst auffällige aufgenommene Einträge zusammen |
-| `@subgroups(flow)` | ordnet direkte Untergruppen in einem umbrechenden Zeilenfluss an |
-| `@subgroups(break)` | gibt jeder direkten Untergruppe eine eigene Zeile; dies ist der Standard |
+| `@subgroups(flow)` | ordnet direkte Untergruppen in einem umbrechenden Zeilenfluss an; dies ist der Standard |
+| `@subgroups(break)` | lässt jede direkte Untergruppe in einer eigenen Zeile beginnen |
 | `@autocompact` | setzt für die Gruppe und ihren Teilbaum eine Inaktivitätsfrist |
 | `@reveal(...)` | öffnet die Gruppe vorübergehend, sobald die angegebene Bedingung neu erfüllt ist |
 | `@reveal(initial)` | beginnt erweitert und bleibt bis zur ersten Bedienung offen |
@@ -142,13 +142,22 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 Der optionale Gruppentyp verwendet dieselben Kurzzeichen wie Werte, zum
 Beispiel `Orientierung|n` oder `Blutung|a`.
 
-Gruppeneinschluss, Offenlegung und Untergruppenlayout sind voneinander
-unabhängig. Jede Gruppenüberschrift kann den Gruppeneinschluss umschalten;
-`@inactive` bestimmt dafür nur den Anfangszustand. Eine inaktive Gruppe behält
-Auswahl und Attribute ihrer Kinder, unterdrückt aber deren effektiven Einschluss
-in Ausgabe, Bedingungen und aktive Hervorhebung. Von außen ausgelöste Vorschläge
-bleiben sichtbar, ohne die Gruppe oder ihre Vorfahren zu aktivieren.
-`@subgroups(...)` und der kompakte Zustand verändern nur die Darstellung.
+Oberfläche und gerenderte Textausgabe ergänzen jede Gruppenüberschrift um
+einen abschließenden Doppelpunkt. Er gehört nicht zum Titel und muss deshalb
+in der `.pt`-Quelle nicht wiederholt werden; ein bereits vorhandener
+Doppelpunkt wird nicht verdoppelt.
+
+Gruppeneinschluss, Offenlegung und Untergruppenlayout bleiben getrennte
+Zustände, werden bei einem Überschriftenklick aber gemeinsam bedient:
+Deaktivieren deaktiviert und kompaktiert die Gruppe; Aktivieren aktiviert sie
+und öffnet den nötigen Pfad. `@inactive` bestimmt nur den Anfangszustand. Eine
+inaktive Gruppe behält Auswahl und Attribute ihrer Kinder, unterdrückt aber
+deren effektiven Einschluss in Ausgabe, Bedingungen und aktive Hervorhebung.
+Von außen ausgelöste Vorschläge bleiben sichtbar, ohne die Gruppe oder ihre
+Vorfahren zu aktivieren. `@subgroups(...)` und eine reine Bedienung über
+**…** beziehungsweise **−** verändern nur die Darstellung. Eine ausdrückliche
+Auswahl oder Bearbeitung eines Kindes aktiviert dagegen dessen inaktiven
+Gruppenpfad, damit die Auswahl unmittelbar effektiv aufgenommen werden kann.
 
 `@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und
 `P<...>`, verändert aber weder Sichtbarkeit noch Einschluss. Beim Übergang der
@@ -185,23 +194,27 @@ bleibt stabil wie in der `.pt`-Quelle und wird nicht nach Aktivität sortiert.
 Die früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind
 daher nicht mehr Teil des Formats.
 
-Ein Klick auf eine Gruppenüberschrift schaltet ausschließlich ihren Einschluss
-ein oder aus. **…** am Zeilenende erweitert die Gruppe, **−** macht sie sofort
-kompakt. **+** ist ausschließlich die Aktion zum Anlegen einer wiederholbaren
-Instanz; **×** entfernt eine Instanz. Ein erweiterter Block der ersten Ebene
-zeigt **↺ Zurücksetzen** ausgeschrieben, verschachtelte beziehungsweise kompakte
-Gruppen zeigen nur **↺** mit zugänglicher Beschriftung. Auswahl und Attribute
-bleiben beim Deaktivieren oder Kompaktwerden erhalten.
+Ein Klick auf eine Gruppenüberschrift schaltet ihren Einschluss samt dem oben
+beschriebenen Kompakt-/Offenlegungsschritt um. **…** erweitert nur die
+Darstellung; im erweiterten Zustand ersetzt **−** dieses Zeichen am Ende
+derselben Inhaltszeile. **+** ist ausschließlich die Aktion zum Anlegen einer
+wiederholbaren Instanz; **×** entfernt eine Instanz. Ein erweiterter Block der
+ersten Ebene zeigt **↺ Zurücksetzen** ausgeschrieben, verschachtelte
+beziehungsweise kompakte Gruppen zeigen nur **↺** mit zugänglicher
+Beschriftung. Auswahl und Attribute bleiben beim Deaktivieren oder
+Kompaktwerden erhalten.
 
-Die Überschrift einer Untergruppe und ihre direkten Phrasen bilden ohne weitere
-Annotation einen gemeinsamen umbrechenden Fluss. `@subgroups(flow)` und
-`@subgroups(break)` steuern ausschließlich die direkten Gruppen-Kinder, nicht
-die Phrasen. Bei `flow` bilden diese Untergruppen zusätzlich ein Akkordeon:
-Öffnen einer Untergruppe macht ihre offenen Geschwister kompakt. Bei `break`
-beginnt jede Untergruppe auf einer eigenen, deutlicher markierten Zeile. Im
-kompakten Zustand sehen beide Layouts gleich aus und fließen in die Zeile der
-Elterngruppe zurück. Reihenfolge und Gruppenzugehörigkeit bleiben aus der
-`.pt`-Quelle erhalten.
+Die Überschrift einer Untergruppe, ihre direkten Phrasen und ihr abschließendes
+Disclosure bilden ohne weitere Annotation einen gemeinsamen umbrechenden
+Fluss. `@subgroups(flow)` und `@subgroups(break)` steuern ausschließlich die
+direkten Gruppen-Kinder, nicht die Phrasen. `flow` ist der Standard und bildet
+zusätzlich ein Akkordeon: Öffnen einer Untergruppe macht ihre offenen
+Geschwister kompakt. Bei `break` beginnt jede direkte Untergruppe in einer
+eigenen Zeile, bleibt darin aber selbst inline. Deren eigene Untergruppen
+fließen wieder, sofern die Untergruppe nicht ihrerseits `@subgroups(break)`
+trägt. Im kompakten Zustand sehen beide Layouts gleich aus und fließen in die
+Zeile der Elterngruppe zurück. Reihenfolge und Gruppenzugehörigkeit bleiben aus
+der `.pt`-Quelle erhalten.
 
 `@autocompact` markiert eine Zeitgebergrenze. Bedienung in der Gruppe oder einem
 beliebig tiefen Kind setzt ausschließlich die nächstgelegene solche Frist
@@ -209,9 +222,9 @@ zurück. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor h�
 die Grenze offen. Nach **Fertig** oder **Enter** läuft die Frist erneut. Die
 Dauer wird über `autoCompactSeconds` konfiguriert; `0` schaltet die Automatik
 aus. Das ältere URL-Argument `autoCollapseSeconds` bleibt als Übergangs-Alias
-erhalten. Die Expansion ist sichtbar animiert und respektiert reduzierte
-Bewegung. Das Kompaktwerden ändert weder Gruppeneinschluss noch gespeicherte
-Kindzustände.
+erhalten. Expansion und Kompaktierung sind mit einer ruhigen, längeren
+Transition sichtbar und respektieren reduzierte Bewegung. Das Kompaktwerden
+ändert weder Gruppeneinschluss noch gespeicherte Kindzustände.
 
 Ein Klick außerhalb einer geöffneten Phrase und ihres Inline-Editors beendet
 die Bearbeitung, bevor die angeklickte Bedienung ausgeführt wird. Nicht leere
@@ -338,9 +351,10 @@ Die Markierung ist nur für Phrasen mit mindestens zwei Werten zulässig und ist
 vom `*` am Ende eines Werts für dessen Standardauswahl unabhängig. Sind mehrere
 markierte Phrasen sichtbar, öffnet die Laufzeit jeweils genau einen Editor in
 Quellreihenfolge. Nach einer Auswahl oder `Fertig` folgt die nächste markierte
-Phrase. Erforderliche Attribute werden zuvor abgeschlossen. Eingeklappte oder
-inaktive Gruppen werden übersprungen, bis sie geöffnet beziehungsweise
-aktiviert werden. Ein Zurücksetzen startet die Reihenfolge erneut.
+Phrase. Erforderliche Attribute werden zuvor abgeschlossen. Inaktive Gruppen
+werden übersprungen, bis sie aktiviert werden; ein kompakter Pfad wird für den
+nächsten Editor automatisch geöffnet. Ein Zurücksetzen startet die Reihenfolge
+erneut.
 
 ### SNOMED CT
 

@@ -34,11 +34,13 @@ bestehende URLs erhalten. Der Zeitgeber gehört der nächstgelegenen
 Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt: Die
 gerenderte Modulwurzel startet erweitert, jede Untergruppe kompakt;
 `@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
-`flow` schließt offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte
-Darstellung bildet effektiv aufgenommene Phrasen, Vorschläge und ihre
+Ohne Annotation gilt `flow`; `break` wirkt genau eine Ebene. `flow` schließt
+offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte Darstellung
+bildet effektiv aufgenommene Phrasen, Vorschläge und ihre
 Überschriftenpfade in stabiler Quellreihenfolge ab. Die Überschrift der Grenze
-selbst bleibt stets erreichbar. Ein Disclosure verändert nur Offenlegung; die
-Überschrift verändert nur den Gruppeneinschluss.
+selbst bleibt stets erreichbar. Ein Disclosure verändert nur Offenlegung; ein
+Überschriftenklick koppelt Aktivierung mit Öffnen beziehungsweise Deaktivierung
+mit Kompaktierung.
 
 ## Komponenten
 

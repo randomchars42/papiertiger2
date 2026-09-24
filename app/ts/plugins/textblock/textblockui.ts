@@ -1,4 +1,5 @@
 import {
+    groupHeading,
     isDateTimeValue,
     isDurationValue,
     parseValue,
@@ -680,7 +681,7 @@ function renderCompactGroup(
             `group--${group.kind ?? "neutral"}`,
             instanceIndex === undefined ? "" : "group--instance",
             "group--nested",
-            `group--subgroups-${group.subgroups ?? "break"}`,
+            `group--subgroups-${group.subgroups ?? "flow"}`,
             included ? "group--included" : "",
             enabled ? "" : "group--inactive",
             "group--compact",
@@ -701,7 +702,7 @@ function renderCompactGroup(
     const title =
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
-        title,
+        groupHeading(title),
         "toggle-group",
         scopedData({ groupId }, instanceId),
         "group__toggle",
@@ -710,23 +711,6 @@ function renderCompactGroup(
     headingButton.title = group.note ?? "";
     heading.append(headingButton);
     header.append(heading);
-    const tools = element("div", "group__tools");
-    tools.append(
-        iconActionButton(
-            "…",
-            `${title} öffnen`,
-            "open-group-path",
-            scopedData(
-                {
-                    groupId,
-                    groupPath: JSON.stringify(nextPath),
-                },
-                instanceId,
-            ),
-            "control group__disclosure",
-        ),
-    );
-    header.append(tools);
     section.append(header);
 
     const body = element("div", "group__body group__body--compact-only");
@@ -744,6 +728,21 @@ function renderCompactGroup(
         instanceId,
     );
     section.append(body);
+    section.append(
+        iconActionButton(
+            "…",
+            `${title} öffnen`,
+            "open-group-path",
+            scopedData(
+                {
+                    groupId,
+                    groupPath: JSON.stringify(nextPath),
+                },
+                instanceId,
+            ),
+            "control group__disclosure group__disclosure--trailing",
+        ),
+    );
     parent.append(section);
 }
 
@@ -829,7 +828,7 @@ function renderGroup(
             `group--${group.kind ?? "neutral"}`,
             isInstanceRoot ? "group--instance" : "",
             level === 1 ? "group--root" : "group--nested",
-            `group--subgroups-${group.subgroups ?? "break"}`,
+            `group--subgroups-${group.subgroups ?? "flow"}`,
             included ? "group--included" : "",
             enabled ? "" : "group--inactive",
             compact ? "group--compact" : "",
@@ -849,7 +848,7 @@ function renderGroup(
     const title =
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
-        title,
+        groupHeading(title),
         "toggle-group",
         scopedData({ groupId }, instanceId),
         "group__toggle",
@@ -911,15 +910,16 @@ function renderGroup(
             ),
         );
     }
-    tools.append(
-        iconActionButton(
-            compact ? "…" : "−",
-            compact ? `${title} öffnen` : `${title} kompakt anzeigen`,
-            "toggle-compact",
-            scopedData({ groupId }, instanceId),
-            "control group__disclosure",
-        ),
+    const disclosure = iconActionButton(
+        compact ? "…" : "−",
+        compact ? `${title} öffnen` : `${title} kompakt anzeigen`,
+        "toggle-compact",
+        scopedData({ groupId }, instanceId),
+        `control group__disclosure${
+            level === 1 ? "" : " group__disclosure--trailing"
+        }`,
     );
+    if (level === 1) tools.append(disclosure);
     if (tools.childElementCount > 0) header.append(tools);
     section.append(header);
 
@@ -1036,6 +1036,7 @@ function renderGroup(
             section.append(body);
         }
     }
+    if (level > 1) section.append(disclosure);
     parent.append(section);
 }
 

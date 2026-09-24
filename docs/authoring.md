@@ -112,9 +112,12 @@ G @root @subgroups(break): Dokument
   G @repeat(initial=0,add="Symptom hinzufügen") @autocompact: Symptom|a
 ```
 
-`flow` erzeugt einen umbrechenden Akkordeonfluss, `break` eine eigene Zeile pro
-Untergruppe und ist der Standard. Die Modulwurzel beginnt erweitert,
-Untergruppen beginnen kompakt. Das kompakte Minimum enthält nur effektiv
+`flow` erzeugt den standardmäßigen umbrechenden Akkordeonfluss. `break` lässt
+jede direkte Untergruppe in einer eigenen Zeile beginnen; innerhalb dieser
+Zeile bleiben Überschrift, Phrasen und Disclosure inline. Die Untergruppe fällt
+für ihre eigenen Kinder wieder auf `flow` zurück, sofern sie nicht selbst
+`@subgroups(break)` trägt. Die Modulwurzel beginnt erweitert, Untergruppen
+beginnen kompakt. Das kompakte Minimum enthält nur effektiv
 aufgenommene Phrasen, Vorschläge und deren Überschriftenpfade; die Überschrift
 der Grenze bleibt als Einstieg erhalten. Die Quellreihenfolge ändert sich nicht.
 Kompaktwerden ändert weder Auswahl noch Ausgabe. `@autocompact` setzt lediglich
