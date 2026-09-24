@@ -4,7 +4,7 @@ import {
     parseValue,
 } from "./textblocklib.js";
 import {
-    groupHasIncludedPhrase,
+    groupPhrasePresence,
     groupItems,
     isGroupConditionMet,
     isGroupEnabled,
@@ -584,7 +584,11 @@ const renderCompactContents = (
 
     for (const item of groupItems(group)) {
         if (item.type === "phrase") {
-            if (resolved.phrases[phraseKey(item.id, instanceId)]?.included === true) {
+            const phrase = resolved.phrases[phraseKey(item.id, instanceId)];
+            if (
+                phrase?.included === true ||
+                (phrase?.visible === true && phrase.source === "suggestion")
+            ) {
                 phraseIds.push(item.id);
             }
             continue;
@@ -652,7 +656,7 @@ function renderCompactGroup(
         instanceId,
     );
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
-    const included = groupHasIncludedPhrase(
+    const { included, suggested } = groupPhrasePresence(
         groupId,
         definitions,
         state,
@@ -662,7 +666,13 @@ function renderCompactGroup(
     const activeHeading =
         (group.condition !== undefined && conditionMet) ||
         (group.default === false && enabled);
-    if (!conditionMet || !enabled || (!included && !activeHeading)) return;
+    if (
+        !conditionMet ||
+        !enabled ||
+        (!included && !suggested && !activeHeading)
+    ) {
+        return;
+    }
     const nextPath = [
         ...path,
         { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
@@ -675,7 +685,7 @@ function renderCompactGroup(
             instanceIndex === undefined ? "" : "group--instance",
             "group--nested",
             `group--subgroups-${group.subgroups ?? "break"}`,
-            "group--included",
+            included ? "group--included" : "",
             "group--compact",
             "group--compact-summary",
         ]
@@ -798,7 +808,7 @@ function renderGroup(
     if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return;
     const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
-    const included = groupHasIncludedPhrase(
+    const { included, suggested } = groupPhrasePresence(
         groupId,
         definitions,
         state,
@@ -1023,7 +1033,7 @@ function renderGroup(
         renderPhrases();
         section.append(body);
     } else if (enabled) {
-        if (included) {
+        if (included || suggested) {
             const body = element("div", "group__body group__body--compact-only");
             renderCompactContents(
                 body,

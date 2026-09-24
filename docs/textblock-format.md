@@ -166,9 +166,11 @@ Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
 gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
 kompakt. Das gilt auch für die importierte Wurzel eines anderen Pakets. Neu
 aktivierte Gruppen und neu hinzugefügte Wiederholungen öffnen sich dagegen
-sofort. Eine kompakte Gruppe zeigt weiterhin alle aufgenommenen Phrasen. Auch
-Überschriften erfüllter bedingter oder ausdrücklich aktivierter Untergruppen
-bleiben als Bedienelemente sichtbar und öffnen den vollständigen Pfad. Die
+sofort. Eine kompakte Gruppe zeigt weiterhin alle aufgenommenen Phrasen und
+offenen Vorschläge. Nur Gruppen mit aufgenommenen Nachfahren erhalten die
+aktive Überschriftenmarkierung. Überschriften erfüllter bedingter oder
+ausdrücklich aktivierter Untergruppen bleiben ohne diese Markierung als
+Bedienelemente sichtbar und öffnen den vollständigen Pfad. Die
 früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind daher
 nicht mehr Teil des Formats.
 

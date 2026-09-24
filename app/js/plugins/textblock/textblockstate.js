@@ -547,7 +547,13 @@ const collectGroupPhrases = (groupId, definitions, state, resolved, instanceId) 
         return collectGroupPhrases(child, definitions, state, resolved, instanceId);
     });
 };
-export const groupHasIncludedPhrase = (groupId, definitions, state, resolved, instanceId) => collectGroupPhrases(groupId, definitions, state, resolved, instanceId).some((phrase) => phrase.included);
+export const groupPhrasePresence = (groupId, definitions, state, resolved, instanceId) => {
+    const phrases = collectGroupPhrases(groupId, definitions, state, resolved, instanceId);
+    return {
+        included: phrases.some((phrase) => phrase.included),
+        suggested: phrases.some((phrase) => phrase.visible && phrase.source === "suggestion"),
+    };
+};
 export const summarizeGroup = (groupId, definitions, state, resolved) => {
     const unique = new Map(collectGroupPhrases(groupId, definitions, state, resolved).map((phrase) => [
         phrase.key,

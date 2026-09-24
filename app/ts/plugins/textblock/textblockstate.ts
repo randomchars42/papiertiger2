@@ -782,20 +782,27 @@ const collectGroupPhrases = (
     });
 };
 
-export const groupHasIncludedPhrase = (
+export const groupPhrasePresence = (
     groupId: string,
     definitions: Definitions,
     state: DocumentState,
     resolved: ResolvedDocument,
     instanceId?: string,
-): boolean =>
-    collectGroupPhrases(
+): { included: boolean; suggested: boolean } => {
+    const phrases = collectGroupPhrases(
         groupId,
         definitions,
         state,
         resolved,
         instanceId,
-    ).some((phrase) => phrase.included);
+    );
+    return {
+        included: phrases.some((phrase) => phrase.included),
+        suggested: phrases.some(
+            (phrase) => phrase.visible && phrase.source === "suggestion",
+        ),
+    };
+};
 
 export const summarizeGroup = (
     groupId: string,

@@ -111,10 +111,12 @@ Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie
 neu. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
 die Gruppe offen. Nach **Fertig** oder **Enter** beginnt die Frist erneut.
 
-Kompakte Gruppen zeigen ihre aufgenommenen Einträge weiterhin. Überschriften
-erfüllter bedingter oder ausdrücklich aktivierter Untergruppen bleiben als
-Bedienelemente erhalten und öffnen den vollständigen Pfad. Noch nicht
-aufgenommene Auswahlmöglichkeiten werden verborgen. Untergruppen, die über
+Kompakte Gruppen zeigen ihre aufgenommenen Einträge und noch offene Vorschläge
+weiterhin. Nur Überschriften mit aufgenommenen Nachfahren erhalten dabei die
+aktive Hervorhebung. Überschriften erfüllter bedingter oder ausdrücklich
+aktivierter Untergruppen bleiben auch ohne Aufnahme als zurückhaltende
+Bedienelemente erhalten und öffnen den vollständigen Pfad. Gewöhnliche, noch
+nicht aufgenommene Auswahlmöglichkeiten werden verborgen. Untergruppen, die über
 `@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein zeitgeberfreies
 Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt. Die Expansion wird
 bewusst etwas länger animiert; bei systemweit reduzierter Bewegung entfällt die

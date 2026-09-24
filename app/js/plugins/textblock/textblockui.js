@@ -1,5 +1,5 @@
 import { isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { groupHasIncludedPhrase, groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
+import { groupPhrasePresence, groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
 import { matchesSearchTokens, normaliseSearch, searchTokens, } from "@lib/search.js";
 const element = (tag, className, text) => {
@@ -274,7 +274,9 @@ const renderCompactContents = (parent, groupId, level, definitions, state, resol
     };
     for (const item of groupItems(group)) {
         if (item.type === "phrase") {
-            if (resolved.phrases[phraseKey(item.id, instanceId)]?.included === true) {
+            const phrase = resolved.phrases[phraseKey(item.id, instanceId)];
+            if (phrase?.included === true ||
+                (phrase?.visible === true && phrase.source === "suggestion")) {
                 phraseIds.push(item.id);
             }
             continue;
@@ -297,11 +299,14 @@ function renderCompactGroup(parent, groupId, level, definitions, state, resolved
     const group = definitions.groups[groupId];
     const conditionMet = isGroupConditionMet(groupId, definitions, resolved, instanceId);
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
-    const included = groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId);
+    const { included, suggested } = groupPhrasePresence(groupId, definitions, state, resolved, instanceId);
     const activeHeading = (group.condition !== undefined && conditionMet) ||
         (group.default === false && enabled);
-    if (!conditionMet || !enabled || (!included && !activeHeading))
+    if (!conditionMet ||
+        !enabled ||
+        (!included && !suggested && !activeHeading)) {
         return;
+    }
     const nextPath = [
         ...path,
         { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
@@ -312,7 +317,7 @@ function renderCompactGroup(parent, groupId, level, definitions, state, resolved
         instanceIndex === undefined ? "" : "group--instance",
         "group--nested",
         `group--subgroups-${group.subgroups ?? "break"}`,
-        "group--included",
+        included ? "group--included" : "",
         "group--compact",
         "group--compact-summary",
     ]
@@ -366,7 +371,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         return;
     const isInstanceRoot = instanceIndex !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
-    const included = groupHasIncludedPhrase(groupId, definitions, state, resolved, instanceId);
+    const { included, suggested } = groupPhrasePresence(groupId, definitions, state, resolved, instanceId);
     const compactKey = phraseKey(groupId, instanceId);
     const compact = compactOverrides[compactKey] ?? (level > 1);
     const optional = group.default === false;
@@ -484,7 +489,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         section.append(body);
     }
     else if (enabled) {
-        if (included) {
+        if (included || suggested) {
             const body = element("div", "group__body group__body--compact-only");
             renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, [
                 {
