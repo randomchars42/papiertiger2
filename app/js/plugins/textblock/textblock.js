@@ -110,7 +110,7 @@ const renderAll = () => {
     const now = performance.now();
     const currentSuggestions = new Set(Object.values(resolved.phrases)
         .filter((phrase) => phrase.visible &&
-        !phrase.included &&
+        !phrase.effectiveIncluded &&
         phrase.source === "suggestion")
         .map((phrase) => phrase.key));
     for (const module of modules.values()) {
@@ -157,7 +157,7 @@ const renderAll = () => {
     }
     const suggestions = new Map();
     for (const phrase of Object.values(resolved.phrases)) {
-        if (!phrase.included || phrase.valueId === null)
+        if (!phrase.effectiveIncluded || phrase.valueId === null)
             continue;
         const value = definitions.phrases[phrase.id]?.values[phrase.valueId];
         for (const mapping of value?.cedis ?? []) {
@@ -623,6 +623,25 @@ const groupPathToPhrase = (groupId, phraseId, targetInstanceId, instanceId) => {
     }
     return null;
 };
+const expandOpenEditorPath = (module) => {
+    const editor = module.openEditor;
+    if (editor === null)
+        return null;
+    const path = groupPathToPhrase(module.rootId, editor.phraseId, editor.instanceId);
+    if (path === null)
+        return null;
+    let deepestExpanded = null;
+    for (const context of path) {
+        const key = phraseKey(context.groupId, context.instanceId);
+        const compact = module.compactOverrides[key] ??
+            context.groupId !== module.rootId;
+        cancelAutoCompact(module, context.groupId, context.instanceId);
+        module.compactOverrides[key] = false;
+        if (compact)
+            deepestExpanded = context;
+    }
+    return deepestExpanded;
+};
 const allGroupPaths = (groupId, instanceId, prefix = []) => {
     const context = {
         groupId,
@@ -647,6 +666,7 @@ const allGroupPaths = (groupId, instanceId, prefix = []) => {
 };
 const suggestionHoldKey = (key) => `suggestion:${key}`;
 const conditionHoldKey = (groupKey) => `condition:${groupKey}`;
+const initialHoldKey = (groupKey) => `initial:${groupKey}`;
 const holdOpen = (module, holdKey, path) => {
     const heldPath = path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId));
     for (const key of heldPath) {
@@ -694,9 +714,20 @@ const holdOpenForSuggestion = (module, phrase) => {
     holdOpen(module, suggestionHoldKey(phrase.key), path);
     return path;
 };
+const holdInitialReveals = (module) => {
+    for (const path of allGroupPaths(module.rootId)) {
+        const context = path[path.length - 1];
+        if (context === undefined ||
+            definitions.groups[context.groupId].reveal !== "initial") {
+            continue;
+        }
+        const groupKey = phraseKey(context.groupId, context.instanceId);
+        holdOpen(module, initialHoldKey(groupKey), path);
+    }
+};
 const refreshExplicitReveals = (module) => {
     const revealed = [];
-    if (!Object.values(definitions.groups).some((group) => group.reveal !== undefined)) {
+    if (!Object.values(definitions.groups).some((group) => group.reveal !== undefined && group.reveal !== "initial")) {
         return revealed;
     }
     const present = new Set();
@@ -705,7 +736,7 @@ const refreshExplicitReveals = (module) => {
         if (context === undefined)
             continue;
         const condition = definitions.groups[context.groupId].reveal;
-        if (condition === undefined)
+        if (condition === undefined || condition === "initial")
             continue;
         const groupKey = phraseKey(context.groupId, context.instanceId);
         const holdKey = conditionHoldKey(groupKey);
@@ -1032,7 +1063,7 @@ const handleClick = async (module, event) => {
             const selected = Object.fromEntries(score.criteria.flatMap((criterion) => {
                 const phrase = currentPhrase(criterion.phraseId, instanceId);
                 return groupEnabled &&
-                    phrase?.included === true &&
+                    phrase?.effectiveIncluded === true &&
                     phrase.valueId !== null
                     ? [[criterion.phraseId, phrase.valueId]]
                     : [];
@@ -1061,16 +1092,6 @@ const handleClick = async (module, event) => {
         const scope = scopeFor(instanceId);
         const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
         scope.groupOverrides[groupId] = !enabled;
-        if (!enabled) {
-            const groupNode = button.closest(".group[data-group-id]");
-            if (groupNode !== null)
-                compactFlowSiblings(module, groupNode);
-            module.compactOverrides[phraseKey(groupId, instanceId)] = false;
-            expandedGroup = {
-                groupId,
-                ...(instanceId === undefined ? {} : { instanceId }),
-            };
-        }
         module.openEditor = null;
     }
     else if (action === "toggle-compact") {
@@ -1113,7 +1134,17 @@ const handleClick = async (module, event) => {
     else if (action === "add-group-instance") {
         const groupId = requireData(button, "groupId");
         const addedId = addGroupInstance(groupId);
-        module.compactOverrides[phraseKey(groupId, addedId)] = false;
+        const initialPath = allGroupPaths(module.rootId).find((path) => {
+            const context = path[path.length - 1];
+            return context?.groupId === groupId && context.instanceId === addedId;
+        });
+        if (definitions.groups[groupId].reveal === "initial" &&
+            initialPath !== undefined) {
+            holdOpen(module, initialHoldKey(phraseKey(groupId, addedId)), initialPath);
+        }
+        else {
+            module.compactOverrides[phraseKey(groupId, addedId)] = false;
+        }
         expandedGroup = { groupId, instanceId: addedId };
         if (!openFirstRequiredInGroup(module, groupId, addedId)) {
             module.openEditor = null;
@@ -1145,9 +1176,18 @@ const handleClick = async (module, event) => {
             module.status = "Kopieren nicht möglich";
         }
     }
+    const editorExpansion = expandOpenEditorPath(module);
+    if (editorExpansion !== null) {
+        const groupNode = button.closest(".group[data-group-id]");
+        if (groupNode !== null)
+            compactFlowSiblings(module, groupNode);
+        expandedGroup = editorExpansion;
+    }
     renderAll();
-    if (openNextPrompt(module))
+    if (openNextPrompt(module)) {
+        expandOpenEditorPath(module);
         renderAll();
+    }
     if (action !== "open-score") {
         const timerContext = expandedGroup !== null &&
             definitions.groups[expandedGroup.groupId]?.autoCompact === true
@@ -1295,6 +1335,7 @@ export const display = async (parentId, params) => {
     const previous = modules.get(parentId);
     if (previous !== undefined)
         clearAutoCompactTimers(previous);
+    holdInitialReveals(module);
     modules.set(parentId, module);
     parent.addEventListener("click", (event) => void handleClick(module, event));
     parent.addEventListener("input", (event) => handleInput(module, event));

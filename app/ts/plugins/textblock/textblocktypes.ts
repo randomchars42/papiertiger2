@@ -115,7 +115,7 @@ export type GroupDefinition = {
     reset?: boolean;
     subgroups?: "flow" | "break";
     autoCompact?: boolean;
-    reveal?: ConditionDefinition;
+    reveal?: ConditionDefinition | "initial";
     repeatable?: RepeatableDefinition;
     condition?: ConditionDefinition;
     score?: ScoreDefinition;
@@ -263,6 +263,7 @@ export type ResolvedPhrase = {
     parts: ResolvedPart[];
     visible: boolean;
     included: boolean;
+    effectiveIncluded: boolean;
     source: PhraseSource;
     provenance: string[];
     touched: boolean;

@@ -217,10 +217,12 @@ export const renderPhraseEditor = (
             "exclude-phrase",
             scopedData({ phraseId }, instanceId),
         ),
-        actionButton(
-            "↺ Zurücksetzen",
+        iconActionButton(
+            "↺",
+            "Phrase zurücksetzen",
             "reset-phrase",
             scopedData({ phraseId }, instanceId),
+            "control",
         ),
         actionButton("Fertig", "close-editor", {}, "control control--primary"),
     );
@@ -475,7 +477,7 @@ const renderPhrase = (
     if (phrase === undefined || !phrase.visible) return;
 
     const classes = ["phrase", `phrase--${phrase.kind}`];
-    if (phrase.included) {
+    if (phrase.effectiveIncluded) {
         classes.push("phrase--included");
     } else if (phrase.source === "suggestion") {
         classes.push("phrase--suggestion");
@@ -587,7 +589,7 @@ const renderCompactContents = (
         if (item.type === "phrase") {
             const phrase = resolved.phrases[phraseKey(item.id, instanceId)];
             if (
-                phrase?.included === true ||
+                phrase?.effectiveIncluded === true ||
                 (phrase?.visible === true && phrase.source === "suggestion")
             ) {
                 phraseIds.push(item.id);
@@ -664,14 +666,7 @@ function renderCompactGroup(
         resolved,
         instanceId,
     );
-    const activeHeading =
-        (group.condition !== undefined && conditionMet) ||
-        (group.default === false && enabled);
-    if (
-        !conditionMet ||
-        !enabled ||
-        (!included && !suggested && !activeHeading)
-    ) {
+    if (!conditionMet || (!included && !suggested)) {
         return;
     }
     const nextPath = [
@@ -687,6 +682,7 @@ function renderCompactGroup(
             "group--nested",
             `group--subgroups-${group.subgroups ?? "break"}`,
             included ? "group--included" : "",
+            enabled ? "" : "group--inactive",
             "group--compact",
             "group--compact-summary",
         ]
@@ -706,23 +702,31 @@ function renderCompactGroup(
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
         title,
-        "open-group-path",
-        scopedData(
-            {
-                groupId,
-                groupPath: JSON.stringify(nextPath),
-            },
-            instanceId,
-        ),
+        "toggle-group",
+        scopedData({ groupId }, instanceId),
         "group__toggle",
     );
-    headingButton.setAttribute("aria-expanded", "false");
+    headingButton.setAttribute("aria-pressed", String(enabled));
     headingButton.title = group.note ?? "";
-    const indicator = element("span", "group__indicator", "›");
-    indicator.setAttribute("aria-hidden", "true");
-    headingButton.append(indicator);
     heading.append(headingButton);
     header.append(heading);
+    const tools = element("div", "group__tools");
+    tools.append(
+        iconActionButton(
+            "…",
+            `${title} öffnen`,
+            "open-group-path",
+            scopedData(
+                {
+                    groupId,
+                    groupPath: JSON.stringify(nextPath),
+                },
+                instanceId,
+            ),
+            "control group__disclosure",
+        ),
+    );
+    header.append(tools);
     section.append(header);
 
     const body = element("div", "group__body group__body--compact-only");
@@ -818,7 +822,6 @@ function renderGroup(
     );
     const compactKey = phraseKey(groupId, instanceId);
     const compact = compactOverrides[compactKey] ?? (level > 1);
-    const optional = group.default === false;
     const section = element(
         "section",
         [
@@ -847,21 +850,12 @@ function renderGroup(
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const headingButton = actionButton(
         title,
-        !enabled ? "toggle-group" : "toggle-compact",
+        "toggle-group",
         scopedData({ groupId }, instanceId),
         "group__toggle",
     );
-    headingButton.setAttribute(
-        "aria-expanded",
-        String(enabled && !compact),
-    );
+    headingButton.setAttribute("aria-pressed", String(enabled));
     headingButton.title = group.note ?? "";
-    const indicator = !enabled ? "+" : compact ? "›" : "";
-    if (indicator !== "") {
-        const indicatorNode = element("span", "group__indicator", indicator);
-        indicatorNode.setAttribute("aria-hidden", "true");
-        headingButton.append(indicatorNode);
-    }
     heading.append(headingButton);
     header.append(heading);
 
@@ -888,29 +882,18 @@ function renderGroup(
         button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
         tools.append(button);
     }
-    if (optional && enabled && !compact) {
-        tools.append(
-            iconActionButton(
-                "−",
-                `${title} deaktivieren`,
-                "toggle-group",
-                scopedData({ groupId }, instanceId),
-                "control group__disable",
-            ),
-        );
-    }
     if ((group.reset === true || isInstanceRoot) && (!compact || level === 1)) {
         tools.append(
-            compact
-                ? iconActionButton(
-                      "↺",
-                      "Zurücksetzen",
+            level === 1 && !compact
+                ? actionButton(
+                      "↺ Zurücksetzen",
                       "reset-group",
                       scopedData({ groupId }, instanceId),
                       "control group__reset",
                   )
-                : actionButton(
-                      "↺ Zurücksetzen",
+                : iconActionButton(
+                      "↺",
+                      "Zurücksetzen",
                       "reset-group",
                       scopedData({ groupId }, instanceId),
                       "control group__reset",
@@ -919,18 +902,28 @@ function renderGroup(
     }
     if (isInstanceRoot && instanceId !== undefined && !compact) {
         tools.append(
-            actionButton(
-                "Entfernen",
+            iconActionButton(
+                "×",
+                `${title} entfernen`,
                 "remove-group-instance",
                 { groupId, instanceId },
                 "control control--danger",
             ),
         );
     }
+    tools.append(
+        iconActionButton(
+            compact ? "…" : "−",
+            compact ? `${title} öffnen` : `${title} kompakt anzeigen`,
+            "toggle-compact",
+            scopedData({ groupId }, instanceId),
+            "control group__disclosure",
+        ),
+    );
     if (tools.childElementCount > 0) header.append(tools);
     section.append(header);
 
-    if (enabled && !compact) {
+    if (!compact) {
         const body = element("div", "group__body");
         if (group.summary === true && instanceId === undefined) {
             const summary = element("aside", "group__summary");
@@ -962,21 +955,7 @@ function renderGroup(
         const renderPhrases = (): void => {
             if (phraseIds.length === 0) return;
             const phrases = element("div", "phrases");
-            const orderedPhraseIds = phraseIds
-                .map((id, index) => ({ id, index }))
-                .sort((left, right) => {
-                    const leftIncluded =
-                        resolved.phrases[phraseKey(left.id, instanceId)]?.included ===
-                        true;
-                    const rightIncluded =
-                        resolved.phrases[phraseKey(right.id, instanceId)]?.included ===
-                        true;
-                    return (
-                        Number(rightIncluded) - Number(leftIncluded) ||
-                        left.index - right.index
-                    );
-                });
-            for (const { id } of orderedPhraseIds) {
+            for (const id of phraseIds) {
                 renderPhrase(
                     phrases,
                     id,
@@ -1033,7 +1012,7 @@ function renderGroup(
         }
         renderPhrases();
         section.append(body);
-    } else if (enabled) {
+    } else {
         if (included || suggested) {
             const body = element("div", "group__body group__body--compact-only");
             renderCompactContents(
