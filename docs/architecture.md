@@ -36,9 +36,9 @@ gerenderte Modulwurzel startet erweitert, jede Untergruppe kompakt;
 `@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
 Ohne Annotation gilt `flow`; `break` wirkt genau eine Ebene. `flow` schließt
 offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte Darstellung
-bildet effektiv aufgenommene Phrasen, Vorschläge und ihre
-Überschriftenpfade in stabiler Quellreihenfolge ab. Die Überschrift der Grenze
-selbst bleibt stets erreichbar. Ein Disclosure verändert nur Offenlegung; ein
+bildet effektiv aufgenommene Phrasen, Vorschläge, bedingt sichtbare Gruppen und
+ihre Überschriftenpfade in stabiler Quellreihenfolge ab. Die Überschrift der
+Grenze selbst bleibt stets erreichbar. Ein Disclosure verändert nur Offenlegung; ein
 Überschriftenklick koppelt Aktivierung mit Öffnen beziehungsweise Deaktivierung
 mit Kompaktierung.
 

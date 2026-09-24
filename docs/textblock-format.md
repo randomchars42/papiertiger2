@@ -186,8 +186,9 @@ Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
 gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
 kompakt. Das gilt auch für die importierte Wurzel eines anderen Pakets. Eine
 kompakte Grenze zeigt als Minimum ausschließlich effektiv aufgenommene Phrasen,
-offene Vorschläge und die Überschriften auf deren Pfaden. Ihre eigene
-Überschrift bleibt unabhängig davon erhalten. Nur Gruppen mit effektiv
+offene Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die Überschriften
+auf deren Pfaden. Ihre eigene Überschrift bleibt unabhängig davon erhalten.
+Nur Gruppen mit effektiv
 aufgenommenen Nachfahren erhalten die aktive Überschriftenmarkierung;
 Vorschläge aktivieren oder markieren ihre Vorfahren nicht. Die Reihenfolge
 bleibt stabil wie in der `.pt`-Quelle und wird nicht nach Aktivität sortiert.

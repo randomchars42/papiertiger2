@@ -115,9 +115,10 @@ Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie
 neu. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
 die Gruppe offen. Nach **Fertig** oder **Enter** beginnt die Frist erneut.
 
-Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, offene Vorschläge
-und die dafür nötigen Gruppenüberschriften. Die Überschrift der kompakten Grenze
-selbst bleibt immer sichtbar, damit sie über **…** wieder geöffnet werden kann.
+Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, offene
+Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die dafür nötigen
+Gruppenüberschriften. Die Überschrift der kompakten Grenze selbst bleibt immer
+sichtbar, damit sie über **…** wieder geöffnet werden kann.
 Vorschläge machen ihre Überschriften dabei nicht aktiv; die kräftige,
 unterstrichene Überschrift und der umrandete Eintrag bedeuten ausschließlich,
 dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die Reihenfolge bleibt

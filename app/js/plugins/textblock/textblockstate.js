@@ -590,11 +590,29 @@ const collectDisplayGroupPhrases = (groupId, definitions, state, resolved, insta
         return collectDisplayGroupPhrases(child, definitions, state, resolved, instanceId);
     });
 };
+const hasConditionallyVisibleGroup = (groupId, definitions, state, resolved, instanceId) => {
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
+        return false;
+    }
+    const group = definitions.groups[groupId];
+    if (group.condition !== undefined)
+        return true;
+    return groupItems(group).some((item) => {
+        if (item.type === "phrase")
+            return false;
+        const child = definitions.groups[item.id];
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            return (state.groupInstances[item.id] ?? []).some((childInstance) => hasConditionallyVisibleGroup(item.id, definitions, state, resolved, childInstance));
+        }
+        return hasConditionallyVisibleGroup(item.id, definitions, state, resolved, instanceId);
+    });
+};
 export const groupPhrasePresence = (groupId, definitions, state, resolved, instanceId) => {
     const phrases = collectDisplayGroupPhrases(groupId, definitions, state, resolved, instanceId);
     return {
         included: phrases.some((phrase) => phrase.effectiveIncluded),
-        suggested: phrases.some((phrase) => phrase.visible && phrase.source === "suggestion"),
+        suggested: phrases.some((phrase) => phrase.visible && phrase.source === "suggestion") ||
+            hasConditionallyVisibleGroup(groupId, definitions, state, resolved, instanceId),
     };
 };
 export const summarizeGroup = (groupId, definitions, state, resolved) => {

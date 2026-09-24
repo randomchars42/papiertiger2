@@ -887,6 +887,42 @@ const collectDisplayGroupPhrases = (
     });
 };
 
+const hasConditionallyVisibleGroup = (
+    groupId: string,
+    definitions: Definitions,
+    state: DocumentState,
+    resolved: ResolvedDocument,
+    instanceId?: string,
+): boolean => {
+    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
+        return false;
+    }
+    const group = definitions.groups[groupId];
+    if (group.condition !== undefined) return true;
+    return groupItems(group).some((item) => {
+        if (item.type === "phrase") return false;
+        const child = definitions.groups[item.id];
+        if (child.repeatable !== undefined && instanceId === undefined) {
+            return (state.groupInstances[item.id] ?? []).some((childInstance) =>
+                hasConditionallyVisibleGroup(
+                    item.id,
+                    definitions,
+                    state,
+                    resolved,
+                    childInstance,
+                ),
+            );
+        }
+        return hasConditionallyVisibleGroup(
+            item.id,
+            definitions,
+            state,
+            resolved,
+            instanceId,
+        );
+    });
+};
+
 export const groupPhrasePresence = (
     groupId: string,
     definitions: Definitions,
@@ -903,9 +939,17 @@ export const groupPhrasePresence = (
     );
     return {
         included: phrases.some((phrase) => phrase.effectiveIncluded),
-        suggested: phrases.some(
-            (phrase) => phrase.visible && phrase.source === "suggestion",
-        ),
+        suggested:
+            phrases.some(
+                (phrase) => phrase.visible && phrase.source === "suggestion",
+            ) ||
+            hasConditionallyVisibleGroup(
+                groupId,
+                definitions,
+                state,
+                resolved,
+                instanceId,
+            ),
     };
 };
 
