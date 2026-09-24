@@ -776,14 +776,37 @@ const groupContainsPhrase = (groupId: string, phraseId: string): boolean =>
             : groupContainsPhrase(item.id, phraseId),
     );
 
+const groupContainsGroup = (groupId: string, childId: string): boolean =>
+    groupId === childId ||
+    groupItems(definitions.groups[groupId]).some(
+        (item) =>
+            item.type === "group" && groupContainsGroup(item.id, childId),
+    );
+
+const instanceGroup = (instanceId: string): string | undefined =>
+    Object.entries(state.groupInstances).find(([, instanceIds]) =>
+        instanceIds.includes(instanceId),
+    )?.[0];
+
 const editorIsInsideGroup = (
     module: Module,
     groupId: string,
     instanceId?: string,
-): boolean =>
-    module.openEditor !== null &&
-    module.openEditor.instanceId === instanceId &&
-    groupContainsPhrase(groupId, module.openEditor.phraseId);
+): boolean => {
+    const editor = module.openEditor;
+    if (editor === null) return false;
+    if (editor.instanceId === instanceId) {
+        return groupContainsPhrase(groupId, editor.phraseId);
+    }
+    if (instanceId !== undefined || editor.instanceId === undefined) return false;
+
+    const repeatedGroup = instanceGroup(editor.instanceId);
+    return (
+        repeatedGroup !== undefined &&
+        groupContainsGroup(groupId, repeatedGroup) &&
+        groupContainsPhrase(repeatedGroup, editor.phraseId)
+    );
+};
 
 const cancelAutoCompact = (
     module: Module,

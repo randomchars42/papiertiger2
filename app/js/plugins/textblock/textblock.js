@@ -539,9 +539,23 @@ const configuredAutoCompactDelay = () => {
 const groupContainsPhrase = (groupId, phraseId) => groupItems(definitions.groups[groupId]).some((item) => item.type === "phrase"
     ? item.id === phraseId
     : groupContainsPhrase(item.id, phraseId));
-const editorIsInsideGroup = (module, groupId, instanceId) => module.openEditor !== null &&
-    module.openEditor.instanceId === instanceId &&
-    groupContainsPhrase(groupId, module.openEditor.phraseId);
+const groupContainsGroup = (groupId, childId) => groupId === childId ||
+    groupItems(definitions.groups[groupId]).some((item) => item.type === "group" && groupContainsGroup(item.id, childId));
+const instanceGroup = (instanceId) => Object.entries(state.groupInstances).find(([, instanceIds]) => instanceIds.includes(instanceId))?.[0];
+const editorIsInsideGroup = (module, groupId, instanceId) => {
+    const editor = module.openEditor;
+    if (editor === null)
+        return false;
+    if (editor.instanceId === instanceId) {
+        return groupContainsPhrase(groupId, editor.phraseId);
+    }
+    if (instanceId !== undefined || editor.instanceId === undefined)
+        return false;
+    const repeatedGroup = instanceGroup(editor.instanceId);
+    return (repeatedGroup !== undefined &&
+        groupContainsGroup(groupId, repeatedGroup) &&
+        groupContainsPhrase(repeatedGroup, editor.phraseId));
+};
 const cancelAutoCompact = (module, groupId, instanceId) => {
     const key = phraseKey(groupId, instanceId);
     const timer = module.autoCompactTimers.get(key);
