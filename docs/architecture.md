@@ -35,8 +35,10 @@ Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt: Die
 gerenderte Modulwurzel startet erweitert, jede Untergruppe kompakt;
 `@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
 `flow` schließt offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte
-Darstellung bildet aufgenommene Phrasen sowie erfüllte bedingte oder ausdrücklich
-aktivierte Untergruppen rekursiv mit wieder aufklappbaren Überschriften ab.
+Darstellung bildet effektiv aufgenommene Phrasen, Vorschläge und ihre
+Überschriftenpfade in stabiler Quellreihenfolge ab. Die Überschrift der Grenze
+selbst bleibt stets erreichbar. Ein Disclosure verändert nur Offenlegung; die
+Überschrift verändert nur den Gruppeneinschluss.
 
 ## Komponenten
 
@@ -122,18 +124,22 @@ Die Laufzeit hält voneinander getrennt:
 |---|---|
 | aktive Vorgaben | gemeinsam gesetzte Ausgangswerte |
 | Phrasenüberschreibungen | manuell gewählter Wert und Aufnahme |
-| Gruppenüberschreibungen | Aktivierung zunächst inaktiver Gruppen |
+| Gruppenüberschreibungen | aktueller Einschluss einer beliebigen Gruppe |
 | Attribute | Editorwerte je Phrase |
 | Gruppeninstanzen | Identität wiederholbarer Vorkommen |
 | Instanzzustände | Werte und Attribute einer einzelnen Wiederholung |
 | angenommene Herkunft | Provenienz eines aktiv übernommenen Werkzeugwerts |
 
 Die Auflösung berechnet daraus für jede sichtbare Phrase Wert, Textteile,
-semantischen Typ, Quelle, Provenienz und Vollständigkeit. Vorschläge verändern
-diesen abgeleiteten Zustand, nicht automatisch die Benutzereingaben. Neu
-entstandene Vorschläge und erfüllte `@reveal(...)`-Bedingungen erzeugen nur einen
-flüchtigen UI-Zustand: Der Zielpfad bleibt bis zur ersten Bedienung erweitert.
-Dieser Zustand gehört weder zum Dokument noch zur strukturierten Ausgabe.
+semantischen Typ, Quelle, Provenienz und Vollständigkeit. Gespeicherte Aufnahme
+und effektive Aufnahme bleiben getrennt: Eine inaktive Vorfahrengruppe
+unterdrückt letztere, ohne Kindzustand zu löschen. Nur effektive Aufnahme speist
+Ausgabe, Bedingungen und aktive Darstellung. Vorschläge verändern diesen
+abgeleiteten Zustand, nicht automatisch die Benutzereingaben, und aktivieren
+keine Vorfahrengruppe. Neu entstandene Vorschläge sowie `@reveal(...)`- und
+`@reveal(initial)`-Ereignisse erzeugen nur einen flüchtigen UI-Zustand: Der
+Zielpfad bleibt bis zur ersten Bedienung erweitert. Dieser Zustand gehört weder
+zum Dokument noch zur strukturierten Ausgabe.
 
 ## Kodierung und strukturierte Ausgabe
 

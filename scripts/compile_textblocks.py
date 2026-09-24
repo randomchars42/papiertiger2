@@ -1063,13 +1063,20 @@ def compile_source(
         if "reveal" in annotations:
             reveal = annotations["reveal"]
             if not isinstance(reveal, str):
-                fail(source, group["line"], "@reveal needs a condition in parentheses")
-            references = split_top_level(reveal, " / ")
-            if not references or any(not reference for reference in references):
-                fail(source, group["line"], "@reveal needs a condition")
-            compiled_group["reveal"] = compile_condition(
-                references, group["line"]
-            )
+                fail(
+                    source,
+                    group["line"],
+                    "@reveal needs 'initial' or a condition in parentheses",
+                )
+            if reveal == "initial":
+                compiled_group["reveal"] = "initial"
+            else:
+                references = split_top_level(reveal, " / ")
+                if not references or any(not reference for reference in references):
+                    fail(source, group["line"], "@reveal needs a condition")
+                compiled_group["reveal"] = compile_condition(
+                    references, group["line"]
+                )
         if group["conditions"]:
             if "repeat" in annotations:
                 fail(source, group["line"], "a repeatable group cannot be conditional")
@@ -1642,7 +1649,7 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                         f"repeatable group '{group_id}' cannot be conditional",
                     )
             reveal = group.get("reveal")
-            if reveal is not None:
+            if reveal is not None and reveal != "initial":
                 validate_condition(reveal, f"{group_id} reveal")
             items = group.get("items")
             if items is not None:

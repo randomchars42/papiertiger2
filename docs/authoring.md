@@ -114,9 +114,12 @@ G @root @subgroups(break): Dokument
 
 `flow` erzeugt einen umbrechenden Akkordeonfluss, `break` eine eigene Zeile pro
 Untergruppe und ist der Standard. Die Modulwurzel beginnt erweitert,
-Untergruppen beginnen kompakt. Kompaktwerden ändert weder Auswahl noch Ausgabe;
-aufgenommene Phrasen bleiben sichtbar. `@autocompact` setzt lediglich eine
-Inaktivitätsfrist für den ganzen Teilbaum.
+Untergruppen beginnen kompakt. Das kompakte Minimum enthält nur effektiv
+aufgenommene Phrasen, Vorschläge und deren Überschriftenpfade; die Überschrift
+der Grenze bleibt als Einstieg erhalten. Die Quellreihenfolge ändert sich nicht.
+Kompaktwerden ändert weder Auswahl noch Ausgabe. `@autocompact` setzt lediglich
+eine Inaktivitätsfrist für den ganzen Teilbaum. `@reveal(initial)` kann diese
+Frist bis zur ersten Bedienung verzögern.
 
 ## Einen großen Auswahlkatalog pflegen
 

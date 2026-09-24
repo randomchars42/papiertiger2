@@ -115,16 +115,25 @@ Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie
 neu. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
 die Gruppe offen. Nach **Fertig** oder **Enter** beginnt die Frist erneut.
 
-Kompakte Gruppen zeigen ihre aufgenommenen Einträge und noch offene Vorschläge
-weiterhin. Nur Überschriften mit aufgenommenen Nachfahren erhalten dabei die
-aktive Hervorhebung. Überschriften erfüllter bedingter oder ausdrücklich
-aktivierter Untergruppen bleiben auch ohne Aufnahme als zurückhaltende
-Bedienelemente erhalten und öffnen den vollständigen Pfad. Gewöhnliche, noch
-nicht aufgenommene Auswahlmöglichkeiten werden verborgen. Untergruppen, die über
+Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, offene Vorschläge
+und die dafür nötigen Gruppenüberschriften. Die Überschrift der kompakten Grenze
+selbst bleibt immer sichtbar, damit sie über **…** wieder geöffnet werden kann.
+Vorschläge machen ihre Überschriften dabei nicht aktiv; die kräftige,
+unterstrichene Überschrift und der umrandete Eintrag bedeuten ausschließlich,
+dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die Reihenfolge bleibt
+auch im Minimum dieselbe wie in der Definition. Untergruppen, die über
 `@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein zeitgeberfreies
 Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt. Die Expansion wird
 bewusst etwas länger animiert; bei systemweit reduzierter Bewegung entfällt die
 Animation.
+
+Ein Klick auf eine Gruppenüberschrift schaltet den Einschluss der Gruppe ein
+oder aus, ohne die Auswahl ihrer Kinder zu löschen. **…** öffnet ausschließlich
+die Darstellung; solange sie erweitert ist, steht dort **−** zum sofortigen
+Kompaktwerden. **+** ist allein dem Anlegen einer weiteren Instanz vorbehalten,
+**×** entfernt eine solche Instanz. Nur erweiterte Blöcke der ersten Ebene
+schreiben **↺ Zurücksetzen** aus; verschachtelte Gruppen verwenden das
+zugänglich beschriftete Symbol **↺**.
 
 ## Vorschläge und Vorgaben
 
@@ -134,7 +143,9 @@ nicht in die Ausgabe aufgenommen. Ein neu entstandener Vorschlag öffnet seinen
 Gruppenpfad und hält ihn bis zur ersten Bedienung dort offen. Danach gelten
 wieder die normalen Akkordeon- und Inaktivitätsregeln. Autoren können dieselbe
 vorübergehende Offenlegung für besondere Bedingungen mit `@reveal(...)` an der
-Zielgruppe auslösen. Werden gleichzeitig mehrere Geschwister offengelegt,
+Zielgruppe auslösen. `@reveal(initial)` hält eine Gruppe stattdessen von Beginn
+an bis zur ersten Bedienung offen. Werden gleichzeitig mehrere Geschwister
+offengelegt,
 dürfen sie während dieser Aufmerksamkeitsspanne ausnahmsweise nebeneinander
 offen sein. Verschwindet der auslösende Vorschlag oder die Bedingung schon vor
 einer Bedienung, kehrt der Pfad in seinen vorherigen kompakten Zustand zurück.

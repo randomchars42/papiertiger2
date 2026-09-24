@@ -134,7 +134,8 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@subgroups(break)` | gibt jeder direkten Untergruppe eine eigene Zeile; dies ist der Standard |
 | `@autocompact` | setzt für die Gruppe und ihren Teilbaum eine Inaktivitätsfrist |
 | `@reveal(...)` | öffnet die Gruppe vorübergehend, sobald die angegebene Bedingung neu erfüllt ist |
-| `@inactive` | initial nicht aktiv; bleibt als Vorschlag sichtbar |
+| `@reveal(initial)` | beginnt erweitert und bleibt bis zur ersten Bedienung offen |
+| `@inactive` | initial nicht in die Ausgabe eingeschlossen |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
 
@@ -142,9 +143,12 @@ Der optionale Gruppentyp verwendet dieselben Kurzzeichen wie Werte, zum
 Beispiel `Orientierung|n` oder `Blutung|a`.
 
 Gruppeneinschluss, Offenlegung und Untergruppenlayout sind voneinander
-unabhängig. `@inactive` verändert nur den Einschluss. `@subgroups(...)` und der
-kompakte Zustand verändern nur die Darstellung und niemals Text- oder
-Datenausgabe.
+unabhängig. Jede Gruppenüberschrift kann den Gruppeneinschluss umschalten;
+`@inactive` bestimmt dafür nur den Anfangszustand. Eine inaktive Gruppe behält
+Auswahl und Attribute ihrer Kinder, unterdrückt aber deren effektiven Einschluss
+in Ausgabe, Bedingungen und aktive Hervorhebung. Von außen ausgelöste Vorschläge
+bleiben sichtbar, ohne die Gruppe oder ihre Vorfahren zu aktivieren.
+`@subgroups(...)` und der kompakte Zustand verändern nur die Darstellung.
 
 `@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und
 `P<...>`, verändert aber weder Sichtbarkeit noch Einschluss. Beim Übergang der
@@ -164,24 +168,30 @@ ebenfalls als Offenlegungsereignis. Verschwindet die Bedingung vor der ersten
 Bedienung im offengelegten Pfad, wird dessen vorheriger kompakter Zustand
 wiederhergestellt. Vorschlagsbedingte Offenlegung folgt derselben Regel.
 
+`@reveal(initial)` benötigt keine Bedingung. Es erweitert die Zielgruppe beim
+ersten Rendern und eine damit markierte neue Wiederholungsinstanz beim Anlegen.
+Die erste Bedienung im offengehaltenen Pfad löst den Halt; erst dann beginnt die
+normale `@autocompact`-Frist.
+
 Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
 gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
-kompakt. Das gilt auch für die importierte Wurzel eines anderen Pakets. Neu
-aktivierte Gruppen und neu hinzugefügte Wiederholungen öffnen sich dagegen
-sofort. Eine kompakte Gruppe zeigt weiterhin alle aufgenommenen Phrasen und
-offenen Vorschläge. Nur Gruppen mit aufgenommenen Nachfahren erhalten die
-aktive Überschriftenmarkierung. Überschriften erfüllter bedingter oder
-ausdrücklich aktivierter Untergruppen bleiben ohne diese Markierung als
-Bedienelemente sichtbar und öffnen den vollständigen Pfad. Die
-früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind daher
-nicht mehr Teil des Formats.
+kompakt. Das gilt auch für die importierte Wurzel eines anderen Pakets. Eine
+kompakte Grenze zeigt als Minimum ausschließlich effektiv aufgenommene Phrasen,
+offene Vorschläge und die Überschriften auf deren Pfaden. Ihre eigene
+Überschrift bleibt unabhängig davon erhalten. Nur Gruppen mit effektiv
+aufgenommenen Nachfahren erhalten die aktive Überschriftenmarkierung;
+Vorschläge aktivieren oder markieren ihre Vorfahren nicht. Die Reihenfolge
+bleibt stabil wie in der `.pt`-Quelle und wird nicht nach Aktivität sortiert.
+Die früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind
+daher nicht mehr Teil des Formats.
 
-Eine aktive kompakte Überschrift erweitert die Gruppe; eine aktive erweiterte
-Überschrift macht sie kompakt. Eine zunächst inaktive Überschrift aktiviert die
-Gruppe mit `+` und öffnet sie. Deaktivieren geschieht nur im erweiterten Zustand
-über `−`. Dabei bleiben Auswahlen und Attribute erhalten. Zurücksetzen und das
-Entfernen einer Wiederholung sind bei Untergruppen ebenfalls nur erweitert
-sichtbar; die Wurzel darf ihre Rücksetzfunktion auch kompakt zeigen.
+Ein Klick auf eine Gruppenüberschrift schaltet ausschließlich ihren Einschluss
+ein oder aus. **…** am Zeilenende erweitert die Gruppe, **−** macht sie sofort
+kompakt. **+** ist ausschließlich die Aktion zum Anlegen einer wiederholbaren
+Instanz; **×** entfernt eine Instanz. Ein erweiterter Block der ersten Ebene
+zeigt **↺ Zurücksetzen** ausgeschrieben, verschachtelte beziehungsweise kompakte
+Gruppen zeigen nur **↺** mit zugänglicher Beschriftung. Auswahl und Attribute
+bleiben beim Deaktivieren oder Kompaktwerden erhalten.
 
 Die Überschrift einer Untergruppe und ihre direkten Phrasen bilden ohne weitere
 Annotation einen gemeinsamen umbrechenden Fluss. `@subgroups(flow)` und
@@ -200,7 +210,8 @@ die Grenze offen. Nach **Fertig** oder **Enter** läuft die Frist erneut. Die
 Dauer wird über `autoCompactSeconds` konfiguriert; `0` schaltet die Automatik
 aus. Das ältere URL-Argument `autoCollapseSeconds` bleibt als Übergangs-Alias
 erhalten. Die Expansion ist sichtbar animiert und respektiert reduzierte
-Bewegung.
+Bewegung. Das Kompaktwerden ändert weder Gruppeneinschluss noch gespeicherte
+Kindzustände.
 
 Ein Klick außerhalb einer geöffneten Phrase und ihres Inline-Editors beendet
 die Bearbeitung, bevor die angeklickte Bedienung ausgeführt wird. Nicht leere
@@ -231,9 +242,10 @@ G @repeat(initial=0,add="Blutung hinzufügen",empty="Blutung") @reset: Blutung|a
 Jede Instanz erhält eigenen Zustand und eigene Attribute. Verschachtelte
 wiederholbare Gruppen werden derzeit nicht unterstützt.
 
-Die sichtbare Hinzufügen-Schaltfläche verwendet analog zu einer inaktiven
-Gruppe den kompakten Gruppentitel mit `+`, beispielsweise `Schmerz +`. Der
-ausführlichere `add`-Text bleibt als zugänglicher Name und Tooltip erhalten.
+Die sichtbare Hinzufügen-Schaltfläche verwendet den kompakten Gruppentitel mit
+`+`, beispielsweise `Schmerz +`. Dieses Zeichen ist ausschließlich dem Anlegen
+einer Instanz vorbehalten. Der ausführlichere `add`-Text bleibt als zugänglicher
+Name und Tooltip erhalten.
 
 ### Additive Scores
 
