@@ -155,7 +155,7 @@ inaktive Gruppe behält Auswahl und Attribute ihrer Kinder, unterdrückt aber
 deren effektiven Einschluss in Ausgabe, Bedingungen und aktive Hervorhebung.
 Von außen ausgelöste Vorschläge bleiben sichtbar, ohne die Gruppe oder ihre
 Vorfahren zu aktivieren. `@subgroups(...)` und eine reine Bedienung über
-**…** beziehungsweise **−** verändern nur die Darstellung. Eine ausdrückliche
+**…** beziehungsweise **≪** verändern nur die Darstellung. Eine ausdrückliche
 Auswahl oder Bearbeitung eines Kindes aktiviert dagegen dessen inaktiven
 Gruppenpfad, damit die Auswahl unmittelbar effektiv aufgenommen werden kann.
 
@@ -197,7 +197,7 @@ daher nicht mehr Teil des Formats.
 
 Ein Klick auf eine Gruppenüberschrift schaltet ihren Einschluss samt dem oben
 beschriebenen Kompakt-/Offenlegungsschritt um. **…** erweitert nur die
-Darstellung; im erweiterten Zustand ersetzt **−** dieses Zeichen am Ende
+Darstellung; im erweiterten Zustand ersetzt **≪** dieses Zeichen am Ende
 derselben Inhaltszeile. **+** ist ausschließlich die Aktion zum Anlegen einer
 wiederholbaren Instanz; **×** entfernt eine Instanz. Ein erweiterter Block der
 ersten Ebene zeigt **↺ Zurücksetzen** ausgeschrieben, verschachtelte

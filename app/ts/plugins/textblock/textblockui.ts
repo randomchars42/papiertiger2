@@ -911,7 +911,7 @@ function renderGroup(
         );
     }
     const disclosure = iconActionButton(
-        compact ? "…" : "−",
+        compact ? "…" : "≪",
         compact ? `${title} öffnen` : `${title} kompakt anzeigen`,
         "toggle-compact",
         scopedData({ groupId }, instanceId),

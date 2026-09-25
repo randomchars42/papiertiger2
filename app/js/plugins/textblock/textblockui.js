@@ -414,7 +414,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     if (isInstanceRoot && instanceId !== undefined && !compact) {
         tools.append(iconActionButton("×", `${title} entfernen`, "remove-group-instance", { groupId, instanceId }, "control control--danger"));
     }
-    const disclosure = iconActionButton(compact ? "…" : "−", compact ? `${title} öffnen` : `${title} kompakt anzeigen`, "toggle-compact", scopedData({ groupId }, instanceId), `control group__disclosure${level === 1 ? "" : " group__disclosure--trailing"}`);
+    const disclosure = iconActionButton(compact ? "…" : "≪", compact ? `${title} öffnen` : `${title} kompakt anzeigen`, "toggle-compact", scopedData({ groupId }, instanceId), `control group__disclosure${level === 1 ? "" : " group__disclosure--trailing"}`);
     if (level === 1)
         tools.append(disclosure);
     if (tools.childElementCount > 0)
