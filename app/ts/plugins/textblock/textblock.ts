@@ -50,7 +50,6 @@ type Module = {
     controls: boolean;
     suggestionKeys: Set<string>;
     suggestionHighlights: Map<string, number>;
-    acknowledgedSuggestions: Set<string>;
     revealHolds: Map<string, string[]>;
     revealRestores: Map<string, { hadOverride: boolean; value?: boolean }>;
     revealConditionStates: Map<string, boolean>;
@@ -200,10 +199,7 @@ const renderAll = (): void => {
                         now + suggestionHighlightDuration,
                     );
                     const phrase = resolved.phrases[key];
-                    if (
-                        phrase !== undefined &&
-                        !module.acknowledgedSuggestions.has(key)
-                    ) {
+                    if (phrase !== undefined) {
                         const path = holdOpenForSuggestion(module, phrase);
                         if (path !== null) revealedPaths.push(path);
                     }
@@ -1142,11 +1138,6 @@ const releaseRevealHoldsForTarget = (
             isPathPrefix(targetPath, heldPath)
         ) {
             releaseRevealHold(module, holdKey, false);
-            if (holdKey.startsWith("suggestion:")) {
-                module.acknowledgedSuggestions.add(
-                    holdKey.slice("suggestion:".length),
-                );
-            }
         }
     }
 };
@@ -1939,7 +1930,6 @@ export const display = async (
         controls: params.controls !== false,
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
-        acknowledgedSuggestions: new Set(),
         revealHolds: new Map(),
         revealRestores: new Map(),
         revealConditionStates: new Map(),
@@ -2073,6 +2063,8 @@ export const receive = (message: PluginMessage): void => {
 };
 
 export const dispose = (parentId: string): void => {
+    const module = modules.get(parentId);
+    if (module !== undefined) clearAutoCompactTimers(module);
     modules.delete(parentId);
 };
 
