@@ -1027,16 +1027,9 @@ def compile_source(
         for boolean_annotation in known_annotations - {"repeat", "score", "subgroups", "reveal"}:
             if boolean_annotation in annotations and annotations[boolean_annotation] is not True:
                 fail(source, group["line"], f"@{boolean_annotation} takes no arguments")
-        compiled_group: dict[str, Any] = {"title": group["title"]}
-        if group["kind"] is not None:
-            compiled_group["kind"] = group["kind"]
-        children = [child["id"] for child in group["children"]] + group["external_children"]
-        if children:
-            compiled_group["children"] = children
-        if group["phrases"]:
-            compiled_group["phrases"] = [phrase["id"] for phrase in group["phrases"]]
-        if group["items"]:
-            compiled_group["items"] = [
+        compiled_group: dict[str, Any] = {
+            "title": group["title"],
+            "items": [
                 {
                     "type": item["type"],
                     "id": (
@@ -1046,7 +1039,10 @@ def compile_source(
                     ),
                 }
                 for item in group["items"]
-            ]
+            ],
+        }
+        if group["kind"] is not None:
+            compiled_group["kind"] = group["kind"]
         if group["sets"]:
             compiled_group["sets"] = [definition["id"] for definition in group["sets"]]
         if "inactive" in annotations:
@@ -1628,12 +1624,6 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                     )
 
         for group_id, group in definitions["groups"].items():
-            for child in group.get("children", []):
-                if child not in definitions["groups"]:
-                    raise CompileError(data_directory / f"{name}.json", 0, f"unknown child group '{child}'")
-            for phrase_id in group.get("phrases", []):
-                if phrase_id not in definitions["phrases"]:
-                    raise CompileError(data_directory / f"{name}.json", 0, f"unknown phrase '{phrase_id}'")
             for set_id in group.get("sets", []):
                 if set_id not in definitions["sets"]:
                     raise CompileError(data_directory / f"{name}.json", 0, f"unknown set '{set_id}'")
@@ -1653,42 +1643,38 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
             if reveal is not None and reveal != "initial":
                 validate_condition(reveal, f"{group_id} reveal")
             items = group.get("items")
-            if items is not None:
-                if not isinstance(items, list):
+            if not isinstance(items, list):
+                raise CompileError(
+                    data_directory / f"{name}.json",
+                    0,
+                    f"invalid ordered items in group '{group_id}'",
+                )
+            for item in items:
+                if not isinstance(item, dict) or set(item) != {"type", "id"}:
                     raise CompileError(
                         data_directory / f"{name}.json",
                         0,
-                        f"invalid ordered items in group '{group_id}'",
+                        f"invalid ordered item in group '{group_id}'",
                     )
-                ordered_phrases: list[str] = []
-                ordered_children: list[str] = []
-                for item in items:
-                    if not isinstance(item, dict) or set(item) != {"type", "id"}:
+                item_type, item_id = item["type"], item["id"]
+                if item_type == "phrase" and item_id in definitions["phrases"]:
+                    continue
+                if item_type == "group" and item_id in definitions["groups"]:
+                    if (
+                        group.get("repeatable") is not None
+                        and definitions["groups"][item_id].get("repeatable") is not None
+                    ):
                         raise CompileError(
                             data_directory / f"{name}.json",
                             0,
-                            f"invalid ordered item in group '{group_id}'",
+                            f"nested repeatable group '{item_id}' is not supported",
                         )
-                    item_type, item_id = item["type"], item["id"]
-                    if item_type == "phrase" and item_id in definitions["phrases"]:
-                        ordered_phrases.append(item_id)
-                    elif item_type == "group" and item_id in definitions["groups"]:
-                        ordered_children.append(item_id)
-                    else:
-                        raise CompileError(
-                            data_directory / f"{name}.json",
-                            0,
-                            f"invalid ordered item in group '{group_id}'",
-                        )
-                if (
-                    sorted(ordered_phrases) != sorted(group.get("phrases", []))
-                    or sorted(ordered_children) != sorted(group.get("children", []))
-                ):
-                    raise CompileError(
-                        data_directory / f"{name}.json",
-                        0,
-                        f"ordered items do not match group '{group_id}'",
-                    )
+                    continue
+                raise CompileError(
+                    data_directory / f"{name}.json",
+                    0,
+                    f"invalid ordered item in group '{group_id}'",
+                )
         for phrase_id, phrase in definitions["phrases"].items():
             for trigger, target in phrase.get("suggestions", {}).items():
                 if trigger not in values:

@@ -54,11 +54,7 @@ export const scopeState = (
 export const phraseKey = (phraseId: string, instanceId?: string): string =>
     instanceId === undefined ? phraseId : `${instanceId}:${phraseId}`;
 
-export const groupItems = (group: GroupDefinition) =>
-    group.items ?? [
-        ...(group.phrases ?? []).map((id) => ({ type: "phrase" as const, id })),
-        ...(group.children ?? []).map((id) => ({ type: "group" as const, id })),
-    ];
+export const groupItems = (group: GroupDefinition) => group.items;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
     typeof value === "object" && value !== null && !Array.isArray(value);
@@ -112,299 +108,6 @@ export const mergePackage = (
                 ...(phrase.attributes ?? {}),
             },
         };
-    }
-};
-
-export const validateDefinitions = (definitions: Definitions): void => {
-    const valueOwners = new Map<string, string>();
-    const itemKinds = new Set(["normal", "abnormal", "intervention", "neutral"]);
-
-    for (const [catalogId, catalog] of Object.entries(definitions.catalogs)) {
-        const lensIds = new Set(catalog.lenses.map((lens) => lens.id));
-        if (
-            catalog.lenses.some(
-                (lens) => lens.id === "" || lens.label === "",
-            ) ||
-            lensIds.size !== catalog.lenses.length
-        ) {
-            throw new Error(`Invalid lenses in catalog "${catalogId}"`);
-        }
-        for (const [valueId, value] of Object.entries(catalog.values)) {
-            if (
-                !Array.isArray(value.lenses) ||
-                value.lenses.some((lens) => !lensIds.has(lens)) ||
-                !Array.isArray(value.tags) ||
-                value.tags.some(
-                    (tag) =>
-                        typeof tag !== "string" ||
-                        !/^[a-z][a-z0-9_]*$/.test(tag),
-                )
-            ) {
-                throw new Error(`Invalid metadata in catalog value "${valueId}"`);
-            }
-        }
-    }
-
-    for (const [id, phrase] of Object.entries(definitions.phrases)) {
-        if (typeof phrase.title !== "string" || !isRecord(phrase.values)) {
-            throw new Error(`Invalid phrase "${id}"`);
-        }
-        if (
-            phrase.default !== "" &&
-            phrase.default !== null &&
-            !(phrase.default in phrase.values)
-        ) {
-            throw new Error(`Unknown default "${phrase.default}" in phrase "${id}"`);
-        }
-        if (phrase.kind !== undefined && !itemKinds.has(phrase.kind)) {
-            throw new Error(`Invalid suggestion kind in phrase "${id}"`);
-        }
-        if (phrase.prompt !== undefined && typeof phrase.prompt !== "boolean") {
-            throw new Error(`Invalid prompt state in phrase "${id}"`);
-        }
-        if (phrase.prompt === true && Object.keys(phrase.values).length < 2) {
-            throw new Error(`Prompt phrase "${id}" needs at least two values`);
-        }
-        for (const [valueId, value] of Object.entries(phrase.values)) {
-            if (
-                !isRecord(value) ||
-                typeof value.text !== "string" ||
-                typeof value.kind !== "string" ||
-                !itemKinds.has(value.kind)
-            ) {
-                throw new Error(
-                    `Value "${valueId}" in phrase "${id}" needs text and kind`,
-                );
-            }
-            const owner = valueOwners.get(valueId);
-            if (owner !== undefined) {
-                throw new Error(
-                    `Value id "${valueId}" is used by both "${owner}" and "${id}"`,
-                );
-            }
-            valueOwners.set(valueId, id);
-            if (value.points !== undefined && !Number.isFinite(value.points)) {
-                throw new Error(`Invalid score points in value "${valueId}"`);
-            }
-            for (const placeholder of attributePlaceholders(value.text)) {
-                if (phrase.attributes?.[placeholder.id] === undefined) {
-                    throw new Error(
-                        `Missing attribute "${placeholder.id}" in value "${valueId}"`,
-                    );
-                }
-            }
-        }
-        for (const editorId of Object.values(phrase.attributes ?? {})) {
-            if (!(editorId in definitions.editors)) {
-                throw new Error(`Unknown editor "${editorId}" in phrase "${id}"`);
-            }
-        }
-    }
-
-    for (const [id, editor] of Object.entries(definitions.editors)) {
-        if (editor.type !== "choice") continue;
-        if (editor.default !== undefined && !(editor.default in editor.options)) {
-            throw new Error(`Unknown default "${editor.default}" in editor "${id}"`);
-        }
-        for (const [optionId, option] of Object.entries(editor.options)) {
-            if (
-                !isRecord(option) ||
-                typeof option.text !== "string" ||
-                typeof option.kind !== "string" ||
-                !itemKinds.has(option.kind)
-            ) {
-                throw new Error(
-                    `Option "${optionId}" in editor "${id}" needs text and kind`,
-                );
-            }
-        }
-    }
-
-    const validateCondition = (condition: unknown, owner: string): void => {
-        if (
-            !isRecord(condition) ||
-            !Array.isArray(condition.values) ||
-            condition.values.length === 0 ||
-            condition.values.some(
-                (valueId) =>
-                    typeof valueId !== "string" || !valueOwners.has(valueId),
-            ) ||
-            typeof condition.negated !== "boolean"
-        ) {
-            throw new Error(`Invalid condition in "${owner}"`);
-        }
-    };
-
-    for (const [id, group] of Object.entries(definitions.groups)) {
-        if (group.kind !== undefined && !itemKinds.has(group.kind)) {
-            throw new Error(`Invalid kind in group "${id}"`);
-        }
-        if (
-            group.subgroups !== undefined &&
-            group.subgroups !== "flow" &&
-            group.subgroups !== "break"
-        ) {
-            throw new Error(`Invalid subgroup layout in group "${id}"`);
-        }
-        if (
-            group.autoCompact !== undefined &&
-            typeof group.autoCompact !== "boolean"
-        ) {
-            throw new Error(`Invalid auto-compact state in group "${id}"`);
-        }
-        if (group.score !== undefined) {
-            const score = group.score;
-            const targetPhrase = definitions.phrases[score.target.phraseId];
-            const targetEditorId =
-                targetPhrase?.attributes?.[score.target.attributeId];
-            if (
-                typeof score.id !== "string" ||
-                score.id === "" ||
-                typeof score.label !== "string" ||
-                score.label === "" ||
-                !Number.isFinite(score.minimum) ||
-                !Number.isFinite(score.maximum) ||
-                score.minimum > score.maximum ||
-                !Array.isArray(score.criteria) ||
-                score.criteria.length === 0 ||
-                targetPhrase === undefined ||
-                !(score.target.valueId in targetPhrase.values) ||
-                definitions.editors[targetEditorId ?? ""]?.type !== "number"
-            ) {
-                throw new Error(`Invalid score configuration in group "${id}"`);
-            }
-            for (const criterion of score.criteria) {
-                const phrase = definitions.phrases[criterion.phraseId];
-                if (
-                    phrase === undefined ||
-                    typeof criterion.title !== "string" ||
-                    !Array.isArray(criterion.options) ||
-                    criterion.options.length === 0 ||
-                    criterion.options.some(
-                        (option) =>
-                            !(option.valueId in phrase.values) ||
-                            !Number.isFinite(option.points),
-                    )
-                ) {
-                    throw new Error(`Invalid score criterion in group "${id}"`);
-                }
-            }
-        }
-        if (group.repeatable !== undefined) {
-            if (group.condition !== undefined) {
-                throw new Error(`Repeatable group "${id}" cannot be conditional`);
-            }
-            if (
-                !Number.isInteger(group.repeatable.initial ?? 0) ||
-                (group.repeatable.initial ?? 0) < 0 ||
-                group.repeatable.add === ""
-            ) {
-                throw new Error(`Invalid repeatable configuration in group "${id}"`);
-            }
-            if (
-                group.repeatable.empty !== undefined &&
-                !(group.repeatable.empty in definitions.phrases)
-            ) {
-                throw new Error(
-                    `Unknown empty phrase "${group.repeatable.empty}" in group "${id}"`,
-                );
-            }
-        }
-        if (group.condition !== undefined) {
-            validateCondition(group.condition, id);
-        }
-        if (group.reveal !== undefined && group.reveal !== "initial") {
-            validateCondition(group.reveal, `${id} reveal`);
-        }
-        for (const child of group.children ?? []) {
-            if (!(child in definitions.groups)) {
-                throw new Error(`Unknown child group "${child}" in group "${id}"`);
-            }
-            if (
-                group.repeatable !== undefined &&
-                definitions.groups[child].repeatable !== undefined
-            ) {
-                throw new Error(`Nested repeatable group "${child}" is not supported`);
-            }
-        }
-        for (const phrase of group.phrases ?? []) {
-            if (!(phrase in definitions.phrases)) {
-                throw new Error(`Unknown phrase "${phrase}" in group "${id}"`);
-            }
-        }
-        for (const set of group.sets ?? []) {
-            if (!(set in definitions.sets)) {
-                throw new Error(`Unknown set "${set}" in group "${id}"`);
-            }
-        }
-        if (group.items !== undefined) {
-            for (const item of group.items) {
-                if (
-                    !isRecord(item) ||
-                    (item.type !== "phrase" && item.type !== "group") ||
-                    typeof item.id !== "string" ||
-                    !(item.id in
-                        (item.type === "phrase"
-                            ? definitions.phrases
-                            : definitions.groups))
-                ) {
-                    throw new Error(`Invalid ordered item in group "${id}"`);
-                }
-            }
-            const orderedPhrases = group.items
-                .filter((item) => item.type === "phrase")
-                .map((item) => item.id)
-                .sort();
-            const orderedChildren = group.items
-                .filter((item) => item.type === "group")
-                .map((item) => item.id)
-                .sort();
-            if (
-                orderedPhrases.join("\0") !==
-                    [...(group.phrases ?? [])].sort().join("\0") ||
-                orderedChildren.join("\0") !==
-                    [...(group.children ?? [])].sort().join("\0")
-            ) {
-                throw new Error(`Ordered items do not match group "${id}"`);
-            }
-        }
-    }
-
-    for (const [id, set] of Object.entries(definitions.sets)) {
-        if (set.kind !== undefined && !itemKinds.has(set.kind)) {
-            throw new Error(`Invalid kind in set "${id}"`);
-        }
-        for (const [phraseId, valueId] of Object.entries(set.values)) {
-            const phrase = definitions.phrases[phraseId];
-            if (phrase === undefined) {
-                throw new Error(`Unknown phrase "${phraseId}" in set "${id}"`);
-            }
-            if (valueId !== null && !(valueId in phrase.values)) {
-                throw new Error(`Unknown value "${valueId}" in set "${id}"`);
-            }
-        }
-    }
-
-    for (const [id, phrase] of Object.entries(definitions.phrases)) {
-        for (const [trigger, valueId] of Object.entries(phrase.suggestions ?? {})) {
-            if (!valueOwners.has(trigger)) {
-                throw new Error(`Unknown suggestion trigger "${trigger}" in "${id}"`);
-            }
-            if (valueId !== null && !(valueId in phrase.values)) {
-                throw new Error(`Unknown suggested value "${valueId}" in "${id}"`);
-            }
-        }
-        if (phrase.condition !== undefined) {
-            validateCondition(phrase.condition, id);
-            if (
-                phrase.condition.suggestion !== null &&
-                !(phrase.condition.suggestion in phrase.values)
-            ) {
-                throw new Error(
-                    `Unknown condition suggestion "${phrase.condition.suggestion}" in "${id}"`,
-                );
-            }
-        }
     }
 };
 
@@ -1012,14 +715,18 @@ const renderGroupTextInternal = (
     const title =
         instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
     const heading = groupHeading(title);
-    const phrases = (group.phrases ?? [])
+    const phrases = groupItems(group)
+        .filter((item) => item.type === "phrase")
+        .map((item) => item.id)
         .map((id) => resolved.phrases[phraseKey(id, instanceId)])
         .filter(
             (phrase): phrase is ResolvedPhrase =>
                 phrase?.effectiveIncluded === true,
         )
         .map((phrase) => phrase.text);
-    const children = (group.children ?? [])
+    const children = groupItems(group)
+        .filter((item) => item.type === "group")
+        .map((item) => item.id)
         .flatMap((child) => {
             const childGroup = definitions.groups[child];
             if (childGroup.repeatable !== undefined && instanceId === undefined) {
@@ -1051,7 +758,9 @@ const renderGroupTextInternal = (
     if (own !== "" && children.length > 0) return `${own}\n${children.join("\n")}`;
     if (own !== "") return own;
     if (children.length > 0) return `${heading}\n${children.join("\n")}`;
-    if ((group.phrases ?? []).length > 0) return group.content ?? "";
+    if (groupItems(group).some((item) => item.type === "phrase")) {
+        return group.content ?? "";
+    }
     return group.content === undefined ? heading : `${heading}\n${group.content}`;
 };
 

@@ -20,6 +20,12 @@ Der Build erzeugt zusätzlich JavaScript aus den TypeScript-Quellen:
 app/ts/ -> tsc -> app/js/
 ```
 
+Jede kompilierte Gruppe besitzt genau eine geordnete `items`-Liste aus
+Phrasen- und Gruppenreferenzen. Getrennte, parallel zu synchronisierende
+`phrases`- oder `children`-Listen gehören nicht zum Laufzeitformat. Die
+vollständige semantische Prüfung geschieht im Compiler; die Laufzeit prüft bei
+statisch ausgelieferten Paketen nur Formatversion und oberste Struktur.
+
 Zur Laufzeit ist die Anwendung statisch und frameworkfrei. Alle Pakete werden
 über `fetch` geladen; es gibt keine Server-API und keine externe Bibliothek.
 

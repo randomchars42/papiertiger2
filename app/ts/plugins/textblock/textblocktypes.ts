@@ -103,9 +103,7 @@ export type GroupItemDefinition = {
 
 export type GroupDefinition = {
     title: TextDefinition;
-    children?: string[];
-    phrases?: string[];
-    items?: GroupItemDefinition[];
+    items: GroupItemDefinition[];
     sets?: string[];
     default?: boolean;
     content?: string;

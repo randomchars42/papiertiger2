@@ -3,38 +3,13 @@ import { loadJSON } from "@lib/base.js";
 import { loadPlugin } from "@lib/plugin.js";
 import { getSymptomLens, initialiseSymptomLenses, setSymptomLens, symptomLenses, } from "@lib/symptomlens.js";
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
-const validateDocuments = (value) => {
+const documentCatalog = (value) => {
     if (!isRecord(value) ||
         value.version !== 1 ||
         typeof value.default !== "string" ||
-        !isRecord(value.documents)) {
+        !isRecord(value.documents) ||
+        !(value.default in value.documents)) {
         throw new Error("Die Dokumentdefinition ist ungültig.");
-    }
-    for (const [id, candidate] of Object.entries(value.documents)) {
-        if (!isRecord(candidate) ||
-            typeof candidate.title !== "string" ||
-            !Array.isArray(candidate.blocks)) {
-            throw new Error(`Das Dokument "${id}" ist ungültig.`);
-        }
-        for (const block of candidate.blocks) {
-            if (!isRecord(block) ||
-                typeof block.plugin !== "string" ||
-                !isRecord(block.params) ||
-                typeof block.params.id !== "string") {
-                throw new Error(`Ein Block in Dokument "${id}" ist ungültig.`);
-            }
-        }
-    }
-    if (!(value.default in value.documents)) {
-        throw new Error(`Das Standarddokument "${value.default}" fehlt.`);
-    }
-    if (value.tools !== undefined &&
-        (!Array.isArray(value.tools) ||
-            value.tools.some((tool) => !isRecord(tool) ||
-                typeof tool.plugin !== "string" ||
-                !isRecord(tool.params) ||
-                typeof tool.params.id !== "string"))) {
-        throw new Error("Die Werkzeugdefinition ist ungültig.");
     }
     return value;
 };
@@ -93,7 +68,7 @@ const showError = (error) => {
 const run = async () => {
     configure();
     await initialiseSymptomLenses();
-    const catalog = validateDocuments(await loadJSON(`${getConfig("dataURL").replace(/\/$/, "")}/documents.json`));
+    const catalog = documentCatalog(await loadJSON(`${getConfig("dataURL").replace(/\/$/, "")}/documents.json`));
     const host = document.getElementById("Editor__body");
     if (host === null)
         throw new Error("Der Dokumentbereich wurde nicht gefunden.");

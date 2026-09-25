@@ -24,7 +24,6 @@ import {
     resolveDocument,
     scopeState,
     structuredDocument,
-    validateDefinitions,
 } from "./textblockstate.js";
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
 import type { OpenEditor } from "./textblockui.js";
@@ -119,19 +118,22 @@ const ensureGroup = async (
     if (trail.has(id)) throw new Error(`Group cycle detected at "${id}"`);
 
     const nextTrail = new Set(trail).add(id);
-    for (const child of group.children ?? []) await ensureGroup(child, nextTrail);
+    for (const item of groupItems(group)) {
+        if (item.type === "group") {
+            await ensureGroup(item.id, nextTrail);
+        } else {
+            if (!(item.id in definitions.phrases)) await fetchPackage(item.id);
+            const phrase = definitions.phrases[item.id];
+            if (phrase === undefined) {
+                throw new Error(`Phrase "${item.id}" was not found`);
+            }
+            for (const editorId of Object.values(phrase.attributes ?? {})) {
+                if (!(editorId in definitions.editors)) await fetchPackage(editorId);
+            }
+        }
+    }
     for (const setId of group.sets ?? []) {
         if (!(setId in definitions.sets)) await fetchPackage(setId);
-    }
-    for (const phraseId of group.phrases ?? []) {
-        if (!(phraseId in definitions.phrases)) await fetchPackage(phraseId);
-        const phrase = definitions.phrases[phraseId];
-        if (phrase === undefined) {
-            throw new Error(`Phrase "${phraseId}" was not found`);
-        }
-        for (const editorId of Object.values(phrase.attributes ?? {})) {
-            if (!(editorId in definitions.editors)) await fetchPackage(editorId);
-        }
     }
 };
 
@@ -158,7 +160,9 @@ const addGroupInstance = (groupId: string): string => {
 
 const initialiseRepeatables = (groupId: string): void => {
     const group = definitions.groups[groupId];
-    for (const child of group.children ?? []) {
+    for (const item of groupItems(group)) {
+        if (item.type === "phrase") continue;
+        const child = item.id;
         const childGroup = definitions.groups[child];
         if (childGroup.repeatable !== undefined) {
             if (state.groupInstances[child] === undefined) {
@@ -766,17 +770,15 @@ const resetInstance = (instanceId: string): void => {
 
 const resetStaticGroup = (groupId: string): void => {
     const group = definitions.groups[groupId];
-    for (const phraseId of group.phrases ?? []) {
-        delete state.phraseOverrides[phraseId];
-        delete state.attributes[phraseId];
-        delete state.acceptedProvenance[phraseId];
-        resetPrompt(phraseId);
-    }
-    for (const setId of group.sets ?? []) {
-        state.activeSets = state.activeSets.filter((id) => id !== setId);
-    }
-    delete state.groupOverrides[groupId];
-    for (const child of group.children ?? []) {
+    for (const item of groupItems(group)) {
+        if (item.type === "phrase") {
+            delete state.phraseOverrides[item.id];
+            delete state.attributes[item.id];
+            delete state.acceptedProvenance[item.id];
+            resetPrompt(item.id);
+            continue;
+        }
+        const child = item.id;
         const childGroup = definitions.groups[child];
         if (childGroup.repeatable !== undefined) {
             for (const instanceId of state.groupInstances[child] ?? []) {
@@ -790,6 +792,10 @@ const resetStaticGroup = (groupId: string): void => {
             resetStaticGroup(child);
         }
     }
+    for (const setId of group.sets ?? []) {
+        state.activeSets = state.activeSets.filter((id) => id !== setId);
+    }
+    delete state.groupOverrides[groupId];
 };
 
 const copyToClipboard = async (text: string): Promise<void> => {
@@ -1912,7 +1918,6 @@ export const display = async (
     if (parent === null) throw new Error(`Parent element "${parentId}" was not found`);
 
     await ensureGroup(rootId);
-    validateDefinitions(definitions);
     initialiseRepeatables(rootId);
 
     const module: Module = {
