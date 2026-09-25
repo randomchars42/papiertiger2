@@ -116,14 +116,16 @@ Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, offene
 Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die dafür nötigen
 Gruppenüberschriften. Die Überschrift der kompakten Grenze selbst bleibt immer
 sichtbar, damit sie über **…** wieder geöffnet werden kann.
-Vorschläge machen ihre Überschriften dabei nicht aktiv; die kräftige,
-unterstrichene Überschrift und der umrandete Eintrag bedeuten ausschließlich,
-dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die Reihenfolge bleibt
-auch im Minimum dieselbe wie in der Definition. Untergruppen, die über
-`@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein zeitgeberfreies
-Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt. Expansion und
-Kompaktierung werden bewusst langsam genug animiert, um die Layoutänderung zu
-erklären; bei systemweit reduzierter Bewegung entfällt die Animation.
+Vorschläge machen ihre Überschriften dabei nicht aktiv. Inaktive Überschriften
+tragen eine Linie in ihrer abgeschwächten Farbe; erst die kräftige Schrift und
+die Linie in der aktiven semantischen Farbe bedeuten zusammen mit dem
+umrandeten Eintrag, dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die
+Reihenfolge bleibt auch im Minimum dieselbe wie in der Definition. Untergruppen,
+die über `@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein
+zeitgeberfreies Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt.
+Expansion und Kompaktierung werden bewusst langsam genug animiert, um die
+Layoutänderung zu erklären; bei systemweit reduzierter Bewegung entfällt die
+Animation.
 
 Ein Klick auf eine Gruppenüberschrift schaltet den Einschluss der Gruppe ein
 oder aus, ohne die Auswahl ihrer Kinder zu löschen. Deaktivieren kompaktiert die

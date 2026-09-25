@@ -200,6 +200,7 @@ select:focus-visible {
 
 .group__toggle {
     color: var(--kind-muted);
+    box-shadow: inset 0 -2px var(--kind-muted);
     font-weight: 400;
 }
 
