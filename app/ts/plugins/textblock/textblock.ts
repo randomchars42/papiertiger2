@@ -29,7 +29,6 @@ import {
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
 import type { OpenEditor } from "./textblockui.js";
 import type { PluginMessage } from "@lib/plugin.js";
-import { setSymptomLens } from "@lib/symptomlens.js";
 import type {
     AttributeValue,
     DocumentState,
@@ -1849,13 +1848,6 @@ const handleInput = (module: Module, event: Event): void => {
 const handleChange = (module: Module, event: Event): void => {
     releaseRevealHoldsForTarget(module, event.target);
     cancelAutoCompactForTarget(module, event.target);
-    if (
-        event.target instanceof HTMLSelectElement &&
-        event.target.dataset.input === "symptom-lens"
-    ) {
-        setSymptomLens(event.target.value);
-        return;
-    }
     if (!updateFromInput(event.target)) return;
     module.status = "";
     renderAll();

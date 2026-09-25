@@ -147,6 +147,17 @@ Gewichtung ist nicht erforderlich. Linsen bestimmen nur die kompakte
 Vorauswahl. Werte ohne passende Linse bleiben über ihre Bezeichnung und
 Aliase auffindbar.
 
+Katalogphrasen verbinden die global gewählte Linse automatisch mit der
+vollständigen Suche als nachgestellter Alternative:
+
+```pt
+P: Symptom* => @values(symptome)
+```
+
+Mit dem ersten Suchzeichen ersetzt dieses letzte Suchfeld die kuratierte
+Vorauswahl. Das vorhandene `*` öffnet die Auswahl initial; eigene Linsen- oder
+Suchoptionen an `@values(...)` sind nicht erforderlich.
+
 Tags bündeln stabile Katalogwerte für Bedingungen, ohne eine lange Liste im
 verbrauchenden Paket zu wiederholen:
 

@@ -101,10 +101,10 @@ Große Wertkataloge werden vom Compiler vorab normalisiert und beim Laden in
 eine kataloggestützte Phrase eingefügt. Suchtext und stabile IDs entstehen
 beim Build; der Browser filtert nur noch fertige Zeichenketten und rendert
 höchstens die erste Ergebnisgruppe. Kataloge ohne Linsen zeigen initial ihre
-Einträge in Quellreihenfolge. Bei Katalogen mit Linsen verändert die aktive
+Einträge in Quellreihenfolge. Bei Katalogen mit Linsen verändert die globale
 Linse nur die initial sichtbare Teilmenge, nicht Katalog, Auswahl oder Ausgabe.
-Kopfzeile und Inline-Auswahl verwenden denselben Zustand; Konfiguration und URL
-können den Anfangswert der Symptomlinse setzen.
+Eine nachgestellte Suche wechselt mit dem ersten Suchzeichen in einen eigenen
+Ergebniszustand und durchsucht weiterhin den gesamten Katalog.
 
 Paketlokale Katalog-Tags werden ebenfalls ausschließlich beim Build aufgelöst.
 Eine Bedingungsabfrage wie `@tag(symptome.schmerz)` wird in die stabilen IDs der

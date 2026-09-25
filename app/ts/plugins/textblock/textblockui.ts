@@ -13,7 +13,7 @@ import {
     scopeState,
     summarizeGroup,
 } from "./textblockstate.js";
-import { getSymptomLens, symptomLenses } from "@lib/symptomlens.js";
+import { getSymptomLens } from "@lib/symptomlens.js";
 import {
     matchesSearchTokens,
     normaliseSearch,
@@ -126,90 +126,112 @@ export const renderPhraseEditor = (
         phrase.catalog === undefined
             ? undefined
             : definitions.catalogs[phrase.catalog];
-    if (catalog !== undefined) {
+    const appendCandidates = (
+        parent: HTMLElement,
+        candidates: Array<[string, (typeof phrase.values)[string]]>,
+        searchResults = false,
+    ): void => {
+        const visible =
+            catalog === undefined
+                ? candidates
+                : candidates.slice(0, CATALOG_RESULT_LIMIT);
+        for (const [valueId, value] of visible) {
+            const parsed = parseValue(value);
+            const button = actionButton(
+                parsed.text,
+                "choose-value",
+                scopedData({ phraseId, valueId }, instanceId),
+                `choice choice--${parsed.kind ?? "neutral"}`,
+            );
+            button.setAttribute(
+                "aria-pressed",
+                String(resolved.included && resolved.valueId === valueId),
+            );
+            parent.append(button);
+        }
+        if (catalog !== undefined && candidates.length > visible.length) {
+            parent.append(
+                element(
+                    "span",
+                    "status catalog-picker__status",
+                    `${visible.length} von ${candidates.length}${
+                        searchResults ? " · Suche verfeinern" : ""
+                    }`,
+                ),
+            );
+        }
+    };
+    const catalogValues = Object.entries(phrase.values).filter(
+        ([, value]) => value.freeText !== true,
+    );
+    const tokens = searchTokens(query);
+    const freeText = Object.entries(phrase.values).find(
+        ([, value]) => value.freeText === true,
+    );
+
+    if (catalog === undefined) {
+        appendCandidates(editor, catalogValues);
+    } else {
+        const selectedLens = getSymptomLens();
+        const activeLens = catalog.lenses.some(
+            (lens) => lens.id === selectedLens,
+        )
+            ? selectedLens
+            : catalog.lenses[0]?.id;
+        const recommendations = catalogValues.filter(([, value]) =>
+            catalog.lenses.length === 0
+                ? true
+                : value.lenses?.includes(activeLens ?? "") === true,
+        );
+        const searchResults = catalogValues.filter(([, value]) => {
+            const searchable =
+                value.search ?? normaliseSearch(parseValue(value).text);
+            return matchesSearchTokens(searchable, tokens);
+        });
         editor.classList.add("catalog-picker");
+        if (tokens.length > 0) {
+            editor.classList.add("catalog-picker--searching");
+        }
+
         const search = element("input", "editor-input catalog-picker__search");
         search.type = "search";
         search.value = query;
         search.autocomplete = "off";
         search.spellcheck = false;
-        search.placeholder = `${resolved.title} suchen …`;
+        search.placeholder = `Nicht dabei? ${resolved.title} suchen …`;
         search.dataset.input = "catalog-search";
         search.dataset.phraseId = phraseId;
         if (instanceId !== undefined) search.dataset.instanceId = instanceId;
         search.setAttribute("aria-label", `${resolved.title} suchen`);
-        editor.append(search);
 
-        if (catalog.lenses.length > 0) {
-            const lens = element("select", "catalog-picker__lens");
-            lens.dataset.input = "symptom-lens";
-            lens.setAttribute("aria-label", "Symptomlinse auswählen");
-            for (const definition of symptomLenses()) {
-                const option = element("option", undefined, definition.label);
-                option.value = definition.id;
-                lens.append(option);
+        const recommendationList = element(
+            "div",
+            "catalog-picker__recommendations",
+        );
+        appendCandidates(recommendationList, recommendations);
+        editor.append(recommendationList, search);
+        const resultList = element("div", "catalog-picker__results");
+        if (tokens.length > 0) {
+            appendCandidates(resultList, searchResults, true);
+            if (freeText !== undefined) {
+                resultList.append(
+                    actionButton(
+                        `„${query.trim()}“ als Freitext`,
+                        "choose-freetext",
+                        scopedData(
+                            {
+                                phraseId,
+                                valueId: freeText[0],
+                                value: query.trim(),
+                            },
+                            instanceId,
+                        ),
+                        "choice choice--abnormal",
+                    ),
+                );
             }
-            lens.value = getSymptomLens();
-            editor.append(lens);
         }
-    }
-
-    const tokens = searchTokens(query);
-    const candidates = Object.entries(phrase.values).filter(([, value]) => {
-        if (value.freeText === true) return false;
-        if (catalog === undefined) return true;
-        if (tokens.length === 0) {
-            return (
-                catalog.lenses.length === 0 ||
-                value.lenses?.includes(getSymptomLens()) === true
-            );
-        }
-        const searchable = value.search ?? normaliseSearch(parseValue(value).text);
-        return matchesSearchTokens(searchable, tokens);
-    });
-    const visible =
-        catalog === undefined
-            ? candidates
-            : candidates.slice(0, CATALOG_RESULT_LIMIT);
-    for (const [valueId, value] of visible) {
-        const parsed = parseValue(value);
-        const button = actionButton(
-            parsed.text,
-            "choose-value",
-            scopedData({ phraseId, valueId }, instanceId),
-            `choice choice--${parsed.kind ?? "neutral"}`,
-        );
-        button.setAttribute(
-            "aria-pressed",
-            String(resolved.included && resolved.valueId === valueId),
-        );
-        editor.append(button);
-    }
-
-    if (catalog !== undefined && candidates.length > visible.length) {
-        editor.append(
-            element(
-                "span",
-                "status catalog-picker__status",
-                `${visible.length} von ${candidates.length} · Suche verfeinern`,
-            ),
-        );
-    }
-    const freeText = Object.entries(phrase.values).find(
-        ([, value]) => value.freeText === true,
-    );
-    if (catalog !== undefined && tokens.length > 0 && freeText !== undefined) {
-        editor.append(
-            actionButton(
-                `„${query.trim()}“ als Freitext`,
-                "choose-freetext",
-                scopedData(
-                    { phraseId, valueId: freeText[0], value: query.trim() },
-                    instanceId,
-                ),
-                "choice choice--abnormal",
-            ),
-        );
+        editor.append(resultList);
     }
 
     editor.append(

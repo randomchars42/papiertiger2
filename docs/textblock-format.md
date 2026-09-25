@@ -81,6 +81,12 @@ G @root: SAMPLER
   P: Symptom* => @values(symptome)
 ```
 
+Katalogphrasen verwenden die global gewählte Linse. Sie zeigen zuerst deren
+Werte und danach ein echtes Suchfeld als letzte Alternative. Mit dem ersten
+Suchzeichen ersetzt die Suche die Vorauswahl und durchsucht den vollständigen
+Katalog. Das bereits etablierte `*` am Ende des Phrasentitels öffnet auch eine
+Katalogauswahl initial; eine zusätzliche Katalogoption ist nicht nötig.
+
 Bedingungen können einen Katalogwert stabil über `paket.wert` referenzieren:
 
 ```pt

@@ -3,7 +3,6 @@ import { getConfig } from "@lib/config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { createDocumentState, createScopeState, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
-import { setSymptomLens } from "@lib/symptomlens.js";
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const definitions = emptyDefinitions();
 const state = createDocumentState();
@@ -1351,11 +1350,6 @@ const handleInput = (module, event) => {
 const handleChange = (module, event) => {
     releaseRevealHoldsForTarget(module, event.target);
     cancelAutoCompactForTarget(module, event.target);
-    if (event.target instanceof HTMLSelectElement &&
-        event.target.dataset.input === "symptom-lens") {
-        setSymptomLens(event.target.value);
-        return;
-    }
     if (!updateFromInput(event.target))
         return;
     module.status = "";

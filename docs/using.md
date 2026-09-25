@@ -62,21 +62,18 @@ aufgenommen.
   Ausgabe.
 
 Beim Eintrag **Symptom** öffnet **Symptom hinzufügen** eine kompakte
-Inline-Zeile. Ohne Suchtext zeigt sie nur die zur aktiven Linse gehörenden,
-häufigsten Werte in Quellreihenfolge. Die Suche berücksichtigt unabhängig von
-der Linse den ganzen Katalog einschließlich der Aliase. Passt kein Wert, kann
-der eingegebene Text ausdrücklich als Freitext übernommen werden; für CEDIS
-wird dann lediglich **Unbekannt** vorgeschlagen.
+Inline-Zeile. Sie zeigt zuerst die von der globalen Linse kuratierten, häufigen
+Werte in Quellreihenfolge. Das Feld **Nicht dabei? Symptom suchen …** bildet die
+letzte Alternative. Mit dem ersten Suchzeichen ersetzt die Suche die Vorauswahl
+und berücksichtigt den ganzen Katalog einschließlich der Aliase. Passt kein
+Wert, kann der eingegebene Text ausdrücklich als Freitext übernommen werden;
+für CEDIS wird dann lediglich **Unbekannt** vorgeschlagen.
 
-Durchsuchbare Katalogauswahlen wie **Symptom** und **Allergie** setzen den
-Eingabefokus beim Öffnen direkt in ihr Suchfeld. So kann ohne zusätzlichen
-Klick sofort getippt werden.
-
-Die aktive **Linse** kann sowohl in der Kopfzeile als auch unmittelbar neben
-der Symptomsuche gewechselt werden. Beide Auswahlen bleiben synchron. Der
-Standard steht als `symptomLens` in `app/ts/config.ts` und lässt sich für ein
-Lesezeichen mit demselben URL-Parameter überschreiben, beispielsweise
-`?symptomLens=kernteam`.
+Andere Katalogauswahlen wie **Allergie** folgen derselben Regel. Ein `*` am
+Phrasentitel öffnet eine solche Auswahl wie bisher automatisch. Die aktive
+**Linse** wird global in der Kopfzeile gewählt. Der Standard
+steht als `symptomLens` in `app/ts/config.ts` und lässt sich mit demselben
+URL-Parameter überschreiben, beispielsweise `?symptomLens=kernteam`.
 
 ## Inline-Eingaben
 
