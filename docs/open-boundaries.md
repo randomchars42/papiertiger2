@@ -4,6 +4,18 @@ Diese Seite hält Fragen fest, für die noch keine belastbare Projektregel oder
 vollständige Implementierung besteht. Sie ist bewusst kurz und enthält keine
 Roadmap-Zusage.
 
+## Laufzeitkonfiguration und Internationalisierung
+
+Die gegenwärtige Laufzeitkonfiguration umfasst nur Daten- und Plug-in-Pfad,
+Autokompaktierungsfrist und Symptomlinse. Lokale Standardwerte können weiterhin
+durch gleichnamige URL-Parameter überschrieben werden.
+
+Noch offen ist, ob eine spätere Anwendung Varianten für Sprache, Protokolltiefe
+oder einen allgemeinen Basis-Pfad benötigt. Die früheren, ungenutzten Schlüssel
+`language`, `logLevel`, `baseURL` und `languageURL` legen dafür keine Semantik
+fest und wurden entfernt. Vor einer Wiedereinführung müssen Quelle, Gültigkeit
+und das Verhalten bei einem URL-Override definiert werden.
+
 ## Bedingungen über Attributwerte
 
 Bedingungen reagieren derzeit auf ausgewählte Phrasenwerte. Sie können nicht

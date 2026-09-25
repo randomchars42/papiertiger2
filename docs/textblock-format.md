@@ -233,8 +233,7 @@ beliebig tiefen Kind setzt ausschließlich die nächstgelegene solche Frist
 zurück. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
 die Grenze offen. Nach **Fertig** oder **Enter** läuft die Frist erneut. Die
 Dauer wird über `autoCompactSeconds` konfiguriert; `0` schaltet die Automatik
-aus. Das ältere URL-Argument `autoCollapseSeconds` bleibt als Übergangs-Alias
-erhalten. Expansion und Kompaktierung sind mit einer ruhigen, längeren
+aus. Expansion und Kompaktierung sind mit einer ruhigen, längeren
 Transition sichtbar und respektieren reduzierte Bewegung. Das Kompaktwerden
 ändert weder Gruppeneinschluss noch gespeicherte Kindzustände.
 

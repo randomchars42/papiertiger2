@@ -1,5 +1,5 @@
-import * as baselib from "@lib/base.js";
-import { getConfig } from "@lib/config.js";
+import { loadJSON } from "@lib/base.js";
+import { getConfig } from "../../config.js";
 import { validateCatalog } from "./cedislib.js";
 import { renderEditor, renderSummary } from "./cedisui.js";
 const modules = new Map();
@@ -9,7 +9,7 @@ const isRecord = (value) => typeof value === "object" && value !== null && !Arra
 const requestData = () => {
     if (dataRequest !== null)
         return dataRequest;
-    dataRequest = (async () => validateCatalog(await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/cedis.json`, "json")))();
+    dataRequest = (async () => validateCatalog(await loadJSON(`${getConfig("dataURL").replace(/\/$/, "")}/cedis.json`)))();
     return dataRequest;
 };
 const stateFor = (id) => {

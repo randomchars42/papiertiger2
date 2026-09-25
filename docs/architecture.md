@@ -23,12 +23,11 @@ app/ts/ -> tsc -> app/js/
 Zur Laufzeit ist die Anwendung statisch und frameworkfrei. Alle Pakete werden
 über `fetch` geladen; es gibt keine Server-API und keine externe Bibliothek.
 
-Die Laufzeitkonfiguration wird in `app/ts/config.ts` je Umgebung gesetzt. Beim
-Start übernimmt `initialiseConfig()` gleichnamige URL-Parameter mit passendem
-Grundtyp als letzte Konfigurationsschicht. So kann beispielsweise
-`autoCompactSeconds` lokal vorbelegt und für einen konkreten Aufruf per URL
-überschrieben werden. `autoCollapseSeconds` bleibt nur als Übergangs-Alias für
-bestehende URLs erhalten. Der Zeitgeber gehört der nächstgelegenen
+Die Laufzeitkonfiguration wird in `app/ts/config.ts` gesetzt. Beim Start
+übernehmen gleichnamige URL-Parameter mit passendem Grundtyp die letzte
+Konfigurationsschicht. So kann beispielsweise `autoCompactSeconds` lokal
+vorbelegt und für einen konkreten Aufruf per URL überschrieben werden. Der
+Zeitgeber gehört der nächstgelegenen
 `@autocompact`-Grenze einschließlich ihres gesamten Teilbaums.
 
 Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt: Die

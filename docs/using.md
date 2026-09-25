@@ -103,9 +103,8 @@ der Ausgabe.
 `autoCompactSeconds` in `app/ts/config.ts` bestimmt die Inaktivitätsfrist der
 mit `@autocompact` markierten Gruppen. Die Voreinstellung beträgt 12 Sekunden.
 `0` schaltet die Automatik aus; ein gleichnamiger URL-Parameter überschreibt
-die lokale Umgebungskonfiguration, beispielsweise `?autoCompactSeconds=20`
-oder `?autoCompactSeconds=0`. Bestehende Lesezeichen mit
-`autoCollapseSeconds` funktionieren als Übergang weiter.
+die lokale Konfiguration, beispielsweise `?autoCompactSeconds=20` oder
+`?autoCompactSeconds=0`.
 
 Die Frist gehört einer ganzen markierten Gruppe einschließlich ihrer
 Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie

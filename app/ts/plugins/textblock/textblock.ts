@@ -1,5 +1,5 @@
-import * as baselib from "@lib/base.js";
-import { getConfig } from "@lib/config.js";
+import { loadJSON } from "@lib/base.js";
+import { getConfig } from "../../config.js";
 import {
     attributePlaceholders,
     clampNumber,
@@ -80,9 +80,8 @@ const requestPackage = (id: string): Promise<PackageDefinition> => {
     let request = packageRequests.get(id);
     if (request !== undefined) return request;
     request = (async (): Promise<PackageDefinition> => {
-        const data = await baselib.load(
+        const data = await loadJSON(
             `${getConfig("dataURL").replace(/\/$/, "")}/${id}.json`,
-            "json",
         );
         if (!isPackage(data)) {
             throw new Error(`Data file "${id}.json" is not a version 2 package`);
@@ -819,12 +818,7 @@ const instanceData = (button: HTMLButtonElement): string | undefined =>
     button.dataset.instanceId;
 
 const configuredAutoCompactDelay = (): number | null => {
-    const url = new URL(window.location.href);
-    const seconds =
-        !url.searchParams.has("autoCompactSeconds") &&
-        url.searchParams.has("autoCollapseSeconds")
-            ? getConfig("autoCollapseSeconds")
-            : getConfig("autoCompactSeconds");
+    const seconds = getConfig("autoCompactSeconds");
     if (!Number.isFinite(seconds) || seconds < 0) {
         throw new Error(
             'Die Konfiguration "autoCompactSeconds" muss eine nicht negative Zahl sein.',

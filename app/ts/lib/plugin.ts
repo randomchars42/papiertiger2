@@ -1,4 +1,4 @@
-import { getConfig } from "./config.js";
+import { getConfig } from "../config.js";
 
 export type PluginMessage = {
     type: string;

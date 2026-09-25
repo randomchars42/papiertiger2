@@ -787,44 +787,10 @@ select:focus-visible {
     padding: 0.2rem 0.4rem;
 }
 
-.cedis-search__input {
-    flex: 1 1 18rem;
-    width: auto;
-}
-
-.cedis-selection {
-    border-inline-start-color: var(--accent);
-    background: var(--accent-soft);
-}
-
 .cedis-code {
     font-family: ui-monospace, "Cascadia Mono", "Liberation Mono", monospace;
     font-weight: 700;
     white-space: nowrap;
-}
-
-.cedis-results {
-    max-height: 36rem;
-    overflow: auto;
-    overscroll-behavior: contain;
-}
-
-.cedis-result__select {
-    display: grid;
-    flex: 1 1 20rem;
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    align-items: center;
-    gap: 0.15rem 0.4rem;
-    text-align: start;
-}
-
-.cedis-result__category {
-    grid-column: 2;
-    margin-inline-start: 0;
-}
-
-.cedis-result__tags {
-    justify-content: flex-end;
 }
 
 .cedis-sources {

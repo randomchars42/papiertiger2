@@ -1,5 +1,5 @@
-import * as baselib from "@lib/base.js";
-import { getConfig } from "@lib/config.js";
+import { loadJSON } from "@lib/base.js";
+import { getConfig } from "../../config.js";
 import type { PluginMessage, ToolStatus } from "@lib/plugin.js";
 import { validateCatalog } from "./cedislib.js";
 import { renderEditor, renderSummary } from "./cedisui.js";
@@ -29,9 +29,8 @@ const requestData = (): Promise<CedisCatalog> => {
     if (dataRequest !== null) return dataRequest;
     dataRequest = (async (): Promise<CedisCatalog> =>
         validateCatalog(
-            await baselib.load(
+            await loadJSON(
                 `${getConfig("dataURL").replace(/\/$/, "")}/cedis.json`,
-                "json",
             ),
         ))();
     return dataRequest;

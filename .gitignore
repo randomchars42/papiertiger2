@@ -1,1 +1,4 @@
 *.vim
+*.bk
+*.py[cod]
+__pycache__/

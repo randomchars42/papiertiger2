@@ -1,5 +1,5 @@
-import * as baselib from "./base.js";
-import { getConfig } from "./config.js";
+import { loadJSON } from "./base.js";
+import { getConfig } from "../config.js";
 
 export type SymptomLens = {
     id: string;
@@ -18,9 +18,8 @@ const isLens = (value: unknown): value is SymptomLens =>
     typeof value.label === "string";
 
 export const initialiseSymptomLenses = async (): Promise<void> => {
-    const value = await baselib.load(
+    const value = await loadJSON(
         `${getConfig("dataURL").replace(/\/$/, "")}/symptome.json`,
-        "json",
     );
     if (
         typeof value !== "object" ||

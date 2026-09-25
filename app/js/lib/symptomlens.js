@@ -1,5 +1,5 @@
-import * as baselib from "./base.js";
-import { getConfig } from "./config.js";
+import { loadJSON } from "./base.js";
+import { getConfig } from "../config.js";
 let lenses = [];
 let activeLens = "";
 const isLens = (value) => typeof value === "object" &&
@@ -9,7 +9,7 @@ const isLens = (value) => typeof value === "object" &&
     typeof value.id === "string" &&
     typeof value.label === "string";
 export const initialiseSymptomLenses = async () => {
-    const value = await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/symptome.json`, "json");
+    const value = await loadJSON(`${getConfig("dataURL").replace(/\/$/, "")}/symptome.json`);
     if (typeof value !== "object" ||
         value === null ||
         !("catalogs" in value) ||

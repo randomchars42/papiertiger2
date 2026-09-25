@@ -1,4 +1,4 @@
-import { getConfig } from "./config.js";
+import { getConfig } from "../config.js";
 const plugins = new Map();
 export const loadPlugin = async (name) => {
     let request = plugins.get(name);

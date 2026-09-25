@@ -1,5 +1,5 @@
-import * as baselib from "@lib/base.js";
-import { getConfig } from "@lib/config.js";
+import { loadJSON } from "@lib/base.js";
+import { getConfig } from "../../config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { createDocumentState, createScopeState, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, validateDefinitions, } from "./textblockstate.js";
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
@@ -17,7 +17,7 @@ const requestPackage = (id) => {
     if (request !== undefined)
         return request;
     request = (async () => {
-        const data = await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/${id}.json`, "json");
+        const data = await loadJSON(`${getConfig("dataURL").replace(/\/$/, "")}/${id}.json`);
         if (!isPackage(data)) {
             throw new Error(`Data file "${id}.json" is not a version 2 package`);
         }
@@ -122,8 +122,7 @@ const renderAll = () => {
                 if (!module.suggestionKeys.has(key)) {
                     module.suggestionHighlights.set(key, now + suggestionHighlightDuration);
                     const phrase = resolved.phrases[key];
-                    if (phrase !== undefined &&
-                        !module.acknowledgedSuggestions.has(key)) {
+                    if (phrase !== undefined) {
                         const path = holdOpenForSuggestion(module, phrase);
                         if (path !== null)
                             revealedPaths.push(path);
@@ -579,11 +578,7 @@ const requireData = (button, key) => {
 };
 const instanceData = (button) => button.dataset.instanceId;
 const configuredAutoCompactDelay = () => {
-    const url = new URL(window.location.href);
-    const seconds = !url.searchParams.has("autoCompactSeconds") &&
-        url.searchParams.has("autoCollapseSeconds")
-        ? getConfig("autoCollapseSeconds")
-        : getConfig("autoCompactSeconds");
+    const seconds = getConfig("autoCompactSeconds");
     if (!Number.isFinite(seconds) || seconds < 0) {
         throw new Error('Die Konfiguration "autoCompactSeconds" muss eine nicht negative Zahl sein.');
     }
@@ -798,9 +793,6 @@ const releaseRevealHoldsForTarget = (module, target) => {
         if (isPathPrefix(heldPath, targetPath) ||
             isPathPrefix(targetPath, heldPath)) {
             releaseRevealHold(module, holdKey, false);
-            if (holdKey.startsWith("suggestion:")) {
-                module.acknowledgedSuggestions.add(holdKey.slice("suggestion:".length));
-            }
         }
     }
 };
@@ -1426,7 +1418,6 @@ export const display = async (parentId, params) => {
         controls: params.controls !== false,
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
-        acknowledgedSuggestions: new Set(),
         revealHolds: new Map(),
         revealRestores: new Map(),
         revealConditionStates: new Map(),
@@ -1526,6 +1517,9 @@ export const receive = (message) => {
     renderAll();
 };
 export const dispose = (parentId) => {
+    const module = modules.get(parentId);
+    if (module !== undefined)
+        clearAutoCompactTimers(module);
     modules.delete(parentId);
 };
 document.addEventListener("papiertiger:symptom-lens-change", renderAll);

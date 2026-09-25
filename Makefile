@@ -7,6 +7,7 @@ compile:
 	python3 ./scripts/compile_textblocks.py
 
 build: compile
+	find ./app/js -type f -name '*.js' -delete
 	tsc -p ./app/ts/
 
 transpile:

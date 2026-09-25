@@ -99,13 +99,8 @@ export const parseValue = (
     };
 };
 
-export const deSCTIDText = (text: string): string => parseValue(text).text;
-
 export const groupHeading = (title: string): string =>
     title.trimEnd().endsWith(":") ? title : `${title}:`;
-
-export const getSCTIDFromText = (text: string): string =>
-    parseValue(text).coding?.code ?? "";
 
 const durationUnits = (editor: DurationEditor): DurationUnit[] =>
     editor.units ?? ["minute", "hour", "day", "week", "month", "year"];

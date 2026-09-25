@@ -1,6 +1,5 @@
-import * as config from "./config.js";
-import * as baselib from "@lib/base.js";
-import { getConfig, initialiseConfig } from "@lib/config.js";
+import { configure, getConfig } from "./config.js";
+import { loadJSON } from "@lib/base.js";
 import { loadPlugin } from "@lib/plugin.js";
 import { getSymptomLens, initialiseSymptomLenses, setSymptomLens, symptomLenses, } from "@lib/symptomlens.js";
 const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -92,10 +91,9 @@ const showError = (error) => {
     parent.replaceChildren(message);
 };
 const run = async () => {
-    config.configure();
-    initialiseConfig();
+    configure();
     await initialiseSymptomLenses();
-    const catalog = validateDocuments(await baselib.load(`${getConfig("dataURL").replace(/\/$/, "")}/documents.json`, "json"));
+    const catalog = validateDocuments(await loadJSON(`${getConfig("dataURL").replace(/\/$/, "")}/documents.json`));
     const host = document.getElementById("Editor__body");
     if (host === null)
         throw new Error("Der Dokumentbereich wurde nicht gefunden.");

@@ -29,12 +29,6 @@ export type CedisCatalog = {
     entries: CedisEntry[];
 };
 
-export type CedisSearchResult = {
-    entry: CedisEntry;
-    score: number;
-    matchedTags: string[];
-};
-
 export type CedisSelection = {
     system: string;
     version: string;
@@ -58,19 +52,4 @@ export type CedisStructuredValue = {
 export type CedisState = {
     selectedCodes: string[];
     suggestions: CedisSuggestion[];
-};
-
-export type CedisSearchDocument = {
-    entry: CedisEntry;
-    code: string;
-    label: string;
-    english: string;
-    tags: string[];
-    categoryLabel: string;
-    categoryTags: string[];
-};
-
-export type CedisIndex = {
-    catalog: CedisCatalog;
-    documents: CedisSearchDocument[];
 };

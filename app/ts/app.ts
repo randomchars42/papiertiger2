@@ -1,6 +1,5 @@
-import * as config from "./config.js";
-import * as baselib from "@lib/base.js";
-import { getConfig, initialiseConfig } from "@lib/config.js";
+import { configure, getConfig } from "./config.js";
+import { loadJSON } from "@lib/base.js";
 import { loadPlugin } from "@lib/plugin.js";
 import type { Plugin } from "@lib/plugin.js";
 import {
@@ -152,13 +151,11 @@ const showError = (error: unknown): void => {
 };
 
 const run = async (): Promise<void> => {
-    config.configure();
-    initialiseConfig();
+    configure();
     await initialiseSymptomLenses();
     const catalog = validateDocuments(
-        await baselib.load(
+        await loadJSON(
             `${getConfig("dataURL").replace(/\/$/, "")}/documents.json`,
-            "json",
         ),
     );
     const host = document.getElementById("Editor__body");
