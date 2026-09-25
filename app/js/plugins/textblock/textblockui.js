@@ -1,4 +1,4 @@
-import { groupHeading, isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
+import { attributePlaceholders, formatAttribute, groupHeading, isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { groupPhrasePresence, groupItems, isGroupConditionMet, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 import { getSymptomLens } from "@lib/symptomlens.js";
 import { matchesSearchTokens, normaliseSearch, searchTokens, } from "@lib/search.js";
@@ -22,6 +22,45 @@ const instanceLabel = (instanceId, definitions, state) => {
     return "";
 };
 const CATALOG_RESULT_LIMIT = 24;
+const pickerValueLabel = (text, attributes, definitions) => {
+    const placeholders = attributePlaceholders(text);
+    if (placeholders.length === 0)
+        return { text, opensEditor: false };
+    let cursor = 0;
+    let rendered = "";
+    let literalText = "";
+    let onlyEditor;
+    for (const placeholder of placeholders) {
+        const literal = text.slice(cursor, placeholder.start);
+        rendered += literal;
+        literalText += literal;
+        const editorId = attributes?.[placeholder.id];
+        const editor = definitions.editors[editorId ?? ""];
+        rendered += editor === undefined ? "…" : formatAttribute(editor);
+        onlyEditor ??= editor;
+        cursor = placeholder.end;
+    }
+    const tail = text.slice(cursor);
+    rendered += tail;
+    literalText += tail;
+    rendered = rendered
+        .replace(/\s+/g, " ")
+        .replace(/\s+([,.;:])/g, "$1")
+        .trim();
+    if (placeholders.length === 1 &&
+        literalText.trim() === "" &&
+        onlyEditor !== undefined) {
+        const prompt = onlyEditor.type === "text"
+            ? (onlyEditor.placeholder ?? onlyEditor.label)
+            : onlyEditor.label;
+        const action = onlyEditor.type === "choice" ? "auswählen" : "eingeben";
+        return {
+            text: `${(prompt ?? rendered) || "Wert"} ${action} …`,
+            opensEditor: true,
+        };
+    }
+    return { text: rendered, opensEditor: true };
+};
 export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, query = "") => {
     const editor = element("div", "inline-editor phrase-editor");
     editor.dataset.editorFor = resolved.key;
@@ -37,7 +76,10 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
             : candidates.slice(0, CATALOG_RESULT_LIMIT);
         for (const [valueId, value] of visible) {
             const parsed = parseValue(value);
-            const button = actionButton(parsed.text, "choose-value", scopedData({ phraseId, valueId }, instanceId), `choice choice--${parsed.kind ?? "neutral"}`);
+            const label = pickerValueLabel(parsed.text, phrase.attributes, definitions);
+            const button = actionButton(label.text, "choose-value", scopedData({ phraseId, valueId }, instanceId), `choice choice--${parsed.kind ?? "neutral"}`);
+            if (label.opensEditor)
+                button.title = "Öffnet eine Eingabe";
             button.setAttribute("aria-pressed", String(resolved.included && resolved.valueId === valueId));
             parent.append(button);
         }
@@ -72,7 +114,7 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
         search.value = query;
         search.autocomplete = "off";
         search.spellcheck = false;
-        search.placeholder = `Nicht dabei? ${resolved.title} suchen …`;
+        search.placeholder = `Nicht dabei? ${resolved.title} suchen oder frei eingeben …`;
         search.dataset.input = "catalog-search";
         search.dataset.phraseId = phraseId;
         if (instanceId !== undefined)
@@ -85,7 +127,7 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
         if (tokens.length > 0) {
             appendCandidates(resultList, searchResults, true);
             if (freeText !== undefined) {
-                resultList.append(actionButton(`„${query.trim()}“ als Freitext`, "choose-freetext", scopedData({
+                resultList.append(actionButton(`„${query.trim()}“ übernehmen`, "choose-freetext", scopedData({
                     phraseId,
                     valueId: freeText[0],
                     value: query.trim(),

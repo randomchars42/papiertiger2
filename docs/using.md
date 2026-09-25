@@ -63,10 +63,11 @@ aufgenommen.
 
 Beim Eintrag **Symptom** öffnet **Symptom hinzufügen** eine kompakte
 Inline-Zeile. Sie zeigt zuerst die von der globalen Linse kuratierten, häufigen
-Werte in Quellreihenfolge. Das Feld **Nicht dabei? Symptom suchen …** bildet die
-letzte Alternative. Mit dem ersten Suchzeichen ersetzt die Suche die Vorauswahl
-und berücksichtigt den ganzen Katalog einschließlich der Aliase. Passt kein
-Wert, kann der eingegebene Text ausdrücklich als Freitext übernommen werden;
+Werte in Quellreihenfolge. Das Feld **Nicht dabei? Symptom suchen oder frei
+eingeben …** bildet die letzte Alternative. Mit dem ersten Suchzeichen ersetzt
+die Suche die Vorauswahl und berücksichtigt den ganzen Katalog einschließlich
+der Aliase. Passt kein Wert, kann der eingegebene Text ausdrücklich übernommen
+werden;
 für CEDIS wird dann lediglich **Unbekannt** vorgeschlagen.
 
 Andere Katalogauswahlen wie **Allergie** folgen derselben Regel. Ein `*` am
@@ -74,6 +75,11 @@ Phrasentitel öffnet eine solche Auswahl wie bisher automatisch. Die aktive
 **Linse** wird global in der Kopfzeile gewählt. Definition und Standard stehen
 in `documents.pt`; der URL-Parameter `lens` überschreibt den Standard,
 beispielsweise `?lens=kernteam`.
+
+Enthält eine gewöhnliche Auswahlliste einen frei ausfüllbaren Wert, zeigt sie
+dessen Editorbezeichnung statt der technischen Platzhaltersyntax, zum Beispiel
+**Diagnose oder Zustand eingeben …**. Ein Klick wählt diesen Wert und öffnet
+seinen Editor direkt in der Phrase.
 
 ## Inline-Eingaben
 

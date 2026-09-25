@@ -1,4 +1,6 @@
 import {
+    attributePlaceholders,
+    formatAttribute,
     groupHeading,
     isDateTimeValue,
     isDurationValue,
@@ -83,6 +85,55 @@ const instanceLabel = (
 
 const CATALOG_RESULT_LIMIT = 24;
 
+const pickerValueLabel = (
+    text: string,
+    attributes: Record<string, string> | undefined,
+    definitions: Definitions,
+): { text: string; opensEditor: boolean } => {
+    const placeholders = attributePlaceholders(text);
+    if (placeholders.length === 0) return { text, opensEditor: false };
+
+    let cursor = 0;
+    let rendered = "";
+    let literalText = "";
+    let onlyEditor: EditorDefinition | undefined;
+    for (const placeholder of placeholders) {
+        const literal = text.slice(cursor, placeholder.start);
+        rendered += literal;
+        literalText += literal;
+        const editorId = attributes?.[placeholder.id];
+        const editor = definitions.editors[editorId ?? ""];
+        rendered += editor === undefined ? "…" : formatAttribute(editor);
+        onlyEditor ??= editor;
+        cursor = placeholder.end;
+    }
+    const tail = text.slice(cursor);
+    rendered += tail;
+    literalText += tail;
+    rendered = rendered
+        .replace(/\s+/g, " ")
+        .replace(/\s+([,.;:])/g, "$1")
+        .trim();
+
+    if (
+        placeholders.length === 1 &&
+        literalText.trim() === "" &&
+        onlyEditor !== undefined
+    ) {
+        const prompt =
+            onlyEditor.type === "text"
+                ? (onlyEditor.placeholder ?? onlyEditor.label)
+                : onlyEditor.label;
+        const action = onlyEditor.type === "choice" ? "auswählen" : "eingeben";
+        return {
+            text: `${(prompt ?? rendered) || "Wert"} ${action} …`,
+            opensEditor: true,
+        };
+    }
+
+    return { text: rendered, opensEditor: true };
+};
+
 export const renderPhraseEditor = (
     phraseId: string,
     instanceId: string | undefined,
@@ -111,12 +162,18 @@ export const renderPhraseEditor = (
                 : candidates.slice(0, CATALOG_RESULT_LIMIT);
         for (const [valueId, value] of visible) {
             const parsed = parseValue(value);
-            const button = actionButton(
+            const label = pickerValueLabel(
                 parsed.text,
+                phrase.attributes,
+                definitions,
+            );
+            const button = actionButton(
+                label.text,
                 "choose-value",
                 scopedData({ phraseId, valueId }, instanceId),
                 `choice choice--${parsed.kind ?? "neutral"}`,
             );
+            if (label.opensEditor) button.title = "Öffnet eine Eingabe";
             button.setAttribute(
                 "aria-pressed",
                 String(resolved.included && resolved.valueId === valueId),
@@ -170,7 +227,7 @@ export const renderPhraseEditor = (
         search.value = query;
         search.autocomplete = "off";
         search.spellcheck = false;
-        search.placeholder = `Nicht dabei? ${resolved.title} suchen …`;
+        search.placeholder = `Nicht dabei? ${resolved.title} suchen oder frei eingeben …`;
         search.dataset.input = "catalog-search";
         search.dataset.phraseId = phraseId;
         if (instanceId !== undefined) search.dataset.instanceId = instanceId;
@@ -188,7 +245,7 @@ export const renderPhraseEditor = (
             if (freeText !== undefined) {
                 resultList.append(
                     actionButton(
-                        `„${query.trim()}“ als Freitext`,
+                        `„${query.trim()}“ übernehmen`,
                         "choose-freetext",
                         scopedData(
                             {
