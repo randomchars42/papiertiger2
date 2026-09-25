@@ -18,6 +18,7 @@ check:
 	tsc -p ./app/ts/ --noEmit
 
 test: build
+	python3 -m unittest discover -s tests -p 'test_*.py'
 	node --test tests/*.test.js
 
 tag_release_patch:

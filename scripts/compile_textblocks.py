@@ -26,6 +26,22 @@ PLACEHOLDER = re.compile(
 )
 DURATION_UNITS = {"minute", "hour", "day", "week", "month", "year"}
 CEDIS_RELATIONS = {"equivalent", "related", "broader", "narrower"}
+GROUP_ANNOTATIONS = frozenset(
+    {
+        "root",
+        "reset",
+        "summary",
+        "subgroups",
+        "autocompact",
+        "reveal",
+        "inactive",
+        "active",
+        "repeat",
+        "score",
+    }
+)
+DEPRECATED_GROUP_ANNOTATIONS = ("inline", "collapsed", "autocollapse")
+RAW_GROUP_ANNOTATIONS = frozenset({"subgroups", "reveal", "active"})
 
 
 class CompileError(Exception):
@@ -159,6 +175,8 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
         if match is None:
             raise CompileError(path, line, f"invalid group annotation near '{value[index:]}'")
         name = match.group(1)
+        if name not in GROUP_ANNOTATIONS and name not in DEPRECATED_GROUP_ANNOTATIONS:
+            raise CompileError(path, line, f"unknown group annotation '@{name}'")
         index += match.end()
         argument: dict[str, Any] | str | bool = True
         if index < len(value) and value[index] == "(":
@@ -188,7 +206,7 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
             raw_argument = value[start : index - 1].strip()
             argument = (
                 raw_argument
-                if name in {"subgroups", "reveal", "active"}
+                if name in RAW_GROUP_ANNOTATIONS
                 else parse_options(raw_argument, path, line, ",")
             )
         if name in annotations:
@@ -999,22 +1017,10 @@ def compile_source(
             compiled_set["kind"] = definition["kind"]
         compiled_sets[definition["id"]] = compiled_set
 
-    known_annotations = {
-        "root",
-        "reset",
-        "summary",
-        "subgroups",
-        "autocompact",
-        "reveal",
-        "inactive",
-        "active",
-        "repeat",
-        "score",
-    }
     compiled_groups: dict[str, Any] = {}
     for group in source["groups"]:
         annotations = group["annotations"]
-        for deprecated in ("inline", "collapsed", "autocollapse"):
+        for deprecated in DEPRECATED_GROUP_ANNOTATIONS:
             if deprecated in annotations:
                 fail(
                     source,
@@ -1022,10 +1028,10 @@ def compile_source(
                     f"@{deprecated} is obsolete; use @subgroups(flow|break), "
                     "@autocompact, and @reveal",
                 )
-        unknown = set(annotations) - known_annotations
+        unknown = set(annotations) - GROUP_ANNOTATIONS
         if unknown:
             fail(source, group["line"], f"unknown group annotation '@{sorted(unknown)[0]}'")
-        for boolean_annotation in known_annotations - {
+        for boolean_annotation in GROUP_ANNOTATIONS - {
             "repeat",
             "score",
             "subgroups",
@@ -1516,13 +1522,33 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                 result[category][identifier] = definition
         return result
 
+    symptom_catalog = merged("symptome")["catalogs"].get("symptome")
+    symptom_lenses = (
+        symptom_catalog.get("lenses")
+        if isinstance(symptom_catalog, dict)
+        else None
+    )
+    if (
+        not isinstance(symptom_lenses, list)
+        or any(
+            not isinstance(lens, dict)
+            or not isinstance(lens.get("id"), str)
+            for lens in symptom_lenses
+        )
+    ):
+        raise CompileError(
+            data_directory / "symptome.json",
+            0,
+            "invalid global symptom lenses",
+        )
+    global_lens_ids = {lens["id"] for lens in symptom_lenses}
+
     placeholder_pattern = re.compile(r"\{:\s*([a-zA-Z0-9_-]+)\s*(\*)?\s*:\}")
     for name, package in packages.items():
         if package.get("version") != 2:
             continue
         definitions = merged(name)
         values: dict[str, str] = {}
-        available_lens_ids: set[str] = set()
         for catalog_id, catalog in definitions["catalogs"].items():
             if not isinstance(catalog, dict) or not isinstance(catalog.get("values"), dict):
                 raise CompileError(
@@ -1542,7 +1568,6 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                     data_directory / f"{name}.json", 0, f"invalid lenses in catalog '{catalog_id}'"
                 )
             lens_ids = {lens["id"] for lens in lenses}
-            available_lens_ids.update(lens_ids)
             for value_id, value in catalog["values"].items():
                 if (
                     not isinstance(value, dict)
@@ -1651,19 +1676,25 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
 
         for group_id, group in definitions["groups"].items():
             active_lenses = group.get("activeLenses")
-            if active_lenses is not None and (
-                not isinstance(active_lenses, list)
-                or not active_lenses
-                or any(
-                    not isinstance(lens, str) or lens not in available_lens_ids
-                    for lens in active_lenses
-                )
-            ):
-                raise CompileError(
-                    data_directory / f"{name}.json",
-                    0,
-                    f"invalid active lens in group '{group_id}'",
-                )
+            if active_lenses is not None:
+                if (
+                    not isinstance(active_lenses, list)
+                    or not active_lenses
+                    or any(not isinstance(lens, str) for lens in active_lenses)
+                ):
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"invalid active lenses in group '{group_id}'",
+                    )
+                unknown_active_lenses = set(active_lenses) - global_lens_ids
+                if unknown_active_lenses:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"unknown active lens '{sorted(unknown_active_lenses)[0]}' "
+                        f"in group '{group_id}'",
+                    )
             for set_id in group.get("sets", []):
                 if set_id not in definitions["sets"]:
                     raise CompileError(data_directory / f"{name}.json", 0, f"unknown set '{set_id}'")
