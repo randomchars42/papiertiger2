@@ -123,11 +123,12 @@ Gruppen außerhalb einer solchen Grenze beginnen erweitert. Eine
 `@autocompact`-Grenze und ihr Teilbaum beginnen kompakt, sofern kein
 Offenlegungsereignis den benötigten Pfad vorübergehend öffnet.
 
-Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, offene
-Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die dafür nötigen
-Gruppenüberschriften. Die Überschrift der kompakten Grenze selbst bleibt immer
+Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, bedingt
+sichtbare sowie vorgeschlagene oder erforderliche Phrasen, gegenwärtig bedingt
+sichtbare Gruppen und die dafür nötigen Gruppenüberschriften. Die Überschrift
+der kompakten Grenze selbst bleibt immer
 sichtbar, damit sie über **…** wieder geöffnet werden kann.
-Vorschläge machen ihre Überschriften dabei nicht aktiv. Inaktive Überschriften
+Offene Aufmerksamkeit macht ihre Überschriften dabei nicht aktiv. Inaktive Überschriften
 tragen eine Linie in ihrer abgeschwächten Farbe; erst die kräftige Schrift und
 die Linie in der aktiven semantischen Farbe bedeuten zusammen mit dem
 umrandeten Eintrag, dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die
@@ -154,20 +155,30 @@ das zugänglich beschriftete Symbol **↺**. Wird in einer nur zur Ansicht
 geöffneten inaktiven Gruppe ein Kind ausdrücklich ausgewählt oder bearbeitet,
 aktiviert diese Bedienung den Gruppenpfad mit.
 
-## Vorschläge und Vorgaben
+## Bedingungen, Aufmerksamkeit und Vorgaben
 
-Eine Auswahl kann weitere Einträge sichtbar machen. Diese Vorschläge sind
-farblich entsprechend ihrem eigenen Typ markiert, aber abgeschwächt und noch
-nicht in die Ausgabe aufgenommen. Ein neu entstandener Vorschlag öffnet seinen
-Gruppenpfad und hält ihn bis zur ersten Bedienung dort offen. Danach gelten
-wieder die normalen Akkordeon- und Inaktivitätsregeln. Autoren können dieselbe
-vorübergehende Offenlegung für besondere Bedingungen mit `@reveal(...)` an der
+Eine Auswahl kann eine bislang verborgene bedingte Phrase einblenden, eine
+ohnehin verfügbare Phrase vorschlagen oder sie als erforderlich markieren.
+Keine dieser Stufen nimmt den Eintrag automatisch in die Ausgabe auf.
+Vorgeschlagene Phrasen besitzen eine gestrichelte Markierung; erforderliche
+Phrasen sind stärker umrandet und tragen `(!)`. Die normalen semantischen
+Farben für Normalbefund, Auffälligkeit, Intervention und neutrale Angaben
+bleiben davon unabhängig.
+
+Eine neu entstandene Aufmerksamkeitsstufe öffnet ihren Gruppenpfad und hält ihn
+bis zur ersten Bedienung dort offen. Danach gelten wieder die normalen
+Akkordeon- und Inaktivitätsregeln; die unerledigte Phrase bleibt im kompakten
+Minimum sichtbar. **Weglassen** verwirft einen Vorschlag. Eine erforderliche
+Phrase bleibt dagegen unerledigt, bis ihr erwarteter Wert vollständig
+aufgenommen wurde. Eine fachlich zulässige Nichterhebung muss daher als eigener
+Wert auswählbar sein.
+
+Autoren können eine reine vorübergehende Offenlegung mit `@reveal(...)` an der
 Zielgruppe auslösen. `@reveal(initial)` hält eine Gruppe stattdessen von Beginn
 an bis zur ersten Bedienung offen. Werden gleichzeitig mehrere Geschwister
-offengelegt,
-dürfen sie während dieser Aufmerksamkeitsspanne ausnahmsweise nebeneinander
-offen sein. Verschwindet der auslösende Vorschlag oder die Bedingung schon vor
-einer Bedienung, kehrt der Pfad in seinen vorherigen kompakten Zustand zurück.
+offengelegt, dürfen sie während dieser Aufmerksamkeitsspanne ausnahmsweise
+nebeneinander offen sein. Verschwindet die auslösende Bedingung schon vor einer
+Bedienung, kehrt der Pfad in seinen vorherigen kompakten Zustand zurück.
 
 Eine Vorgabe setzt mehrere Phrasen gemeinsam, zum Beispiel den Beispielsatz
 „Pneumonie“. Anschließende manuelle Änderungen haben Vorrang. Herkunft,
@@ -187,4 +198,5 @@ unabhängig zurückgesetzt oder entfernt werden.
   JSON, einschließlich kodierbarer Informationen und Attributwerte.
 
 Nur aufgenommene und vollständig ausgefüllte Einträge gelangen in die
-Textausgabe. Vorschläge bleiben sichtbar, werden aber nicht mitkopiert.
+Textausgabe. Offene bedingte, vorgeschlagene und erforderliche Phrasen bleiben
+sichtbar, werden aber nicht mitkopiert.

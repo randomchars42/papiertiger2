@@ -153,6 +153,23 @@ G @root @active(klinik;rettungsdienst): Sample
 
 
 class ExplicitIdTests(unittest.TestCase):
+    def test_legacy_phrase_condition_syntax_is_rejected(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P: Trigger|-
+  P<Trigger>: Follow-up|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CompileError,
+                r"P<\.\.\.> was removed; use P condition\(\.\.\.\) instead",
+            ):
+                parse_source(path)
+
     def test_groups_and_phrases_can_decouple_ids_from_repeated_titles(self) -> None:
         source_text = """\
 N: sample
@@ -162,7 +179,7 @@ G @root: Sample
     P first_person: Person|-
   G second_section: Abschnitt
     P second_person: Person|-
-    P<first_person>: bestätigt|-
+    P condition(first_person): bestätigt|-
 """
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "sample.pt"
@@ -180,12 +197,83 @@ G @root: Sample
             "Person",
         )
         self.assertEqual(
-            package["phrases"]["sample_eintrag_bestaetigt"]["suggestions"],
+            package["phrases"]["sample_eintrag_bestaetigt"]["condition"],
             {
-                "sample_eintrag_first_person_wert_person":
-                    "sample_eintrag_bestaetigt_wert_bestaetigt"
+                "values": ["sample_eintrag_first_person_wert_person"],
+                "negated": False,
+                "value": "sample_eintrag_bestaetigt_wert_bestaetigt",
             },
         )
+
+    def test_phrase_attention_modes_compile_separately_from_visibility(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P trigger: Trigger|-
+  P suggest(trigger): Follow-up|-
+  P require(!trigger): Documentation|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            package = compile_source(parse_source(path))
+
+        follow_up = package["phrases"]["sample_eintrag_follow_up"]
+        self.assertEqual(follow_up["default"], "")
+        self.assertEqual(
+            follow_up["attention"],
+            {
+                "values": ["sample_eintrag_trigger_wert_trigger"],
+                "negated": False,
+                "level": "suggested",
+                "value": "sample_eintrag_follow_up_wert_follow_up",
+            },
+        )
+        self.assertEqual(
+            package["phrases"]["sample_eintrag_documentation"]["attention"],
+            {
+                "values": ["sample_eintrag_trigger_wert_trigger"],
+                "negated": True,
+                "level": "required",
+                "value": "sample_eintrag_documentation_wert_documentation",
+            },
+        )
+
+    def test_phrase_parser_preserves_colons_inside_the_value(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P: Result => score: normal|- / score: abnormal|a
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            package = compile_source(parse_source(path))
+
+        values = package["phrases"]["sample_eintrag_result"]["values"]
+        self.assertEqual(
+            [value["text"] for value in values.values()],
+            ["score: normal", "score: abnormal"],
+        )
+
+    def test_conditional_phrase_cannot_define_an_inclusion_default(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P trigger: Trigger|-
+  P condition(trigger): Follow-up|-*
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CompileError,
+                "a conditional phrase cannot have a default value",
+            ):
+                compile_source(parse_source(path))
 
 
 if __name__ == "__main__":

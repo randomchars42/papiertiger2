@@ -63,15 +63,29 @@ Das Sternchen macht das Attribut erforderlich. Ohne Sternchen ist es optional.
 Gemeinsamer Freitext benötigt nur `{:freitext*:}`, wenn `gemeinsam` importiert
 ist.
 
-## Einen Vorschlag auslösen
+## Bedingte, vorgeschlagene und erforderliche Phrasen
 
 Referenziere vorzugsweise den Titel links von `=>`:
 
 ```pt
 P: Blutungslokalisation => Blutung {:ort=gemeinsam.blutungslokalisation*:} {:seite=gemeinsam.seite*:}|a*
 C blutung_vorhanden: Blutungslokalisation
-P<blutung_vorhanden>: Kompression|i
+P condition(blutung_vorhanden): Kompression|i
 ```
+
+`condition(...)` verbirgt die Phrase, bis die Bedingung greift. Soll die Phrase
+immer verfügbar bleiben und bei erfüllter Bedingung nur zusätzliche
+Aufmerksamkeit erhalten, verwende `suggest(...)`. `require(...)` verwendet die
+stärkste Markierung und bleibt auch nach **Weglassen** unerledigt:
+
+```pt
+P suggest(Brustschmerz): letzte Koronarangiographie => letzte Koronarangiographie {:zeitpunkt*:}|-
+P require(Intubation): Bestätigung der Tubuslage => kapnographisch bestätigt|i / kapnometrisch bestätigt|i
+```
+
+Keine dieser Formen nimmt einen Wert automatisch in die Ausgabe auf. Eine
+fachlich zulässige Nichterhebung einer erforderlichen Phrase wird deshalb als
+eigener Wert modelliert.
 
 Die Bedingung wird erst aktiv, wenn die Phrase aufgenommen und alle
 erforderlichen Attribute ausgefüllt sind. Ein Verweis auf den Phrasentitel
@@ -126,7 +140,8 @@ für ihre eigenen Kinder wieder auf `flow` zurück, sofern sie nicht selbst
 `@subgroups(break)` trägt. Gruppen beginnen erweitert. Erst eine eigene oder
 geerbte `@autocompact`-Grenze lässt sie kompakt beginnen; `@reveal(initial)`
 öffnet und hält den nötigen Pfad bis zur ersten Bedienung. Das kompakte Minimum enthält nur effektiv
-aufgenommene Phrasen, Vorschläge und deren Überschriftenpfade; die Überschrift
+aufgenommene Phrasen, offene Aufmerksamkeitsstufen und deren
+Überschriftenpfade; die Überschrift
 der Grenze bleibt als Einstieg erhalten. Die Quellreihenfolge ändert sich nicht.
 Kompaktwerden ändert weder Auswahl noch Ausgabe. `@autocompact` setzt zusätzlich
 eine Inaktivitätsfrist für den ganzen Teilbaum.
@@ -172,7 +187,7 @@ verbrauchenden Paket zu wiederholen:
 
 ```pt
 C neurologisch: @tag(symptome.neurologisch)
-P<neurologisch>: neurologische Zusatzanamnese|-
+P condition(neurologisch): neurologische Zusatzanamnese|-
 ```
 
 Die Abfrage nennt immer Paket und Tag. Der Compiler löst sie in konkrete
@@ -186,7 +201,7 @@ definiert ist:
 
 ```pt
 P: Allergie* => @values(allergie)
-P<Allergie>: Allergische Reaktion => {:reaktion=allergie.reaktion*:}|a
+P condition(Allergie): Allergische Reaktion => {:reaktion=allergie.reaktion*:}|a
 ```
 
 CEDIS-Code, CEDIS-Originalbezeichnung und Beziehung werden direkt am Wert

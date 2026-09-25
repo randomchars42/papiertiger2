@@ -88,7 +88,7 @@ Bedingungen können einen Katalogwert stabil über `paket.wert` referenzieren:
 
 ```pt
 C schmerz: symptome.brustschmerz / symptome.bauchschmerz
-P<!symptome.fieber>: kein Fieber|n
+P condition(!symptome.fieber): kein Fieber|n
 ```
 
 Mehrere Katalogwerte lassen sich über ein Tag gemeinsam referenzieren:
@@ -100,7 +100,7 @@ V brustschmerz: Brustschmerz|a
 
 # in einem importierenden Paket
 C schmerz: @tag(symptome.schmerz)
-P<schmerz>: Schmerzstärke => NRS {:wert=nrs*:}|-
+P condition(schmerz): Schmerzstärke => NRS {:wert=nrs*:}|-
 ```
 
 Ein Wert darf mehrere Tags tragen. Die Abfrage ist immer mit Paket und Tag
@@ -175,25 +175,29 @@ linsenabhängigen Anfangszustand wieder her. Eine
 inaktive Gruppe behält Auswahl und Attribute ihrer Kinder, unterdrückt aber
 deren effektiven Einschluss in Ausgabe, Bedingungen und aktive Hervorhebung.
 Sie bildet ein hartes Gate: Nur ihre eigene Überschrift bleibt sichtbar;
-Kinder, Vorschläge, Offenlegungen und Darstellungswerkzeuge werden erst nach
+Kinder, bedingte Phrasen, Aufmerksamkeitshinweise, Offenlegungen und
+Darstellungswerkzeuge werden erst nach
 einem aktivierenden Überschriftenklick wieder berücksichtigt. Das gilt auch,
 wenn `@active(...)` die Gruppe beim Linsenwechsel inaktiv werden lässt. Eine
 ausdrückliche Benutzeraktivierung behält wie beschrieben Vorrang.
 `@lens(...)` beschreibt dagegen strukturelle Anwendbarkeit: Außerhalb der
 genannten Linsen wird die Gruppe einschließlich ihrer Überschrift nicht
 dargestellt und kann nicht manuell aktiviert werden. Ihre Phrasen wirken dort
-weder auf Ausgabe noch auf Bedingungen oder Vorschläge. Auswahl und Attribute
+weder auf Ausgabe noch auf Bedingungen oder Aufmerksamkeitshinweise. Auswahl
+und Attribute
 bleiben gespeichert und werden beim Rückwechsel in eine passende Linse wieder
 wirksam. `@active(...)` und `@inactive` können innerhalb einer anwendbaren
 Gruppe weiterhin deren anfänglichen Einschluss steuern; in `@active(...)`
 genannte Linsen müssen dann eine Teilmenge von `@lens(...)` sein.
-Von außen ausgelöste Vorschläge in aktiven Gruppen bleiben sichtbar, ohne die
-Gruppe oder ihre Vorfahren zu aktivieren. Bei aktiven Gruppen verändern
+Von außen ausgelöste bedingte, vorgeschlagene oder erforderliche Phrasen in
+aktiven Gruppen bleiben sichtbar, ohne die Gruppe oder ihre Vorfahren zu
+aktivieren. Bei aktiven Gruppen verändern
 `@subgroups(...)` und eine reine Bedienung über **…** beziehungsweise **≪** nur
 die Darstellung.
 
-`@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und
-`P<...>`, verändert aber weder Sichtbarkeit noch Einschluss. Beim Übergang der
+`@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und die
+Phrasenmodi `condition(...)`, `suggest(...)` und `require(...)`, verändert aber
+weder Sichtbarkeit noch Einschluss. Beim Übergang der
 Bedingung von nicht erfüllt zu erfüllt wird der vollständige Pfad zur
 Zielgruppe erweitert und bis zur ersten Bedienung in diesem Pfad offengehalten:
 
@@ -208,7 +212,7 @@ Wird die Bedingung später erneut falsch und wieder wahr, kann die Gruppe erneut
 offengelegt werden. Eine bereits erfüllte Bedingung gilt beim ersten Rendern
 ebenfalls als Offenlegungsereignis. Verschwindet die Bedingung vor der ersten
 Bedienung im offengelegten Pfad, wird dessen vorheriger kompakter Zustand
-wiederhergestellt. Vorschlagsbedingte Offenlegung folgt derselben Regel.
+wiederhergestellt. Aufmerksamkeitsbedingte Offenlegung folgt derselben Regel.
 
 `@reveal(initial)` benötigt keine Bedingung. Es erweitert die Zielgruppe beim
 ersten Rendern und eine damit markierte neue Wiederholungsinstanz beim Anlegen.
@@ -218,15 +222,17 @@ normale `@autocompact`-Frist.
 Eine Gruppe beginnt erweitert, solange weder sie selbst noch ein Vorfahr eine
 `@autocompact`-Grenze bildet. Die markierte Grenze und ihr gesamter Teilbaum
 beginnen kompakt. `@reveal(initial)`, eine neu erfüllte Offenlegungsbedingung
-oder ein neuer Vorschlag erweitert den jeweils nötigen Pfad vorübergehend. Eine
+oder eine neue Aufmerksamkeitsstufe erweitert den jeweils nötigen Pfad
+vorübergehend. Eine
 über **+** neu angelegte Wiederholungsinstanz wird als unmittelbare
 Benutzeraktion ebenfalls geöffnet. Eine
 kompakte Grenze zeigt als Minimum ausschließlich effektiv aufgenommene Phrasen,
-offene Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die Überschriften
+Phrasen mit offener Aufmerksamkeit, gegenwärtig bedingt sichtbare Gruppen und
+die Überschriften
 auf deren Pfaden. Ihre eigene Überschrift bleibt unabhängig davon erhalten.
 Nur Gruppen mit effektiv
 aufgenommenen Nachfahren erhalten die aktive Überschriftenmarkierung;
-Vorschläge aktivieren oder markieren ihre Vorfahren nicht. Die Reihenfolge
+Aufmerksamkeit aktiviert oder markiert ihre Vorfahren nicht. Die Reihenfolge
 bleibt stabil wie in der `.pt`-Quelle und wird nicht nach Aktivität sortiert.
 Die früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind
 daher nicht mehr Teil des Formats.
@@ -343,9 +349,9 @@ Oberfläche noch in Text-, Daten- oder Zusammenfassungsausgaben; ihr vorhandener
 Zustand bleibt erhalten. Innerhalb einer wiederholbaren Gruppe wird die
 Bedingung ausschließlich gegen die Werte derselben Instanz geprüft. Eine
 Bedingung außerhalb der Wiederholung berücksichtigt dagegen aufgenommene Werte
-aus allen Instanzen. So kann beispielsweise `P<Brustschmerz>:` außerhalb einer
-wiederholbaren Schmerzgruppe erscheinen, sobald mindestens eine Instanz den
-Wert `Brustschmerz` enthält.
+aus allen Instanzen. So kann beispielsweise
+`P condition(Brustschmerz):` außerhalb einer wiederholbaren Schmerzgruppe
+erscheinen, sobald mindestens eine Instanz den Wert `Brustschmerz` enthält.
 
 Die wiederholbare Gruppe selbst kann nicht bedingt sein. Eine bedingte Gruppe
 innerhalb einer Wiederholung ist dagegen zulässig.
@@ -359,13 +365,13 @@ P: Atmung => Eupnoe|n* / Tachypnoe|a / beatmet|i
 Links von `=>` steht der eindeutige sichtbare Phrasentitel. Rechts stehen mit
 ` / ` getrennte Werte.
 
-Eine optionale stabile ID zwischen `P` beziehungsweise `P<...>` und dem
-Doppelpunkt entkoppelt die technische ID vom sichtbaren Titel:
+Eine optionale stabile ID steht nach `P` beziehungsweise nach dem Phrasenmodus
+und entkoppelt die technische ID vom sichtbaren Titel:
 
 ```pt
 P begleitung_partnerin: Partnerin|-
 P telefon_partnerin: Partnerin|-
-P<telefon_partnerin> kontakt_erfolgreich: Kontakt erfolgreich|-
+P condition(telefon_partnerin) kontakt_erfolgreich: Kontakt erfolgreich|-
 ```
 
 Explizite Phrasen-IDs können wie eindeutige Titel in Bedingungen und Vorgaben
@@ -436,12 +442,14 @@ Aussage. Eckige Klammern innerhalb der Bezeichnung sind nicht zulässig. Wird
 dieselbe SCTID oder derselbe Ausdruck mehrfach verwendet, muss die Bezeichnung
 über alle `.pt`-Pakete hinweg identisch sein; der Compiler prüft diese Regel.
 
-## Bedingungen und Vorschläge
+## Bedingungen und Aufmerksamkeitsstufen
 
 ```pt
 C verlegter_atemweg: Atemweg durch Zunge verlegt / Atemweg durch Blutung verlegt
 
-P<verlegter_atemweg>: Güdeltubus => Atemwegsschienung: Güdeltubus|i
+P condition(verlegter_atemweg): Güdeltubus => Atemwegsschienung: Güdeltubus|i
+P suggest(Brustschmerz): letzte Koronarangiographie => letzte Koronarangiographie {:zeitpunkt*:}|-
+P require(Intubation): Bestätigung der Tubuslage => kapnographisch bestätigt|i / kapnometrisch bestätigt|i
 ```
 
 Eine Bedingung kann referenzieren:
@@ -450,16 +458,38 @@ Eine Bedingung kann referenzieren:
 2. einen eindeutigen Phrasentitel, der alle Werte dieser Phrase umfasst;
 3. den vollständigen eindeutigen Quelltext eines Werts.
 
-Bei einer einwertigen Zielphrase wird dieser Wert vorgeschlagen. Bei genau zwei
-Werten mit einem Standard wird der andere Wert vorgeschlagen. Andernfalls wird
-die Phrase ohne vorgewählten Wert vorgeschlagen.
+Der Modus vor einer Phrase bestimmt, wie die Bedingung ihre Darstellung
+beeinflusst:
 
-Ein Vorschlag bleibt bis zu seiner Annahme außerhalb der Ausgabe und erhält
-deshalb keine dauerhafte Fläche oder Umrandung. Sein erstmaliges Erscheinen wird
-mit einem ruhigen 1,6-sekündigen Puls hervorgehoben; bei reduzierter Bewegung
-entfällt diese Animation. Ein neu entstandener Vorschlag öffnet außerdem immer
-seinen vollständigen Gruppenpfad und hält ihn bis zur ersten Bedienung in diesem
-Pfad offen; dafür ist kein `@reveal(...)` an einer übergeordneten Gruppe nötig.
+| Modus | Bedingung nicht erfüllt | Bedingung erfüllt, aber nicht erledigt |
+|---|---|---|
+| `condition(...)` | Phrase ist verborgen | Phrase wird bedingt sichtbar |
+| `suggest(...)` | Phrase bleibt gewöhnlich verfügbar | Phrase wird als Vorschlag markiert |
+| `require(...)` | Phrase bleibt gewöhnlich verfügbar | Phrase wird stärker und mit `(!)` als erforderlich markiert |
+
+Kein Modus nimmt die Phrase automatisch in die Ausgabe auf. Eine bedingte
+Phrase erhält bei einem Wert genau diesen Kandidaten. Bei genau zwei Werten mit
+einem Standard ist der andere Wert der Kandidat. Andernfalls öffnet die Phrase
+ihre normale Auswahl ohne vorgewählten Kandidaten. `condition(...)` darf keinen
+Standardwert besitzen; ein bedingter Standard wäre bereits vor erfüllter
+Bedingung aufgenommen und widerspräche damit der Sichtbarkeitsregel.
+
+`suggest(...)` und `require(...)` verändern weder vorhandenen Wert noch
+Aufnahmezustand. Ein konkreter Kandidat ist erledigt, sobald genau dieser Wert
+effektiv aufgenommen und vollständig ist; ohne eindeutigen Kandidaten genügt
+ein beliebiger vollständig aufgenommener Wert. **Weglassen** bestätigt die
+Ablehnung eines Vorschlags. Eine erforderliche Phrase bleibt dagegen auch nach
+**Weglassen** oder der Wahl eines anderen Werts offen erforderlich. Dafür soll
+eine fachlich zulässige Nichterhebung als eigener Wert definiert werden.
+
+Eine neu entstandene Aufmerksamkeitsstufe wird mit einem ruhigen
+1,6-sekündigen Puls hervorgehoben; bei reduzierter Bewegung entfällt diese
+Animation. Sie öffnet außerdem ihren vollständigen Gruppenpfad und hält ihn bis
+zur ersten Bedienung in diesem Pfad offen. Danach darf der Pfad wieder
+kompaktieren, die unerledigte Phrase bleibt aber Teil des kompakten Minimums.
+Beim ersten Rendern bereits erfüllte Bedingungen erscheinen im Minimum, lösen
+jedoch keine zusätzliche Ankunftsanimation oder Offenlegung aus. Dafür ist bei
+Bedarf `@reveal(initial)` vorgesehen.
 
 Eine Phrase mit erforderlichen Attributen gilt erst nach deren Vervollständigung
 als aktiver Auslöser.
@@ -469,7 +499,7 @@ behandelt: Eine davon muss aktiv sein. Für die einfache Negation erhält jede
 Referenz ein vorangestelltes `!`:
 
 ```pt
-P<!Schmerz>: schmerzfreie Vorstellung|n
+P condition(!Schmerz): schmerzfreie Vorstellung|n
 G<!Schmerz>: Andere Beschwerden
   P: Übelkeit|a
 ```

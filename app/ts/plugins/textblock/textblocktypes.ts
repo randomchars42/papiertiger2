@@ -45,13 +45,19 @@ export type ConditionDefinition = {
     negated: boolean;
 };
 
+export type PendingAttentionLevel = "conditional" | "suggested" | "required";
+export type AttentionLevel = "none" | PendingAttentionLevel;
+
 export type PhraseDefinition = {
     title: string;
     default: string | "" | null;
     values: Record<string, ValueDefinition>;
     prompt?: boolean;
-    suggestions?: Record<string, string | null>;
-    condition?: ConditionDefinition & { suggestion: string | null };
+    condition?: ConditionDefinition & { value: string | null };
+    attention?: ConditionDefinition & {
+        level: Exclude<PendingAttentionLevel, "conditional">;
+        value: string | null;
+    };
     attributes?: Record<string, string>;
     note?: string;
     kind?: ItemKind;
@@ -234,7 +240,7 @@ export type DocumentState = ScopeState & {
     instanceStates: Record<string, ScopeState>;
 };
 
-export type PhraseSource = "default" | "set" | "suggestion" | "user";
+export type PhraseSource = "default" | "set" | "conditional" | "user";
 
 export type ResolvedPart =
     | { type: "text"; text: string }
@@ -259,6 +265,7 @@ export type ResolvedPhrase = {
     included: boolean;
     effectiveIncluded: boolean;
     source: PhraseSource;
+    attention: AttentionLevel;
     provenance: string[];
     touched: boolean;
     attributes: Record<string, AttributeValue>;
@@ -275,7 +282,7 @@ export type ResolvedDocument = {
             enabled: boolean;
             conditionMet: boolean;
             included: boolean;
-            suggested: boolean;
+            attention: AttentionLevel;
         }
     >;
 };
@@ -308,11 +315,13 @@ export type StructuredSummaryItem = Pick<
 >;
 
 export type StructuredDocument = {
-    version: 1;
+    version: 2;
     root: string;
     text: string;
     items: StructuredItem[];
-    suggestions: StructuredSummaryItem[];
+    pending: Array<
+        StructuredSummaryItem & { attention: PendingAttentionLevel }
+    >;
     summaries: Array<{
         groupId: string;
         title: string;

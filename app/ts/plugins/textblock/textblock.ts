@@ -39,6 +39,7 @@ import type {
     DurationValue,
     EditorDefinition,
     PackageDefinition,
+    PendingAttentionLevel,
     ResolvedDocument,
     ScopeState,
     StructuredDocument,
@@ -52,8 +53,8 @@ type Module = {
     compactOverrides: Record<string, boolean>;
     status: string;
     controls: boolean;
-    suggestionKeys: Set<string>;
-    suggestionHighlights: Map<string, number>;
+    attentionLevels: Map<string, PendingAttentionLevel>;
+    attentionHighlights: Map<string, number>;
     revealHolds: Map<string, string[]>;
     revealGroups: Map<
         string,
@@ -64,7 +65,7 @@ type Module = {
         }
     >;
     revealConditionStates: Map<string, boolean>;
-    suggestionsReady: boolean;
+    attentionReady: boolean;
     autoCompactTimers: Map<string, number>;
     autoCompactDelay: number | null;
     pickerQueries: Record<string, string>;
@@ -82,7 +83,7 @@ const loadedPackages = new Set<string>();
 const packageRequests = new Map<string, Promise<PackageDefinition>>();
 let resolved: ResolvedDocument = { phrases: {}, groups: {} };
 let instanceCounter = 0;
-const suggestionHighlightDuration = 1_600;
+const attentionHighlightDuration = 1_600;
 
 const requestPackage = (id: string): Promise<PackageDefinition> => {
     let request = packageRequests.get(id);
@@ -190,15 +191,12 @@ const renderAll = (): void => {
     const activeLens = getLens();
     resolved = resolveDocument(definitions, state, activeLens);
     const now = performance.now();
-    const currentSuggestions = new Set(
+    const currentAttention = new Map(
         Object.values(resolved.phrases)
             .filter(
-                (phrase) =>
-                    phrase.visible &&
-                    !phrase.effectiveIncluded &&
-                    phrase.source === "suggestion",
+                (phrase) => phrase.visible && phrase.attention !== "none",
             )
-            .map((phrase) => phrase.key),
+            .map((phrase) => [phrase.key, phrase.attention as PendingAttentionLevel]),
     );
     for (const module of modules.values()) {
         if (module.lens !== activeLens) {
@@ -208,33 +206,34 @@ const renderAll = (): void => {
         const parent = document.getElementById(module.parentId);
         if (parent === null) continue;
         const revealedPaths: AutoCompactContext[][] = [];
-        if (module.suggestionsReady) {
-            for (const key of currentSuggestions) {
-                if (!module.suggestionKeys.has(key)) {
-                    module.suggestionHighlights.set(
+        if (module.attentionReady) {
+            for (const [key, level] of currentAttention) {
+                if (module.attentionLevels.get(key) !== level) {
+                    releaseRevealHold(module, attentionHoldKey(key), true);
+                    module.attentionHighlights.set(
                         key,
-                        now + suggestionHighlightDuration,
+                        now + attentionHighlightDuration,
                     );
                     const phrase = resolved.phrases[key];
                     if (phrase !== undefined) {
-                        const path = holdOpenForSuggestion(module, phrase);
+                        const path = holdOpenForAttention(module, phrase);
                         if (path !== null) revealedPaths.push(path);
                     }
                 }
             }
         } else {
-            module.suggestionsReady = true;
+            module.attentionReady = true;
         }
-        for (const key of module.suggestionKeys) {
-            if (!currentSuggestions.has(key)) {
-                releaseRevealHold(module, suggestionHoldKey(key), true);
+        for (const key of module.attentionLevels.keys()) {
+            if (!currentAttention.has(key)) {
+                releaseRevealHold(module, attentionHoldKey(key), true);
             }
         }
-        module.suggestionKeys = currentSuggestions;
+        module.attentionLevels = currentAttention;
         revealedPaths.push(...refreshExplicitReveals(module));
-        for (const [key, expires] of module.suggestionHighlights) {
-            if (!currentSuggestions.has(key) || expires <= now) {
-                module.suggestionHighlights.delete(key);
+        for (const [key, expires] of module.attentionHighlights) {
+            if (!currentAttention.has(key) || expires <= now) {
+                module.attentionHighlights.delete(key);
             }
         }
         renderModule(
@@ -244,7 +243,7 @@ const renderAll = (): void => {
             state,
             resolved,
             module.openEditor,
-            new Set(module.suggestionHighlights.keys()),
+            new Set(module.attentionHighlights.keys()),
             module.compactOverrides,
             module.status,
             module.controls,
@@ -1008,7 +1007,7 @@ const expandGroupPath = (
     }
 };
 
-const suggestionHoldKey = (key: string): string => `suggestion:${key}`;
+const attentionHoldKey = (key: string): string => `attention:${key}`;
 
 const conditionHoldKey = (groupKey: string): string =>
     `condition:${groupKey}`;
@@ -1071,7 +1070,7 @@ const releaseRevealHold = (
     }
 };
 
-const holdOpenForSuggestion = (
+const holdOpenForAttention = (
     module: Module,
     phrase: ResolvedDocument["phrases"][string],
 ): AutoCompactContext[] | null => {
@@ -1081,7 +1080,7 @@ const holdOpenForSuggestion = (
         phrase.instanceId,
     );
     if (path === null) return null;
-    holdOpen(module, suggestionHoldKey(phrase.key), path);
+    holdOpen(module, attentionHoldKey(phrase.key), path);
     return path;
 };
 
@@ -1983,12 +1982,12 @@ export const display = async (
         compactOverrides: {},
         status: "",
         controls: params.controls !== false,
-        suggestionKeys: new Set(),
-        suggestionHighlights: new Map(),
+        attentionLevels: new Map(),
+        attentionHighlights: new Map(),
         revealHolds: new Map(),
         revealGroups: new Map(),
         revealConditionStates: new Map(),
-        suggestionsReady: false,
+        attentionReady: false,
         autoCompactTimers: new Map(),
         autoCompactDelay: configuredAutoCompactDelay(),
         pickerQueries: {},

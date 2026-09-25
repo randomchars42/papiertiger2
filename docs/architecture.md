@@ -43,8 +43,9 @@ ihr Teilbaum starten kompakt. `@reveal(...)` kann den nötigen Pfad temporär
 `@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
 Ohne Annotation gilt `flow`; `break` wirkt genau eine Ebene. `flow` schließt
 offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte Darstellung
-bildet effektiv aufgenommene Phrasen, Vorschläge, bedingt sichtbare Gruppen und
-ihre Überschriftenpfade in stabiler Quellreihenfolge ab. Die Überschrift der
+bildet effektiv aufgenommene Phrasen, offene Aufmerksamkeitsstufen, bedingt
+sichtbare Gruppen und ihre Überschriftenpfade in stabiler Quellreihenfolge ab.
+Die Überschrift der
 Grenze selbst bleibt stets erreichbar. Ein Disclosure verändert nur
 Offenlegung. Andere Aktionen aus dem Minimum öffnen zunächst ihre nächste
 kompakte `@autocompact`-Grenze und laufen danach unverändert weiter; die
@@ -107,8 +108,9 @@ Definitionsgraphen nicht überschneiden.
 
 Mehrere sichtbare Textblockmodule verwenden absichtlich dieselben geladenen
 Definitionen und denselben Dokumentzustand. So kann ein gesetzter Wert in einem
-Block Vorschläge in einem anderen Block beeinflussen. Dokument- und Plug-in-
-Reihenfolge bleiben trotzdem im Dokumentkatalog definiert.
+Block bedingte Sichtbarkeit oder Aufmerksamkeit in einem anderen Block
+beeinflussen. Dokument- und Plug-in-Reihenfolge bleiben trotzdem im
+Dokumentkatalog definiert.
 
 Große Wertkataloge werden vom Compiler vorab normalisiert und beim Laden in
 eine kataloggestützte Phrase eingefügt. Suchtext und stabile IDs entstehen
@@ -147,16 +149,19 @@ Die Laufzeit hält voneinander getrennt:
 | angenommene Herkunft | Provenienz eines aktiv übernommenen Werkzeugwerts |
 
 Die Auflösung berechnet daraus für jede sichtbare Phrase Wert, Textteile,
-semantischen Typ, Quelle, Provenienz und Vollständigkeit. Im selben Durchlauf
-leitet sie für jede Gruppe linsen- beziehungsweise benutzerabhängige
-Aktivierung, Bedingungsergebnis, effektive Aufnahme und sichtbare Vorschläge
-ab. Darstellung und Kompaktierung lesen diesen gemeinsamen Zustand,
+semantischen Typ, Quelle, Provenienz, Vollständigkeit und die unabhängige
+Aufmerksamkeitsstufe `none`, `conditional`, `suggested` oder `required`. Im
+selben Durchlauf leitet sie für jede Gruppe linsen- beziehungsweise
+benutzerabhängige Aktivierung, Bedingungsergebnis, effektive Aufnahme und die
+stärkste offene Aufmerksamkeit ihrer Nachfahren ab. Darstellung und
+Kompaktierung lesen diesen gemeinsamen Zustand,
 statt den Gruppenbaum jeweils erneut zu durchsuchen. Gespeicherte Aufnahme und
 effektive Aufnahme bleiben getrennt: Eine inaktive Vorfahrengruppe unterdrückt
 letztere, ohne Kindzustand zu löschen. Nur effektive Aufnahme speist Ausgabe,
-Bedingungen und aktive Darstellung. Vorschläge verändern diesen abgeleiteten
-Zustand, nicht automatisch die Benutzereingaben, und aktivieren keine
-Vorfahrengruppe. Neu entstandene Vorschläge sowie `@reveal(...)`- und
+Bedingungen und aktive Darstellung. Bedingte Sichtbarkeit und Aufmerksamkeit
+verändern diesen abgeleiteten Zustand, nicht automatisch die Benutzereingaben,
+und aktivieren keine Vorfahrengruppe. Neu entstandene Aufmerksamkeitsstufen
+sowie `@reveal(...)`- und
 `@reveal(initial)`-Ereignisse erzeugen nur einen flüchtigen UI-Zustand: Der
 Zielpfad bleibt bis zur ersten Bedienung erweitert. Dieser Zustand gehört weder
 zum Dokument noch zur strukturierten Ausgabe.
@@ -172,6 +177,12 @@ Attribute werden mit Editor-ID und typisiertem Wert ausgegeben. Zeitspannen
 speichern neben Anzahl und Einheit auch ihren Bezugszeitpunkt; Datum/Zeit speichert
 lokale Eingabe, Zeitzone und aufgelösten Zeitpunkt. Damit bleiben spätere
 Auswertungen möglich, ohne den fertigen Satz erneut parsen zu müssen.
+
+Die strukturierte Textblockausgabe besitzt Version `2`. Effektiv aufgenommene
+Phrasen stehen unter `items`; noch offene bedingte, vorgeschlagene oder
+erforderliche Phrasen stehen gemeinsam unter `pending` und tragen ihre
+Aufmerksamkeitsstufe. Diese Trennung verhindert, dass reine Hinweise als
+dokumentierte Befunde erscheinen.
 
 ## Build-Grenze
 

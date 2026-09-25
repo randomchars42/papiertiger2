@@ -600,7 +600,7 @@ const renderPhrase = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
-    highlightedSuggestions: ReadonlySet<string>,
+    highlightedAttention: ReadonlySet<string>,
     pickerQueries: Readonly<Record<string, string>>,
 ): void => {
     const phrase = resolved.phrases[phraseKey(phraseId, instanceId)];
@@ -609,13 +609,14 @@ const renderPhrase = (
     const classes = ["phrase", `phrase--${phrase.kind}`];
     if (phrase.effectiveIncluded) {
         classes.push("phrase--included");
-    } else if (phrase.source === "suggestion") {
-        classes.push("phrase--suggestion");
     } else {
         classes.push("phrase--available");
     }
-    if (highlightedSuggestions.has(phrase.key)) {
-        classes.push("phrase--new-suggestion");
+    if (phrase.attention !== "none") {
+        classes.push(`phrase--${phrase.attention}`);
+    }
+    if (highlightedAttention.has(phrase.key)) {
+        classes.push("phrase--new-attention");
     }
     if (phrase.touched) classes.push("phrase--touched");
     if (phrase.source === "set") classes.push("phrase--set");
@@ -666,6 +667,12 @@ const renderPhrase = (
             phraseNode.append(button);
         }
     }
+    if (phrase.attention === "required") {
+        const marker = element("span", "phrase__attention", "(!)");
+        marker.setAttribute("aria-label", "Erforderlich");
+        marker.title = "Erforderlich";
+        phraseNode.append(marker);
+    }
     phraseNode.append(element("span", "phrase__delimiter", ";"));
     parent.append(phraseNode);
 
@@ -695,7 +702,7 @@ const renderCompactContents = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
-    highlightedSuggestions: ReadonlySet<string>,
+    highlightedAttention: ReadonlySet<string>,
     compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
     insideAutoCompact: boolean,
@@ -716,7 +723,7 @@ const renderCompactContents = (
                 state,
                 resolved,
                 openEditor,
-                highlightedSuggestions,
+                highlightedAttention,
                 pickerQueries,
             );
         }
@@ -729,7 +736,7 @@ const renderCompactContents = (
             const phrase = resolved.phrases[phraseKey(item.id, instanceId)];
             if (
                 phrase?.effectiveIncluded === true ||
-                (phrase?.visible === true && phrase.source === "suggestion")
+                (phrase?.visible === true && phrase.attention !== "none")
             ) {
                 phraseIds.push(item.id);
             }
@@ -750,7 +757,7 @@ const renderCompactContents = (
                     state,
                     resolved,
                     openEditor,
-                    highlightedSuggestions,
+                    highlightedAttention,
                     compactOverrides,
                     pickerQueries,
                     childInstanceId,
@@ -768,7 +775,7 @@ const renderCompactContents = (
                 state,
                 resolved,
                 openEditor,
-                highlightedSuggestions,
+                highlightedAttention,
                 compactOverrides,
                 pickerQueries,
                 instanceId,
@@ -789,7 +796,7 @@ const renderRepeatable = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
-    highlightedSuggestions: ReadonlySet<string>,
+    highlightedAttention: ReadonlySet<string>,
     compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
     insideAutoCompact: boolean,
@@ -807,7 +814,7 @@ const renderRepeatable = (
             state,
             resolved,
             openEditor,
-            highlightedSuggestions,
+            highlightedAttention,
             compactOverrides,
             pickerQueries,
             instanceId,
@@ -841,7 +848,7 @@ function renderGroup(
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
-    highlightedSuggestions: ReadonlySet<string>,
+    highlightedAttention: ReadonlySet<string>,
     compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
     instanceId?: string,
@@ -856,12 +863,12 @@ function renderGroup(
     const isInstanceRoot = instanceIndex !== undefined;
     const compactSummary = compactPath !== undefined;
     const enabled = groupPresence.enabled;
-    const { included, suggested } = groupPhrasePresence(
+    const { included, attention } = groupPhrasePresence(
         groupId,
         resolved,
         instanceId,
     );
-    if (compactSummary && !included && !suggested) return;
+    if (compactSummary && !included && attention === "none") return;
     const nextCompactPath = compactSummary
         ? [
               ...compactPath,
@@ -1032,7 +1039,7 @@ function renderGroup(
                     state,
                     resolved,
                     openEditor,
-                    highlightedSuggestions,
+                    highlightedAttention,
                     pickerQueries,
                 );
             }
@@ -1058,7 +1065,7 @@ function renderGroup(
                     state,
                     resolved,
                     openEditor,
-                    highlightedSuggestions,
+                    highlightedAttention,
                     compactOverrides,
                     pickerQueries,
                     compactByDefault,
@@ -1072,7 +1079,7 @@ function renderGroup(
                     state,
                     resolved,
                     openEditor,
-                    highlightedSuggestions,
+                    highlightedAttention,
                     compactOverrides,
                     pickerQueries,
                     instanceId,
@@ -1085,7 +1092,7 @@ function renderGroup(
         renderPhrases();
         section.append(body);
     } else {
-        if (included || suggested) {
+        if (included || attention !== "none") {
             const body = element("div", "group__body group__body--compact-only");
             renderCompactContents(
                 body,
@@ -1095,7 +1102,7 @@ function renderGroup(
                 state,
                 resolved,
                 openEditor,
-                highlightedSuggestions,
+                highlightedAttention,
                 compactOverrides,
                 pickerQueries,
                 compactByDefault,
@@ -1141,7 +1148,7 @@ export const renderModule = (
     state: DocumentState,
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
-    highlightedSuggestions: ReadonlySet<string>,
+    highlightedAttention: ReadonlySet<string>,
     compactOverrides: Readonly<Record<string, boolean>>,
     status: string,
     controls = true,
@@ -1174,7 +1181,7 @@ export const renderModule = (
         state,
         resolved,
         openEditor,
-        highlightedSuggestions,
+        highlightedAttention,
         compactOverrides,
         pickerQueries,
     );

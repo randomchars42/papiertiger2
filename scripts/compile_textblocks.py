@@ -126,10 +126,46 @@ def split_top_level(value: str, delimiter: str) -> list[str]:
 
 
 def split_directive(value: str, path: Path, line: int) -> tuple[str, str]:
-    parts = split_top_level(value, ":")
-    if len(parts) < 2:
-        raise CompileError(path, line, "expected ':'")
-    return parts[0], ":".join(parts[1:]).strip()
+    quote = ""
+    escaped = False
+    parentheses = 0
+    brackets = 0
+    placeholder = 0
+    index = 0
+    while index < len(value):
+        character = value[index]
+        if escaped:
+            escaped = False
+        elif character == "\\" and quote:
+            escaped = True
+        elif quote:
+            if character == quote:
+                quote = ""
+        elif character in {'"', "'"}:
+            quote = character
+        elif value.startswith("{:", index):
+            placeholder += 1
+            index += 1
+        elif value.startswith(":}", index) and placeholder:
+            placeholder -= 1
+            index += 1
+        elif not placeholder and character == "(":
+            parentheses += 1
+        elif not placeholder and character == ")":
+            parentheses -= 1
+        elif not placeholder and character == "[":
+            brackets += 1
+        elif not placeholder and character == "]":
+            brackets -= 1
+        elif (
+            not placeholder
+            and parentheses == 0
+            and brackets == 0
+            and character == ":"
+        ):
+            return value[:index].strip(), value[index + 1 :].strip()
+        index += 1
+    raise CompileError(path, line, "expected ':'")
 
 
 def parse_scalar(value: str) -> Any:
@@ -229,6 +265,57 @@ def parse_group_head(
         identifier = match.group(1)
         head = head[: match.start(1)].strip()
     return identifier, parse_annotations(head, path, line)
+
+
+PHRASE_MODES = frozenset({"condition", "suggest", "require"})
+
+
+def parse_phrase_head(
+    value: str,
+    path: Path,
+    line: int,
+) -> tuple[str | None, list[str], str | None]:
+    """Return an optional mode, its condition references, and a stable ID."""
+    head = value.strip()
+    mode: str | None = None
+    references: list[str] = []
+    mode_match = re.match(r"^([a-z]+)\(", head)
+    if mode_match is not None:
+        candidate = mode_match.group(1)
+        if candidate not in PHRASE_MODES:
+            raise CompileError(path, line, f"unknown phrase mode '{candidate}'")
+        mode = candidate
+        start = mode_match.end()
+        index = start
+        quote = ""
+        escaped = False
+        depth = 1
+        while index < len(head) and depth:
+            character = head[index]
+            if escaped:
+                escaped = False
+            elif character == "\\" and quote:
+                escaped = True
+            elif quote:
+                if character == quote:
+                    quote = ""
+            elif character in {'"', "'"}:
+                quote = character
+            elif character == "(":
+                depth += 1
+            elif character == ")":
+                depth -= 1
+            index += 1
+        if depth:
+            raise CompileError(path, line, f"unclosed {mode}(...) phrase mode")
+        raw_references = head[start : index - 1].strip()
+        references = split_top_level(raw_references, " / ")
+        if not references or any(not reference for reference in references):
+            raise CompileError(path, line, f"{mode}(...) needs a condition")
+        head = head[index:].strip()
+    if head and not re.fullmatch(r"[a-z][a-z0-9_]*", head):
+        raise CompileError(path, line, f"invalid phrase head '{head}'")
+    return mode, references, head or None
 
 
 def parse_kind_suffix(value: str, path: Path, line: int) -> tuple[str, str | None]:
@@ -561,19 +648,21 @@ def parse_source(path: Path) -> dict[str, Any]:
             current_set = None
             continue
 
-        phrase_match = re.match(
-            r"^P(?:<([\s\S]*?)>)?(?:\s+([a-z][a-z0-9_]*))?\s*:\s*([\s\S]*)$",
-            text,
-        )
-        if phrase_match is not None:
-            parent = nearest_group(source, group_stack, indent, line_number)
-            conditions = (
-                split_top_level(phrase_match.group(1), " / ")
-                if phrase_match.group(1) is not None
-                else []
+        if text.startswith("P<"):
+            fail(
+                source,
+                line_number,
+                "P<...> was removed; use P condition(...) instead",
             )
-            identifier = phrase_match.group(2)
-            body = phrase_match.group(3).strip()
+
+        if re.match(r"^P(?:\s|:)", text) is not None:
+            parent = nearest_group(source, group_stack, indent, line_number)
+            head, body = split_directive(text[1:].lstrip(), path, line_number)
+            mode, conditions, identifier = parse_phrase_head(
+                head,
+                path,
+                line_number,
+            )
             arrow = split_top_level(body, "=>")
             if len(arrow) > 2:
                 fail(source, line_number, "a phrase may contain only one '=>'")
@@ -612,6 +701,7 @@ def parse_source(path: Path) -> dict[str, Any]:
                 "title": title,
                 "kind": phrase_kind,
                 "prompt": prompt,
+                "mode": mode,
                 "conditions": conditions,
                 "values": values,
                 "catalog": catalog if len(arrow) == 2 else None,
@@ -964,7 +1054,7 @@ def compile_source(
         fail(source, line, f"unknown condition '{reference}'")
         return []
 
-    def suggested_value(phrase: dict[str, Any]) -> str | None:
+    def conditional_value(phrase: dict[str, Any]) -> str | None:
         if len(phrase["values"]) == 1:
             return phrase["values"][0]["id"]
         defaults = [value for value in phrase["values"] if value["default"]]
@@ -996,12 +1086,14 @@ def compile_source(
         defaults = [value for value in phrase["values"] if value["default"]]
         if len(defaults) > 1:
             fail(source, phrase["line"], "a phrase may have only one default value (*)")
+        if phrase["mode"] == "condition" and defaults:
+            fail(source, phrase["line"], "a conditional phrase cannot have a default value")
         if phrase["prompt"] and len(phrase["values"]) < 2 and phrase["catalog"] is None:
             fail(source, phrase["line"], "a prompt phrase needs at least two values")
         default: str | None
         if defaults:
             default = defaults[0]["id"]
-        elif phrase["conditions"]:
+        elif phrase["mode"] == "condition":
             default = None
         else:
             default = ""
@@ -1038,14 +1130,20 @@ def compile_source(
                 attributes[attribute] = editor_id
         if attributes:
             compiled["attributes"] = attributes
-        if phrase["conditions"]:
-            target = suggested_value(phrase)
+        if phrase["mode"] is not None:
             condition = compile_condition(phrase["conditions"], phrase["line"])
-            if condition["negated"]:
-                compiled["condition"] = {**condition, "suggestion": target}
+            if phrase["mode"] == "condition":
+                compiled["condition"] = {
+                    **condition,
+                    "value": conditional_value(phrase),
+                }
             else:
-                compiled["suggestions"] = {
-                    trigger: target for trigger in condition["values"]
+                compiled["attention"] = {
+                    **condition,
+                    "level": (
+                        "suggested" if phrase["mode"] == "suggest" else "required"
+                    ),
+                    "value": conditional_value(phrase),
                 }
         compiled_phrases[phrase["id"]] = compiled
 
@@ -1944,20 +2042,31 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                     f"invalid ordered item in group '{group_id}'",
                 )
         for phrase_id, phrase in definitions["phrases"].items():
-            for trigger, target in phrase.get("suggestions", {}).items():
-                if trigger not in values:
-                    raise CompileError(data_directory / f"{name}.json", 0, f"unknown suggestion trigger '{trigger}'")
-                if target is not None and target not in phrase["values"]:
-                    raise CompileError(data_directory / f"{name}.json", 0, f"unknown suggestion target '{target}'")
             condition = phrase.get("condition")
             if condition is not None:
                 validate_condition(condition, phrase_id)
-                target = condition.get("suggestion")
+                target = condition.get("value")
                 if target is not None and target not in phrase["values"]:
                     raise CompileError(
                         data_directory / f"{name}.json",
                         0,
-                        f"unknown condition suggestion target '{target}'",
+                        f"unknown conditional value '{target}'",
+                    )
+            attention = phrase.get("attention")
+            if attention is not None:
+                validate_condition(attention, f"{phrase_id} attention")
+                if attention.get("level") not in {"suggested", "required"}:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"invalid attention level in '{phrase_id}'",
+                    )
+                target = attention.get("value")
+                if target is not None and target not in phrase["values"]:
+                    raise CompileError(
+                        data_directory / f"{name}.json",
+                        0,
+                        f"unknown attention value '{target}'",
                     )
         for set_id, definition in definitions["sets"].items():
             for phrase_id, value_id in definition.get("values", {}).items():

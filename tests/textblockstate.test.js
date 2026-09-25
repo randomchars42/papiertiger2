@@ -7,6 +7,7 @@ import {
     createScopeState,
     groupCompactDefault,
     resolveDocument,
+    structuredDocument,
 } from "../app/js/plugins/textblock/textblockstate.js";
 
 const value = (text) => ({ text, kind: "neutral" });
@@ -26,7 +27,7 @@ const definitions = (groups, phrases) => ({
     catalogs: {},
 });
 
-test("suggestions remain excluded while their group is revealed", () => {
+test("conditional phrases remain excluded while their group is present", () => {
     const model = definitions(
         {
             root: {
@@ -38,16 +39,22 @@ test("suggestions remain excluded while their group is revealed", () => {
             },
             details: {
                 title: "Details",
-                items: [{ type: "phrase", id: "suggested" }],
+                items: [{ type: "phrase", id: "conditional" }],
             },
         },
         {
             trigger: phrase("Trigger", null, { active: value("active") }),
-            suggested: phrase(
-                "Suggested",
+            conditional: phrase(
+                "Conditional",
                 null,
                 { option: value("option") },
-                { suggestions: { active: "option" } },
+                {
+                    condition: {
+                        values: ["active"],
+                        negated: false,
+                        value: "option",
+                    },
+                },
             ),
         },
     );
@@ -56,14 +63,15 @@ test("suggestions remain excluded while their group is revealed", () => {
 
     const resolved = resolveDocument(model, state);
 
-    assert.equal(resolved.phrases.suggested.source, "suggestion");
-    assert.equal(resolved.phrases.suggested.effectiveIncluded, false);
+    assert.equal(resolved.phrases.conditional.source, "conditional");
+    assert.equal(resolved.phrases.conditional.attention, "conditional");
+    assert.equal(resolved.phrases.conditional.effectiveIncluded, false);
     assert.deepEqual(resolved.groups.details, {
         applicable: true,
         enabled: true,
         conditionMet: true,
         included: false,
-        suggested: true,
+        attention: "conditional",
     });
 });
 
@@ -93,11 +101,11 @@ test("an inactive group suppresses effective child inclusion", () => {
     assert.equal(resolved.phrases.finding.visible, false);
     assert.equal(resolved.phrases.finding.effectiveIncluded, false);
     assert.equal(resolved.groups.inactive.included, false);
-    assert.equal(resolved.groups.inactive.suggested, false);
+    assert.equal(resolved.groups.inactive.attention, "none");
     assert.equal(resolved.groups.root.included, false);
 });
 
-test("an inactive group gates suggestions until it is reactivated", () => {
+test("an inactive group gates conditional phrases until it is reactivated", () => {
     const model = definitions(
         {
             root: {
@@ -110,16 +118,22 @@ test("an inactive group gates suggestions until it is reactivated", () => {
             inactive: {
                 title: "Inactive",
                 default: false,
-                items: [{ type: "phrase", id: "suggested" }],
+                items: [{ type: "phrase", id: "conditional" }],
             },
         },
         {
             trigger: phrase("Trigger", null, { active: value("active") }),
-            suggested: phrase(
-                "Suggested",
+            conditional: phrase(
+                "Conditional",
                 null,
                 { option: value("option") },
-                { suggestions: { active: "option" } },
+                {
+                    condition: {
+                        values: ["active"],
+                        negated: false,
+                        value: "option",
+                    },
+                },
             ),
         },
     );
@@ -127,16 +141,16 @@ test("an inactive group gates suggestions until it is reactivated", () => {
     state.phraseOverrides.trigger = { valueId: "active", included: true };
 
     let resolved = resolveDocument(model, state);
-    assert.equal(resolved.phrases.suggested.visible, false);
-    assert.equal(resolved.groups.inactive.suggested, false);
+    assert.equal(resolved.phrases.conditional.visible, false);
+    assert.equal(resolved.groups.inactive.attention, "none");
 
     state.groupOverrides.inactive = true;
     resolved = resolveDocument(model, state);
-    assert.equal(resolved.phrases.suggested.visible, true);
-    assert.equal(resolved.groups.inactive.suggested, true);
+    assert.equal(resolved.phrases.conditional.visible, true);
+    assert.equal(resolved.groups.inactive.attention, "conditional");
 });
 
-test("a matching conditional group is suggested but not included", () => {
+test("a matching conditional group is present but not included", () => {
     const model = definitions(
         {
             root: {
@@ -151,7 +165,6 @@ test("a matching conditional group is suggested but not included", () => {
                 condition: {
                     values: ["active"],
                     negated: false,
-                    suggestion: null,
                 },
                 items: [],
             },
@@ -168,7 +181,7 @@ test("a matching conditional group is suggested but not included", () => {
         enabled: true,
         conditionMet: true,
         included: false,
-        suggested: true,
+        attention: "conditional",
     });
 });
 
@@ -214,7 +227,6 @@ test("conditional group presence stays scoped to a repeatable instance", () => {
                 condition: {
                     values: ["active"],
                     negated: false,
-                    suggestion: null,
                 },
                 items: [],
             },
@@ -235,10 +247,121 @@ test("conditional group presence stays scoped to a repeatable instance", () => {
     const resolved = resolveDocument(model, state);
 
     assert.equal(resolved.groups["instance-1:details"].conditionMet, true);
-    assert.equal(resolved.groups["instance-1:details"].suggested, true);
+    assert.equal(resolved.groups["instance-1:details"].attention, "conditional");
     assert.equal(resolved.groups["instance-2:details"].conditionMet, false);
     assert.equal("details" in resolved.groups, false);
-    assert.equal(resolved.groups.repeated.suggested, true);
+    assert.equal(resolved.groups.repeated.attention, "conditional");
+});
+
+test("suggested attention keeps a phrase available and can be rejected", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "Root",
+                items: [
+                    { type: "phrase", id: "trigger" },
+                    { type: "phrase", id: "followup" },
+                ],
+            },
+        },
+        {
+            trigger: phrase("Trigger", null, { active: value("active") }),
+            followup: phrase(
+                "Follow-up",
+                "",
+                { option: value("option") },
+                {
+                    attention: {
+                        values: ["active"],
+                        negated: false,
+                        level: "suggested",
+                        value: "option",
+                    },
+                },
+            ),
+        },
+    );
+    const state = createDocumentState();
+
+    let resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.followup.visible, true);
+    assert.equal(resolved.phrases.followup.attention, "none");
+
+    state.phraseOverrides.trigger = { valueId: "active", included: true };
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.followup.visible, true);
+    assert.equal(resolved.phrases.followup.effectiveIncluded, false);
+    assert.equal(resolved.phrases.followup.attention, "suggested");
+    assert.deepEqual(structuredDocument("root", model, state, resolved).pending, [
+        {
+            id: "followup",
+            valueId: null,
+            text: "Follow-up",
+            kind: "neutral",
+            source: "default",
+            provenance: [],
+            attributes: {},
+            attention: "suggested",
+        },
+    ]);
+
+    state.phraseOverrides.followup = { valueId: "option", included: false };
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.followup.attention, "none");
+});
+
+test("required attention remains unresolved until its target is included", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "Root",
+                items: [
+                    { type: "phrase", id: "trigger" },
+                    { type: "phrase", id: "documentation" },
+                ],
+            },
+        },
+        {
+            trigger: phrase("Trigger", null, { active: value("active") }),
+            documentation: phrase(
+                "Documentation",
+                "",
+                {
+                    complete: value("complete"),
+                    other: value("other"),
+                },
+                {
+                    attention: {
+                        values: ["active"],
+                        negated: false,
+                        level: "required",
+                        value: "complete",
+                    },
+                },
+            ),
+        },
+    );
+    const state = createDocumentState();
+    state.phraseOverrides.trigger = { valueId: "active", included: true };
+    state.phraseOverrides.documentation = {
+        valueId: "complete",
+        included: false,
+    };
+
+    let resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.documentation.attention, "required");
+    assert.equal(resolved.groups.root.attention, "required");
+
+    state.phraseOverrides.documentation = { valueId: "other", included: true };
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.documentation.attention, "required");
+
+    state.phraseOverrides.documentation = {
+        valueId: "complete",
+        included: true,
+    };
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.documentation.attention, "none");
 });
 
 test("an empty-state phrase remains until a repeatable instance is completed", () => {

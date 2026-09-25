@@ -2,7 +2,7 @@ const defaults = {
     dataURL: "./data",
     pluginURL: "./plugins",
     autoCompactSeconds: 12,
-    symptomLens: "rettungsdienst",
+    lens: "",
 };
 let configured = { ...defaults };
 export const configure = () => {

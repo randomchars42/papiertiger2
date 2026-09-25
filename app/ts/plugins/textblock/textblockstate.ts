@@ -15,7 +15,9 @@ import type {
     DocumentState,
     EditorDefinition,
     GroupDefinition,
+    AttentionLevel,
     PackageDefinition,
+    PendingAttentionLevel,
     ResolvedDocument,
     ResolvedPart,
     ResolvedPhrase,
@@ -62,6 +64,19 @@ export const groupCompactDefault = (
 ): boolean => !enabled || insideAutoCompact || autoCompact;
 
 export const groupItems = (group: GroupDefinition) => group.items;
+
+const attentionRank: Record<AttentionLevel, number> = {
+    none: 0,
+    conditional: 1,
+    suggested: 2,
+    required: 3,
+};
+
+const strongestAttention = (
+    left: AttentionLevel,
+    right: AttentionLevel,
+): AttentionLevel =>
+    attentionRank[right] > attentionRank[left] ? right : left;
 
 export const isPackage = (value: unknown): value is PackageDefinition => {
     if (!isRecord(value) || value.version !== 2) return false;
@@ -323,6 +338,7 @@ const resolveScope = (
             included: defaultId !== "" && defaultId !== null,
             effectiveIncluded: false,
             source: "default",
+            attention: "none",
             provenance: [],
             touched: false,
             attributes: {},
@@ -356,7 +372,7 @@ const resolveScope = (
         phrase.touched = true;
     }
 
-    // Attribute completeness affects inclusion and therefore suggestion triggers.
+    // Attribute completeness affects inclusion and therefore condition triggers.
     for (const phrase of Object.values(phrases)) {
         refreshPhraseText(phrase, definitions, scope);
     }
@@ -374,27 +390,6 @@ const resolveScope = (
 
     for (const phraseId of phraseIds) {
         const definition = definitions.phrases[phraseId];
-        const phrase = phrases[phraseKey(phraseId, instanceId)];
-        if (
-            scope.phraseOverrides[phraseId] !== undefined ||
-            phrase.source === "set"
-        ) {
-            continue;
-        }
-        const matches = Object.entries(definition.suggestions ?? {}).filter(
-            ([trigger]) => activeValues.has(trigger),
-        );
-        if (matches.length === 0) continue;
-        const [, valueId] = matches[matches.length - 1];
-        phrase.valueId = valueId;
-        phrase.visible = true;
-        phrase.included = false;
-        phrase.source = "suggestion";
-        phrase.provenance = matches.map(([source]) => source);
-    }
-
-    for (const phraseId of phraseIds) {
-        const definition = definitions.phrases[phraseId];
         const condition = definition.condition;
         const phrase = phrases[phraseKey(phraseId, instanceId)];
         if (
@@ -404,15 +399,14 @@ const resolveScope = (
         ) {
             continue;
         }
-        const hasMatch = condition.values.some((valueId) =>
-            activeValues.has(valueId),
-        );
+        const hasMatch = condition.values.some((valueId) => activeValues.has(valueId));
         const conditionMet = condition.negated ? !hasMatch : hasMatch;
         if (!conditionMet) continue;
-        phrase.valueId = condition.suggestion;
+        phrase.valueId = condition.value;
         phrase.visible = true;
         phrase.included = false;
-        phrase.source = "suggestion";
+        phrase.source = "conditional";
+        phrase.attention = "conditional";
         phrase.provenance = [...condition.values];
     }
 
@@ -420,6 +414,32 @@ const resolveScope = (
         refreshPhraseText(phrase, definitions, scope);
     }
     refreshEffectiveInclusion(phrases, inactive);
+
+    for (const phraseId of phraseIds) {
+        const definition = definitions.phrases[phraseId];
+        const attention = definition.attention;
+        const phrase = phrases[phraseKey(phraseId, instanceId)];
+        if (attention === undefined || !phrase.visible) continue;
+        const hasMatch = attention.values.some((valueId) =>
+            activeValues.has(valueId),
+        );
+        const conditionMet = attention.negated ? !hasMatch : hasMatch;
+        if (!conditionMet) continue;
+        const satisfied =
+            phrase.effectiveIncluded &&
+            (attention.value === null || phrase.valueId === attention.value);
+        if (satisfied) continue;
+        const override = scope.phraseOverrides[phraseId];
+        const explicitlyRejected =
+            override !== undefined &&
+            (!override.included ||
+                (attention.value !== null && override.valueId !== attention.value));
+        if (attention.level === "suggested" && explicitlyRejected) continue;
+        phrase.attention = attention.level;
+    }
+    for (const phrase of Object.values(phrases)) {
+        if (!phrase.visible) phrase.attention = "none";
+    }
     return phrases;
 };
 
@@ -560,7 +580,10 @@ export const resolveDocument = (
                 enabled,
                 conditionMet: true,
                 included: instances.some((entry) => entry.included),
-                suggested: instances.some((entry) => entry.suggested),
+                attention: instances.reduce(
+                    (level, entry) => strongestAttention(level, entry.attention),
+                    "none" as AttentionLevel,
+                ),
             };
             groups[key] = aggregate;
             return aggregate;
@@ -574,7 +597,7 @@ export const resolveDocument = (
                 enabled,
                 conditionMet: false,
                 included: false,
-                suggested: false,
+                attention: "none" as AttentionLevel,
             };
             groups[key] = hidden;
             return hidden;
@@ -585,31 +608,33 @@ export const resolveDocument = (
                 enabled: false,
                 conditionMet: true,
                 included: false,
-                suggested: false,
+                attention: "none" as AttentionLevel,
             };
             groups[key] = inactive;
             return inactive;
         }
         let included = false;
-        let suggested = group.condition !== undefined;
+        let attention: AttentionLevel =
+            group.condition === undefined ? "none" : "conditional";
         for (const item of groupItems(group)) {
             if (item.type === "phrase") {
                 const phrase = phrases[phraseKey(item.id, instanceId)];
                 included ||= phrase?.effectiveIncluded === true;
-                suggested ||=
-                    phrase?.visible === true && phrase.source === "suggestion";
+                if (phrase?.visible === true) {
+                    attention = strongestAttention(attention, phrase.attention);
+                }
                 continue;
             }
             const child = resolveGroup(item.id, instanceId);
             included ||= child.included;
-            suggested ||= child.suggested;
+            attention = strongestAttention(attention, child.attention);
         }
         const presence = {
             applicable,
             enabled,
             conditionMet,
             included,
-            suggested,
+            attention,
         };
         groups[key] = presence;
         return presence;
@@ -733,10 +758,10 @@ export const groupPhrasePresence = (
     groupId: string,
     resolved: ResolvedDocument,
     instanceId?: string,
-): { included: boolean; suggested: boolean } =>
+): { included: boolean; attention: AttentionLevel } =>
     resolved.groups[phraseKey(groupId, instanceId)] ?? {
         included: false,
-        suggested: false,
+        attention: "none",
     };
 
 export const summarizeGroup = (
@@ -905,16 +930,16 @@ export const structuredDocument = (
     });
 
     return {
-        version: 1,
+        version: 2,
         root,
         text: renderGroupText(root, definitions, state, resolved),
         items: all.filter((phrase) => phrase.effectiveIncluded).map(item),
-        suggestions: all
-            .filter(
-                (phrase) =>
-                    phrase.visible && phrase.source === "suggestion",
-            )
-            .map(summaryItem),
+        pending: all
+            .filter((phrase) => phrase.visible && phrase.attention !== "none")
+            .map((phrase) => ({
+                ...summaryItem(phrase),
+                attention: phrase.attention as PendingAttentionLevel,
+            })),
         summaries: collectSummaryGroupIds(root, definitions, state, resolved).map(
             (groupId) => ({
                 groupId,

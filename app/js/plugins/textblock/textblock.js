@@ -1,10 +1,10 @@
 import { loadJSON } from "@lib/base.js";
 import { copyToClipboard } from "@lib/dom.js";
 import { isRecord } from "@lib/guards.js";
-import { getSymptomLens } from "@lib/symptomlens.js";
+import { getLens } from "@lib/lens.js";
 import { getConfig } from "../../config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { createDocumentState, createScopeState, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, } from "./textblockstate.js";
+import { createDocumentState, createScopeState, groupCompactDefault, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, } from "./textblockstate.js";
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
 const definitions = emptyDefinitions();
 const state = createDocumentState();
@@ -13,7 +13,7 @@ const loadedPackages = new Set();
 const packageRequests = new Map();
 let resolved = { phrases: {}, groups: {} };
 let instanceCounter = 0;
-const suggestionHighlightDuration = 1_600;
+const attentionHighlightDuration = 1_600;
 const requestPackage = (id) => {
     let request = packageRequests.get(id);
     if (request !== undefined)
@@ -113,25 +113,29 @@ const initialiseRepeatables = (groupId) => {
     }
 };
 const renderAll = () => {
-    resolved = resolveDocument(definitions, state, getSymptomLens());
+    const activeLens = getLens();
+    resolved = resolveDocument(definitions, state, activeLens);
     const now = performance.now();
-    const currentSuggestions = new Set(Object.values(resolved.phrases)
-        .filter((phrase) => phrase.visible &&
-        !phrase.effectiveIncluded &&
-        phrase.source === "suggestion")
-        .map((phrase) => phrase.key));
+    const currentAttention = new Map(Object.values(resolved.phrases)
+        .filter((phrase) => phrase.visible && phrase.attention !== "none")
+        .map((phrase) => [phrase.key, phrase.attention]));
     for (const module of modules.values()) {
+        if (module.lens !== activeLens) {
+            reconcileModuleApplicability(module);
+            module.lens = activeLens;
+        }
         const parent = document.getElementById(module.parentId);
         if (parent === null)
             continue;
         const revealedPaths = [];
-        if (module.suggestionsReady) {
-            for (const key of currentSuggestions) {
-                if (!module.suggestionKeys.has(key)) {
-                    module.suggestionHighlights.set(key, now + suggestionHighlightDuration);
+        if (module.attentionReady) {
+            for (const [key, level] of currentAttention) {
+                if (module.attentionLevels.get(key) !== level) {
+                    releaseRevealHold(module, attentionHoldKey(key), true);
+                    module.attentionHighlights.set(key, now + attentionHighlightDuration);
                     const phrase = resolved.phrases[key];
                     if (phrase !== undefined) {
-                        const path = holdOpenForSuggestion(module, phrase);
+                        const path = holdOpenForAttention(module, phrase);
                         if (path !== null)
                             revealedPaths.push(path);
                     }
@@ -139,21 +143,21 @@ const renderAll = () => {
             }
         }
         else {
-            module.suggestionsReady = true;
+            module.attentionReady = true;
         }
-        for (const key of module.suggestionKeys) {
-            if (!currentSuggestions.has(key)) {
-                releaseRevealHold(module, suggestionHoldKey(key), true);
+        for (const key of module.attentionLevels.keys()) {
+            if (!currentAttention.has(key)) {
+                releaseRevealHold(module, attentionHoldKey(key), true);
             }
         }
-        module.suggestionKeys = currentSuggestions;
+        module.attentionLevels = currentAttention;
         revealedPaths.push(...refreshExplicitReveals(module));
-        for (const [key, expires] of module.suggestionHighlights) {
-            if (!currentSuggestions.has(key) || expires <= now) {
-                module.suggestionHighlights.delete(key);
+        for (const [key, expires] of module.attentionHighlights) {
+            if (!currentAttention.has(key) || expires <= now) {
+                module.attentionHighlights.delete(key);
             }
         }
-        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.suggestionHighlights.keys()), module.compactOverrides, module.status, module.controls, module.pickerQueries);
+        renderModule(parent, module.rootId, definitions, state, resolved, module.openEditor, new Set(module.attentionHighlights.keys()), module.compactOverrides, module.status, module.controls, module.pickerQueries);
         for (const path of revealedPaths) {
             const group = path[path.length - 1];
             if (group !== undefined) {
@@ -207,7 +211,7 @@ const resetPrompt = (phraseId, instanceId) => {
     scope.completedPrompts = scope.completedPrompts.filter((candidate) => candidate !== phraseId);
 };
 const nextPromptInGroup = (module, groupId, instanceId) => {
-    if (!isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens())) {
+    if (!isGroupEnabled(groupId, definitions, state, instanceId, getLens())) {
         return null;
     }
     if (!isGroupConditionMet(groupId, resolved, instanceId)) {
@@ -655,14 +659,20 @@ const groupPathToGroup = (module, groupId, instanceId) => allGroupPaths(module.r
     const context = path[path.length - 1];
     return context?.groupId === groupId && context.instanceId === instanceId;
 });
-const groupStartsCompact = (module, groupId, instanceId) => groupPathToGroup(module, groupId, instanceId)?.some((context) => definitions.groups[context.groupId].autoCompact === true) ?? definitions.groups[groupId].autoCompact === true;
+const groupStartsCompact = (module, groupId, instanceId) => {
+    const path = groupPathToGroup(module, groupId, instanceId);
+    if (path === undefined) {
+        return groupCompactDefault(isGroupEnabled(groupId, definitions, state, instanceId, getLens()), false, definitions.groups[groupId].autoCompact === true);
+    }
+    return path.some((context) => groupCompactDefault(isGroupEnabled(context.groupId, definitions, state, context.instanceId, getLens()), false, definitions.groups[context.groupId].autoCompact === true));
+};
 const expandGroupPath = (module, path) => {
     for (const context of path) {
         cancelAutoCompact(module, context.groupId, context.instanceId);
         module.compactOverrides[phraseKey(context.groupId, context.instanceId)] = false;
     }
 };
-const suggestionHoldKey = (key) => `suggestion:${key}`;
+const attentionHoldKey = (key) => `attention:${key}`;
 const conditionHoldKey = (groupKey) => `condition:${groupKey}`;
 const initialHoldKey = (groupKey) => `initial:${groupKey}`;
 const holdOpen = (module, holdKey, path) => {
@@ -711,18 +721,23 @@ const releaseRevealHold = (module, holdKey, restore) => {
         }
     }
 };
-const holdOpenForSuggestion = (module, phrase) => {
+const holdOpenForAttention = (module, phrase) => {
     const path = groupPathToPhrase(module.rootId, phrase.id, phrase.instanceId);
     if (path === null)
         return null;
-    holdOpen(module, suggestionHoldKey(phrase.key), path);
+    holdOpen(module, attentionHoldKey(phrase.key), path);
     return path;
 };
 const holdInitialReveals = (module) => {
+    const activeLens = getLens();
     for (const path of allGroupPaths(module.rootId)) {
         const context = path[path.length - 1];
         if (context === undefined ||
-            definitions.groups[context.groupId].reveal !== "initial") {
+            definitions.groups[context.groupId].reveal !== "initial" ||
+            path.some(({ groupId }) => {
+                const lenses = definitions.groups[groupId].lenses;
+                return lenses !== undefined && !lenses.includes(activeLens);
+            })) {
             continue;
         }
         const groupKey = phraseKey(context.groupId, context.instanceId);
@@ -736,6 +751,10 @@ const refreshExplicitReveals = (module) => {
     }
     const present = new Set();
     for (const path of allGroupPaths(module.rootId)) {
+        if (path.some(({ groupId, instanceId }) => resolved.groups[phraseKey(groupId, instanceId)]?.applicable ===
+            false)) {
+            continue;
+        }
         const context = path[path.length - 1];
         if (context === undefined)
             continue;
@@ -823,6 +842,27 @@ const clearAutoCompactTimers = (module, instanceId) => {
             continue;
         window.clearTimeout(timer);
         module.autoCompactTimers.delete(key);
+    }
+};
+const reconcileModuleApplicability = (module) => {
+    const editor = module.openEditor;
+    if (editor !== null) {
+        const path = groupPathToPhrase(module.rootId, editor.phraseId, editor.instanceId);
+        if (path === null ||
+            path.some(({ groupId, instanceId }) => resolved.groups[phraseKey(groupId, instanceId)]?.applicable ===
+                false)) {
+            module.openEditor = null;
+        }
+    }
+    clearAutoCompactTimers(module);
+    for (const [holdKey, path] of [...module.revealHolds]) {
+        if (!path.some((key) => resolved.groups[key]?.applicable === false)) {
+            continue;
+        }
+        releaseRevealHold(module, holdKey, true);
+        if (holdKey.startsWith("condition:")) {
+            module.revealConditionStates.delete(holdKey);
+        }
     }
 };
 const closestParentGroup = (node) => node.parentElement?.closest(".group[data-group-id]") ?? null;
@@ -943,38 +983,6 @@ const restartAutoCompactForTarget = (module, target) => {
         scheduleAutoCompact(module, context.groupId, context.instanceId);
     }
 };
-const activatingChildActions = new Set([
-    "phrase",
-    "choose-value",
-    "choose-freetext",
-    "attribute",
-    "choose-attribute",
-    "step-number",
-    "step-duration",
-    "choose-duration-unit",
-    "clear-attribute",
-    "toggle-set",
-]);
-const activateInactiveGroupPath = (module, target, parent) => {
-    let deepestActivated = null;
-    let node = target.closest(".group[data-group-id]");
-    while (node !== null && parent.contains(node)) {
-        const groupId = node.dataset.groupId;
-        const instanceId = node.dataset.instanceId;
-        if (groupId !== undefined &&
-            !isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens())) {
-            scopeFor(instanceId).groupOverrides[groupId] = true;
-            cancelAutoCompact(module, groupId, instanceId);
-            module.compactOverrides[phraseKey(groupId, instanceId)] = false;
-            deepestActivated ??= {
-                groupId,
-                ...(instanceId === undefined ? {} : { instanceId }),
-            };
-        }
-        node = node.parentElement?.closest(".group[data-group-id]") ?? null;
-    }
-    return deepestActivated;
-};
 const expandCompactedAutoCompactForAction = (module, button, action, parent) => {
     if (action === "toggle-compact" || action === "open-group-path")
         return null;
@@ -1032,17 +1040,9 @@ const handleClick = async (module, event) => {
     module.status = "";
     let expandedGroup = expandCompactedAutoCompactForAction(module, button, action, parent);
     let compactedGroup = null;
-    const activatedByChild = activatingChildActions.has(action)
-        ? activateInactiveGroupPath(module, button, parent)
-        : null;
-    if (activatedByChild !== null)
-        expandedGroup ??= activatedByChild;
     if (action === "phrase") {
         const phraseId = requireData(button, "phraseId");
-        if (activatedByChild === null ||
-            currentPhrase(phraseId, instanceId)?.included !== true) {
-            handlePhrase(module, phraseId, instanceId);
-        }
+        handlePhrase(module, phraseId, instanceId);
     }
     else if (action === "choose-value") {
         selectValue(module, requireData(button, "phraseId"), requireData(button, "valueId"), instanceId);
@@ -1138,7 +1138,7 @@ const handleClick = async (module, event) => {
         const groupId = requireData(button, "groupId");
         const score = definitions.groups[groupId]?.score;
         if (score !== undefined) {
-            const groupEnabled = isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens());
+            const groupEnabled = isGroupEnabled(groupId, definitions, state, instanceId, getLens());
             const selected = Object.fromEntries(score.criteria.flatMap((criterion) => {
                 const phrase = currentPhrase(criterion.phraseId, instanceId);
                 return groupEnabled &&
@@ -1169,7 +1169,7 @@ const handleClick = async (module, event) => {
     else if (action === "toggle-group") {
         const groupId = requireData(button, "groupId");
         const scope = scopeFor(instanceId);
-        const enabled = isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens());
+        const enabled = isGroupEnabled(groupId, definitions, state, instanceId, getLens());
         scope.groupOverrides[groupId] = !enabled;
         const context = {
             groupId,
@@ -1263,7 +1263,7 @@ const handleClick = async (module, event) => {
     }
     else if (action === "copy-text" || action === "copy-data") {
         const rootId = requireData(button, "rootId");
-        resolved = resolveDocument(definitions, state, getSymptomLens());
+        resolved = resolveDocument(definitions, state, getLens());
         const document = structuredDocument(rootId, definitions, state, resolved);
         try {
             await copyToClipboard(action === "copy-text"
@@ -1425,16 +1425,17 @@ export const display = async (parentId, params) => {
     const module = {
         parentId,
         rootId,
+        lens: getLens(),
         openEditor: null,
         compactOverrides: {},
         status: "",
         controls: params.controls !== false,
-        suggestionKeys: new Set(),
-        suggestionHighlights: new Map(),
+        attentionLevels: new Map(),
+        attentionHighlights: new Map(),
         revealHolds: new Map(),
         revealGroups: new Map(),
         revealConditionStates: new Map(),
-        suggestionsReady: false,
+        attentionReady: false,
         autoCompactTimers: new Map(),
         autoCompactDelay: configuredAutoCompactDelay(),
         pickerQueries: {},
@@ -1467,13 +1468,13 @@ export const display = async (parentId, params) => {
 export const getValue = async (id) => {
     await ensureGroup(id);
     initialiseRepeatables(id);
-    resolved = resolveDocument(definitions, state, getSymptomLens());
+    resolved = resolveDocument(definitions, state, getLens());
     return renderGroupText(id, definitions, state, resolved);
 };
 export const getStructuredValue = async (id) => {
     await ensureGroup(id);
     initialiseRepeatables(id);
-    resolved = resolveDocument(definitions, state, getSymptomLens());
+    resolved = resolveDocument(definitions, state, getLens());
     return structuredDocument(id, definitions, state, resolved);
 };
 export const receive = (message) => {
@@ -1535,7 +1536,7 @@ export const dispose = (parentId) => {
         clearAutoCompactTimers(module);
     modules.delete(parentId);
 };
-document.addEventListener("papiertiger:symptom-lens-change", renderAll);
+document.addEventListener("papiertiger:lens-change", renderAll);
 document.addEventListener("click", (event) => {
     const path = event.composedPath();
     let dismissed = false;

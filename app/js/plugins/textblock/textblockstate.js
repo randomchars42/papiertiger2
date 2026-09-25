@@ -23,7 +23,15 @@ export const scopeState = (state, instanceId) => {
     return scope;
 };
 export const phraseKey = (phraseId, instanceId) => instanceId === undefined ? phraseId : `${instanceId}:${phraseId}`;
+export const groupCompactDefault = (enabled, insideAutoCompact, autoCompact) => !enabled || insideAutoCompact || autoCompact;
 export const groupItems = (group) => group.items;
+const attentionRank = {
+    none: 0,
+    conditional: 1,
+    suggested: 2,
+    required: 3,
+};
+const strongestAttention = (left, right) => attentionRank[right] > attentionRank[left] ? right : left;
 export const isPackage = (value) => {
     if (!isRecord(value) || value.version !== 2)
         return false;
@@ -145,15 +153,20 @@ const groupIdsInGroup = (groupId, definitions) => [
 const groupDefaultEnabled = (group, activeLens) => group.activeLenses === undefined
     ? (group.default ?? true)
     : group.activeLenses.includes(activeLens);
+const groupApplicable = (group, activeLens) => group.lenses === undefined || group.lenses.includes(activeLens);
 const scopeGroupEnabled = (groupId, definitions, scope, activeLens) => scope.groupOverrides[groupId] ??
     groupDefaultEnabled(definitions.groups[groupId], activeLens);
 const inactivePhraseIds = (definitions, scope, groupIds, activeLens) => new Set([...groupIds].flatMap((groupId) => {
-    const enabled = scopeGroupEnabled(groupId, definitions, scope, activeLens);
+    const applicable = groupApplicable(definitions.groups[groupId], activeLens);
+    const enabled = applicable && scopeGroupEnabled(groupId, definitions, scope, activeLens);
     return enabled ? [] : phraseIdsInGroup(groupId, definitions, true);
 }));
 const refreshEffectiveInclusion = (phrases, inactive) => {
     for (const phrase of Object.values(phrases)) {
-        phrase.effectiveIncluded = phrase.included && !inactive.has(phrase.id);
+        const active = !inactive.has(phrase.id);
+        phrase.effectiveIncluded = phrase.included && active;
+        if (!active)
+            phrase.visible = false;
     }
 };
 const resolveScope = (phraseIds, definitions, scope, instanceId, additionalActiveValues = new Set(), inactive = new Set()) => {
@@ -174,6 +187,7 @@ const resolveScope = (phraseIds, definitions, scope, instanceId, additionalActiv
             included: defaultId !== "" && defaultId !== null,
             effectiveIncluded: false,
             source: "default",
+            attention: "none",
             provenance: [],
             touched: false,
             attributes: {},
@@ -220,23 +234,6 @@ const resolveScope = (phraseIds, definitions, scope, instanceId, additionalActiv
     ]);
     for (const phraseId of phraseIds) {
         const definition = definitions.phrases[phraseId];
-        const phrase = phrases[phraseKey(phraseId, instanceId)];
-        if (scope.phraseOverrides[phraseId] !== undefined ||
-            phrase.source === "set") {
-            continue;
-        }
-        const matches = Object.entries(definition.suggestions ?? {}).filter(([trigger]) => activeValues.has(trigger));
-        if (matches.length === 0)
-            continue;
-        const [, valueId] = matches[matches.length - 1];
-        phrase.valueId = valueId;
-        phrase.visible = true;
-        phrase.included = false;
-        phrase.source = "suggestion";
-        phrase.provenance = matches.map(([source]) => source);
-    }
-    for (const phraseId of phraseIds) {
-        const definition = definitions.phrases[phraseId];
         const condition = definition.condition;
         const phrase = phrases[phraseKey(phraseId, instanceId)];
         if (condition === undefined ||
@@ -248,16 +245,43 @@ const resolveScope = (phraseIds, definitions, scope, instanceId, additionalActiv
         const conditionMet = condition.negated ? !hasMatch : hasMatch;
         if (!conditionMet)
             continue;
-        phrase.valueId = condition.suggestion;
+        phrase.valueId = condition.value;
         phrase.visible = true;
         phrase.included = false;
-        phrase.source = "suggestion";
+        phrase.source = "conditional";
+        phrase.attention = "conditional";
         phrase.provenance = [...condition.values];
     }
     for (const phrase of Object.values(phrases)) {
         refreshPhraseText(phrase, definitions, scope);
     }
     refreshEffectiveInclusion(phrases, inactive);
+    for (const phraseId of phraseIds) {
+        const definition = definitions.phrases[phraseId];
+        const attention = definition.attention;
+        const phrase = phrases[phraseKey(phraseId, instanceId)];
+        if (attention === undefined || !phrase.visible)
+            continue;
+        const hasMatch = attention.values.some((valueId) => activeValues.has(valueId));
+        const conditionMet = attention.negated ? !hasMatch : hasMatch;
+        if (!conditionMet)
+            continue;
+        const satisfied = phrase.effectiveIncluded &&
+            (attention.value === null || phrase.valueId === attention.value);
+        if (satisfied)
+            continue;
+        const override = scope.phraseOverrides[phraseId];
+        const explicitlyRejected = override !== undefined &&
+            (!override.included ||
+                (attention.value !== null && override.valueId !== attention.value));
+        if (attention.level === "suggested" && explicitlyRejected)
+            continue;
+        phrase.attention = attention.level;
+    }
+    for (const phrase of Object.values(phrases)) {
+        if (!phrase.visible)
+            phrase.attention = "none";
+    }
     return phrases;
 };
 const conditionMatches = (condition, phrases, instanceId) => {
@@ -323,14 +347,16 @@ export const resolveDocument = (definitions, state, activeLens = "") => {
         if (cached !== undefined)
             return cached;
         const group = definitions.groups[groupId];
+        const applicable = groupApplicable(group, activeLens);
         const enabled = isGroupEnabled(groupId, definitions, state, instanceId, activeLens);
         if (group.repeatable !== undefined && instanceId === undefined) {
             const instances = (state.groupInstances[groupId] ?? []).map((id) => resolveGroup(groupId, id));
             const aggregate = {
+                applicable,
                 enabled,
                 conditionMet: true,
                 included: instances.some((entry) => entry.included),
-                suggested: instances.some((entry) => entry.suggested),
+                attention: instances.reduce((level, entry) => strongestAttention(level, entry.attention), "none"),
             };
             groups[key] = aggregate;
             return aggregate;
@@ -339,29 +365,48 @@ export const resolveDocument = (definitions, state, activeLens = "") => {
             conditionMatches(group.condition, phrases, instanceId);
         if (!conditionMet) {
             const hidden = {
+                applicable,
                 enabled,
                 conditionMet: false,
                 included: false,
-                suggested: false,
+                attention: "none",
             };
             groups[key] = hidden;
             return hidden;
         }
+        if (!enabled) {
+            const inactive = {
+                applicable,
+                enabled: false,
+                conditionMet: true,
+                included: false,
+                attention: "none",
+            };
+            groups[key] = inactive;
+            return inactive;
+        }
         let included = false;
-        let suggested = group.condition !== undefined;
+        let attention = group.condition === undefined ? "none" : "conditional";
         for (const item of groupItems(group)) {
             if (item.type === "phrase") {
                 const phrase = phrases[phraseKey(item.id, instanceId)];
                 included ||= phrase?.effectiveIncluded === true;
-                suggested ||=
-                    phrase?.visible === true && phrase.source === "suggestion";
+                if (phrase?.visible === true) {
+                    attention = strongestAttention(attention, phrase.attention);
+                }
                 continue;
             }
             const child = resolveGroup(item.id, instanceId);
             included ||= child.included;
-            suggested ||= child.suggested;
+            attention = strongestAttention(attention, child.attention);
         }
-        const presence = { enabled, conditionMet, included, suggested };
+        const presence = {
+            applicable,
+            enabled,
+            conditionMet,
+            included,
+            attention,
+        };
         groups[key] = presence;
         return presence;
     };
@@ -378,7 +423,8 @@ export const resolveDocument = (definitions, state, activeLens = "") => {
 };
 export const isGroupEnabled = (groupId, definitions, state, instanceId, activeLens = "") => {
     const scope = scopeState(state, instanceId);
-    return scopeGroupEnabled(groupId, definitions, scope, activeLens);
+    return (groupApplicable(definitions.groups[groupId], activeLens) &&
+        scopeGroupEnabled(groupId, definitions, scope, activeLens));
 };
 export const isGroupConditionMet = (groupId, resolved, instanceId) => resolved.groups[phraseKey(groupId, instanceId)]?.conditionMet ?? false;
 export const isConditionMet = (condition, resolved, instanceId) => {
@@ -422,7 +468,7 @@ const collectDisplayGroupPhrases = (groupId, definitions, state, resolved, insta
 };
 export const groupPhrasePresence = (groupId, resolved, instanceId) => resolved.groups[phraseKey(groupId, instanceId)] ?? {
     included: false,
-    suggested: false,
+    attention: "none",
 };
 export const summarizeGroup = (groupId, definitions, state, resolved) => {
     const unique = new Map(collectGroupPhrases(groupId, definitions, state, resolved).map((phrase) => [
@@ -520,13 +566,16 @@ export const structuredDocument = (root, definitions, state, resolved) => {
         ...(phrase.coding === undefined ? {} : { coding: phrase.coding }),
     });
     return {
-        version: 1,
+        version: 2,
         root,
         text: renderGroupText(root, definitions, state, resolved),
         items: all.filter((phrase) => phrase.effectiveIncluded).map(item),
-        suggestions: all
-            .filter((phrase) => phrase.visible && phrase.source === "suggestion")
-            .map(summaryItem),
+        pending: all
+            .filter((phrase) => phrase.visible && phrase.attention !== "none")
+            .map((phrase) => ({
+            ...summaryItem(phrase),
+            attention: phrase.attention,
+        })),
         summaries: collectSummaryGroupIds(root, definitions, state, resolved).map((groupId) => ({
             groupId,
             title: parseValue(definitions.groups[groupId].title).text,

@@ -13,22 +13,22 @@
     --normal-border: #75a47b;
     --normal-soft: #e3f0e2;
     --normal-muted: #718574;
-    --normal-suggestion: #f3f7f2;
+    --normal-faint: #f3f7f2;
     --abnormal: #9d3832;
     --abnormal-border: #c36b65;
     --abnormal-soft: #f6dfdd;
     --abnormal-muted: #9a726f;
-    --abnormal-suggestion: #fbf2f1;
+    --abnormal-faint: #fbf2f1;
     --intervention: #315f8d;
     --intervention-border: #7099c0;
     --intervention-soft: #dfeaf4;
     --intervention-muted: #6d8196;
-    --intervention-suggestion: #f1f5f9;
+    --intervention-faint: #f1f5f9;
     --neutral: #4f5960;
     --neutral-border: #929a9f;
     --neutral-soft: #eceeef;
     --neutral-muted: #7a8287;
-    --neutral-suggestion: #f6f7f7;
+    --neutral-faint: #f6f7f7;
     --danger: #9c3029;
     --focus: #006fc4;
     --radius: 2px;
@@ -347,7 +347,7 @@ select:focus-visible {
 .control--danger {
     border-color: var(--abnormal-border);
     color: var(--abnormal);
-    background: var(--abnormal-suggestion);
+    background: var(--abnormal-faint);
 }
 
 .control--attention {
@@ -386,7 +386,7 @@ select:focus-visible {
     margin-block: 0.25rem;
     padding: 0.25rem;
     border-inline-start: 3px solid var(--abnormal-border);
-    background: var(--abnormal-suggestion);
+    background: var(--abnormal-faint);
     font-size: 0.9rem;
 }
 
@@ -433,7 +433,7 @@ select:focus-visible {
     --kind-border: var(--normal-border);
     --kind-soft: var(--normal-soft);
     --kind-muted: var(--normal-muted);
-    --kind-suggestion: var(--normal-suggestion);
+    --kind-faint: var(--normal-faint);
 }
 
 .phrase--abnormal,
@@ -442,7 +442,7 @@ select:focus-visible {
     --kind-border: var(--abnormal-border);
     --kind-soft: var(--abnormal-soft);
     --kind-muted: var(--abnormal-muted);
-    --kind-suggestion: var(--abnormal-suggestion);
+    --kind-faint: var(--abnormal-faint);
 }
 
 .phrase--intervention,
@@ -451,7 +451,7 @@ select:focus-visible {
     --kind-border: var(--intervention-border);
     --kind-soft: var(--intervention-soft);
     --kind-muted: var(--intervention-muted);
-    --kind-suggestion: var(--intervention-suggestion);
+    --kind-faint: var(--intervention-faint);
 }
 
 .phrase--neutral,
@@ -460,7 +460,7 @@ select:focus-visible {
     --kind-border: var(--neutral-border);
     --kind-soft: var(--neutral-soft);
     --kind-muted: var(--neutral-muted);
-    --kind-suggestion: var(--neutral-suggestion);
+    --kind-faint: var(--neutral-faint);
 }
 
 .phrase__part {
@@ -495,10 +495,27 @@ select:focus-visible {
     color: var(--kind-muted);
 }
 
-.phrase--suggestion {
+.phrase--conditional {
     border-color: transparent;
     color: var(--kind-muted);
     background: transparent;
+}
+
+.phrase--suggested {
+    border-color: var(--kind-border);
+    border-style: dashed;
+}
+
+.phrase--required {
+    border-width: 2px;
+    border-color: var(--kind);
+}
+
+.phrase__attention {
+    align-self: center;
+    margin-inline: 0.15rem 0.25rem;
+    color: var(--kind);
+    font-weight: 700;
 }
 
 .phrase--touched.phrase--included {
@@ -510,12 +527,9 @@ select:focus-visible {
     border-width: 2px;
 }
 
-@keyframes suggestion-arrive {
+@keyframes attention-arrive {
     0%,
     100% {
-        border-color: transparent;
-        color: var(--kind-muted);
-        background: transparent;
         box-shadow: 0 0 0 0 transparent;
     }
 
@@ -527,8 +541,8 @@ select:focus-visible {
     }
 }
 
-.phrase--new-suggestion {
-    animation: suggestion-arrive 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+.phrase--new-attention {
+    animation: attention-arrive 1.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .set--normal {
@@ -975,22 +989,22 @@ select:focus-visible {
         --normal-border: #568260;
         --normal-soft: #203b25;
         --normal-muted: #86a78a;
-        --normal-suggestion: #1b281e;
+        --normal-faint: #1b281e;
         --abnormal: #ffaca5;
         --abnormal-border: #9a514c;
         --abnormal-soft: #452523;
         --abnormal-muted: #c0817c;
-        --abnormal-suggestion: #2d2020;
+        --abnormal-faint: #2d2020;
         --intervention: #a9d4ff;
         --intervention-border: #4f7397;
         --intervention-soft: #203449;
         --intervention-muted: #7e9bb8;
-        --intervention-suggestion: #1d2731;
+        --intervention-faint: #1d2731;
         --neutral: #e1e5e7;
         --neutral-border: #707980;
         --neutral-soft: #2a2e31;
         --neutral-muted: #a0a8ad;
-        --neutral-suggestion: #222628;
+        --neutral-faint: #222628;
         --danger: #ff928a;
         --focus: #66bfff;
     }
