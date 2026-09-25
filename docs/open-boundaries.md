@@ -7,8 +7,8 @@ Roadmap-Zusage.
 ## Laufzeitkonfiguration und Internationalisierung
 
 Die gegenwärtige Laufzeitkonfiguration umfasst nur Daten- und Plug-in-Pfad,
-Autokompaktierungsfrist und Symptomlinse. Lokale Standardwerte können weiterhin
-durch gleichnamige URL-Parameter überschrieben werden.
+Autokompaktierungsfrist und eine optionale Linsenwahl. Die Standardlinse steht
+im Dokumentkatalog; der URL-Parameter `lens` kann sie überschreiben.
 
 Noch offen ist, ob eine spätere Anwendung Varianten für Sprache, Protokolltiefe
 oder einen allgemeinen Basis-Pfad benötigt. Die früheren, ungenutzten Schlüssel

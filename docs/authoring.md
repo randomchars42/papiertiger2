@@ -131,8 +131,6 @@ Ein großer, durchsuchbarer Auswahlvorrat wird als Wertkatalog im selben
 Kodierungen und fachlichen Zuordnungen zusammen:
 
 ```pt
-L neurologie: Neurologie
-
 V schwindel: Schwindel|a
   @sct=404640003[Dizziness]
   @alias=Drehschwindel; Vertigo; Benommenheit
@@ -140,6 +138,10 @@ V schwindel: Schwindel|a
   @lens=neurologie
   @tag=schwindel; neurologisch
 ```
+
+Die referenzierten Linsen werden zentral mit `L*` beziehungsweise `L` in
+`documents.pt` definiert. Wertkataloge wiederholen weder Bezeichnung noch
+Standardlinse.
 
 Die Quellreihenfolge dient als einfache Rangfolge. Ist eine Häufigkeit
 hinreichend bekannt, stehen häufige Werte zuerst; eine zusätzliche numerische
@@ -200,14 +202,19 @@ T: dokumente
 
 W: updates updates label="Neuigkeiten"
 
+L* rettungsdienst: Rettungsdienst
+L kernteam: Kernteam
+
 D*: Rettungsdienst
   B: textblock ankunft controls=false
   B: textblock anamnese controls=false
   B: textblock abcde controls=false
 ```
 
-`D*` markiert das Standarddokument. Textblock-IDs müssen auf ein Paket mit
-gleichnamiger Wurzelgruppe verweisen.
+`L*` markiert die globale Standardlinse, `L` weitere verfügbare Linsen. Diese
+IDs werden von `@lens=...` an Katalogwerten und `@active(...)` an Gruppen
+referenziert. `D*` markiert das Standarddokument. Textblock-IDs müssen auf ein
+Paket mit gleichnamiger Wurzelgruppe verweisen.
 
 `W:` registriert ein globales Werkzeug getrennt von den auszugebenden
 Dokumentblöcken. Werkzeuge werden daher nicht von **Dokument kopieren** oder

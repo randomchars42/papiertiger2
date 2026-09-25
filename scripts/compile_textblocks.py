@@ -364,7 +364,6 @@ def parse_source(path: Path) -> dict[str, Any]:
         "groups": [],
         "phrases": [],
         "sets": [],
-        "lenses": [],
         "catalog_values": [],
     }
     group_stack: list[dict[str, Any]] = []
@@ -420,21 +419,6 @@ def parse_source(path: Path) -> dict[str, Any]:
                 if imported in source["imports"]:
                     fail(source, line_number, f"duplicate import '{imported}'")
                 source["imports"].append(imported)
-            continue
-
-        if text.startswith("L "):
-            if indent:
-                fail(source, line_number, "L must not be indented")
-            identifier, label = split_directive(text[2:], path, line_number)
-            if not re.fullmatch(r"[a-z][a-z0-9_]*", identifier):
-                fail(source, line_number, f"invalid lens id '{identifier}'")
-            if not label:
-                fail(source, line_number, "lens label cannot be empty")
-            if any(lens["id"] == identifier for lens in source["lenses"]):
-                fail(source, line_number, f"duplicate lens '{identifier}'")
-            source["lenses"].append(
-                {"line": line_number, "id": identifier, "label": label}
-            )
             continue
 
         if text.startswith("V "):
@@ -725,7 +709,9 @@ def compile_source(
     source: dict[str, Any],
     catalog_tags: dict[tuple[str, str], list[str]] | None = None,
     catalog_members: dict[str, list[str]] | None = None,
+    known_lenses: set[str] | None = None,
 ) -> dict[str, Any]:
+    known_lenses = known_lenses or set()
     namespace = source["namespace"]
     identifiers: dict[str, tuple[str, int]] = {}
 
@@ -806,10 +792,7 @@ def compile_source(
         return editor_id
 
     compiled_catalogs: dict[str, Any] = {}
-    if source["catalog_values"] or source["lenses"]:
-        if not source["catalog_values"]:
-            fail(source, 0, "a lens package needs catalog values")
-        known_lenses = {lens["id"] for lens in source["lenses"]}
+    if source["catalog_values"]:
         catalog_attributes: dict[str, str] = {}
         catalog_values: dict[str, Any] = {}
         free_text_values = 0
@@ -851,13 +834,7 @@ def compile_source(
             catalog_values[value["id"]] = compiled_value
         if free_text_values > 1:
             fail(source, 0, "a catalog may contain only one @freetext value")
-        catalog: dict[str, Any] = {
-            "lenses": [
-                {"id": lens["id"], "label": lens["label"]}
-                for lens in source["lenses"]
-            ],
-            "values": catalog_values,
-        }
+        catalog: dict[str, Any] = {"values": catalog_values}
         if catalog_attributes:
             catalog["attributes"] = catalog_attributes
         compiled_catalogs[namespace] = catalog
@@ -1076,6 +1053,13 @@ def compile_source(
                 for lens in active_lenses
             ):
                 fail(source, group["line"], "@active lens IDs must be lowercase identifiers")
+            unknown_lenses = set(active_lenses) - known_lenses
+            if unknown_lenses:
+                fail(
+                    source,
+                    group["line"],
+                    f"unknown lens '{sorted(unknown_lenses)[0]}'",
+                )
             compiled_group["activeLenses"] = active_lenses
         if "subgroups" in annotations:
             subgroup_layout = annotations["subgroups"]
@@ -1230,7 +1214,9 @@ def is_document_source(path: Path) -> bool:
 def compile_documents(path: Path) -> dict[str, Any]:
     documents: dict[str, Any] = {}
     tools: list[dict[str, Any]] = []
+    lenses: list[dict[str, str]] = []
     default_id: str | None = None
+    default_lens_id: str | None = None
     current: dict[str, Any] | None = None
     current_indent = -1
     saw_type = False
@@ -1243,6 +1229,27 @@ def compile_documents(path: Path) -> dict[str, Any]:
             if indent or saw_type or documents:
                 raise CompileError(path, line_number, "T: dokumente must occur once at the start")
             saw_type = True
+            continue
+        lens_match = re.fullmatch(
+            r"L(\*)?\s+([a-z][a-z0-9_]*)\s*:\s*(.+)",
+            text,
+        )
+        if lens_match is not None:
+            if indent:
+                raise CompileError(path, line_number, "L must not be indented")
+            if documents:
+                raise CompileError(path, line_number, "L must occur before the first document")
+            identifier = lens_match.group(2)
+            label = lens_match.group(3).strip()
+            if not label:
+                raise CompileError(path, line_number, "lens label cannot be empty")
+            if any(lens["id"] == identifier for lens in lenses):
+                raise CompileError(path, line_number, f"duplicate lens '{identifier}'")
+            lenses.append({"id": identifier, "label": label})
+            if lens_match.group(1):
+                if default_lens_id is not None:
+                    raise CompileError(path, line_number, "only one lens may be the default (*)")
+                default_lens_id = identifier
             continue
         document_match = re.fullmatch(r"D(\*)?\s*:\s*(.+)", text)
         if document_match is not None:
@@ -1319,10 +1326,46 @@ def compile_documents(path: Path) -> dict[str, Any]:
         raise CompileError(path, 0, "at least one document is required")
     if default_id is None:
         raise CompileError(path, 0, "one document needs D* as the default")
-    catalog = {"version": 1, "default": default_id, "documents": documents}
+    if not lenses:
+        raise CompileError(path, 0, "at least one lens is required")
+    if default_lens_id is None:
+        raise CompileError(path, 0, "one lens needs L* as the default")
+    catalog = {
+        "version": 1,
+        "default": default_id,
+        "defaultLens": default_lens_id,
+        "lenses": lenses,
+        "documents": documents,
+    }
     if tools:
         catalog["tools"] = tools
     return catalog
+
+
+def document_lens_ids(catalog: Any, path: Path) -> set[str]:
+    if not isinstance(catalog, dict):
+        raise CompileError(path, 0, "document catalog must be an object")
+    lenses = catalog.get("lenses")
+    default_lens = catalog.get("defaultLens")
+    if (
+        not isinstance(lenses, list)
+        or not lenses
+        or any(
+            not isinstance(lens, dict)
+            or not isinstance(lens.get("id"), str)
+            or re.fullmatch(r"[a-z][a-z0-9_]*", lens["id"]) is None
+            or not isinstance(lens.get("label"), str)
+            or not lens["label"]
+            for lens in lenses
+        )
+    ):
+        raise CompileError(path, 0, "invalid document lenses")
+    identifiers = [lens["id"] for lens in lenses]
+    if len(set(identifiers)) != len(identifiers):
+        raise CompileError(path, 0, "duplicate document lens")
+    if not isinstance(default_lens, str) or default_lens not in identifiers:
+        raise CompileError(path, 0, "invalid default document lens")
+    return set(identifiers)
 
 
 def output_path(source_path: Path) -> Path:
@@ -1522,26 +1565,13 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                 result[category][identifier] = definition
         return result
 
-    symptom_catalog = merged("symptome")["catalogs"].get("symptome")
-    symptom_lenses = (
-        symptom_catalog.get("lenses")
-        if isinstance(symptom_catalog, dict)
-        else None
+    document_catalog = packages.get("documents")
+    if document_catalog is None:
+        document_catalog = load("documents", "documents")
+    global_lens_ids = document_lens_ids(
+        document_catalog,
+        data_directory / "documents.json",
     )
-    if (
-        not isinstance(symptom_lenses, list)
-        or any(
-            not isinstance(lens, dict)
-            or not isinstance(lens.get("id"), str)
-            for lens in symptom_lenses
-        )
-    ):
-        raise CompileError(
-            data_directory / "symptome.json",
-            0,
-            "invalid global symptom lenses",
-        )
-    global_lens_ids = {lens["id"] for lens in symptom_lenses}
 
     placeholder_pattern = re.compile(r"\{:\s*([a-zA-Z0-9_-]+)\s*(\*)?\s*:\}")
     for name, package in packages.items():
@@ -1554,20 +1584,6 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                 raise CompileError(
                     data_directory / f"{name}.json", 0, f"invalid catalog '{catalog_id}'"
                 )
-            lenses = catalog.get("lenses")
-            if (
-                not isinstance(lenses, list)
-                or any(
-                    not isinstance(lens, dict)
-                    or not isinstance(lens.get("id"), str)
-                    or not isinstance(lens.get("label"), str)
-                    for lens in lenses
-                )
-            ):
-                raise CompileError(
-                    data_directory / f"{name}.json", 0, f"invalid lenses in catalog '{catalog_id}'"
-                )
-            lens_ids = {lens["id"] for lens in lenses}
             for value_id, value in catalog["values"].items():
                 if (
                     not isinstance(value, dict)
@@ -1580,7 +1596,10 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                         or re.fullmatch(r"[a-z][a-z0-9_]*", tag) is None
                         for tag in value["tags"]
                     )
-                    or any(lens not in lens_ids for lens in value["lenses"])
+                    or any(
+                        not isinstance(lens, str) or lens not in global_lens_ids
+                        for lens in value["lenses"]
+                    )
                 ):
                     raise CompileError(
                         data_directory / f"{name}.json",
@@ -1807,20 +1826,38 @@ def main() -> int:
             parsed.append(
                 (resolved, None if is_document_source(resolved) else parse_source(resolved))
             )
+        selected_document_paths = [
+            resolved for resolved, source in parsed if source is None
+        ]
+        if len(selected_document_paths) > 1:
+            raise CompileError(
+                selected_document_paths[1],
+                0,
+                "only one document catalog may be compiled at a time",
+            )
+        document_path = (
+            selected_document_paths[0]
+            if selected_document_paths
+            else root / "app" / "data" / "documents.pt"
+        )
+        document_catalog = compile_documents(document_path)
+        known_lenses = document_lens_ids(document_catalog, document_path)
         tags, catalog_members = catalog_indexes(
             [source for _, source in parsed if source is not None],
             root / "app" / "data",
         )
         for resolved, source in parsed:
             package = (
-                compile_documents(resolved)
+                document_catalog
                 if source is None
-                else compile_source(source, tags, catalog_members)
+                else compile_source(source, tags, catalog_members, known_lenses)
             )
             target = output_path(resolved)
             generated.append((target, encoded(package), package))
             packages[target.stem] = package
-        validate_packages(packages, root / "app" / "data")
+        validation_packages = dict(packages)
+        validation_packages.setdefault("documents", document_catalog)
+        validate_packages(validation_packages, root / "app" / "data")
     except (CompileError, OSError) as error:
         print(error, file=sys.stderr)
         return 1

@@ -2,14 +2,14 @@ type Config = {
     dataURL: string;
     pluginURL: string;
     autoCompactSeconds: number;
-    symptomLens: string;
+    lens: string;
 };
 
 const defaults: Config = {
     dataURL: "./data",
     pluginURL: "./plugins",
     autoCompactSeconds: 12,
-    symptomLens: "rettungsdienst",
+    lens: "",
 };
 
 let configured: Config = { ...defaults };

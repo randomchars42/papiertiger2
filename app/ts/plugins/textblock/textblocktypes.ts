@@ -35,13 +35,7 @@ export type ValueDefinition = {
     freeText?: boolean;
 };
 
-export type LensDefinition = {
-    id: string;
-    label: string;
-};
-
 export type ValueCatalogDefinition = {
-    lenses: LensDefinition[];
     values: Record<string, ValueDefinition>;
     attributes?: Record<string, string>;
 };

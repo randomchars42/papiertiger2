@@ -1,7 +1,7 @@
 import { loadJSON } from "@lib/base.js";
 import { copyToClipboard } from "@lib/dom.js";
 import { isRecord } from "@lib/guards.js";
-import { getSymptomLens } from "@lib/symptomlens.js";
+import { getLens } from "@lib/lens.js";
 import { getConfig } from "../../config.js";
 import {
     attributePlaceholders,
@@ -186,7 +186,7 @@ const initialiseRepeatables = (groupId: string): void => {
 };
 
 const renderAll = (): void => {
-    resolved = resolveDocument(definitions, state, getSymptomLens());
+    resolved = resolveDocument(definitions, state, getLens());
     const now = performance.now();
     const currentSuggestions = new Set(
         Object.values(resolved.phrases)
@@ -323,7 +323,7 @@ const nextPromptInGroup = (
             definitions,
             state,
             instanceId,
-            getSymptomLens(),
+            getLens(),
         )
     ) {
         return null;
@@ -970,7 +970,7 @@ const groupStartsCompact = (
                 definitions,
                 state,
                 instanceId,
-                getSymptomLens(),
+                getLens(),
             ),
             false,
             definitions.groups[groupId].autoCompact === true,
@@ -983,7 +983,7 @@ const groupStartsCompact = (
                 definitions,
                 state,
                 context.instanceId,
-                getSymptomLens(),
+                getLens(),
             ),
             false,
             definitions.groups[context.groupId].autoCompact === true,
@@ -1583,7 +1583,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
                 definitions,
                 state,
                 instanceId,
-                getSymptomLens(),
+                getLens(),
             );
             const selected = Object.fromEntries(
                 score.criteria.flatMap((criterion) => {
@@ -1626,7 +1626,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
             definitions,
             state,
             instanceId,
-            getSymptomLens(),
+            getLens(),
         );
         scope.groupOverrides[groupId] = !enabled;
         const context: AutoCompactContext = {
@@ -1717,7 +1717,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         closeEditor(module);
     } else if (action === "copy-text" || action === "copy-data") {
         const rootId = requireData(button, "rootId");
-        resolved = resolveDocument(definitions, state, getSymptomLens());
+        resolved = resolveDocument(definitions, state, getLens());
         const document = structuredDocument(rootId, definitions, state, resolved);
         try {
             await copyToClipboard(
@@ -1962,7 +1962,7 @@ export const display = async (
 export const getValue = async (id: string): Promise<string> => {
     await ensureGroup(id);
     initialiseRepeatables(id);
-    resolved = resolveDocument(definitions, state, getSymptomLens());
+    resolved = resolveDocument(definitions, state, getLens());
     return renderGroupText(id, definitions, state, resolved);
 };
 
@@ -1971,7 +1971,7 @@ export const getStructuredValue = async (
 ): Promise<StructuredDocument> => {
     await ensureGroup(id);
     initialiseRepeatables(id);
-    resolved = resolveDocument(definitions, state, getSymptomLens());
+    resolved = resolveDocument(definitions, state, getLens());
     return structuredDocument(id, definitions, state, resolved);
 };
 
@@ -2059,7 +2059,7 @@ export const dispose = (parentId: string): void => {
     modules.delete(parentId);
 };
 
-document.addEventListener("papiertiger:symptom-lens-change", renderAll);
+document.addEventListener("papiertiger:lens-change", renderAll);
 document.addEventListener("click", (event) => {
     const path = event.composedPath();
     let dismissed = false;

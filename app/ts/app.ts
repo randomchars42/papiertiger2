@@ -5,11 +5,12 @@ import type { Plugin } from "@lib/plugin.js";
 import { copyToClipboard, element } from "@lib/dom.js";
 import { isRecord } from "@lib/guards.js";
 import {
-    getSymptomLens,
-    initialiseSymptomLenses,
-    setSymptomLens,
-    symptomLenses,
-} from "@lib/symptomlens.js";
+    availableLenses,
+    getLens,
+    initialiseLenses,
+    setLens,
+} from "@lib/lens.js";
+import type { Lens } from "@lib/lens.js";
 
 type DocumentBlock = {
     plugin: string;
@@ -26,6 +27,8 @@ type DocumentDefinition = {
 type DocumentCatalog = {
     version: 1;
     default: string;
+    defaultLens: string;
+    lenses: Lens[];
     documents: Record<string, DocumentDefinition>;
     tools?: ToolDefinition[];
 };
@@ -48,6 +51,16 @@ const documentCatalog = (value: unknown): DocumentCatalog => {
         !isRecord(value) ||
         value.version !== 1 ||
         typeof value.default !== "string" ||
+        typeof value.defaultLens !== "string" ||
+        !Array.isArray(value.lenses) ||
+        value.lenses.length === 0 ||
+        !value.lenses.every(
+            (lens) =>
+                isRecord(lens) &&
+                typeof lens.id === "string" &&
+                typeof lens.label === "string",
+        ) ||
+        !value.lenses.some((lens) => lens.id === value.defaultLens) ||
         !isRecord(value.documents) ||
         !(value.default in value.documents)
     ) {
@@ -91,12 +104,12 @@ const showError = (error: unknown): void => {
 
 const run = async (): Promise<void> => {
     configure();
-    await initialiseSymptomLenses();
     const catalog = documentCatalog(
         await loadJSON(
             `${getConfig("dataURL").replace(/\/$/, "")}/documents.json`,
         ),
     );
+    initialiseLenses(catalog.lenses, catalog.defaultLens);
     const host = document.getElementById("Editor__body");
     if (host === null) throw new Error("Der Dokumentbereich wurde nicht gefunden.");
 
@@ -113,13 +126,13 @@ const run = async (): Promise<void> => {
     label.append(select);
     const lensLabel = element("label", "document-shell__label", "Linse");
     const lensSelect = element("select", "document-shell__select");
-    lensSelect.setAttribute("aria-label", "Symptomlinse auswählen");
-    for (const lens of symptomLenses()) {
+    lensSelect.setAttribute("aria-label", "Linse auswählen");
+    for (const lens of availableLenses()) {
         const option = element("option", undefined, lens.label);
         option.value = lens.id;
         lensSelect.append(option);
     }
-    lensSelect.value = getSymptomLens();
+    lensSelect.value = getLens();
     lensLabel.append(lensSelect);
     const copyText = button("Dokument kopieren", "copy-text");
     const copyData = button("Daten kopieren", "copy-data");
@@ -315,10 +328,10 @@ const run = async (): Promise<void> => {
         void renderDocument(select.value).catch(showError);
     });
     lensSelect.addEventListener("change", () => {
-        setSymptomLens(lensSelect.value);
+        setLens(lensSelect.value);
     });
-    document.addEventListener("papiertiger:symptom-lens-change", () => {
-        lensSelect.value = getSymptomLens();
+    document.addEventListener("papiertiger:lens-change", () => {
+        lensSelect.value = getLens();
     });
     toolbar.addEventListener("click", (event) => {
         const target = event.target;

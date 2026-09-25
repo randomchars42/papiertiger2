@@ -77,10 +77,11 @@ scripts/compile_textblocks.py
     Parser, ID-Ableitung, Referenzauflösung, Validierung, atomare Ausgabe
 ```
 
-`documents.json` ist der einzige Katalog der sichtbaren Dokumente. Jeder Block
-nennt ein Plug-in und dessen Parameter. Dadurch kann ein Dokument Textblöcke
-und andere Module kombinieren, ohne ihre Implementierungen miteinander zu
-verschmelzen.
+`documents.json` ist der einzige Katalog der sichtbaren Dokumente und der
+globalen Linsen. Jeder Block nennt ein Plug-in und dessen Parameter. Dadurch
+kann ein Dokument Textblöcke und andere Module kombinieren, ohne ihre
+Implementierungen miteinander zu verschmelzen. Katalogwerte und Gruppen
+referenzieren Linsen-IDs, besitzen aber keine eigene Linsenregistrierung.
 
 Globale Werkzeuge stehen im selben Katalog, aber getrennt von den
 Dokumentblöcken. Die Anwendung besitzt eine gemeinsame responsive
@@ -110,9 +111,10 @@ Reihenfolge bleiben trotzdem im Dokumentkatalog definiert.
 Große Wertkataloge werden vom Compiler vorab normalisiert und beim Laden in
 eine kataloggestützte Phrase eingefügt. Suchtext und stabile IDs entstehen
 beim Build; der Browser filtert nur noch fertige Zeichenketten und rendert
-höchstens die erste Ergebnisgruppe. Kataloge ohne Linsen zeigen initial ihre
-Einträge in Quellreihenfolge. Bei Katalogen mit Linsen verändert die globale
-Linse nur die initial sichtbare Teilmenge, nicht Katalog, Auswahl oder Ausgabe.
+höchstens die erste Ergebnisgruppe. Kataloge ohne `@lens`-Zuordnungen zeigen
+initial ihre Einträge in Quellreihenfolge. Bei Katalogen mit Zuordnungen
+verändert die globale Linse nur die initial sichtbare Teilmenge, nicht Katalog,
+Auswahl oder Ausgabe.
 Eine nachgestellte Suche wechselt mit dem ersten Suchzeichen in einen eigenen
 Ergebniszustand und durchsucht weiterhin den gesamten Katalog.
 

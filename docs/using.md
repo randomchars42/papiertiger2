@@ -71,9 +71,9 @@ für CEDIS wird dann lediglich **Unbekannt** vorgeschlagen.
 
 Andere Katalogauswahlen wie **Allergie** folgen derselben Regel. Ein `*` am
 Phrasentitel öffnet eine solche Auswahl wie bisher automatisch. Die aktive
-**Linse** wird global in der Kopfzeile gewählt. Der Standard
-steht als `symptomLens` in `app/ts/config.ts` und lässt sich mit demselben
-URL-Parameter überschreiben, beispielsweise `?symptomLens=kernteam`.
+**Linse** wird global in der Kopfzeile gewählt. Definition und Standard stehen
+in `documents.pt`; der URL-Parameter `lens` überschreibt den Standard,
+beispielsweise `?lens=kernteam`.
 
 ## Inline-Eingaben
 

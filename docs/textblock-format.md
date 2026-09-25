@@ -30,19 +30,17 @@ doppelte IDs sind Fehler.
 ## Wertkataloge und Linsen
 
 Ein Paket kann einen wiederverwendbaren Wertkatalog mit stabilen, expliziten
-Eintrags-IDs enthalten. Die Quellreihenfolge ist zugleich die bevorzugte
-Anzeigereihenfolge. Ein Katalog benötigt keine Linse; dann werden initial seine
-ersten Werte in Quellreihenfolge gezeigt. Falls Linsen definiert sind, filtern
-sie nur die initial sichtbaren Werte. Eine Suche durchsucht immer den
-vollständigen Katalog. Ihr Eingabefeld und ihre Beschriftung werden aus der
-verwendenden Phrase abgeleitet.
+Eintrags-IDs enthalten. Die globalen Linsen werden einmal im Dokumentkatalog
+definiert; Katalogwerte referenzieren sie nur. Die Quellreihenfolge ist zugleich
+die bevorzugte Anzeigereihenfolge. Enthält ein Katalog keine `@lens`-Zuordnung,
+werden initial seine ersten Werte in Quellreihenfolge gezeigt. Andernfalls
+filtert die aktive Linse nur die initial sichtbaren Werte. Eine Suche durchsucht
+immer den vollständigen Katalog. Ihr Eingabefeld und ihre Beschriftung werden
+aus der verwendenden Phrase abgeleitet.
 
 ```pt
 N: symptome
 I: gemeinsam
-
-L rettungsdienst: Rettungsdienst
-L kernteam: Kernteam
 
 V schwindel: Schwindel|a
   @sct=404640003[Dizziness]
@@ -58,7 +56,6 @@ V freitext: {:freitext=gemeinsam.freitext*:}|a
 
 | Direktive | Bedeutung |
 |---|---|
-| `L id: Text` | definiert eine Linse mit sichtbarer Bezeichnung |
 | `V id: Text|Art` | definiert einen stabil benannten Katalogwert |
 | `@sct=` | optionale SNOMED-CT-Kodierung wie bei Phrasenwerten |
 | `@alias=` | mit Semikolon getrennte Suchbegriffe |
@@ -536,6 +533,9 @@ T: dokumente
 
 W: updates updates label="Neuigkeiten"
 
+L* rettungsdienst: Rettungsdienst
+L kernteam: Kernteam
+
 D*: Rettungsdienst
   B: textblock ankunft controls=false
 
@@ -547,6 +547,8 @@ D: Erstbefund
 |---|---|
 | `T: dokumente` | kennzeichnet den Dokumentkatalog |
 | `W:` | globales Werkzeug: Plug-in, Werkzeug-ID und optionale Parameter |
+| `L* id: Text` | definiert die globale Standardlinse |
+| `L id: Text` | definiert eine weitere globale Linse |
 | `D*:` | Standarddokument |
 | `D:` | weiteres Dokument |
 | `B:` | Plug-in, Definitions-ID und optionale Parameter |

@@ -13,7 +13,7 @@ import {
     scopeState,
     summarizeGroup,
 } from "./textblockstate.js";
-import { getSymptomLens } from "@lib/symptomlens.js";
+import { getLens } from "@lib/lens.js";
 import {
     matchesSearchTokens,
     normaliseSearch,
@@ -136,14 +136,12 @@ export const renderPhraseEditor = (
     if (catalog === undefined) {
         appendCandidates(editor, catalogValues);
     } else {
-        const selectedLens = getSymptomLens();
-        const activeLens = catalog.lenses.some(
-            (lens) => lens.id === selectedLens,
-        )
-            ? selectedLens
-            : catalog.lenses[0]?.id;
+        const activeLens = getLens();
+        const filtersByLens = catalogValues.some(
+            ([, value]) => (value.lenses?.length ?? 0) > 0,
+        );
         const recommendations = catalogValues.filter(([, value]) =>
-            catalog.lenses.length === 0
+            !filtersByLens
                 ? true
                 : value.lenses?.includes(activeLens ?? "") === true,
         );
