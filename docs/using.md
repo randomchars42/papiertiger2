@@ -130,7 +130,12 @@ Animation.
 Ein Klick auf eine Gruppenüberschrift schaltet den Einschluss der Gruppe ein
 oder aus, ohne die Auswahl ihrer Kinder zu löschen. Deaktivieren kompaktiert die
 Gruppe zugleich; Aktivieren öffnet den dafür nötigen Pfad. **…** öffnet
-ausschließlich die Darstellung. Im erweiterten Zustand ersetzt **≪** es am Ende
+ausschließlich die Darstellung. Jede andere Bedienung eines sichtbaren Elements
+im Minimum öffnet zuerst die zugehörige `@autocompact`-Grenze und führt danach
+die gewählte Aktion aus. Deshalb erscheinen dort keine zusätzlichen
+Disclosure-Symbole für die dargestellten Untergruppen. Einzige Ausnahme ist die
+Überschrift der kompakten Grenze selbst: Ihr Klick deaktiviert und kompaktiert
+sie unmittelbar. Im erweiterten Zustand ersetzt **≪** das **…** am Ende
 derselben Inhaltszeile. **+** ist allein dem Anlegen einer weiteren Instanz
 vorbehalten, **×** entfernt eine solche Instanz. Nur erweiterte Blöcke der
 ersten Ebene schreiben **↺ Zurücksetzen** aus; verschachtelte Gruppen verwenden

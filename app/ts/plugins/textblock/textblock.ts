@@ -1379,6 +1379,42 @@ const activateInactiveGroupPath = (
     return deepestActivated;
 };
 
+const expandCompactedAutoCompactForAction = (
+    module: Module,
+    button: HTMLButtonElement,
+    action: string,
+    parent: HTMLElement,
+): AutoCompactContext | null => {
+    if (action === "toggle-compact" || action === "open-group-path") return null;
+    const actionGroup = button.closest<HTMLElement>(".group[data-group-id]");
+    let node = actionGroup;
+    while (node !== null && parent.contains(node)) {
+        const groupId = node.dataset.groupId;
+        const instanceId = node.dataset.instanceId;
+        if (
+            groupId !== undefined &&
+            node.classList.contains("group--compact") &&
+            definitions.groups[groupId]?.autoCompact === true
+        ) {
+            if (action === "toggle-group" && actionGroup === node) return null;
+            const context: AutoCompactContext = {
+                groupId,
+                ...(instanceId === undefined ? {} : { instanceId }),
+            };
+            compactFlowSiblings(module, node);
+            const path = groupPathToGroup(module, groupId, instanceId);
+            if (path === undefined) {
+                module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+            } else {
+                expandGroupPath(module, path);
+            }
+            return context;
+        }
+        node = closestParentGroup(node);
+    }
+    return null;
+};
+
 const handleClick = async (module: Module, event: Event): Promise<void> => {
     const target = event.target;
     if (!(target instanceof Element)) return;
@@ -1402,12 +1438,17 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         cancelAutoCompact(module, compactContext.groupId, compactContext.instanceId);
     }
     module.status = "";
-    let expandedGroup: AutoCompactContext | null = null;
+    let expandedGroup = expandCompactedAutoCompactForAction(
+        module,
+        button,
+        action,
+        parent,
+    );
     let compactedGroup: AutoCompactContext | null = null;
     const activatedByChild = activatingChildActions.has(action)
         ? activateInactiveGroupPath(module, button, parent)
         : null;
-    if (activatedByChild !== null) expandedGroup = activatedByChild;
+    if (activatedByChild !== null) expandedGroup ??= activatedByChild;
 
     if (action === "phrase") {
         const phraseId = requireData(button, "phraseId");
@@ -1712,7 +1753,7 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
     if (editorExpansion !== null) {
         const groupNode = button.closest<HTMLElement>(".group[data-group-id]");
         if (groupNode !== null) compactFlowSiblings(module, groupNode);
-        expandedGroup = editorExpansion;
+        expandedGroup ??= editorExpansion;
     }
 
     renderAll();

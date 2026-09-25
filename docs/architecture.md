@@ -38,7 +38,10 @@ Ohne Annotation gilt `flow`; `break` wirkt genau eine Ebene. `flow` schließt
 offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte Darstellung
 bildet effektiv aufgenommene Phrasen, Vorschläge, bedingt sichtbare Gruppen und
 ihre Überschriftenpfade in stabiler Quellreihenfolge ab. Die Überschrift der
-Grenze selbst bleibt stets erreichbar. Ein Disclosure verändert nur Offenlegung; ein
+Grenze selbst bleibt stets erreichbar. Ein Disclosure verändert nur
+Offenlegung. Andere Aktionen aus dem Minimum öffnen zunächst ihre nächste
+kompakte `@autocompact`-Grenze und laufen danach unverändert weiter; die
+Grenzüberschrift selbst deaktiviert ohne vorherige Expansion. Ein gewöhnlicher
 Überschriftenklick koppelt Aktivierung mit Öffnen beziehungsweise Deaktivierung
 mit Kompaktierung.
 

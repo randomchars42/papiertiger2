@@ -981,6 +981,37 @@ const activateInactiveGroupPath = (module, target, parent) => {
     }
     return deepestActivated;
 };
+const expandCompactedAutoCompactForAction = (module, button, action, parent) => {
+    if (action === "toggle-compact" || action === "open-group-path")
+        return null;
+    const actionGroup = button.closest(".group[data-group-id]");
+    let node = actionGroup;
+    while (node !== null && parent.contains(node)) {
+        const groupId = node.dataset.groupId;
+        const instanceId = node.dataset.instanceId;
+        if (groupId !== undefined &&
+            node.classList.contains("group--compact") &&
+            definitions.groups[groupId]?.autoCompact === true) {
+            if (action === "toggle-group" && actionGroup === node)
+                return null;
+            const context = {
+                groupId,
+                ...(instanceId === undefined ? {} : { instanceId }),
+            };
+            compactFlowSiblings(module, node);
+            const path = groupPathToGroup(module, groupId, instanceId);
+            if (path === undefined) {
+                module.compactOverrides[phraseKey(groupId, instanceId)] = false;
+            }
+            else {
+                expandGroupPath(module, path);
+            }
+            return context;
+        }
+        node = closestParentGroup(node);
+    }
+    return null;
+};
 const handleClick = async (module, event) => {
     const target = event.target;
     if (!(target instanceof Element))
@@ -1005,13 +1036,13 @@ const handleClick = async (module, event) => {
         cancelAutoCompact(module, compactContext.groupId, compactContext.instanceId);
     }
     module.status = "";
-    let expandedGroup = null;
+    let expandedGroup = expandCompactedAutoCompactForAction(module, button, action, parent);
     let compactedGroup = null;
     const activatedByChild = activatingChildActions.has(action)
         ? activateInactiveGroupPath(module, button, parent)
         : null;
     if (activatedByChild !== null)
-        expandedGroup = activatedByChild;
+        expandedGroup ??= activatedByChild;
     if (action === "phrase") {
         const phraseId = requireData(button, "phraseId");
         if (activatedByChild === null ||
@@ -1255,7 +1286,7 @@ const handleClick = async (module, event) => {
         const groupNode = button.closest(".group[data-group-id]");
         if (groupNode !== null)
             compactFlowSiblings(module, groupNode);
-        expandedGroup = editorExpansion;
+        expandedGroup ??= editorExpansion;
     }
     renderAll();
     if (openNextPrompt(module)) {

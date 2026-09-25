@@ -345,10 +345,13 @@ function renderCompactGroup(parent, groupId, level, definitions, state, resolved
     const body = element("div", "group__body group__body--compact-only");
     renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, pickerQueries, nextPath, instanceId);
     section.append(body);
-    section.append(iconActionButton("…", `${title} öffnen`, "open-group-path", scopedData({
-        groupId,
-        groupPath: JSON.stringify(nextPath),
-    }, instanceId), "control group__disclosure group__disclosure--trailing"));
+    const insideAutoCompactSummary = path.some((context) => definitions.groups[context.groupId]?.autoCompact === true);
+    if (!insideAutoCompactSummary) {
+        section.append(iconActionButton("…", `${title} öffnen`, "open-group-path", scopedData({
+            groupId,
+            groupPath: JSON.stringify(nextPath),
+        }, instanceId), "control group__disclosure group__disclosure--trailing"));
+    }
     parent.append(section);
 }
 const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries) => {

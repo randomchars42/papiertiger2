@@ -750,21 +750,26 @@ function renderCompactGroup(
         instanceId,
     );
     section.append(body);
-    section.append(
-        iconActionButton(
-            "…",
-            `${title} öffnen`,
-            "open-group-path",
-            scopedData(
-                {
-                    groupId,
-                    groupPath: JSON.stringify(nextPath),
-                },
-                instanceId,
-            ),
-            "control group__disclosure group__disclosure--trailing",
-        ),
+    const insideAutoCompactSummary = path.some(
+        (context) => definitions.groups[context.groupId]?.autoCompact === true,
     );
+    if (!insideAutoCompactSummary) {
+        section.append(
+            iconActionButton(
+                "…",
+                `${title} öffnen`,
+                "open-group-path",
+                scopedData(
+                    {
+                        groupId,
+                        groupPath: JSON.stringify(nextPath),
+                    },
+                    instanceId,
+                ),
+                "control group__disclosure group__disclosure--trailing",
+            ),
+        );
+    }
     parent.append(section);
 }
 

@@ -205,12 +205,16 @@ daher nicht mehr Teil des Formats.
 Ein Klick auf eine Gruppenüberschrift schaltet ihren Einschluss samt dem oben
 beschriebenen Kompakt-/Offenlegungsschritt um. **…** erweitert nur die
 Darstellung; im erweiterten Zustand ersetzt **≪** dieses Zeichen am Ende
-derselben Inhaltszeile. **+** ist ausschließlich die Aktion zum Anlegen einer
-wiederholbaren Instanz; **×** entfernt eine Instanz. Ein erweiterter Block der
-ersten Ebene zeigt **↺ Zurücksetzen** ausgeschrieben, verschachtelte
-beziehungsweise kompakte Gruppen zeigen nur **↺** mit zugänglicher
-Beschriftung. Auswahl und Attribute bleiben beim Deaktivieren oder
-Kompaktwerden erhalten.
+derselben Inhaltszeile. Die Bedienung eines anderen sichtbaren Elements im
+Minimum öffnet zuerst die umgebende `@autocompact`-Grenze und führt danach die
+ursprüngliche Aktion aus. Untergruppen benötigen deshalb in diesem Minimum kein
+eigenes Disclosure. Nur die Überschrift der `@autocompact`-Grenze ist
+ausgenommen: Sie deaktiviert und kompaktiert unmittelbar. **+** ist
+ausschließlich die Aktion zum Anlegen einer wiederholbaren Instanz; **×**
+entfernt eine Instanz. Ein erweiterter Block der ersten Ebene zeigt
+**↺ Zurücksetzen** ausgeschrieben, verschachtelte beziehungsweise kompakte
+Gruppen zeigen nur **↺** mit zugänglicher Beschriftung. Auswahl und Attribute
+bleiben beim Deaktivieren oder Kompaktwerden erhalten.
 
 Die Überschrift einer Untergruppe, ihre direkten Phrasen und ihr abschließendes
 Disclosure bilden ohne weitere Annotation einen gemeinsamen umbrechenden
