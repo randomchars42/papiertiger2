@@ -5,6 +5,7 @@ import {
     parseValue,
 } from "./textblocklib.js";
 import {
+    groupCompactDefault,
     groupPhrasePresence,
     groupItems,
     isGroupConditionMet,
@@ -716,7 +717,11 @@ function renderGroup(
           ]
         : undefined;
     const compactKey = phraseKey(groupId, instanceId);
-    const compactByDefault = insideAutoCompact || group.autoCompact === true;
+    const compactByDefault = groupCompactDefault(
+        enabled,
+        insideAutoCompact,
+        group.autoCompact === true,
+    );
     const compact =
         compactSummary || (compactOverrides[compactKey] ?? compactByDefault);
     const section = element(
@@ -756,6 +761,12 @@ function renderGroup(
     headingButton.title = group.note ?? "";
     heading.append(headingButton);
     header.append(heading);
+
+    if (!enabled) {
+        section.append(header);
+        parent.append(section);
+        return;
+    }
 
     let disclosure: HTMLButtonElement | null = null;
     if (!compactSummary) {

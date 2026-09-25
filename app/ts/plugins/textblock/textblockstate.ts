@@ -55,6 +55,12 @@ export const scopeState = (
 export const phraseKey = (phraseId: string, instanceId?: string): string =>
     instanceId === undefined ? phraseId : `${instanceId}:${phraseId}`;
 
+export const groupCompactDefault = (
+    enabled: boolean,
+    insideAutoCompact: boolean,
+    autoCompact: boolean,
+): boolean => !enabled || insideAutoCompact || autoCompact;
+
 export const groupItems = (group: GroupDefinition) => group.items;
 
 export const isPackage = (value: unknown): value is PackageDefinition => {
@@ -276,7 +282,9 @@ const refreshEffectiveInclusion = (
     inactive: ReadonlySet<string>,
 ): void => {
     for (const phrase of Object.values(phrases)) {
-        phrase.effectiveIncluded = phrase.included && !inactive.has(phrase.id);
+        const active = !inactive.has(phrase.id);
+        phrase.effectiveIncluded = phrase.included && active;
+        if (!active) phrase.visible = false;
     }
 };
 
@@ -558,6 +566,16 @@ export const resolveDocument = (
             };
             groups[key] = hidden;
             return hidden;
+        }
+        if (!enabled) {
+            const inactive = {
+                enabled: false,
+                conditionMet: true,
+                included: false,
+                suggested: false,
+            };
+            groups[key] = inactive;
+            return inactive;
         }
         let included = false;
         let suggested = group.condition !== undefined;

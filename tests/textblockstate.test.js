@@ -5,6 +5,7 @@ import test from "node:test";
 import {
     createDocumentState,
     createScopeState,
+    groupCompactDefault,
     resolveDocument,
 } from "../app/js/plugins/textblock/textblockstate.js";
 
@@ -88,9 +89,50 @@ test("an inactive group suppresses effective child inclusion", () => {
     const resolved = resolveDocument(model, createDocumentState());
 
     assert.equal(resolved.phrases.finding.included, true);
+    assert.equal(resolved.phrases.finding.visible, false);
     assert.equal(resolved.phrases.finding.effectiveIncluded, false);
     assert.equal(resolved.groups.inactive.included, false);
+    assert.equal(resolved.groups.inactive.suggested, false);
     assert.equal(resolved.groups.root.included, false);
+});
+
+test("an inactive group gates suggestions until it is reactivated", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "Root",
+                items: [
+                    { type: "phrase", id: "trigger" },
+                    { type: "group", id: "inactive" },
+                ],
+            },
+            inactive: {
+                title: "Inactive",
+                default: false,
+                items: [{ type: "phrase", id: "suggested" }],
+            },
+        },
+        {
+            trigger: phrase("Trigger", null, { active: value("active") }),
+            suggested: phrase(
+                "Suggested",
+                null,
+                { option: value("option") },
+                { suggestions: { active: "option" } },
+            ),
+        },
+    );
+    const state = createDocumentState();
+    state.phraseOverrides.trigger = { valueId: "active", included: true };
+
+    let resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.suggested.visible, false);
+    assert.equal(resolved.groups.inactive.suggested, false);
+
+    state.groupOverrides.inactive = true;
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.suggested.visible, true);
+    assert.equal(resolved.groups.inactive.suggested, true);
 });
 
 test("a matching conditional group is suggested but not included", () => {
@@ -275,6 +317,13 @@ test("active lenses provide a group default without overriding user choice", () 
     state.groupOverrides.root = true;
     resolved = resolveDocument(model, state, "general");
     assert.equal(resolved.groups.root.enabled, true);
+});
+
+test("inactive groups start compact without coupling compactness to activity", () => {
+    assert.equal(groupCompactDefault(false, false, false), true);
+    assert.equal(groupCompactDefault(true, false, false), false);
+    assert.equal(groupCompactDefault(true, true, false), true);
+    assert.equal(groupCompactDefault(true, false, true), true);
 });
 
 test("compiled groups use only the ordered items representation", async () => {

@@ -167,11 +167,15 @@ Linsenwechsel erhalten; Zurücksetzen entfernt sie und stellt den gegenwärtigen
 linsenabhängigen Anfangszustand wieder her. Eine
 inaktive Gruppe behält Auswahl und Attribute ihrer Kinder, unterdrückt aber
 deren effektiven Einschluss in Ausgabe, Bedingungen und aktive Hervorhebung.
-Von außen ausgelöste Vorschläge bleiben sichtbar, ohne die Gruppe oder ihre
-Vorfahren zu aktivieren. `@subgroups(...)` und eine reine Bedienung über
-**…** beziehungsweise **≪** verändern nur die Darstellung. Eine ausdrückliche
-Auswahl oder Bearbeitung eines Kindes aktiviert dagegen dessen inaktiven
-Gruppenpfad, damit die Auswahl unmittelbar effektiv aufgenommen werden kann.
+Sie bildet ein hartes Gate: Nur ihre eigene Überschrift bleibt sichtbar;
+Kinder, Vorschläge, Offenlegungen und Darstellungswerkzeuge werden erst nach
+einem aktivierenden Überschriftenklick wieder berücksichtigt. Das gilt auch,
+wenn `@active(...)` die Gruppe beim Linsenwechsel inaktiv werden lässt. Eine
+ausdrückliche Benutzeraktivierung behält wie beschrieben Vorrang.
+Von außen ausgelöste Vorschläge in aktiven Gruppen bleiben sichtbar, ohne die
+Gruppe oder ihre Vorfahren zu aktivieren. Bei aktiven Gruppen verändern
+`@subgroups(...)` und eine reine Bedienung über **…** beziehungsweise **≪** nur
+die Darstellung.
 
 `@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und
 `P<...>`, verändert aber weder Sichtbarkeit noch Einschluss. Beim Übergang der

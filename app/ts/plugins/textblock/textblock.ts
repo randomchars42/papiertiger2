@@ -16,6 +16,7 @@ import {
 import {
     createDocumentState,
     createScopeState,
+    groupCompactDefault,
     groupItems,
     isConditionMet,
     isGroupConditionMet,
@@ -960,10 +961,35 @@ const groupStartsCompact = (
     module: Module,
     groupId: string,
     instanceId?: string,
-): boolean =>
-    groupPathToGroup(module, groupId, instanceId)?.some(
-        (context) => definitions.groups[context.groupId].autoCompact === true,
-    ) ?? definitions.groups[groupId].autoCompact === true;
+): boolean => {
+    const path = groupPathToGroup(module, groupId, instanceId);
+    if (path === undefined) {
+        return groupCompactDefault(
+            isGroupEnabled(
+                groupId,
+                definitions,
+                state,
+                instanceId,
+                getSymptomLens(),
+            ),
+            false,
+            definitions.groups[groupId].autoCompact === true,
+        );
+    }
+    return path.some((context) =>
+        groupCompactDefault(
+            isGroupEnabled(
+                context.groupId,
+                definitions,
+                state,
+                context.instanceId,
+                getSymptomLens(),
+            ),
+            false,
+            definitions.groups[context.groupId].autoCompact === true,
+        ),
+    );
+};
 
 const expandGroupPath = (
     module: Module,
@@ -1342,54 +1368,6 @@ const restartAutoCompactForTarget = (
     }
 };
 
-const activatingChildActions = new Set([
-    "phrase",
-    "choose-value",
-    "choose-freetext",
-    "attribute",
-    "choose-attribute",
-    "step-number",
-    "step-duration",
-    "choose-duration-unit",
-    "clear-attribute",
-    "toggle-set",
-]);
-
-const activateInactiveGroupPath = (
-    module: Module,
-    target: Element,
-    parent: HTMLElement,
-): AutoCompactContext | null => {
-    let deepestActivated: AutoCompactContext | null = null;
-    let node = target.closest<HTMLElement>(".group[data-group-id]");
-    while (node !== null && parent.contains(node)) {
-        const groupId = node.dataset.groupId;
-        const instanceId = node.dataset.instanceId;
-        if (
-            groupId !== undefined &&
-            !isGroupEnabled(
-                groupId,
-                definitions,
-                state,
-                instanceId,
-                getSymptomLens(),
-            )
-        ) {
-            scopeFor(instanceId).groupOverrides[groupId] = true;
-            cancelAutoCompact(module, groupId, instanceId);
-            module.compactOverrides[phraseKey(groupId, instanceId)] = false;
-            deepestActivated ??= {
-                groupId,
-                ...(instanceId === undefined ? {} : { instanceId }),
-            };
-        }
-        node = node.parentElement?.closest<HTMLElement>(
-            ".group[data-group-id]",
-        ) ?? null;
-    }
-    return deepestActivated;
-};
-
 const expandCompactedAutoCompactForAction = (
     module: Module,
     button: HTMLButtonElement,
@@ -1456,19 +1434,10 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
         parent,
     );
     let compactedGroup: AutoCompactContext | null = null;
-    const activatedByChild = activatingChildActions.has(action)
-        ? activateInactiveGroupPath(module, button, parent)
-        : null;
-    if (activatedByChild !== null) expandedGroup ??= activatedByChild;
 
     if (action === "phrase") {
         const phraseId = requireData(button, "phraseId");
-        if (
-            activatedByChild === null ||
-            currentPhrase(phraseId, instanceId)?.included !== true
-        ) {
-            handlePhrase(module, phraseId, instanceId);
-        }
+        handlePhrase(module, phraseId, instanceId);
     } else if (action === "choose-value") {
         selectValue(
             module,
