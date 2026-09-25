@@ -170,6 +170,16 @@ Die Abfrage nennt immer Paket und Tag. Der Compiler löst sie in konkrete
 Wert-IDs auf und meldet leere Treffer als Fehler. Freitextwerte werden nicht aus
 ihrem später eingegebenen Text klassifiziert.
 
+Soll eine Folgephrase nach jeder Auswahl aus einem Katalog erscheinen, darf sie
+stattdessen den Titel der verwendenden Katalogphrase referenzieren. Das
+funktioniert auch dann, wenn nur der Katalog importiert und die Gruppe lokal
+definiert ist:
+
+```pt
+P: Allergie* => @values(allergie)
+P<Allergie>: Allergische Reaktion => {:reaktion=allergie.reaktion*:}|a
+```
+
 CEDIS-Code, CEDIS-Originalbezeichnung und Beziehung werden direkt am Wert
 geführt. Der Compiler gleicht alle drei Angaben mit dem gebündelten Katalog ab
 und verlangt für den Symptomkatalog mindestens eine Zuordnung zu jedem

@@ -112,10 +112,11 @@ Compiler ersetzt die Abfrage durch die gegenwärtigen stabilen Wert-IDs und
 bricht ab, wenn kein Wert passt. Die Laufzeit benötigt dadurch keine eigene
 Tag-Semantik. Freitext wird nicht anhand seiner Eingabe automatisch getaggt.
 
-Verweist eine Bedingung stattdessen auf den Titel einer Phrase, die den lokalen
-Katalog ihres Pakets verwendet, umfasst sie sämtliche Werte dieses Katalogs.
-Damit können gemeinsame Folgefragen nach jeder Katalogauswahl sichtbar werden.
-Für importierte Kataloge sind weiterhin explizite `paket.wert`-Referenzen nötig.
+Verweist eine Bedingung stattdessen auf den Titel einer Katalogphrase, umfasst
+sie sämtliche Werte dieses Katalogs sowie zusätzliche, direkt an der Phrase
+definierte Werte. Das gilt für lokale und importierte Kataloge; der Compiler
+ersetzt beide durch stabile Wert-IDs. Damit können gemeinsame Folgefragen nach
+jeder Katalogauswahl sichtbar werden.
 
 Der Compiler fügt die Katalogwerte in die Laufzeitphrase ein. Auswahl,
 Wiederholung, Bedingungen und Ausgabe verwenden danach das normale

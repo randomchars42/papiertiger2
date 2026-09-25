@@ -706,6 +706,7 @@ def search_text(*values: str) -> str:
 def compile_source(
     source: dict[str, Any],
     catalog_tags: dict[tuple[str, str], list[str]] | None = None,
+    catalog_members: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     namespace = source["namespace"]
     identifiers: dict[str, tuple[str, int]] = {}
@@ -864,14 +865,11 @@ def compile_source(
         phrases = phrase_titles.get(reference, [])
         if len(phrases) == 1:
             phrase = phrases[0]
-            if phrase["catalog"] == namespace:
-                return [*source["catalog_values"], *phrase["values"]]
             if phrase["catalog"] is not None:
-                fail(
-                    source,
-                    line,
-                    "conditions on an imported catalog phrase need stable package.value references",
-                )
+                members = (catalog_members or {}).get(phrase["catalog"])
+                if members is None:
+                    fail(source, line, f"unknown value catalog '{phrase['catalog']}'")
+                return [{"id": value_id} for value_id in members] + phrase["values"]
             return phrase["values"]
         if len(phrases) > 1:
             fail(source, line, f"ambiguous condition phrase '{reference}'")
@@ -1305,18 +1303,20 @@ def output_path(source_path: Path) -> Path:
     return source_path.with_suffix(".json")
 
 
-def catalog_tag_index(
+def catalog_indexes(
     sources: list[dict[str, Any]], data_directory: Path
-) -> dict[tuple[str, str], list[str]]:
-    index: dict[tuple[str, str], list[str]] = {}
+) -> tuple[dict[tuple[str, str], list[str]], dict[str, list[str]]]:
+    tag_index: dict[tuple[str, str], list[str]] = {}
+    member_index: dict[str, list[str]] = {}
     selected_names = {source["namespace"] for source in sources}
 
     for source in sources:
         namespace = source["namespace"]
         for value in source["catalog_values"]:
             value_id = f"{namespace}_wert_{value['name']}"
+            member_index.setdefault(namespace, []).append(value_id)
             for tag in value["tags"]:
-                index.setdefault((namespace, tag), []).append(value_id)
+                tag_index.setdefault((namespace, tag), []).append(value_id)
 
     external_imports = {
         imported
@@ -1336,13 +1336,14 @@ def catalog_tag_index(
         for value_id, value in values.items():
             if not isinstance(value_id, str) or not isinstance(value, dict):
                 continue
-            tags = value.get("tags", [])
-            if not isinstance(tags, list):
+            member_index.setdefault(imported, []).append(value_id)
+            value_tags = value.get("tags", [])
+            if not isinstance(value_tags, list):
                 continue
-            for tag in tags:
+            for tag in value_tags:
                 if isinstance(tag, str):
-                    index.setdefault((imported, tag), []).append(value_id)
-    return index
+                    tag_index.setdefault((imported, tag), []).append(value_id)
+    return tag_index, member_index
 
 
 def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path) -> None:
@@ -1749,7 +1750,7 @@ def main() -> int:
             parsed.append(
                 (resolved, None if is_document_source(resolved) else parse_source(resolved))
             )
-        tags = catalog_tag_index(
+        tags, catalog_members = catalog_indexes(
             [source for _, source in parsed if source is not None],
             root / "app" / "data",
         )
@@ -1757,7 +1758,7 @@ def main() -> int:
             package = (
                 compile_documents(resolved)
                 if source is None
-                else compile_source(source, tags)
+                else compile_source(source, tags, catalog_members)
             )
             target = output_path(resolved)
             generated.append((target, encoded(package), package))
