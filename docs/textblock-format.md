@@ -140,6 +140,7 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@reveal(...)` | öffnet die Gruppe vorübergehend, sobald die angegebene Bedingung neu erfüllt ist |
 | `@reveal(initial)` | beginnt erweitert und bleibt bis zur ersten Bedienung offen |
 | `@active(linse; ...)` | initial nur in den genannten Linsen oder Linsengruppen aktiv |
+| `@lens(linse; ...)` | ist nur in den genannten Linsen oder Linsengruppen vorhanden |
 | `@inactive` | initial nicht in die Ausgabe eingeschlossen |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
@@ -178,6 +179,14 @@ Kinder, Vorschläge, Offenlegungen und Darstellungswerkzeuge werden erst nach
 einem aktivierenden Überschriftenklick wieder berücksichtigt. Das gilt auch,
 wenn `@active(...)` die Gruppe beim Linsenwechsel inaktiv werden lässt. Eine
 ausdrückliche Benutzeraktivierung behält wie beschrieben Vorrang.
+`@lens(...)` beschreibt dagegen strukturelle Anwendbarkeit: Außerhalb der
+genannten Linsen wird die Gruppe einschließlich ihrer Überschrift nicht
+dargestellt und kann nicht manuell aktiviert werden. Ihre Phrasen wirken dort
+weder auf Ausgabe noch auf Bedingungen oder Vorschläge. Auswahl und Attribute
+bleiben gespeichert und werden beim Rückwechsel in eine passende Linse wieder
+wirksam. `@active(...)` und `@inactive` können innerhalb einer anwendbaren
+Gruppe weiterhin deren anfänglichen Einschluss steuern; in `@active(...)`
+genannte Linsen müssen dann eine Teilmenge von `@lens(...)` sein.
 Von außen ausgelöste Vorschläge in aktiven Gruppen bleiben sichtbar, ohne die
 Gruppe oder ihre Vorfahren zu aktivieren. Bei aktiven Gruppen verändern
 `@subgroups(...)` und eine reine Bedienung über **…** beziehungsweise **≪** nur
@@ -583,10 +592,10 @@ D: Erstbefund
 | `B:` | Plug-in, Definitions-ID und optionale Parameter |
 
 Dokument-IDs werden aus den sichtbaren Titeln abgeleitet. Linsengruppen dürfen
-in `@active(...)` und `@lens=` gemeinsam mit einzelnen Linsen stehen. Der
-Compiler ersetzt sie in Quellreihenfolge durch ihre konkreten Linsen und
-entfernt dabei Überschneidungen. Linsengruppen enthalten ausschließlich
-existierende Linsen, keine weiteren Linsengruppen.
+in `@active(...)`, `@lens(...)` und `@lens=` gemeinsam mit einzelnen Linsen
+stehen. Der Compiler ersetzt sie in Quellreihenfolge durch ihre konkreten
+Linsen und entfernt dabei Überschneidungen. Linsengruppen enthalten
+ausschließlich existierende Linsen, keine weiteren Linsengruppen.
 
 ## Abgeleitete IDs
 

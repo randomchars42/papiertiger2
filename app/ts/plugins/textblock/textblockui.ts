@@ -643,6 +643,7 @@ const renderRepeatable = (
     insideAutoCompact: boolean,
 ): void => {
     const group = definitions.groups[groupId];
+    if (resolved.groups[groupId]?.applicable !== true) return;
     const container = element("div", "repeatable");
     container.dataset.repeatableGroupId = groupId;
     for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
@@ -697,11 +698,12 @@ function renderGroup(
     insideAutoCompact = false,
 ): void {
     const group = definitions.groups[groupId];
+    const groupPresence = resolved.groups[phraseKey(groupId, instanceId)];
+    if (groupPresence?.applicable !== true) return;
     if (!isGroupConditionMet(groupId, resolved, instanceId)) return;
     const isInstanceRoot = instanceIndex !== undefined;
     const compactSummary = compactPath !== undefined;
-    const enabled =
-        resolved.groups[phraseKey(groupId, instanceId)]?.enabled ?? false;
+    const enabled = groupPresence.enabled;
     const { included, suggested } = groupPhrasePresence(
         groupId,
         resolved,

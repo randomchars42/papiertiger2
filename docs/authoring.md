@@ -225,10 +225,12 @@ D*: Rettungsdienst
 
 `L*` markiert die globale Standardlinse, `L` weitere verfügbare Linsen. `LG`
 bündelt mehrere Linsen als reine Autorenabkürzung. Einzelne Linsen und Gruppen
-werden von `@lens=...` an Katalogwerten und `@active(...)` an Gruppen
-referenziert; der Compiler schreibt ausschließlich die aufgelösten Linsen in
-die Textblockpakete. `D*` markiert das Standarddokument. Textblock-IDs müssen
-auf ein Paket mit gleichnamiger Wurzelgruppe verweisen.
+werden von `@lens=...` an Katalogwerten sowie `@active(...)` und `@lens(...)` an
+Gruppen referenziert; der Compiler schreibt ausschließlich die aufgelösten
+Linsen in die Textblockpakete. `@active(...)` wählt nur den anfänglichen
+Einschluss, `@lens(...)` blendet eine fachlich nicht anwendbare Gruppe samt
+Überschrift aus. `D*` markiert das Standarddokument. Textblock-IDs müssen auf
+ein Paket mit gleichnamiger Wurzelgruppe verweisen.
 
 `W:` registriert ein globales Werkzeug getrennt von den auszugebenden
 Dokumentblöcken. Werkzeuge werden daher nicht von **Dokument kopieren** oder

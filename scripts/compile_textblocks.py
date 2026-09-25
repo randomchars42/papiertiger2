@@ -36,12 +36,13 @@ GROUP_ANNOTATIONS = frozenset(
         "reveal",
         "inactive",
         "active",
+        "lens",
         "repeat",
         "score",
     }
 )
 DEPRECATED_GROUP_ANNOTATIONS = ("inline", "collapsed", "autocollapse")
-RAW_GROUP_ANNOTATIONS = frozenset({"subgroups", "reveal", "active"})
+RAW_GROUP_ANNOTATIONS = frozenset({"subgroups", "reveal", "active", "lens"})
 
 
 class CompileError(Exception):
@@ -839,6 +840,21 @@ def compile_source(
                     expanded.append(lens)
         return expanded
 
+    def group_lenses(name: str, argument: Any, line: int) -> list[str]:
+        if not isinstance(argument, str):
+            fail(source, line, f"@{name} needs lens IDs in parentheses")
+        references = [entry.strip() for entry in argument.split(";") if entry.strip()]
+        if not references:
+            fail(source, line, f"@{name} needs at least one lens ID")
+        if len(set(references)) != len(references):
+            fail(source, line, f"@{name} contains a duplicate lens ID")
+        if any(
+            re.fullmatch(r"[a-z][a-z0-9_]*", reference) is None
+            for reference in references
+        ):
+            fail(source, line, f"@{name} lens IDs must be lowercase identifiers")
+        return expand_lenses(references, line)
+
     compiled_catalogs: dict[str, Any] = {}
     if source["catalog_values"]:
         catalog_attributes: dict[str, str] = {}
@@ -1067,6 +1083,7 @@ def compile_source(
             "subgroups",
             "reveal",
             "active",
+            "lens",
         }:
             if boolean_annotation in annotations and annotations[boolean_annotation] is not True:
                 fail(source, group["line"], f"@{boolean_annotation} takes no arguments")
@@ -1093,23 +1110,27 @@ def compile_source(
         if "active" in annotations:
             if "inactive" in annotations:
                 fail(source, group["line"], "@active and @inactive are mutually exclusive")
-            active = annotations["active"]
-            if not isinstance(active, str):
-                fail(source, group["line"], "@active needs lens IDs in parentheses")
-            active_lenses = [entry.strip() for entry in active.split(";") if entry.strip()]
-            if not active_lenses:
-                fail(source, group["line"], "@active needs at least one lens ID")
-            if len(set(active_lenses)) != len(active_lenses):
-                fail(source, group["line"], "@active contains a duplicate lens ID")
-            if any(
-                re.fullmatch(r"[a-z][a-z0-9_]*", lens) is None
-                for lens in active_lenses
-            ):
-                fail(source, group["line"], "@active lens IDs must be lowercase identifiers")
-            compiled_group["activeLenses"] = expand_lenses(
-                active_lenses,
+            compiled_group["activeLenses"] = group_lenses(
+                "active",
+                annotations["active"],
                 group["line"],
             )
+        if "lens" in annotations:
+            compiled_group["lenses"] = group_lenses(
+                "lens",
+                annotations["lens"],
+                group["line"],
+            )
+        if "activeLenses" in compiled_group and "lenses" in compiled_group:
+            unavailable_defaults = set(compiled_group["activeLenses"]) - set(
+                compiled_group["lenses"]
+            )
+            if unavailable_defaults:
+                fail(
+                    source,
+                    group["line"],
+                    "@active lenses must also be included in @lens",
+                )
         if "subgroups" in annotations:
             subgroup_layout = annotations["subgroups"]
             if subgroup_layout not in {"flow", "break"}:
@@ -1839,26 +1860,38 @@ def validate_packages(packages: dict[str, dict[str, Any]], data_directory: Path)
                     )
 
         for group_id, group in definitions["groups"].items():
-            active_lenses = group.get("activeLenses")
-            if active_lenses is not None:
+            for field, label in (("activeLenses", "active"), ("lenses", "applicable")):
+                group_lenses = group.get(field)
+                if group_lenses is None:
+                    continue
                 if (
-                    not isinstance(active_lenses, list)
-                    or not active_lenses
-                    or any(not isinstance(lens, str) for lens in active_lenses)
+                    not isinstance(group_lenses, list)
+                    or not group_lenses
+                    or any(not isinstance(lens, str) for lens in group_lenses)
                 ):
                     raise CompileError(
                         data_directory / f"{name}.json",
                         0,
-                        f"invalid active lenses in group '{group_id}'",
+                        f"invalid {label} lenses in group '{group_id}'",
                     )
-                unknown_active_lenses = set(active_lenses) - global_lens_ids
-                if unknown_active_lenses:
+                unknown_lenses = set(group_lenses) - global_lens_ids
+                if unknown_lenses:
                     raise CompileError(
                         data_directory / f"{name}.json",
                         0,
-                        f"unknown active lens '{sorted(unknown_active_lenses)[0]}' "
+                        f"unknown {label} lens '{sorted(unknown_lenses)[0]}' "
                         f"in group '{group_id}'",
                     )
+            if (
+                group.get("activeLenses") is not None
+                and group.get("lenses") is not None
+                and not set(group["activeLenses"]).issubset(group["lenses"])
+            ):
+                raise CompileError(
+                    data_directory / f"{name}.json",
+                    0,
+                    f"active lenses exceed applicable lenses in group '{group_id}'",
+                )
             for set_id in group.get("sets", []):
                 if set_id not in definitions["sets"]:
                     raise CompileError(data_directory / f"{name}.json", 0, f"unknown set '{set_id}'")

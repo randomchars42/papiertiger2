@@ -101,7 +101,7 @@ D*: Dokument
             },
         )
 
-    def test_lens_groups_expand_in_catalog_values_and_active_groups(self) -> None:
+    def test_lens_groups_expand_in_catalog_values_and_groups(self) -> None:
         source_text = """\
 N: sample
 
@@ -110,6 +110,8 @@ V item: Item|-
 
 G @root @active(klinik;rettungsdienst): Sample
   P: Item|-
+  G @lens(klinik) clinical: Clinical
+    P: Clinical item|-
 """
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "sample.pt"
@@ -139,6 +141,10 @@ G @root @active(klinik;rettungsdienst): Sample
                 "neurochirurgie",
                 "rettungsdienst",
             ],
+        )
+        self.assertEqual(
+            package["groups"]["sample_gruppe_clinical"]["lenses"],
+            ["kernteam", "trauma_orthopaedie", "neurochirurgie"],
         )
         self.assertEqual(
             package["catalogs"]["sample"]["values"]["sample_wert_item"]["lenses"],

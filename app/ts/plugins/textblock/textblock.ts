@@ -47,6 +47,7 @@ import type {
 type Module = {
     parentId: string;
     rootId: string;
+    lens: string;
     openEditor: OpenEditor;
     compactOverrides: Record<string, boolean>;
     status: string;
@@ -186,7 +187,8 @@ const initialiseRepeatables = (groupId: string): void => {
 };
 
 const renderAll = (): void => {
-    resolved = resolveDocument(definitions, state, getLens());
+    const activeLens = getLens();
+    resolved = resolveDocument(definitions, state, activeLens);
     const now = performance.now();
     const currentSuggestions = new Set(
         Object.values(resolved.phrases)
@@ -199,6 +201,10 @@ const renderAll = (): void => {
             .map((phrase) => phrase.key),
     );
     for (const module of modules.values()) {
+        if (module.lens !== activeLens) {
+            reconcileModuleApplicability(module);
+            module.lens = activeLens;
+        }
         const parent = document.getElementById(module.parentId);
         if (parent === null) continue;
         const revealedPaths: AutoCompactContext[][] = [];
@@ -1081,11 +1087,16 @@ const holdOpenForSuggestion = (
 };
 
 const holdInitialReveals = (module: Module): void => {
+    const activeLens = getLens();
     for (const path of allGroupPaths(module.rootId)) {
         const context = path[path.length - 1];
         if (
             context === undefined ||
-            definitions.groups[context.groupId].reveal !== "initial"
+            definitions.groups[context.groupId].reveal !== "initial" ||
+            path.some(({ groupId }) => {
+                const lenses = definitions.groups[groupId].lenses;
+                return lenses !== undefined && !lenses.includes(activeLens);
+            })
         ) {
             continue;
         }
@@ -1106,6 +1117,15 @@ const refreshExplicitReveals = (module: Module): AutoCompactContext[][] => {
     }
     const present = new Set<string>();
     for (const path of allGroupPaths(module.rootId)) {
+        if (
+            path.some(
+                ({ groupId, instanceId }) =>
+                    resolved.groups[phraseKey(groupId, instanceId)]?.applicable ===
+                    false,
+            )
+        ) {
+            continue;
+        }
         const context = path[path.length - 1];
         if (context === undefined) continue;
         const condition = definitions.groups[context.groupId].reveal;
@@ -1213,6 +1233,39 @@ const clearAutoCompactTimers = (module: Module, instanceId?: string): void => {
         if (instanceId !== undefined && !key.startsWith(`${instanceId}:`)) continue;
         window.clearTimeout(timer);
         module.autoCompactTimers.delete(key);
+    }
+};
+
+const reconcileModuleApplicability = (module: Module): void => {
+    const editor = module.openEditor;
+    if (editor !== null) {
+        const path = groupPathToPhrase(
+            module.rootId,
+            editor.phraseId,
+            editor.instanceId,
+        );
+        if (
+            path === null ||
+            path.some(
+                ({ groupId, instanceId }) =>
+                    resolved.groups[phraseKey(groupId, instanceId)]?.applicable ===
+                    false,
+            )
+        ) {
+            module.openEditor = null;
+        }
+    }
+    clearAutoCompactTimers(module);
+    for (const [holdKey, path] of [...module.revealHolds]) {
+        if (
+            !path.some((key) => resolved.groups[key]?.applicable === false)
+        ) {
+            continue;
+        }
+        releaseRevealHold(module, holdKey, true);
+        if (holdKey.startsWith("condition:")) {
+            module.revealConditionStates.delete(holdKey);
+        }
     }
 };
 
@@ -1915,6 +1968,7 @@ export const display = async (
     const module: Module = {
         parentId,
         rootId,
+        lens: getLens(),
         openEditor: null,
         compactOverrides: {},
         status: "",

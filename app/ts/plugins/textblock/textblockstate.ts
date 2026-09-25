@@ -250,6 +250,11 @@ const groupDefaultEnabled = (
         ? (group.default ?? true)
         : group.activeLenses.includes(activeLens);
 
+const groupApplicable = (
+    group: GroupDefinition,
+    activeLens: string,
+): boolean => group.lenses === undefined || group.lenses.includes(activeLens);
+
 const scopeGroupEnabled = (
     groupId: string,
     definitions: Definitions,
@@ -267,7 +272,11 @@ const inactivePhraseIds = (
 ): Set<string> =>
     new Set(
         [...groupIds].flatMap((groupId) => {
-            const enabled = scopeGroupEnabled(
+            const applicable = groupApplicable(
+                definitions.groups[groupId],
+                activeLens,
+            );
+            const enabled = applicable && scopeGroupEnabled(
                 groupId,
                 definitions,
                 scope,
@@ -534,6 +543,7 @@ export const resolveDocument = (
         const cached = groups[key];
         if (cached !== undefined) return cached;
         const group = definitions.groups[groupId];
+        const applicable = groupApplicable(group, activeLens);
         const enabled = isGroupEnabled(
             groupId,
             definitions,
@@ -546,6 +556,7 @@ export const resolveDocument = (
                 resolveGroup(groupId, id),
             );
             const aggregate = {
+                applicable,
                 enabled,
                 conditionMet: true,
                 included: instances.some((entry) => entry.included),
@@ -559,6 +570,7 @@ export const resolveDocument = (
             conditionMatches(group.condition, phrases, instanceId);
         if (!conditionMet) {
             const hidden = {
+                applicable,
                 enabled,
                 conditionMet: false,
                 included: false,
@@ -569,6 +581,7 @@ export const resolveDocument = (
         }
         if (!enabled) {
             const inactive = {
+                applicable,
                 enabled: false,
                 conditionMet: true,
                 included: false,
@@ -591,7 +604,13 @@ export const resolveDocument = (
             included ||= child.included;
             suggested ||= child.suggested;
         }
-        const presence = { enabled, conditionMet, included, suggested };
+        const presence = {
+            applicable,
+            enabled,
+            conditionMet,
+            included,
+            suggested,
+        };
         groups[key] = presence;
         return presence;
     };
@@ -615,7 +634,10 @@ export const isGroupEnabled = (
     activeLens = "",
 ): boolean => {
     const scope = scopeState(state, instanceId);
-    return scopeGroupEnabled(groupId, definitions, scope, activeLens);
+    return (
+        groupApplicable(definitions.groups[groupId], activeLens) &&
+        scopeGroupEnabled(groupId, definitions, scope, activeLens)
+    );
 };
 
 export const isGroupConditionMet = (

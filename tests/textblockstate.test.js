@@ -59,6 +59,7 @@ test("suggestions remain excluded while their group is revealed", () => {
     assert.equal(resolved.phrases.suggested.source, "suggestion");
     assert.equal(resolved.phrases.suggested.effectiveIncluded, false);
     assert.deepEqual(resolved.groups.details, {
+        applicable: true,
         enabled: true,
         conditionMet: true,
         included: false,
@@ -163,6 +164,7 @@ test("a matching conditional group is suggested but not included", () => {
     const resolved = resolveDocument(model, createDocumentState());
 
     assert.deepEqual(resolved.groups.conditional, {
+        applicable: true,
         enabled: true,
         conditionMet: true,
         included: false,
@@ -317,6 +319,57 @@ test("active lenses provide a group default without overriding user choice", () 
     state.groupOverrides.root = true;
     resolved = resolveDocument(model, state, "general");
     assert.equal(resolved.groups.root.enabled, true);
+});
+
+test("group lenses hide inapplicable branches without discarding their state", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "Root",
+                items: [
+                    { type: "group", id: "preclinical" },
+                    { type: "group", id: "clinical" },
+                ],
+            },
+            preclinical: {
+                title: "Status",
+                lenses: ["preclinical"],
+                items: [{ type: "phrase", id: "preclinical-finding" }],
+            },
+            clinical: {
+                title: "Status",
+                lenses: ["clinical"],
+                items: [{ type: "phrase", id: "clinical-finding" }],
+            },
+        },
+        {
+            "preclinical-finding": phrase("Preclinical", "present", {
+                present: value("present"),
+            }),
+            "clinical-finding": phrase("Clinical", "present", {
+                present: value("present"),
+            }),
+        },
+    );
+    const state = createDocumentState();
+    state.groupOverrides.clinical = true;
+
+    let resolved = resolveDocument(model, state, "preclinical");
+    assert.equal(resolved.groups.preclinical.applicable, true);
+    assert.equal(resolved.groups.preclinical.enabled, true);
+    assert.equal(resolved.groups.clinical.applicable, false);
+    assert.equal(resolved.groups.clinical.enabled, false);
+    assert.equal(resolved.phrases["preclinical-finding"].effectiveIncluded, true);
+    assert.equal(resolved.phrases["clinical-finding"].included, true);
+    assert.equal(resolved.phrases["clinical-finding"].visible, false);
+    assert.equal(resolved.phrases["clinical-finding"].effectiveIncluded, false);
+
+    resolved = resolveDocument(model, state, "clinical");
+    assert.equal(resolved.groups.preclinical.applicable, false);
+    assert.equal(resolved.groups.clinical.applicable, true);
+    assert.equal(resolved.groups.clinical.enabled, true);
+    assert.equal(resolved.phrases["preclinical-finding"].effectiveIncluded, false);
+    assert.equal(resolved.phrases["clinical-finding"].effectiveIncluded, true);
 });
 
 test("inactive groups start compact without coupling compactness to activity", () => {

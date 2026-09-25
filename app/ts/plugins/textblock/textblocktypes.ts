@@ -101,6 +101,7 @@ export type GroupDefinition = {
     sets?: string[];
     default?: boolean;
     activeLenses?: string[];
+    lenses?: string[];
     content?: string;
     note?: string;
     kind?: ItemKind;
@@ -270,6 +271,7 @@ export type ResolvedDocument = {
     groups: Record<
         string,
         {
+            applicable: boolean;
             enabled: boolean;
             conditionMet: boolean;
             included: boolean;
