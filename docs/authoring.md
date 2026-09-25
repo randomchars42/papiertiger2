@@ -38,7 +38,14 @@ G @root @reset: Kreislauf
 
 `N:` ist zugleich Paketname, Dateiname und ID der Wurzelgruppe. Der Compiler
 erzeugt alle weiteren IDs aus Paketname, Typ und sichtbarer deutscher
-Bezeichnung. IDs werden daher normalerweise nicht geschrieben.
+Bezeichnung. IDs werden daher normalerweise nicht geschrieben. Nur wenn zwei
+Gruppen oder Phrasen denselben sichtbaren Titel benötigen, kann vor dem
+Doppelpunkt eine stabile kleingeschriebene ID stehen:
+
+```pt
+G telefonische_quellen: telefonisch
+  P telefon_partnerin: Partnerin|-
+```
 
 ## Einen Editor ergänzen
 
@@ -204,6 +211,11 @@ W: updates updates label="Neuigkeiten"
 
 L* rettungsdienst: Rettungsdienst
 L kernteam: Kernteam
+L trauma_orthopaedie: Trauma & Orthopädie
+L neurochirurgie: Neurochirurgie
+
+LG klinik: kernteam; trauma_orthopaedie; neurochirurgie
+LG praeklinik: rettungsdienst
 
 D*: Rettungsdienst
   B: textblock ankunft controls=false
@@ -211,10 +223,12 @@ D*: Rettungsdienst
   B: textblock abcde controls=false
 ```
 
-`L*` markiert die globale Standardlinse, `L` weitere verfügbare Linsen. Diese
-IDs werden von `@lens=...` an Katalogwerten und `@active(...)` an Gruppen
-referenziert. `D*` markiert das Standarddokument. Textblock-IDs müssen auf ein
-Paket mit gleichnamiger Wurzelgruppe verweisen.
+`L*` markiert die globale Standardlinse, `L` weitere verfügbare Linsen. `LG`
+bündelt mehrere Linsen als reine Autorenabkürzung. Einzelne Linsen und Gruppen
+werden von `@lens=...` an Katalogwerten und `@active(...)` an Gruppen
+referenziert; der Compiler schreibt ausschließlich die aufgelösten Linsen in
+die Textblockpakete. `D*` markiert das Standarddokument. Textblock-IDs müssen
+auf ein Paket mit gleichnamiger Wurzelgruppe verweisen.
 
 `W:` registriert ein globales Werkzeug getrennt von den auszugebenden
 Dokumentblöcken. Werkzeuge werden daher nicht von **Dokument kopieren** oder
@@ -254,5 +268,14 @@ ankunft_eintrag_position_wert_stehend
 ```
 
 Erzeugen zwei sichtbare Bezeichnungen dieselbe ID, bricht der Compiler mit
-Datei und Zeile ab. Für den Moment wird die Bezeichnung präzisiert; explizite
-ID-Ausnahmen sind bewusst noch nicht Teil der Sprache.
+Datei und Zeile ab. Soll die Oberfläche trotzdem denselben Titel zeigen,
+entkoppelt eine explizite ID die technische Identität von der Bezeichnung:
+
+```pt
+P begleitung_partnerin: Partnerin|-
+P telefon_partnerin: Partnerin|-
+```
+
+Explizite Phrasen-IDs sind auch stabile Bedingungsreferenzen. Eine weiterhin
+über den mehrfach vorkommenden sichtbaren Titel formulierte Referenz bleibt
+absichtlich mehrdeutig und wird abgewiesen.

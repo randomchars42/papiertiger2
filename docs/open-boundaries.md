@@ -48,12 +48,6 @@ Zeitbezug sicher in einen postkoordinierten Ausdruck eingehen.
 Bis dahin dürfen kodierte und unkodierte Phrasen gemischt werden. Der Compiler
 erfindet keine Kodierung aus sichtbaren Wörtern oder Editorarten.
 
-## Explizite ID-Ausnahmen
-
-IDs werden vollständig abgeleitet. Bei einer Kollision muss zurzeit die
-sichtbare Bezeichnung präzisiert werden. Eine optionale explizite ID-Syntax wäre
-denkbar, würde aber zusätzliche Stabilitäts- und Migrationsregeln benötigen.
-
 ## Persistenz und Import vorhandener Dokumentation
 
 Der Zustand lebt derzeit nur in der geöffneten Anwendung. Speicherung,

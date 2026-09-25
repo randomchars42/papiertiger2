@@ -77,8 +77,10 @@ scripts/compile_textblocks.py
     Parser, ID-Ableitung, Referenzauflösung, Validierung, atomare Ausgabe
 ```
 
-`documents.json` ist der einzige Katalog der sichtbaren Dokumente und der
-globalen Linsen. Jeder Block nennt ein Plug-in und dessen Parameter. Dadurch
+`documents.json` ist der einzige Katalog der sichtbaren Dokumente, der globalen
+Linsen und ihrer Autorengruppen. Linsengruppen werden beim Kompilieren von
+`@active(...)` und `@lens=` vollständig in konkrete Linsen-IDs aufgelöst. Jeder
+Block nennt ein Plug-in und dessen Parameter. Dadurch
 kann ein Dokument Textblöcke und andere Module kombinieren, ohne ihre
 Implementierungen miteinander zu verschmelzen. Katalogwerte und Gruppen
 referenzieren Linsen-IDs, besitzen aber keine eigene Linsenregistrierung.

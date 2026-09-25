@@ -215,6 +215,21 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
     return annotations
 
 
+def parse_group_head(
+    value: str,
+    path: Path,
+    line: int,
+) -> tuple[str | None, dict[str, Any]]:
+    """Return an optional stable source ID and the group annotations."""
+    head = value.strip()
+    identifier: str | None = None
+    match = re.search(r"(?:^|\s)([a-z][a-z0-9_]*)\s*$", head)
+    if match is not None:
+        identifier = match.group(1)
+        head = head[: match.start(1)].strip()
+    return identifier, parse_annotations(head, path, line)
+
+
 def parse_kind_suffix(value: str, path: Path, line: int) -> tuple[str, str | None]:
     match = re.fullmatch(r"([\s\S]*?)\|([nai-])", value.strip())
     if match is None:
@@ -500,7 +515,7 @@ def parse_source(path: Path) -> dict[str, Any]:
                 else []
             )
             head, body = split_directive(group_match.group(2).lstrip(), path, line_number)
-            annotations = parse_annotations(head, path, line_number)
+            identifier, annotations = parse_group_head(head, path, line_number)
             title, kind = parse_kind_suffix(body, path, line_number)
             while group_stack and group_stack[-1]["indent"] >= indent:
                 group_stack.pop()
@@ -508,6 +523,7 @@ def parse_source(path: Path) -> dict[str, Any]:
             group = {
                 "line": line_number,
                 "indent": indent,
+                "name": identifier,
                 "title": title,
                 "kind": kind,
                 "conditions": conditions,
@@ -544,7 +560,10 @@ def parse_source(path: Path) -> dict[str, Any]:
             current_set = None
             continue
 
-        phrase_match = re.match(r"^P(?:<([\s\S]*?)>)?\s*:\s*([\s\S]*)$", text)
+        phrase_match = re.match(
+            r"^P(?:<([\s\S]*?)>)?(?:\s+([a-z][a-z0-9_]*))?\s*:\s*([\s\S]*)$",
+            text,
+        )
         if phrase_match is not None:
             parent = nearest_group(source, group_stack, indent, line_number)
             conditions = (
@@ -552,7 +571,8 @@ def parse_source(path: Path) -> dict[str, Any]:
                 if phrase_match.group(1) is not None
                 else []
             )
-            body = phrase_match.group(2).strip()
+            identifier = phrase_match.group(2)
+            body = phrase_match.group(3).strip()
             arrow = split_top_level(body, "=>")
             if len(arrow) > 2:
                 fail(source, line_number, "a phrase may contain only one '=>'")
@@ -587,6 +607,7 @@ def parse_source(path: Path) -> dict[str, Any]:
                     fail(source, line_number, "a phrase needs at least one value")
             phrase = {
                 "line": line_number,
+                "name": identifier,
                 "title": title,
                 "kind": phrase_kind,
                 "prompt": prompt,
@@ -710,8 +731,10 @@ def compile_source(
     catalog_tags: dict[tuple[str, str], list[str]] | None = None,
     catalog_members: dict[str, list[str]] | None = None,
     known_lenses: set[str] | None = None,
+    lens_groups: dict[str, list[str]] | None = None,
 ) -> dict[str, Any]:
     known_lenses = known_lenses or set()
+    lens_groups = lens_groups or {}
     namespace = source["namespace"]
     identifiers: dict[str, tuple[str, int]] = {}
 
@@ -726,18 +749,29 @@ def compile_source(
         identifiers[identifier] = (category, line)
 
     for group in source["groups"]:
+        if "root" in group["annotations"] and group["name"] is not None:
+            fail(source, group["line"], "the root group cannot have an explicit id")
         group["id"] = (
             namespace
             if "root" in group["annotations"]
-            else f"{namespace}_gruppe_{slug(group['title'])}"
+            else f"{namespace}_gruppe_{group['name'] or slug(group['title'])}"
         )
         register("group", group["id"], group["line"])
 
     phrase_titles: dict[str, list[dict[str, Any]]] = {}
+    phrase_names: dict[str, dict[str, Any]] = {}
     values_by_text: dict[str, list[dict[str, Any]]] = {}
     for phrase in source["phrases"]:
-        phrase["id"] = f"{namespace}_eintrag_{slug(phrase['title'])}"
+        phrase["id"] = f"{namespace}_eintrag_{phrase['name'] or slug(phrase['title'])}"
         register("phrase", phrase["id"], phrase["line"])
+        if phrase["name"] is not None:
+            if phrase["name"] in source["aliases"]:
+                fail(
+                    source,
+                    phrase["line"],
+                    f"explicit phrase id '{phrase['name']}' conflicts with a condition alias",
+                )
+            phrase_names[phrase["name"]] = phrase
         phrase_titles.setdefault(phrase["title"], []).append(phrase)
         used_value_ids: set[str] = set()
         for value in phrase["values"]:
@@ -791,24 +825,32 @@ def compile_source(
             fail(source, line, f"unknown local editor '{editor_ref}'")
         return editor_id
 
+    def expand_lenses(references: list[str], line: int) -> list[str]:
+        expanded: list[str] = []
+        for reference in references:
+            if reference in known_lenses:
+                members = [reference]
+            else:
+                members = lens_groups.get(reference, [])
+                if not members:
+                    fail(source, line, f"unknown lens or lens group '{reference}'")
+            for lens in members:
+                if lens not in expanded:
+                    expanded.append(lens)
+        return expanded
+
     compiled_catalogs: dict[str, Any] = {}
     if source["catalog_values"]:
         catalog_attributes: dict[str, str] = {}
         catalog_values: dict[str, Any] = {}
         free_text_values = 0
         for value in source["catalog_values"]:
-            unknown_lenses = set(value["lenses"]) - known_lenses
-            if unknown_lenses:
-                fail(
-                    source,
-                    value["line"],
-                    f"unknown lens '{sorted(unknown_lenses)[0]}'",
-                )
+            value_lenses = expand_lenses(value["lenses"], value["line"])
             compiled_value: dict[str, Any] = {
                 "kind": value["kind"],
                 "text": value["text"],
                 "aliases": value["aliases"],
-                "lenses": value["lenses"],
+                "lenses": value_lenses,
                 "tags": value["tags"],
                 "search": search_text(value["raw_text"], *value["aliases"]),
             }
@@ -840,6 +882,9 @@ def compile_source(
         compiled_catalogs[namespace] = catalog
 
     def unique_phrase(title: str, line: int) -> dict[str, Any]:
+        named = phrase_names.get(title)
+        if named is not None:
+            return named
         matches = phrase_titles.get(title, [])
         if not matches:
             fail(source, line, f"unknown phrase '{title}'")
@@ -848,6 +893,14 @@ def compile_source(
         return matches[0]
 
     def resolve_reference(reference: str, line: int, trail: tuple[str, ...] = ()) -> list[dict[str, Any]]:
+        named_phrase = phrase_names.get(reference)
+        if named_phrase is not None:
+            if named_phrase["catalog"] is not None:
+                members = (catalog_members or {}).get(named_phrase["catalog"])
+                if members is None:
+                    fail(source, line, f"unknown value catalog '{named_phrase['catalog']}'")
+                return [{"id": value_id} for value_id in members] + named_phrase["values"]
+            return named_phrase["values"]
         if reference in source["aliases"]:
             if reference in trail:
                 fail(source, line, f"condition alias cycle: {' -> '.join((*trail, reference))}")
@@ -1053,14 +1106,10 @@ def compile_source(
                 for lens in active_lenses
             ):
                 fail(source, group["line"], "@active lens IDs must be lowercase identifiers")
-            unknown_lenses = set(active_lenses) - known_lenses
-            if unknown_lenses:
-                fail(
-                    source,
-                    group["line"],
-                    f"unknown lens '{sorted(unknown_lenses)[0]}'",
-                )
-            compiled_group["activeLenses"] = active_lenses
+            compiled_group["activeLenses"] = expand_lenses(
+                active_lenses,
+                group["line"],
+            )
         if "subgroups" in annotations:
             subgroup_layout = annotations["subgroups"]
             if subgroup_layout not in {"flow", "break"}:
@@ -1215,6 +1264,7 @@ def compile_documents(path: Path) -> dict[str, Any]:
     documents: dict[str, Any] = {}
     tools: list[dict[str, Any]] = []
     lenses: list[dict[str, str]] = []
+    lens_groups: dict[str, list[str]] = {}
     default_id: str | None = None
     default_lens_id: str | None = None
     current: dict[str, Any] | None = None
@@ -1229,6 +1279,38 @@ def compile_documents(path: Path) -> dict[str, Any]:
             if indent or saw_type or documents:
                 raise CompileError(path, line_number, "T: dokumente must occur once at the start")
             saw_type = True
+            continue
+        lens_group_match = re.fullmatch(
+            r"LG\s+([a-z][a-z0-9_]*)\s*:\s*(.*)",
+            text,
+        )
+        if lens_group_match is not None:
+            if indent:
+                raise CompileError(path, line_number, "LG must not be indented")
+            if documents:
+                raise CompileError(path, line_number, "LG must occur before the first document")
+            identifier = lens_group_match.group(1)
+            if identifier in lens_groups:
+                raise CompileError(path, line_number, f"duplicate lens group '{identifier}'")
+            members = [
+                member.strip()
+                for member in lens_group_match.group(2).split(";")
+                if member.strip()
+            ]
+            if not members:
+                raise CompileError(path, line_number, "lens group needs at least one lens")
+            if len(set(members)) != len(members):
+                raise CompileError(path, line_number, "lens group contains a duplicate lens")
+            if any(
+                re.fullmatch(r"[a-z][a-z0-9_]*", member) is None
+                for member in members
+            ):
+                raise CompileError(
+                    path,
+                    line_number,
+                    "lens group members must be lowercase identifiers",
+                )
+            lens_groups[identifier] = members
             continue
         lens_match = re.fullmatch(
             r"L(\*)?\s+([a-z][a-z0-9_]*)\s*:\s*(.+)",
@@ -1330,11 +1412,28 @@ def compile_documents(path: Path) -> dict[str, Any]:
         raise CompileError(path, 0, "at least one lens is required")
     if default_lens_id is None:
         raise CompileError(path, 0, "one lens needs L* as the default")
+    lens_ids = {lens["id"] for lens in lenses}
+    conflicting_groups = set(lens_groups).intersection(lens_ids)
+    if conflicting_groups:
+        raise CompileError(
+            path,
+            0,
+            f"lens group '{sorted(conflicting_groups)[0]}' conflicts with a lens",
+        )
+    for identifier, members in lens_groups.items():
+        unknown = set(members) - lens_ids
+        if unknown:
+            raise CompileError(
+                path,
+                0,
+                f"lens group '{identifier}' contains unknown lens '{sorted(unknown)[0]}'",
+            )
     catalog = {
         "version": 1,
         "default": default_id,
         "defaultLens": default_lens_id,
         "lenses": lenses,
+        "lensGroups": lens_groups,
         "documents": documents,
     }
     if tools:
@@ -1365,7 +1464,53 @@ def document_lens_ids(catalog: Any, path: Path) -> set[str]:
         raise CompileError(path, 0, "duplicate document lens")
     if not isinstance(default_lens, str) or default_lens not in identifiers:
         raise CompileError(path, 0, "invalid default document lens")
-    return set(identifiers)
+    lens_ids = set(identifiers)
+    document_lens_groups(catalog, path, lens_ids)
+    return lens_ids
+
+
+def document_lens_groups(
+    catalog: Any,
+    path: Path,
+    lens_ids: set[str] | None = None,
+) -> dict[str, list[str]]:
+    if not isinstance(catalog, dict):
+        raise CompileError(path, 0, "document catalog must be an object")
+    groups = catalog.get("lensGroups", {})
+    if not isinstance(groups, dict) or any(
+        not isinstance(identifier, str)
+        or re.fullmatch(r"[a-z][a-z0-9_]*", identifier) is None
+        or not isinstance(members, list)
+        or not members
+        or any(not isinstance(member, str) for member in members)
+        or len(set(members)) != len(members)
+        for identifier, members in groups.items()
+    ):
+        raise CompileError(path, 0, "invalid document lens groups")
+    known = lens_ids
+    if known is None:
+        lenses = catalog.get("lenses", [])
+        known = {
+            lens["id"]
+            for lens in lenses
+            if isinstance(lens, dict) and isinstance(lens.get("id"), str)
+        }
+    conflicts = set(groups).intersection(known)
+    if conflicts:
+        raise CompileError(
+            path,
+            0,
+            f"lens group '{sorted(conflicts)[0]}' conflicts with a lens",
+        )
+    for identifier, members in groups.items():
+        unknown = set(members) - known
+        if unknown:
+            raise CompileError(
+                path,
+                0,
+                f"lens group '{identifier}' contains unknown lens '{sorted(unknown)[0]}'",
+            )
+    return groups
 
 
 def output_path(source_path: Path) -> Path:
@@ -1842,6 +1987,11 @@ def main() -> int:
         )
         document_catalog = compile_documents(document_path)
         known_lenses = document_lens_ids(document_catalog, document_path)
+        lens_groups = document_lens_groups(
+            document_catalog,
+            document_path,
+            known_lenses,
+        )
         tags, catalog_members = catalog_indexes(
             [source for _, source in parsed if source is not None],
             root / "app" / "data",
@@ -1850,7 +2000,13 @@ def main() -> int:
             package = (
                 document_catalog
                 if source is None
-                else compile_source(source, tags, catalog_members, known_lenses)
+                else compile_source(
+                    source,
+                    tags,
+                    catalog_members,
+                    known_lenses,
+                    lens_groups,
+                )
             )
             target = output_path(resolved)
             generated.append((target, encoded(package), package))

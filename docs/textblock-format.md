@@ -60,7 +60,7 @@ V freitext: {:freitext=gemeinsam.freitext*:}|a
 | `@sct=` | optionale SNOMED-CT-Kodierung wie bei Phrasenwerten |
 | `@alias=` | mit Semikolon getrennte Suchbegriffe |
 | `@cedis=` | CEDIS-Code, Originalbezeichnung und Beziehung |
-| `@lens=` | mit Semikolon getrennte Linsen-IDs |
+| `@lens=` | mit Semikolon getrennte Linsen- oder Linsengruppen-IDs |
 | `@tag=` | mit Semikolon getrennte, paketlokale Bedingungs-Tags |
 | `@freetext` | markiert genau einen Freitextwert des Katalogs |
 
@@ -139,13 +139,22 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@autocompact` | setzt für die Gruppe und ihren Teilbaum eine Inaktivitätsfrist |
 | `@reveal(...)` | öffnet die Gruppe vorübergehend, sobald die angegebene Bedingung neu erfüllt ist |
 | `@reveal(initial)` | beginnt erweitert und bleibt bis zur ersten Bedienung offen |
-| `@active(linse; ...)` | initial nur in den genannten Linsen aktiv |
+| `@active(linse; ...)` | initial nur in den genannten Linsen oder Linsengruppen aktiv |
 | `@inactive` | initial nicht in die Ausgabe eingeschlossen |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
 
 Der optionale Gruppentyp verwendet dieselben Kurzzeichen wie Werte, zum
 Beispiel `Orientierung|n` oder `Blutung|a`.
+
+Normalerweise entsteht die Gruppen-ID aus dem sichtbaren Titel. Bei gleichen
+Titeln kann vor dem Doppelpunkt eine optionale stabile ID stehen:
+
+```pt
+G telefonische_quellen: telefonisch
+```
+
+Die Wurzelgruppe behält immer die Paket-ID und erlaubt daher keine explizite ID.
 
 Oberfläche und gerenderte Textausgabe ergänzen jede Gruppenüberschrift um
 einen abschließenden Doppelpunkt. Er gehört nicht zum Titel und muss deshalb
@@ -341,6 +350,20 @@ P: Atmung => Eupnoe|n* / Tachypnoe|a / beatmet|i
 Links von `=>` steht der eindeutige sichtbare Phrasentitel. Rechts stehen mit
 ` / ` getrennte Werte.
 
+Eine optionale stabile ID zwischen `P` beziehungsweise `P<...>` und dem
+Doppelpunkt entkoppelt die technische ID vom sichtbaren Titel:
+
+```pt
+P begleitung_partnerin: Partnerin|-
+P telefon_partnerin: Partnerin|-
+P<telefon_partnerin> kontakt_erfolgreich: Kontakt erfolgreich|-
+```
+
+Explizite Phrasen-IDs können wie eindeutige Titel in Bedingungen und Vorgaben
+referenziert werden. Sichtbare Titel dürfen sich wiederholen, sofern alle
+betroffenen Phrasen unterschiedliche explizite IDs besitzen; ein Verweis über
+den dann mehrdeutigen Titel bleibt ein Compilerfehler.
+
 | Kürzel | Typ |
 |---|---|
 | `|n` | normal |
@@ -535,6 +558,11 @@ W: updates updates label="Neuigkeiten"
 
 L* rettungsdienst: Rettungsdienst
 L kernteam: Kernteam
+L trauma_orthopaedie: Trauma & Orthopädie
+L neurochirurgie: Neurochirurgie
+
+LG klinik: kernteam; trauma_orthopaedie; neurochirurgie
+LG praeklinik: rettungsdienst
 
 D*: Rettungsdienst
   B: textblock ankunft controls=false
@@ -549,11 +577,16 @@ D: Erstbefund
 | `W:` | globales Werkzeug: Plug-in, Werkzeug-ID und optionale Parameter |
 | `L* id: Text` | definiert die globale Standardlinse |
 | `L id: Text` | definiert eine weitere globale Linse |
+| `LG id: linse; ...` | definiert eine vom Compiler aufgelöste Linsengruppe |
 | `D*:` | Standarddokument |
 | `D:` | weiteres Dokument |
 | `B:` | Plug-in, Definitions-ID und optionale Parameter |
 
-Dokument-IDs werden aus den sichtbaren Titeln abgeleitet.
+Dokument-IDs werden aus den sichtbaren Titeln abgeleitet. Linsengruppen dürfen
+in `@active(...)` und `@lens=` gemeinsam mit einzelnen Linsen stehen. Der
+Compiler ersetzt sie in Quellreihenfolge durch ihre konkreten Linsen und
+entfernt dabei Überschneidungen. Linsengruppen enthalten ausschließlich
+existierende Linsen, keine weiteren Linsengruppen.
 
 ## Abgeleitete IDs
 
@@ -569,7 +602,10 @@ erzeugt typisierte IDs:
 ```
 
 Die Wurzelgruppe heißt nur `<paket>`. Platzhalter werden bei der Wert-ID
-weggelassen. Ergibt sich dadurch eine Kollision, bricht die Kompilierung ab.
+weggelassen. Eine optionale ID in `G id:` oder `P id:` ersetzt nur den jeweiligen
+`<titel>`-Teil. Sie muss ein kleingeschriebener Bezeichner aus Buchstaben,
+Ziffern und Unterstrichen sein. Ergibt sich weiterhin eine Kollision, bricht die
+Kompilierung ab.
 
 ## Compiler
 
