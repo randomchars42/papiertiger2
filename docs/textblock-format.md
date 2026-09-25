@@ -87,7 +87,7 @@ Katalogauswahl initial; eine zusätzliche Katalogoption ist nicht nötig.
 Bedingungen können einen Katalogwert stabil über `paket.wert` referenzieren:
 
 ```pt
-C schmerz: symptome.brustschmerz / symptome.bauchschmerz
+C schmerz: symptome.brustschmerz; symptome.bauchschmerz
 P condition(!symptome.fieber): kein Fieber|n
 ```
 
@@ -379,6 +379,16 @@ referenziert werden. Sichtbare Titel dürfen sich wiederholen, sofern alle
 betroffenen Phrasen unterschiedliche explizite IDs besitzen; ein Verweis über
 den dann mehrdeutigen Titel bleibt ein Compilerfehler.
 
+Soll nur ein bestimmter Wert einer solchen Phrase auslösen, folgt auf die
+explizite ID ein `=` und der sichtbare Werttext. Das hält kurze, im
+Gruppenkontext verständliche Werte auch dann eindeutig, wenn sie in mehreren
+Phrasen vorkommen:
+
+```pt
+P nikotinstatus: Nikotinstatus => verneint|n / vormals|a / aktiv|a
+P condition(nikotinstatus=vormals; nikotinstatus=aktiv): Konsumhäufigkeit dokumentieren|-
+```
+
 | Kürzel | Typ |
 |---|---|
 | `|n` | normal |
@@ -445,7 +455,7 @@ dieselbe SCTID oder derselbe Ausdruck mehrfach verwendet, muss die Bezeichnung
 ## Bedingungen und Aufmerksamkeitsstufen
 
 ```pt
-C verlegter_atemweg: Atemweg durch Zunge verlegt / Atemweg durch Blutung verlegt
+C verlegter_atemweg: Atemweg durch Zunge verlegt; Atemweg durch Blutung verlegt
 
 P condition(verlegter_atemweg): Güdeltubus => Atemwegsschienung: Güdeltubus|i
 P suggest(Brustschmerz): letzte Koronarangiographie => letzte Koronarangiographie {:zeitpunkt*:}|-
@@ -456,7 +466,8 @@ Eine Bedingung kann referenzieren:
 
 1. einen Alias aus `C:`;
 2. einen eindeutigen Phrasentitel, der alle Werte dieser Phrase umfasst;
-3. den vollständigen eindeutigen Quelltext eines Werts.
+3. den vollständigen eindeutigen Quelltext eines Werts;
+4. mit `phrasen_id=werttext` genau einen Wert einer explizit benannten Phrase.
 
 Der Modus vor einer Phrase bestimmt, wie die Bedingung ihre Darstellung
 beeinflusst:
@@ -494,9 +505,11 @@ Bedarf `@reveal(initial)` vorgesehen.
 Eine Phrase mit erforderlichen Attributen gilt erst nach deren Vervollständigung
 als aktiver Auslöser.
 
-Mehrere Referenzen werden weiterhin mit ` / ` getrennt und als Alternativen
-behandelt: Eine davon muss aktiv sein. Für die einfache Negation erhält jede
-Referenz ein vorangestelltes `!`:
+Mehrere Referenzen werden mit `;` getrennt und als Alternativen behandelt: Eine
+davon muss aktiv sein. Das gilt einheitlich für `C`, `G<...>`,
+`condition(...)`, `suggest(...)`, `require(...)` und `@reveal(...)`. `/` ist
+dagegen ausschließlich der Trenner zwischen auswählbaren Werten rechts von
+`=>`. Für die einfache Negation erhält jede Referenz ein vorangestelltes `!`:
 
 ```pt
 P condition(!Schmerz): schmerzfreie Vorstellung|n

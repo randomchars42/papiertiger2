@@ -6,6 +6,7 @@ import {
     createDocumentState,
     createScopeState,
     groupCompactDefault,
+    renderGroupText,
     resolveDocument,
     structuredDocument,
 } from "../app/js/plugins/textblock/textblockstate.js";
@@ -25,6 +26,33 @@ const definitions = (groups, phrases) => ({
     sets: {},
     editors: {},
     catalogs: {},
+});
+
+test("text output includes the headings that provide phrase context", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "SAMPLER",
+                items: [{ type: "group", id: "smoking" }],
+            },
+            smoking: {
+                title: "Nikotinkonsum",
+                items: [{ type: "phrase", id: "status" }],
+            },
+        },
+        {
+            status: phrase("Nikotinstatus", "denied", {
+                denied: value("verneint"),
+            }),
+        },
+    );
+    const state = createDocumentState();
+    const resolved = resolveDocument(model, state);
+
+    assert.equal(
+        renderGroupText("root", model, state, resolved),
+        "SAMPLER:\nNikotinkonsum: verneint;",
+    );
 });
 
 test("conditional phrases remain excluded while their group is present", () => {

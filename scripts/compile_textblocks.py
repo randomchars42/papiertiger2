@@ -125,6 +125,25 @@ def split_top_level(value: str, delimiter: str) -> list[str]:
     return parts
 
 
+def parse_reference_list(
+    value: str,
+    path: Path,
+    line: int,
+    owner: str,
+) -> list[str]:
+    """Parse condition-style references, whose separator is always ';'."""
+    references = split_top_level(value, ";")
+    if len(references) == 1 and len(split_top_level(value, " / ")) > 1:
+        raise CompileError(
+            path,
+            line,
+            f"{owner} references use ';', not '/'",
+        )
+    if not references or any(not reference for reference in references):
+        raise CompileError(path, line, f"{owner} needs a condition")
+    return references
+
+
 def split_directive(value: str, path: Path, line: int) -> tuple[str, str]:
     quote = ""
     escaped = False
@@ -309,9 +328,12 @@ def parse_phrase_head(
         if depth:
             raise CompileError(path, line, f"unclosed {mode}(...) phrase mode")
         raw_references = head[start : index - 1].strip()
-        references = split_top_level(raw_references, " / ")
-        if not references or any(not reference for reference in references):
-            raise CompileError(path, line, f"{mode}(...) needs a condition")
+        references = parse_reference_list(
+            raw_references,
+            path,
+            line,
+            f"{mode}(...)",
+        )
         head = head[index:].strip()
     if head and not re.fullmatch(r"[a-z][a-z0-9_]*", head):
         raise CompileError(path, line, f"invalid phrase head '{head}'")
@@ -591,14 +613,24 @@ def parse_source(path: Path) -> dict[str, Any]:
                 fail(source, line_number, f"duplicate condition alias '{head}'")
             source["aliases"][head] = {
                 "line": line_number,
-                "members": split_top_level(body, " / "),
+                "members": parse_reference_list(
+                    body,
+                    path,
+                    line_number,
+                    f"condition alias '{head}'",
+                ),
             }
             continue
 
         group_match = re.match(r"^G(?:<([\s\S]*?)>)?\s*([:\s][\s\S]*)$", text)
         if group_match is not None:
             conditions = (
-                split_top_level(group_match.group(1), " / ")
+                parse_reference_list(
+                    group_match.group(1),
+                    path,
+                    line_number,
+                    "G<...>",
+                )
                 if group_match.group(1) is not None
                 else []
             )
@@ -999,6 +1031,27 @@ def compile_source(
         return matches[0]
 
     def resolve_reference(reference: str, line: int, trail: tuple[str, ...] = ()) -> list[dict[str, Any]]:
+        selected_value = re.fullmatch(
+            r"([a-z][a-z0-9_]*)\s*=\s*([\s\S]+)",
+            reference,
+        )
+        if selected_value is not None:
+            phrase_name, value_text = selected_value.groups()
+            phrase = phrase_names.get(phrase_name)
+            if phrase is None:
+                fail(source, line, f"unknown explicit phrase id '{phrase_name}'")
+            matches = [
+                value
+                for value in phrase["values"]
+                if value["raw_text"] == value_text.strip()
+            ]
+            if not matches:
+                fail(
+                    source,
+                    line,
+                    f"phrase '{phrase_name}' has no value '{value_text.strip()}'",
+                )
+            return matches
         named_phrase = phrase_names.get(reference)
         if named_phrase is not None:
             if named_phrase["catalog"] is not None:
@@ -1247,9 +1300,12 @@ def compile_source(
             if reveal == "initial":
                 compiled_group["reveal"] = "initial"
             else:
-                references = split_top_level(reveal, " / ")
-                if not references or any(not reference for reference in references):
-                    fail(source, group["line"], "@reveal needs a condition")
+                references = parse_reference_list(
+                    reveal,
+                    source["path"],
+                    group["line"],
+                    "@reveal(...)",
+                )
                 compiled_group["reveal"] = compile_condition(
                     references, group["line"]
                 )

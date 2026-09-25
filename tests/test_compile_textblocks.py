@@ -240,6 +240,46 @@ G @root: Sample
             },
         )
 
+    def test_reference_lists_use_semicolons_and_can_select_a_named_phrase_value(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P first_status: First => inactive|n / active|a
+  P second_status: Second => inactive|n / active|a
+  P condition(first_status=active; second_status=active): Follow-up|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            package = compile_source(parse_source(path))
+
+        self.assertEqual(
+            package["phrases"]["sample_eintrag_follow_up"]["condition"]["values"],
+            [
+                "sample_eintrag_first_status_wert_active",
+                "sample_eintrag_second_status_wert_active",
+            ],
+        )
+
+    def test_slash_is_rejected_as_a_reference_separator(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P first: First|-
+  P second: Second|-
+  P condition(first / second): Follow-up|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CompileError,
+                r"condition\(\.\.\.\) references use ';', not '/'",
+            ):
+                parse_source(path)
+
     def test_phrase_parser_preserves_colons_inside_the_value(self) -> None:
         source_text = """\
 N: sample

@@ -199,4 +199,5 @@ unabhängig zurückgesetzt oder entfernt werden.
 
 Nur aufgenommene und vollständig ausgefüllte Einträge gelangen in die
 Textausgabe. Offene bedingte, vorgeschlagene und erforderliche Phrasen bleiben
-sichtbar, werden aber nicht mitkopiert.
+sichtbar, werden aber nicht mitkopiert. Die Überschriften aller Gruppen auf dem
+Pfad zu aufgenommenen Einträgen werden als Kontext mit ausgegeben.

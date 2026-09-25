@@ -87,6 +87,15 @@ Keine dieser Formen nimmt einen Wert automatisch in die Ausgabe auf. Eine
 fachlich zulässige Nichterhebung einer erforderlichen Phrase wird deshalb als
 eigener Wert modelliert.
 
+Mehrere Bedingungsreferenzen werden mit `;` getrennt; `/` bleibt Werten rechts
+von `=>` vorbehalten. Wiederholt sich ein kurzer Werttext in mehreren Phrasen,
+adressiert `phrasen_id=werttext` ihn eindeutig:
+
+```pt
+P nikotinstatus: Nikotinstatus => verneint|n / vormals|a / aktiv|a
+P condition(nikotinstatus=vormals; nikotinstatus=aktiv): Konsumhäufigkeit dokumentieren|-
+```
+
 Die Bedingung wird erst aktiv, wenn die Phrase aufgenommen und alle
 erforderlichen Attribute ausgefüllt sind. Ein Verweis auf den Phrasentitel
 umfasst alle Werte der Phrase.
