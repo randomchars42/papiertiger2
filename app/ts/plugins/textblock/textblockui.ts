@@ -19,6 +19,7 @@ import {
     normaliseSearch,
     searchTokens,
 } from "@lib/search.js";
+import { actionButton, element, iconActionButton } from "@lib/dom.js";
 import type {
     AttributeValue,
     Definitions,
@@ -38,43 +39,6 @@ export type OpenEditor =
           instanceId?: string;
       }
     | null;
-
-const element = <K extends keyof HTMLElementTagNameMap>(
-    tag: K,
-    className?: string,
-    text?: string,
-): HTMLElementTagNameMap[K] => {
-    const node = document.createElement(tag);
-    if (className !== undefined) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-};
-
-const actionButton = (
-    label: string,
-    action: string,
-    data: Record<string, string> = {},
-    className = "control",
-): HTMLButtonElement => {
-    const button = element("button", className, label);
-    button.type = "button";
-    button.dataset.action = action;
-    Object.assign(button.dataset, data);
-    return button;
-};
-
-const iconActionButton = (
-    symbol: string,
-    label: string,
-    action: string,
-    data: Record<string, string>,
-    className: string,
-): HTMLButtonElement => {
-    const button = actionButton(symbol, action, data, `${className} control--icon`);
-    button.setAttribute("aria-label", label);
-    button.title = label;
-    return button;
-};
 
 const scopedData = (
     data: Record<string, string>,
@@ -582,6 +546,7 @@ const renderCompactContents = (
     resolved: ResolvedDocument,
     openEditor: OpenEditor,
     highlightedSuggestions: ReadonlySet<string>,
+    compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
     path: readonly CompactGroupPathEntry[],
     instanceId?: string,
@@ -626,7 +591,7 @@ const renderCompactContents = (
             for (const [index, childInstanceId] of (
                 state.groupInstances[childId] ?? []
             ).entries()) {
-                renderCompactGroup(
+                renderGroup(
                     parent,
                     childId,
                     level,
@@ -635,14 +600,15 @@ const renderCompactContents = (
                     resolved,
                     openEditor,
                     highlightedSuggestions,
+                    compactOverrides,
                     pickerQueries,
-                    path,
                     childInstanceId,
                     index,
+                    path,
                 );
             }
         } else {
-            renderCompactGroup(
+            renderGroup(
                 parent,
                 childId,
                 level,
@@ -651,127 +617,16 @@ const renderCompactContents = (
                 resolved,
                 openEditor,
                 highlightedSuggestions,
+                compactOverrides,
                 pickerQueries,
-                path,
                 instanceId,
+                undefined,
+                path,
             );
         }
     }
     renderPhrases();
 };
-
-function renderCompactGroup(
-    parent: HTMLElement,
-    groupId: string,
-    level: number,
-    definitions: Definitions,
-    state: DocumentState,
-    resolved: ResolvedDocument,
-    openEditor: OpenEditor,
-    highlightedSuggestions: ReadonlySet<string>,
-    pickerQueries: Readonly<Record<string, string>>,
-    path: readonly CompactGroupPathEntry[],
-    instanceId?: string,
-    instanceIndex?: number,
-): void {
-    const group = definitions.groups[groupId];
-    const conditionMet = isGroupConditionMet(
-        groupId,
-        definitions,
-        resolved,
-        instanceId,
-    );
-    const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
-    const { included, suggested } = groupPhrasePresence(
-        groupId,
-        definitions,
-        state,
-        resolved,
-        instanceId,
-    );
-    if (!conditionMet || (!included && !suggested)) {
-        return;
-    }
-    const nextPath = [
-        ...path,
-        { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
-    ];
-    const section = element(
-        "section",
-        [
-            "group",
-            `group--${group.kind ?? "neutral"}`,
-            instanceIndex === undefined ? "" : "group--instance",
-            "group--nested",
-            `group--subgroups-${group.subgroups ?? "flow"}`,
-            included ? "group--included" : "",
-            enabled ? "" : "group--inactive",
-            "group--compact",
-            "group--compact-summary",
-        ]
-            .filter(Boolean)
-            .join(" "),
-    );
-    section.dataset.groupId = groupId;
-    if (instanceId !== undefined) section.dataset.instanceId = instanceId;
-
-    const header = element("header", "group__header");
-    const heading = element(
-        `h${Math.min(6, Math.max(1, level))}` as keyof HTMLElementTagNameMap,
-        "group__heading",
-    );
-    const baseTitle = parseValue(group.title).text;
-    const title =
-        instanceIndex === undefined ? baseTitle : `${baseTitle} ${instanceIndex + 1}`;
-    const headingButton = actionButton(
-        groupHeading(title),
-        "toggle-group",
-        scopedData({ groupId }, instanceId),
-        "group__toggle",
-    );
-    headingButton.setAttribute("aria-pressed", String(enabled));
-    headingButton.title = group.note ?? "";
-    heading.append(headingButton);
-    header.append(heading);
-    section.append(header);
-
-    const body = element("div", "group__body group__body--compact-only");
-    renderCompactContents(
-        body,
-        groupId,
-        level + 1,
-        definitions,
-        state,
-        resolved,
-        openEditor,
-        highlightedSuggestions,
-        pickerQueries,
-        nextPath,
-        instanceId,
-    );
-    section.append(body);
-    const insideAutoCompactSummary = path.some(
-        (context) => definitions.groups[context.groupId]?.autoCompact === true,
-    );
-    if (!insideAutoCompactSummary) {
-        section.append(
-            iconActionButton(
-                "…",
-                `${title} öffnen`,
-                "open-group-path",
-                scopedData(
-                    {
-                        groupId,
-                        groupPath: JSON.stringify(nextPath),
-                    },
-                    instanceId,
-                ),
-                "control group__disclosure group__disclosure--trailing",
-            ),
-        );
-    }
-    parent.append(section);
-}
 
 const renderRepeatable = (
     parent: HTMLElement,
@@ -834,31 +689,40 @@ function renderGroup(
     pickerQueries: Readonly<Record<string, string>>,
     instanceId?: string,
     instanceIndex?: number,
+    compactPath?: readonly CompactGroupPathEntry[],
 ): void {
     const group = definitions.groups[groupId];
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return;
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) return;
     const isInstanceRoot = instanceIndex !== undefined;
+    const compactSummary = compactPath !== undefined;
     const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
     const { included, suggested } = groupPhrasePresence(
         groupId,
-        definitions,
-        state,
         resolved,
         instanceId,
     );
+    if (compactSummary && !included && !suggested) return;
+    const nextCompactPath = compactSummary
+        ? [
+              ...compactPath,
+              { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
+          ]
+        : undefined;
     const compactKey = phraseKey(groupId, instanceId);
-    const compact = compactOverrides[compactKey] ?? (level > 1);
+    const compact =
+        compactSummary || (compactOverrides[compactKey] ?? (level > 1));
     const section = element(
         "section",
         [
             "group",
             `group--${group.kind ?? "neutral"}`,
             isInstanceRoot ? "group--instance" : "",
-            level === 1 ? "group--root" : "group--nested",
+            !compactSummary && level === 1 ? "group--root" : "group--nested",
             `group--subgroups-${group.subgroups ?? "flow"}`,
             included ? "group--included" : "",
             enabled ? "" : "group--inactive",
             compact ? "group--compact" : "",
+            compactSummary ? "group--compact-summary" : "",
         ]
             .filter(Boolean)
             .join(" "),
@@ -885,69 +749,75 @@ function renderGroup(
     heading.append(headingButton);
     header.append(heading);
 
-    const scope = scopeState(state, instanceId);
-    const tools = element("div", "group__tools");
-    if (!compact && group.score !== undefined) {
-        tools.append(
-            actionButton(
-                group.score.label,
-                "open-score",
-                scopedData({ groupId }, instanceId),
-                "control control--primary group__score",
-            ),
+    let disclosure: HTMLButtonElement | null = null;
+    if (!compactSummary) {
+        const scope = scopeState(state, instanceId);
+        const tools = element("div", "group__tools");
+        if (!compact && group.score !== undefined) {
+            tools.append(
+                actionButton(
+                    group.score.label,
+                    "open-score",
+                    scopedData({ groupId }, instanceId),
+                    "control control--primary group__score",
+                ),
+            );
+        }
+        for (const setId of compact ? [] : (group.sets ?? [])) {
+            const set = definitions.sets[setId];
+            const button = actionButton(
+                set.title,
+                "toggle-set",
+                scopedData({ setId }, instanceId),
+                `set set--${set.kind ?? "neutral"}`,
+            );
+            button.setAttribute(
+                "aria-pressed",
+                String(scope.activeSets.includes(setId)),
+            );
+            tools.append(button);
+        }
+        if ((group.reset === true || isInstanceRoot) && (!compact || level === 1)) {
+            tools.append(
+                level === 1 && !compact
+                    ? actionButton(
+                          "↺ Zurücksetzen",
+                          "reset-group",
+                          scopedData({ groupId }, instanceId),
+                          "control group__reset",
+                      )
+                    : iconActionButton(
+                          "↺",
+                          "Zurücksetzen",
+                          "reset-group",
+                          scopedData({ groupId }, instanceId),
+                          "control group__reset",
+                      ),
+            );
+        }
+        if (isInstanceRoot && instanceId !== undefined && !compact) {
+            tools.append(
+                iconActionButton(
+                    "×",
+                    `${title} entfernen`,
+                    "remove-group-instance",
+                    { groupId, instanceId },
+                    "control control--danger",
+                ),
+            );
+        }
+        disclosure = iconActionButton(
+            compact ? "…" : "≪",
+            compact ? `${title} öffnen` : `${title} kompakt anzeigen`,
+            "toggle-compact",
+            scopedData({ groupId }, instanceId),
+            `control group__disclosure${
+                level === 1 ? "" : " group__disclosure--trailing"
+            }`,
         );
+        if (level === 1) tools.append(disclosure);
+        if (tools.childElementCount > 0) header.append(tools);
     }
-    for (const setId of compact ? [] : (group.sets ?? [])) {
-        const set = definitions.sets[setId];
-        const button = actionButton(
-            set.title,
-            "toggle-set",
-            scopedData({ setId }, instanceId),
-            `set set--${set.kind ?? "neutral"}`,
-        );
-        button.setAttribute("aria-pressed", String(scope.activeSets.includes(setId)));
-        tools.append(button);
-    }
-    if ((group.reset === true || isInstanceRoot) && (!compact || level === 1)) {
-        tools.append(
-            level === 1 && !compact
-                ? actionButton(
-                      "↺ Zurücksetzen",
-                      "reset-group",
-                      scopedData({ groupId }, instanceId),
-                      "control group__reset",
-                  )
-                : iconActionButton(
-                      "↺",
-                      "Zurücksetzen",
-                      "reset-group",
-                      scopedData({ groupId }, instanceId),
-                      "control group__reset",
-                  ),
-        );
-    }
-    if (isInstanceRoot && instanceId !== undefined && !compact) {
-        tools.append(
-            iconActionButton(
-                "×",
-                `${title} entfernen`,
-                "remove-group-instance",
-                { groupId, instanceId },
-                "control control--danger",
-            ),
-        );
-    }
-    const disclosure = iconActionButton(
-        compact ? "…" : "≪",
-        compact ? `${title} öffnen` : `${title} kompakt anzeigen`,
-        "toggle-compact",
-        scopedData({ groupId }, instanceId),
-        `control group__disclosure${
-            level === 1 ? "" : " group__disclosure--trailing"
-        }`,
-    );
-    if (level === 1) tools.append(disclosure);
-    if (tools.childElementCount > 0) header.append(tools);
     section.append(header);
 
     if (!compact) {
@@ -1051,19 +921,40 @@ function renderGroup(
                 resolved,
                 openEditor,
                 highlightedSuggestions,
+                compactOverrides,
                 pickerQueries,
-                [
-                    {
-                        groupId,
-                        ...(instanceId === undefined ? {} : { instanceId }),
-                    },
+                nextCompactPath ?? [
+                    { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
                 ],
                 instanceId,
             );
             section.append(body);
         }
     }
-    if (level > 1) section.append(disclosure);
+    if (compactSummary && nextCompactPath !== undefined) {
+        const insideAutoCompactSummary = compactPath.some(
+            (context) => definitions.groups[context.groupId]?.autoCompact === true,
+        );
+        if (!insideAutoCompactSummary) {
+            section.append(
+                iconActionButton(
+                    "…",
+                    `${title} öffnen`,
+                    "open-group-path",
+                    scopedData(
+                        {
+                            groupId,
+                            groupPath: JSON.stringify(nextCompactPath),
+                        },
+                        instanceId,
+                    ),
+                    "control group__disclosure group__disclosure--trailing",
+                ),
+            );
+        }
+    } else if (level > 1 && disclosure !== null) {
+        section.append(disclosure);
+    }
     parent.append(section);
 }
 

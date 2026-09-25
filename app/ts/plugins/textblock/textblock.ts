@@ -1,4 +1,6 @@
 import { loadJSON } from "@lib/base.js";
+import { copyToClipboard } from "@lib/dom.js";
+import { isRecord } from "@lib/guards.js";
 import { getConfig } from "../../config.js";
 import {
     attributePlaceholders,
@@ -50,7 +52,14 @@ type Module = {
     suggestionKeys: Set<string>;
     suggestionHighlights: Map<string, number>;
     revealHolds: Map<string, string[]>;
-    revealRestores: Map<string, { hadOverride: boolean; value?: boolean }>;
+    revealGroups: Map<
+        string,
+        {
+            holds: Set<string>;
+            hadOverride: boolean;
+            value?: boolean;
+        }
+    >;
     revealConditionStates: Map<string, boolean>;
     suggestionsReady: boolean;
     autoCompactTimers: Map<string, number>;
@@ -63,15 +72,12 @@ type ScoreResultSelection = {
     valueId: string;
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-    typeof value === "object" && value !== null && !Array.isArray(value);
-
 const definitions = emptyDefinitions();
 const state: DocumentState = createDocumentState();
 const modules = new Map<string, Module>();
 const loadedPackages = new Set<string>();
 const packageRequests = new Map<string, Promise<PackageDefinition>>();
-let resolved: ResolvedDocument = { phrases: {} };
+let resolved: ResolvedDocument = { phrases: {}, groups: {} };
 let instanceCounter = 0;
 const suggestionHighlightDuration = 1_600;
 
@@ -310,7 +316,7 @@ const nextPromptInGroup = (
     instanceId?: string,
 ): OpenEditor => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId)) return null;
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) {
         return null;
     }
     const group = definitions.groups[groupId];
@@ -798,22 +804,6 @@ const resetStaticGroup = (groupId: string): void => {
     delete state.groupOverrides[groupId];
 };
 
-const copyToClipboard = async (text: string): Promise<void> => {
-    if (navigator.clipboard !== undefined && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return;
-    }
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.setAttribute("readonly", "");
-    textarea.className = "clipboard-fallback";
-    document.body.append(textarea);
-    textarea.select();
-    const copied = document.execCommand("copy");
-    textarea.remove();
-    if (!copied) throw new Error("Clipboard access failed");
-};
-
 const requireData = (button: HTMLButtonElement, key: string): string => {
     const value = button.dataset[key];
     if (value === undefined) throw new Error(`Missing action data "${key}"`);
@@ -983,20 +973,22 @@ const holdOpen = (
         phraseKey(groupId, instanceId),
     );
     for (const key of heldPath) {
-        if (
-            ![...module.revealHolds.values()].some((held) => held.includes(key))
-        ) {
+        let groupState = module.revealGroups.get(key);
+        if (groupState === undefined) {
             const hadOverride = Object.prototype.hasOwnProperty.call(
                 module.compactOverrides,
                 key,
             );
-            module.revealRestores.set(key, {
+            groupState = {
+                holds: new Set(),
                 hadOverride,
                 ...(hadOverride
                     ? { value: module.compactOverrides[key] }
                     : {}),
-            });
+            };
+            module.revealGroups.set(key, groupState);
         }
+        groupState.holds.add(holdKey);
     }
     module.revealHolds.set(holdKey, heldPath);
     for (const { groupId, instanceId } of path) {
@@ -1014,15 +1006,14 @@ const releaseRevealHold = (
     if (path === undefined) return;
     module.revealHolds.delete(holdKey);
     for (const key of path) {
-        const stillHeld = [...module.revealHolds.values()].some((held) =>
-            held.includes(key),
-        );
-        if (stillHeld) continue;
-        const previous = module.revealRestores.get(key);
-        module.revealRestores.delete(key);
-        if (!restore || previous === undefined) continue;
-        if (previous.hadOverride) {
-            module.compactOverrides[key] = previous.value ?? false;
+        const groupState = module.revealGroups.get(key);
+        if (groupState === undefined) continue;
+        groupState.holds.delete(holdKey);
+        if (groupState.holds.size > 0) continue;
+        module.revealGroups.delete(key);
+        if (!restore) continue;
+        if (groupState.hadOverride) {
+            module.compactOverrides[key] = groupState.value ?? false;
         } else {
             delete module.compactOverrides[key];
         }
@@ -1100,9 +1091,7 @@ const groupIsHeldOpen = (
     instanceId?: string,
 ): boolean => {
     const key = phraseKey(groupId, instanceId);
-    return [...module.revealHolds.values()].some((path) =>
-        path.includes(key),
-    );
+    return module.revealGroups.has(key);
 };
 
 const elementGroupPath = (target: Element, parent: HTMLElement): string[] => {
@@ -1930,7 +1919,7 @@ export const display = async (
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
         revealHolds: new Map(),
-        revealRestores: new Map(),
+        revealGroups: new Map(),
         revealConditionStates: new Map(),
         suggestionsReady: false,
         autoCompactTimers: new Map(),

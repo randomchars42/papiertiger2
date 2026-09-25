@@ -2,6 +2,7 @@ import { loadJSON } from "@lib/base.js";
 import { getConfig } from "../../config.js";
 import type { PluginMessage, ToolStatus } from "@lib/plugin.js";
 import { validateCatalog } from "./cedislib.js";
+import { isRecord } from "@lib/guards.js";
 import { renderEditor, renderSummary } from "./cedisui.js";
 import type {
     CedisCatalog,
@@ -21,9 +22,6 @@ type Module = {
 const modules = new Map<string, Module>();
 const states = new Map<string, CedisState>();
 let dataRequest: Promise<CedisCatalog> | null = null;
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-    typeof value === "object" && value !== null && !Array.isArray(value);
 
 const requestData = (): Promise<CedisCatalog> => {
     if (dataRequest !== null) return dataRequest;

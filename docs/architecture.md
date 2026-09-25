@@ -141,12 +141,15 @@ Die Laufzeit hält voneinander getrennt:
 | angenommene Herkunft | Provenienz eines aktiv übernommenen Werkzeugwerts |
 
 Die Auflösung berechnet daraus für jede sichtbare Phrase Wert, Textteile,
-semantischen Typ, Quelle, Provenienz und Vollständigkeit. Gespeicherte Aufnahme
-und effektive Aufnahme bleiben getrennt: Eine inaktive Vorfahrengruppe
-unterdrückt letztere, ohne Kindzustand zu löschen. Nur effektive Aufnahme speist
-Ausgabe, Bedingungen und aktive Darstellung. Vorschläge verändern diesen
-abgeleiteten Zustand, nicht automatisch die Benutzereingaben, und aktivieren
-keine Vorfahrengruppe. Neu entstandene Vorschläge sowie `@reveal(...)`- und
+semantischen Typ, Quelle, Provenienz und Vollständigkeit. Im selben Durchlauf
+leitet sie für jede Gruppe Bedingungsergebnis, effektive Aufnahme und sichtbare
+Vorschläge ab. Darstellung und Kompaktierung lesen diesen gemeinsamen Zustand,
+statt den Gruppenbaum jeweils erneut zu durchsuchen. Gespeicherte Aufnahme und
+effektive Aufnahme bleiben getrennt: Eine inaktive Vorfahrengruppe unterdrückt
+letztere, ohne Kindzustand zu löschen. Nur effektive Aufnahme speist Ausgabe,
+Bedingungen und aktive Darstellung. Vorschläge verändern diesen abgeleiteten
+Zustand, nicht automatisch die Benutzereingaben, und aktivieren keine
+Vorfahrengruppe. Neu entstandene Vorschläge sowie `@reveal(...)`- und
 `@reveal(initial)`-Ereignisse erzeugen nur einen flüchtigen UI-Zustand: Der
 Zielpfad bleibt bis zur ersten Bedienung erweitert. Dieser Zustand gehört weder
 zum Dokument noch zur strukturierten Ausgabe.
@@ -171,4 +174,5 @@ Zieldateien. `--check` schreibt nichts und meldet veraltete JSON-Produkte.
 
 `make build` führt Compiler und TypeScript-Build aus. `make check` prüft, dass
 die JSON-Produkte aktuell sind, und führt die TypeScript-Typprüfung ohne Ausgabe
-aus.
+aus. `make test` baut zuerst und prüft anschließend die zentralen Regeln des
+abgeleiteten Textblockzustands mit den integrierten Node.js-Tests.

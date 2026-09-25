@@ -4,30 +4,7 @@ import type {
     CedisState,
     CedisSuggestion,
 } from "./cedistypes.js";
-
-const element = <K extends keyof HTMLElementTagNameMap>(
-    tag: K,
-    className?: string,
-    text?: string,
-): HTMLElementTagNameMap[K] => {
-    const node = document.createElement(tag);
-    if (className !== undefined) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-};
-
-const actionButton = (
-    label: string,
-    action: string,
-    data: Record<string, string> = {},
-    className = "control",
-): HTMLButtonElement => {
-    const button = element("button", className, label);
-    button.type = "button";
-    button.dataset.action = action;
-    Object.assign(button.dataset, data);
-    return button;
-};
+import { actionButton, element } from "@lib/dom.js";
 
 const entriesByCode = (catalog: CedisCatalog): Map<string, CedisEntry> =>
     new Map(catalog.entries.map((entry) => [entry.code, entry]));

@@ -1,3 +1,4 @@
+import { element } from "@lib/dom.js";
 const updates = [
     {
         id: "papiertiger2",
@@ -37,14 +38,6 @@ const writeReadIds = (ids) => {
 const unreadEntries = () => {
     const read = readIds();
     return updates.filter((entry) => !read.has(entry.id));
-};
-const element = (tag, className, text) => {
-    const node = document.createElement(tag);
-    if (className !== undefined)
-        node.className = className;
-    if (text !== undefined)
-        node.textContent = text;
-    return node;
 };
 export const getToolStatus = async () => {
     const unread = unreadEntries().length;

@@ -1,18 +1,4 @@
-const element = (tag, className, text) => {
-    const node = document.createElement(tag);
-    if (className !== undefined)
-        node.className = className;
-    if (text !== undefined)
-        node.textContent = text;
-    return node;
-};
-const actionButton = (label, action, data = {}, className = "control") => {
-    const button = element("button", className, label);
-    button.type = "button";
-    button.dataset.action = action;
-    Object.assign(button.dataset, data);
-    return button;
-};
+import { actionButton, element } from "@lib/dom.js";
 const entriesByCode = (catalog) => new Map(catalog.entries.map((entry) => [entry.code, entry]));
 const categoryNames = (catalog) => new Map(catalog.categories.map((category) => [category.code, category.label]));
 const selectionRow = (entry, category, index, count) => {

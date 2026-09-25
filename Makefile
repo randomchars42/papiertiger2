@@ -1,4 +1,4 @@
-.PHONY: serve compile build transpile check
+.PHONY: serve compile build transpile check test
 
 serve:
 	python3 -m http.server --directory app
@@ -16,6 +16,9 @@ transpile:
 check:
 	python3 ./scripts/compile_textblocks.py --check
 	tsc -p ./app/ts/ --noEmit
+
+test: build
+	node --test tests/*.test.js
 
 tag_release_patch:
 	./tag_release.sh patch

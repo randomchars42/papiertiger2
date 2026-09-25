@@ -1,19 +1,4 @@
-const element = (tag, className, text) => {
-    const node = document.createElement(tag);
-    if (className !== undefined)
-        node.className = className;
-    if (text !== undefined)
-        node.textContent = text;
-    return node;
-};
-const actionButton = (label, action, data = {}, className = "control") => {
-    const node = element("button", className, label);
-    node.type = "button";
-    node.dataset.action = action;
-    for (const [key, value] of Object.entries(data))
-        node.dataset[key] = value;
-    return node;
-};
+import { actionButton, element } from "@lib/dom.js";
 export const scoreTotal = (module) => {
     let total = 0;
     for (const criterion of module.score.criteria) {

@@ -272,6 +272,10 @@ export type ResolvedPhrase = {
 
 export type ResolvedDocument = {
     phrases: Record<string, ResolvedPhrase>;
+    groups: Record<
+        string,
+        { conditionMet: boolean; included: boolean; suggested: boolean }
+    >;
 };
 
 export type StructuredItem = {

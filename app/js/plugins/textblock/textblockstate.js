@@ -1,4 +1,5 @@
 import { attributePlaceholders, formatAttribute, groupHeading, hasAttributeValue, isDurationValue, parseValue, resolvedStart, } from "./textblocklib.js";
+import { isRecord } from "../../lib/guards.js";
 export const createScopeState = () => ({
     activeSets: [],
     completedPrompts: [],
@@ -23,7 +24,6 @@ export const scopeState = (state, instanceId) => {
 };
 export const phraseKey = (phraseId, instanceId) => instanceId === undefined ? phraseId : `${instanceId}:${phraseId}`;
 export const groupItems = (group) => group.items;
-const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 export const isPackage = (value) => {
     if (!isRecord(value) || value.version !== 2)
         return false;
@@ -256,6 +256,13 @@ const resolveScope = (phraseIds, definitions, scope, instanceId, additionalActiv
     refreshEffectiveInclusion(phrases, inactive);
     return phrases;
 };
+const conditionMatches = (condition, phrases, instanceId) => {
+    const hasMatch = Object.values(phrases).some((phrase) => (instanceId === undefined || phrase.instanceId === instanceId) &&
+        phrase.effectiveIncluded &&
+        phrase.valueId !== null &&
+        condition.values.includes(phrase.valueId));
+    return condition.negated ? !hasMatch : hasMatch;
+};
 export const resolveDocument = (definitions, state) => {
     const repeated = repeatedPhraseIds(definitions);
     const repeatedGroups = new Set(Object.entries(definitions.groups).flatMap(([groupId, group]) => group.repeatable === undefined
@@ -302,29 +309,71 @@ export const resolveDocument = (definitions, state) => {
             empty.effectiveIncluded = false;
         }
     }
-    return { phrases };
+    const groups = {};
+    const resolveGroup = (groupId, instanceId) => {
+        const key = phraseKey(groupId, instanceId);
+        const cached = groups[key];
+        if (cached !== undefined)
+            return cached;
+        const group = definitions.groups[groupId];
+        if (group.repeatable !== undefined && instanceId === undefined) {
+            const instances = (state.groupInstances[groupId] ?? []).map((id) => resolveGroup(groupId, id));
+            const aggregate = {
+                conditionMet: true,
+                included: instances.some((entry) => entry.included),
+                suggested: instances.some((entry) => entry.suggested),
+            };
+            groups[key] = aggregate;
+            return aggregate;
+        }
+        const conditionMet = group.condition === undefined ||
+            conditionMatches(group.condition, phrases, instanceId);
+        if (!conditionMet) {
+            const hidden = { conditionMet: false, included: false, suggested: false };
+            groups[key] = hidden;
+            return hidden;
+        }
+        let included = false;
+        let suggested = group.condition !== undefined;
+        for (const item of groupItems(group)) {
+            if (item.type === "phrase") {
+                const phrase = phrases[phraseKey(item.id, instanceId)];
+                included ||= phrase?.effectiveIncluded === true;
+                suggested ||=
+                    phrase?.visible === true && phrase.source === "suggestion";
+                continue;
+            }
+            const child = resolveGroup(item.id, instanceId);
+            included ||= child.included;
+            suggested ||= child.suggested;
+        }
+        const presence = { conditionMet, included, suggested };
+        groups[key] = presence;
+        return presence;
+    };
+    for (const [groupId, group] of Object.entries(definitions.groups)) {
+        if (!repeatedGroups.has(groupId) || group.repeatable !== undefined) {
+            resolveGroup(groupId);
+        }
+    }
+    for (const [groupId, instanceIds] of Object.entries(state.groupInstances)) {
+        for (const instanceId of instanceIds)
+            resolveGroup(groupId, instanceId);
+    }
+    return { phrases, groups };
 };
 export const isGroupEnabled = (groupId, definitions, state, instanceId) => {
     const scope = scopeState(state, instanceId);
     return (scope.groupOverrides[groupId] ?? definitions.groups[groupId]?.default ?? true);
 };
-export const isGroupConditionMet = (groupId, definitions, resolved, instanceId) => {
-    const condition = definitions.groups[groupId]?.condition;
-    if (condition === undefined)
-        return true;
-    return isConditionMet(condition, resolved, instanceId);
-};
+export const isGroupConditionMet = (groupId, resolved, instanceId) => resolved.groups[phraseKey(groupId, instanceId)]?.conditionMet ?? false;
 export const isConditionMet = (condition, resolved, instanceId) => {
-    const hasMatch = Object.values(resolved.phrases).some((phrase) => (instanceId === undefined || phrase.instanceId === instanceId) &&
-        phrase.effectiveIncluded &&
-        phrase.valueId !== null &&
-        condition.values.includes(phrase.valueId));
-    return condition.negated ? !hasMatch : hasMatch;
+    return conditionMatches(condition, resolved.phrases, instanceId);
 };
 const collectGroupPhrases = (groupId, definitions, state, resolved, instanceId) => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId))
         return [];
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
+    if (!isGroupConditionMet(groupId, resolved, instanceId))
         return [];
     const group = definitions.groups[groupId];
     return groupItems(group).flatMap((item) => {
@@ -341,7 +390,7 @@ const collectGroupPhrases = (groupId, definitions, state, resolved, instanceId) 
     });
 };
 const collectDisplayGroupPhrases = (groupId, definitions, state, resolved, instanceId) => {
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
+    if (!isGroupConditionMet(groupId, resolved, instanceId))
         return [];
     const group = definitions.groups[groupId];
     return groupItems(group).flatMap((item) => {
@@ -357,30 +406,9 @@ const collectDisplayGroupPhrases = (groupId, definitions, state, resolved, insta
         return collectDisplayGroupPhrases(child, definitions, state, resolved, instanceId);
     });
 };
-const hasConditionallyVisibleGroup = (groupId, definitions, state, resolved, instanceId) => {
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
-        return false;
-    }
-    const group = definitions.groups[groupId];
-    if (group.condition !== undefined)
-        return true;
-    return groupItems(group).some((item) => {
-        if (item.type === "phrase")
-            return false;
-        const child = definitions.groups[item.id];
-        if (child.repeatable !== undefined && instanceId === undefined) {
-            return (state.groupInstances[item.id] ?? []).some((childInstance) => hasConditionallyVisibleGroup(item.id, definitions, state, resolved, childInstance));
-        }
-        return hasConditionallyVisibleGroup(item.id, definitions, state, resolved, instanceId);
-    });
-};
-export const groupPhrasePresence = (groupId, definitions, state, resolved, instanceId) => {
-    const phrases = collectDisplayGroupPhrases(groupId, definitions, state, resolved, instanceId);
-    return {
-        included: phrases.some((phrase) => phrase.effectiveIncluded),
-        suggested: phrases.some((phrase) => phrase.visible && phrase.source === "suggestion") ||
-            hasConditionallyVisibleGroup(groupId, definitions, state, resolved, instanceId),
-    };
+export const groupPhrasePresence = (groupId, resolved, instanceId) => resolved.groups[phraseKey(groupId, instanceId)] ?? {
+    included: false,
+    suggested: false,
 };
 export const summarizeGroup = (groupId, definitions, state, resolved) => {
     const unique = new Map(collectGroupPhrases(groupId, definitions, state, resolved).map((phrase) => [
@@ -392,7 +420,7 @@ export const summarizeGroup = (groupId, definitions, state, resolved) => {
 const collectSummaryGroupIds = (groupId, definitions, state, resolved, instanceId) => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId))
         return [];
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
+    if (!isGroupConditionMet(groupId, resolved, instanceId))
         return [];
     const group = definitions.groups[groupId];
     return [
@@ -406,7 +434,7 @@ const collectSummaryGroupIds = (groupId, definitions, state, resolved, instanceI
 const renderGroupTextInternal = (groupId, definitions, state, resolved, instanceId, instanceIndex) => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId))
         return "";
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId))
+    if (!isGroupConditionMet(groupId, resolved, instanceId))
         return "";
     const group = definitions.groups[groupId];
     const baseTitle = parseValue(group.title).text;

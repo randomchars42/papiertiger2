@@ -1,6 +1,6 @@
 import { renderModule, scoreTotal } from "./scoreui.js";
+import { isRecord } from "@lib/guards.js";
 const modules = new Map();
-const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const isOption = (value) => isRecord(value) &&
     typeof value.valueId === "string" &&
     typeof value.text === "string" &&

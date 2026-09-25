@@ -1,15 +1,16 @@
 import { loadJSON } from "@lib/base.js";
+import { copyToClipboard } from "@lib/dom.js";
+import { isRecord } from "@lib/guards.js";
 import { getConfig } from "../../config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { createDocumentState, createScopeState, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, } from "./textblockstate.js";
 import { renderModule, renderPhraseEditor } from "./textblockui.js";
-const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const definitions = emptyDefinitions();
 const state = createDocumentState();
 const modules = new Map();
 const loadedPackages = new Set();
 const packageRequests = new Map();
-let resolved = { phrases: {} };
+let resolved = { phrases: {}, groups: {} };
 let instanceCounter = 0;
 const suggestionHighlightDuration = 1_600;
 const requestPackage = (id) => {
@@ -207,7 +208,7 @@ const resetPrompt = (phraseId, instanceId) => {
 const nextPromptInGroup = (module, groupId, instanceId) => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId))
         return null;
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) {
         return null;
     }
     const group = definitions.groups[groupId];
@@ -562,22 +563,6 @@ const resetStaticGroup = (groupId) => {
     }
     delete state.groupOverrides[groupId];
 };
-const copyToClipboard = async (text) => {
-    if (navigator.clipboard !== undefined && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return;
-    }
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.setAttribute("readonly", "");
-    textarea.className = "clipboard-fallback";
-    document.body.append(textarea);
-    textarea.select();
-    const copied = document.execCommand("copy");
-    textarea.remove();
-    if (!copied)
-        throw new Error("Clipboard access failed");
-};
 const requireData = (button, key) => {
     const value = button.dataset[key];
     if (value === undefined)
@@ -682,15 +667,19 @@ const initialHoldKey = (groupKey) => `initial:${groupKey}`;
 const holdOpen = (module, holdKey, path) => {
     const heldPath = path.map(({ groupId, instanceId }) => phraseKey(groupId, instanceId));
     for (const key of heldPath) {
-        if (![...module.revealHolds.values()].some((held) => held.includes(key))) {
+        let groupState = module.revealGroups.get(key);
+        if (groupState === undefined) {
             const hadOverride = Object.prototype.hasOwnProperty.call(module.compactOverrides, key);
-            module.revealRestores.set(key, {
+            groupState = {
+                holds: new Set(),
                 hadOverride,
                 ...(hadOverride
                     ? { value: module.compactOverrides[key] }
                     : {}),
-            });
+            };
+            module.revealGroups.set(key, groupState);
         }
+        groupState.holds.add(holdKey);
     }
     module.revealHolds.set(holdKey, heldPath);
     for (const { groupId, instanceId } of path) {
@@ -704,15 +693,17 @@ const releaseRevealHold = (module, holdKey, restore) => {
         return;
     module.revealHolds.delete(holdKey);
     for (const key of path) {
-        const stillHeld = [...module.revealHolds.values()].some((held) => held.includes(key));
-        if (stillHeld)
+        const groupState = module.revealGroups.get(key);
+        if (groupState === undefined)
             continue;
-        const previous = module.revealRestores.get(key);
-        module.revealRestores.delete(key);
-        if (!restore || previous === undefined)
+        groupState.holds.delete(holdKey);
+        if (groupState.holds.size > 0)
             continue;
-        if (previous.hadOverride) {
-            module.compactOverrides[key] = previous.value ?? false;
+        module.revealGroups.delete(key);
+        if (!restore)
+            continue;
+        if (groupState.hadOverride) {
+            module.compactOverrides[key] = groupState.value ?? false;
         }
         else {
             delete module.compactOverrides[key];
@@ -774,7 +765,7 @@ const refreshExplicitReveals = (module) => {
 };
 const groupIsHeldOpen = (module, groupId, instanceId) => {
     const key = phraseKey(groupId, instanceId);
-    return [...module.revealHolds.values()].some((path) => path.includes(key));
+    return module.revealGroups.has(key);
 };
 const elementGroupPath = (target, parent) => {
     const path = [];
@@ -1426,7 +1417,7 @@ export const display = async (parentId, params) => {
         suggestionKeys: new Set(),
         suggestionHighlights: new Map(),
         revealHolds: new Map(),
-        revealRestores: new Map(),
+        revealGroups: new Map(),
         revealConditionStates: new Map(),
         suggestionsReady: false,
         autoCompactTimers: new Map(),

@@ -7,6 +7,7 @@ import {
     parseValue,
     resolvedStart,
 } from "./textblocklib.js";
+import { isRecord } from "../../lib/guards.js";
 import type {
     AttributeValue,
     ConditionDefinition,
@@ -55,9 +56,6 @@ export const phraseKey = (phraseId: string, instanceId?: string): string =>
     instanceId === undefined ? phraseId : `${instanceId}:${phraseId}`;
 
 export const groupItems = (group: GroupDefinition) => group.items;
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-    typeof value === "object" && value !== null && !Array.isArray(value);
 
 export const isPackage = (value: unknown): value is PackageDefinition => {
     if (!isRecord(value) || value.version !== 2) return false;
@@ -386,6 +384,21 @@ const resolveScope = (
     return phrases;
 };
 
+const conditionMatches = (
+    condition: ConditionDefinition,
+    phrases: Readonly<Record<string, ResolvedPhrase>>,
+    instanceId?: string,
+): boolean => {
+    const hasMatch = Object.values(phrases).some(
+        (phrase) =>
+            (instanceId === undefined || phrase.instanceId === instanceId) &&
+            phrase.effectiveIncluded &&
+            phrase.valueId !== null &&
+            condition.values.includes(phrase.valueId),
+    );
+    return condition.negated ? !hasMatch : hasMatch;
+};
+
 export const resolveDocument = (
     definitions: Definitions,
     state: DocumentState,
@@ -474,7 +487,63 @@ export const resolveDocument = (
         }
     }
 
-    return { phrases };
+    const groups: ResolvedDocument["groups"] = {};
+    const resolveGroup = (
+        groupId: string,
+        instanceId?: string,
+    ): ResolvedDocument["groups"][string] => {
+        const key = phraseKey(groupId, instanceId);
+        const cached = groups[key];
+        if (cached !== undefined) return cached;
+        const group = definitions.groups[groupId];
+        if (group.repeatable !== undefined && instanceId === undefined) {
+            const instances = (state.groupInstances[groupId] ?? []).map((id) =>
+                resolveGroup(groupId, id),
+            );
+            const aggregate = {
+                conditionMet: true,
+                included: instances.some((entry) => entry.included),
+                suggested: instances.some((entry) => entry.suggested),
+            };
+            groups[key] = aggregate;
+            return aggregate;
+        }
+        const conditionMet =
+            group.condition === undefined ||
+            conditionMatches(group.condition, phrases, instanceId);
+        if (!conditionMet) {
+            const hidden = { conditionMet: false, included: false, suggested: false };
+            groups[key] = hidden;
+            return hidden;
+        }
+        let included = false;
+        let suggested = group.condition !== undefined;
+        for (const item of groupItems(group)) {
+            if (item.type === "phrase") {
+                const phrase = phrases[phraseKey(item.id, instanceId)];
+                included ||= phrase?.effectiveIncluded === true;
+                suggested ||=
+                    phrase?.visible === true && phrase.source === "suggestion";
+                continue;
+            }
+            const child = resolveGroup(item.id, instanceId);
+            included ||= child.included;
+            suggested ||= child.suggested;
+        }
+        const presence = { conditionMet, included, suggested };
+        groups[key] = presence;
+        return presence;
+    };
+    for (const [groupId, group] of Object.entries(definitions.groups)) {
+        if (!repeatedGroups.has(groupId) || group.repeatable !== undefined) {
+            resolveGroup(groupId);
+        }
+    }
+    for (const [groupId, instanceIds] of Object.entries(state.groupInstances)) {
+        for (const instanceId of instanceIds) resolveGroup(groupId, instanceId);
+    }
+
+    return { phrases, groups };
 };
 
 export const isGroupEnabled = (
@@ -491,28 +560,16 @@ export const isGroupEnabled = (
 
 export const isGroupConditionMet = (
     groupId: string,
-    definitions: Definitions,
     resolved: ResolvedDocument,
     instanceId?: string,
-): boolean => {
-    const condition = definitions.groups[groupId]?.condition;
-    if (condition === undefined) return true;
-    return isConditionMet(condition, resolved, instanceId);
-};
+): boolean => resolved.groups[phraseKey(groupId, instanceId)]?.conditionMet ?? false;
 
 export const isConditionMet = (
     condition: ConditionDefinition,
     resolved: ResolvedDocument,
     instanceId?: string,
 ): boolean => {
-    const hasMatch = Object.values(resolved.phrases).some(
-        (phrase) =>
-            (instanceId === undefined || phrase.instanceId === instanceId) &&
-            phrase.effectiveIncluded &&
-            phrase.valueId !== null &&
-            condition.values.includes(phrase.valueId),
-    );
-    return condition.negated ? !hasMatch : hasMatch;
+    return conditionMatches(condition, resolved.phrases, instanceId);
 };
 
 const collectGroupPhrases = (
@@ -523,7 +580,7 @@ const collectGroupPhrases = (
     instanceId?: string,
 ): ResolvedPhrase[] => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId)) return [];
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return [];
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) return [];
     const group = definitions.groups[groupId];
     return groupItems(group).flatMap((item): ResolvedPhrase[] => {
         if (item.type === "phrase") {
@@ -560,7 +617,7 @@ const collectDisplayGroupPhrases = (
     resolved: ResolvedDocument,
     instanceId?: string,
 ): ResolvedPhrase[] => {
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return [];
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) return [];
     const group = definitions.groups[groupId];
     return groupItems(group).flatMap((item): ResolvedPhrase[] => {
         if (item.type === "phrase") {
@@ -590,71 +647,15 @@ const collectDisplayGroupPhrases = (
     });
 };
 
-const hasConditionallyVisibleGroup = (
-    groupId: string,
-    definitions: Definitions,
-    state: DocumentState,
-    resolved: ResolvedDocument,
-    instanceId?: string,
-): boolean => {
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) {
-        return false;
-    }
-    const group = definitions.groups[groupId];
-    if (group.condition !== undefined) return true;
-    return groupItems(group).some((item) => {
-        if (item.type === "phrase") return false;
-        const child = definitions.groups[item.id];
-        if (child.repeatable !== undefined && instanceId === undefined) {
-            return (state.groupInstances[item.id] ?? []).some((childInstance) =>
-                hasConditionallyVisibleGroup(
-                    item.id,
-                    definitions,
-                    state,
-                    resolved,
-                    childInstance,
-                ),
-            );
-        }
-        return hasConditionallyVisibleGroup(
-            item.id,
-            definitions,
-            state,
-            resolved,
-            instanceId,
-        );
-    });
-};
-
 export const groupPhrasePresence = (
     groupId: string,
-    definitions: Definitions,
-    state: DocumentState,
     resolved: ResolvedDocument,
     instanceId?: string,
-): { included: boolean; suggested: boolean } => {
-    const phrases = collectDisplayGroupPhrases(
-        groupId,
-        definitions,
-        state,
-        resolved,
-        instanceId,
-    );
-    return {
-        included: phrases.some((phrase) => phrase.effectiveIncluded),
-        suggested:
-            phrases.some(
-                (phrase) => phrase.visible && phrase.source === "suggestion",
-            ) ||
-            hasConditionallyVisibleGroup(
-                groupId,
-                definitions,
-                state,
-                resolved,
-                instanceId,
-            ),
+): { included: boolean; suggested: boolean } =>
+    resolved.groups[phraseKey(groupId, instanceId)] ?? {
+        included: false,
+        suggested: false,
     };
-};
 
 export const summarizeGroup = (
     groupId: string,
@@ -681,7 +682,7 @@ const collectSummaryGroupIds = (
     instanceId?: string,
 ): string[] => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId)) return [];
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return [];
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) return [];
     const group = definitions.groups[groupId];
     return [
         ...(group.summary === true ? [groupId] : []),
@@ -709,7 +710,7 @@ const renderGroupTextInternal = (
     instanceIndex?: number,
 ): string => {
     if (!isGroupEnabled(groupId, definitions, state, instanceId)) return "";
-    if (!isGroupConditionMet(groupId, definitions, resolved, instanceId)) return "";
+    if (!isGroupConditionMet(groupId, resolved, instanceId)) return "";
     const group = definitions.groups[groupId];
     const baseTitle = parseValue(group.title).text;
     const title =

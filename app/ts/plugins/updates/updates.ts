@@ -1,4 +1,5 @@
 import type { ToolStatus } from "@lib/plugin.js";
+import { element } from "@lib/dom.js";
 
 type UpdateEntry = {
     id: string;
@@ -47,17 +48,6 @@ const writeReadIds = (ids: Set<string>): void => {
 const unreadEntries = (): UpdateEntry[] => {
     const read = readIds();
     return updates.filter((entry) => !read.has(entry.id));
-};
-
-const element = <K extends keyof HTMLElementTagNameMap>(
-    tag: K,
-    className?: string,
-    text?: string,
-): HTMLElementTagNameMap[K] => {
-    const node = document.createElement(tag);
-    if (className !== undefined) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
 };
 
 export const getToolStatus = async (): Promise<ToolStatus> => {

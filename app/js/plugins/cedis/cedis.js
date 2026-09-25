@@ -1,11 +1,11 @@
 import { loadJSON } from "@lib/base.js";
 import { getConfig } from "../../config.js";
 import { validateCatalog } from "./cedislib.js";
+import { isRecord } from "@lib/guards.js";
 import { renderEditor, renderSummary } from "./cedisui.js";
 const modules = new Map();
 const states = new Map();
 let dataRequest = null;
-const isRecord = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
 const requestData = () => {
     if (dataRequest !== null)
         return dataRequest;

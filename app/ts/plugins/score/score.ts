@@ -1,4 +1,5 @@
 import { renderModule, scoreTotal } from "./scoreui.js";
+import { isRecord } from "@lib/guards.js";
 import type {
     ScoreCriterion,
     ScoreDefinition,
@@ -7,9 +8,6 @@ import type {
 } from "./scoretypes.js";
 
 const modules = new Map<string, ScoreModuleState>();
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-    typeof value === "object" && value !== null && !Array.isArray(value);
 
 const isOption = (value: unknown): value is ScoreOption =>
     isRecord(value) &&

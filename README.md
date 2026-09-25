@@ -27,6 +27,7 @@ Die vollständige Navigation steht im [Dokumentationsindex](docs/index.md).
 ## Voraussetzungen
 
 - Python 3;
+- Node.js für die Verhaltenstests;
 - der TypeScript-Compiler `tsc` für den Build;
 - ein moderner Browser.
 
@@ -50,6 +51,7 @@ Bearbeitet werden ausschließlich die `.pt`-Quellen unter `app/data/`:
 ```bash
 make compile
 make check
+make test
 ```
 
 `make compile` erzeugt die gleichnamigen JSON-Dateien. Diese sowie die Dateien

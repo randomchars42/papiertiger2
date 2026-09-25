@@ -2,6 +2,8 @@ import { configure, getConfig } from "./config.js";
 import { loadJSON } from "@lib/base.js";
 import { loadPlugin } from "@lib/plugin.js";
 import type { Plugin } from "@lib/plugin.js";
+import { copyToClipboard, element } from "@lib/dom.js";
+import { isRecord } from "@lib/guards.js";
 import {
     getSymptomLens,
     initialiseSymptomLenses,
@@ -41,9 +43,6 @@ type DocumentBlockValue = {
     value: unknown;
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-    typeof value === "object" && value !== null && !Array.isArray(value);
-
 const documentCatalog = (value: unknown): DocumentCatalog => {
     if (
         !isRecord(value) ||
@@ -71,37 +70,11 @@ const toolRequest = (value: unknown): ToolRequest | null => {
     return value as ToolRequest;
 };
 
-const element = <K extends keyof HTMLElementTagNameMap>(
-    tag: K,
-    className?: string,
-    text?: string,
-): HTMLElementTagNameMap[K] => {
-    const node = document.createElement(tag);
-    if (className !== undefined) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-};
-
 const button = (label: string, action: string): HTMLButtonElement => {
     const node = element("button", "control", label);
     node.type = "button";
     node.dataset.documentAction = action;
     return node;
-};
-
-const copyToClipboard = async (text: string): Promise<void> => {
-    if (navigator.clipboard !== undefined && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return;
-    }
-    const textarea = element("textarea", "clipboard-fallback");
-    textarea.value = text;
-    textarea.readOnly = true;
-    document.body.append(textarea);
-    textarea.select();
-    const copied = document.execCommand("copy");
-    textarea.remove();
-    if (!copied) throw new Error("Clipboard access failed");
 };
 
 const showError = (error: unknown): void => {

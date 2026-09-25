@@ -1,28 +1,5 @@
 import type { ScoreModuleState } from "./scoretypes.js";
-
-const element = <K extends keyof HTMLElementTagNameMap>(
-    tag: K,
-    className?: string,
-    text?: string,
-): HTMLElementTagNameMap[K] => {
-    const node = document.createElement(tag);
-    if (className !== undefined) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-};
-
-const actionButton = (
-    label: string,
-    action: string,
-    data: Record<string, string> = {},
-    className = "control",
-): HTMLButtonElement => {
-    const node = element("button", className, label);
-    node.type = "button";
-    node.dataset.action = action;
-    for (const [key, value] of Object.entries(data)) node.dataset[key] = value;
-    return node;
-};
+import { actionButton, element } from "@lib/dom.js";
 
 export const scoreTotal = (module: ScoreModuleState): number | null => {
     let total = 0;
