@@ -36,8 +36,10 @@ vorbelegt und für einen konkreten Aufruf per URL überschrieben werden. Der
 Zeitgeber gehört der nächstgelegenen
 `@autocompact`-Grenze einschließlich ihres gesamten Teilbaums.
 
-Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt: Die
-gerenderte Modulwurzel startet erweitert, jede Untergruppe kompakt;
+Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt:
+Gruppen außerhalb einer `@autocompact`-Grenze starten erweitert; die Grenze und
+ihr Teilbaum starten kompakt. `@reveal(...)` kann den nötigen Pfad temporär
+öffnen;
 `@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
 Ohne Annotation gilt `flow`; `break` wirkt genau eine Ebene. `flow` schließt
 offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte Darstellung
@@ -142,8 +144,9 @@ Die Laufzeit hält voneinander getrennt:
 
 Die Auflösung berechnet daraus für jede sichtbare Phrase Wert, Textteile,
 semantischen Typ, Quelle, Provenienz und Vollständigkeit. Im selben Durchlauf
-leitet sie für jede Gruppe Bedingungsergebnis, effektive Aufnahme und sichtbare
-Vorschläge ab. Darstellung und Kompaktierung lesen diesen gemeinsamen Zustand,
+leitet sie für jede Gruppe linsen- beziehungsweise benutzerabhängige
+Aktivierung, Bedingungsergebnis, effektive Aufnahme und sichtbare Vorschläge
+ab. Darstellung und Kompaktierung lesen diesen gemeinsamen Zustand,
 statt den Gruppenbaum jeweils erneut zu durchsuchen. Gespeicherte Aufnahme und
 effektive Aufnahme bleiben getrennt: Eine inaktive Vorfahrengruppe unterdrückt
 letztere, ohne Kindzustand zu löschen. Nur effektive Aufnahme speist Ausgabe,

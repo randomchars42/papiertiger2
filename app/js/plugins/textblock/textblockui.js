@@ -1,5 +1,5 @@
 import { groupHeading, isDateTimeValue, isDurationValue, parseValue, } from "./textblocklib.js";
-import { groupPhrasePresence, groupItems, isGroupConditionMet, isGroupEnabled, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
+import { groupPhrasePresence, groupItems, isGroupConditionMet, phraseKey, scopeState, summarizeGroup, } from "./textblockstate.js";
 import { getSymptomLens } from "@lib/symptomlens.js";
 import { matchesSearchTokens, normaliseSearch, searchTokens, } from "@lib/search.js";
 import { actionButton, element, iconActionButton } from "@lib/dom.js";
@@ -248,7 +248,7 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
         parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
-const renderCompactContents = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, path, instanceId) => {
+const renderCompactContents = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, insideAutoCompact, path, instanceId) => {
     const group = definitions.groups[groupId];
     let phraseIds = [];
     const renderPhrases = () => {
@@ -275,21 +275,21 @@ const renderCompactContents = (parent, groupId, level, definitions, state, resol
         const child = definitions.groups[childId];
         if (child.repeatable !== undefined && instanceId === undefined) {
             for (const [index, childInstanceId] of (state.groupInstances[childId] ?? []).entries()) {
-                renderGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, childInstanceId, index, path);
+                renderGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, childInstanceId, index, path, insideAutoCompact);
             }
         }
         else {
-            renderGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, undefined, path);
+            renderGroup(parent, childId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, undefined, path, insideAutoCompact);
         }
     }
     renderPhrases();
 };
-const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries) => {
+const renderRepeatable = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, insideAutoCompact) => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
     container.dataset.repeatableGroupId = groupId;
     for (const [index, instanceId] of (state.groupInstances[groupId] ?? []).entries()) {
-        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, index);
+        renderGroup(container, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, index, undefined, insideAutoCompact);
     }
     const title = parseValue(group.title).text;
     const addLabel = group.repeatable?.add ?? `${title} hinzufügen`;
@@ -302,13 +302,13 @@ const renderRepeatable = (parent, groupId, level, definitions, state, resolved, 
     container.append(addButton);
     parent.append(container);
 };
-function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, instanceIndex, compactPath) {
+function renderGroup(parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, instanceIndex, compactPath, insideAutoCompact = false) {
     const group = definitions.groups[groupId];
     if (!isGroupConditionMet(groupId, resolved, instanceId))
         return;
     const isInstanceRoot = instanceIndex !== undefined;
     const compactSummary = compactPath !== undefined;
-    const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const enabled = resolved.groups[phraseKey(groupId, instanceId)]?.enabled ?? false;
     const { included, suggested } = groupPhrasePresence(groupId, resolved, instanceId);
     if (compactSummary && !included && !suggested)
         return;
@@ -319,7 +319,8 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
         ]
         : undefined;
     const compactKey = phraseKey(groupId, instanceId);
-    const compact = compactSummary || (compactOverrides[compactKey] ?? (level > 1));
+    const compactByDefault = insideAutoCompact || group.autoCompact === true;
+    const compact = compactSummary || (compactOverrides[compactKey] ?? compactByDefault);
     const section = element("section", [
         "group",
         `group--${group.kind ?? "neutral"}`,
@@ -412,10 +413,10 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
             const child = item.id;
             if (definitions.groups[child].repeatable !== undefined &&
                 instanceId === undefined) {
-                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries);
+                renderRepeatable(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, compactByDefault);
             }
             else {
-                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId);
+                renderGroup(body, child, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, instanceId, undefined, undefined, compactByDefault);
             }
         }
         renderPhrases();
@@ -424,7 +425,7 @@ function renderGroup(parent, groupId, level, definitions, state, resolved, openE
     else {
         if (included || suggested) {
             const body = element("div", "group__body group__body--compact-only");
-            renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, nextCompactPath ?? [
+            renderCompactContents(body, groupId, level + 1, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, compactByDefault, nextCompactPath ?? [
                 { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
             ], instanceId);
             section.append(body);

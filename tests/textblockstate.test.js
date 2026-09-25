@@ -58,6 +58,7 @@ test("suggestions remain excluded while their group is revealed", () => {
     assert.equal(resolved.phrases.suggested.source, "suggestion");
     assert.equal(resolved.phrases.suggested.effectiveIncluded, false);
     assert.deepEqual(resolved.groups.details, {
+        enabled: true,
         conditionMet: true,
         included: false,
         suggested: true,
@@ -120,6 +121,7 @@ test("a matching conditional group is suggested but not included", () => {
     const resolved = resolveDocument(model, createDocumentState());
 
     assert.deepEqual(resolved.groups.conditional, {
+        enabled: true,
         conditionMet: true,
         included: false,
         suggested: true,
@@ -193,6 +195,86 @@ test("conditional group presence stays scoped to a repeatable instance", () => {
     assert.equal(resolved.groups["instance-2:details"].conditionMet, false);
     assert.equal("details" in resolved.groups, false);
     assert.equal(resolved.groups.repeated.suggested, true);
+});
+
+test("an empty-state phrase remains until a repeatable instance is completed", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "Root",
+                items: [
+                    { type: "phrase", id: "empty" },
+                    { type: "group", id: "repeated" },
+                ],
+            },
+            repeated: {
+                title: "Repeated",
+                repeatable: { initial: 0, add: "Add", empty: "empty" },
+                items: [{ type: "phrase", id: "finding" }],
+            },
+        },
+        {
+            empty: phrase("Empty", "none", { none: value("none") }),
+            finding: phrase("Finding", null, { present: value("present") }),
+        },
+    );
+    const state = createDocumentState();
+    state.groupInstances.repeated = ["instance-1"];
+    state.instanceStates["instance-1"] = createScopeState();
+
+    let resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.empty.effectiveIncluded, true);
+    assert.equal(resolved.phrases.empty.visible, true);
+
+    state.instanceStates["instance-1"].phraseOverrides.finding = {
+        valueId: "present",
+        included: true,
+    };
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.empty.effectiveIncluded, false);
+    assert.equal(resolved.phrases.empty.visible, false);
+
+    state.instanceStates["instance-1"].phraseOverrides.finding = {
+        valueId: "present",
+        included: false,
+    };
+    resolved = resolveDocument(model, state);
+    assert.equal(resolved.phrases.empty.effectiveIncluded, true);
+    assert.equal(resolved.phrases.empty.visible, true);
+});
+
+test("active lenses provide a group default without overriding user choice", () => {
+    const model = definitions(
+        {
+            root: {
+                title: "Root",
+                activeLenses: ["special"],
+                items: [{ type: "phrase", id: "finding" }],
+            },
+        },
+        {
+            finding: phrase("Finding", "present", {
+                present: value("present"),
+            }),
+        },
+    );
+    const state = createDocumentState();
+
+    let resolved = resolveDocument(model, state, "general");
+    assert.equal(resolved.groups.root.enabled, false);
+    assert.equal(resolved.phrases.finding.effectiveIncluded, false);
+
+    resolved = resolveDocument(model, state, "special");
+    assert.equal(resolved.groups.root.enabled, true);
+    assert.equal(resolved.phrases.finding.effectiveIncluded, true);
+
+    state.groupOverrides.root = false;
+    resolved = resolveDocument(model, state, "special");
+    assert.equal(resolved.groups.root.enabled, false);
+
+    state.groupOverrides.root = true;
+    resolved = resolveDocument(model, state, "general");
+    assert.equal(resolved.groups.root.enabled, true);
 });
 
 test("compiled groups use only the ordered items representation", async () => {

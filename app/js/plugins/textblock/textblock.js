@@ -1,6 +1,7 @@
 import { loadJSON } from "@lib/base.js";
 import { copyToClipboard } from "@lib/dom.js";
 import { isRecord } from "@lib/guards.js";
+import { getSymptomLens } from "@lib/symptomlens.js";
 import { getConfig } from "../../config.js";
 import { attributePlaceholders, clampNumber, dateTimeValue, editorDefaultValue, emptyDefinitions, hasAttributeValue, isDurationValue, parseValue, } from "./textblocklib.js";
 import { createDocumentState, createScopeState, groupItems, isConditionMet, isGroupConditionMet, isGroupEnabled, isPackage, mergePackage, phraseKey, renderGroupText, resolveDocument, scopeState, structuredDocument, } from "./textblockstate.js";
@@ -112,7 +113,7 @@ const initialiseRepeatables = (groupId) => {
     }
 };
 const renderAll = () => {
-    resolved = resolveDocument(definitions, state);
+    resolved = resolveDocument(definitions, state, getSymptomLens());
     const now = performance.now();
     const currentSuggestions = new Set(Object.values(resolved.phrases)
         .filter((phrase) => phrase.visible &&
@@ -206,14 +207,15 @@ const resetPrompt = (phraseId, instanceId) => {
     scope.completedPrompts = scope.completedPrompts.filter((candidate) => candidate !== phraseId);
 };
 const nextPromptInGroup = (module, groupId, instanceId) => {
-    if (!isGroupEnabled(groupId, definitions, state, instanceId))
+    if (!isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens())) {
         return null;
+    }
     if (!isGroupConditionMet(groupId, resolved, instanceId)) {
         return null;
     }
     const group = definitions.groups[groupId];
     const compact = module.compactOverrides[phraseKey(groupId, instanceId)] ??
-        (groupId !== module.rootId);
+        groupStartsCompact(module, groupId, instanceId);
     if (compact)
         return null;
     const scope = scopeFor(instanceId);
@@ -621,7 +623,7 @@ const expandOpenEditorPath = (module) => {
     for (const context of path) {
         const key = phraseKey(context.groupId, context.instanceId);
         const compact = module.compactOverrides[key] ??
-            context.groupId !== module.rootId;
+            groupStartsCompact(module, context.groupId, context.instanceId);
         cancelAutoCompact(module, context.groupId, context.instanceId);
         module.compactOverrides[key] = false;
         if (compact)
@@ -655,6 +657,7 @@ const groupPathToGroup = (module, groupId, instanceId) => allGroupPaths(module.r
     const context = path[path.length - 1];
     return context?.groupId === groupId && context.instanceId === instanceId;
 });
+const groupStartsCompact = (module, groupId, instanceId) => groupPathToGroup(module, groupId, instanceId)?.some((context) => definitions.groups[context.groupId].autoCompact === true) ?? definitions.groups[groupId].autoCompact === true;
 const expandGroupPath = (module, path) => {
     for (const context of path) {
         cancelAutoCompact(module, context.groupId, context.instanceId);
@@ -908,8 +911,10 @@ const scheduleAutoCompact = (module, groupId, instanceId) => {
     if (groupIsHeldOpen(module, groupId, instanceId))
         return;
     const key = phraseKey(groupId, instanceId);
-    if (module.compactOverrides[key] ?? (groupId !== module.rootId))
+    if (module.compactOverrides[key] ??
+        groupStartsCompact(module, groupId, instanceId)) {
         return;
+    }
     const delay = module.autoCompactDelay;
     if (delay === null)
         return;
@@ -959,7 +964,7 @@ const activateInactiveGroupPath = (module, target, parent) => {
         const groupId = node.dataset.groupId;
         const instanceId = node.dataset.instanceId;
         if (groupId !== undefined &&
-            !isGroupEnabled(groupId, definitions, state, instanceId)) {
+            !isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens())) {
             scopeFor(instanceId).groupOverrides[groupId] = true;
             cancelAutoCompact(module, groupId, instanceId);
             module.compactOverrides[phraseKey(groupId, instanceId)] = false;
@@ -1135,7 +1140,7 @@ const handleClick = async (module, event) => {
         const groupId = requireData(button, "groupId");
         const score = definitions.groups[groupId]?.score;
         if (score !== undefined) {
-            const groupEnabled = isGroupEnabled(groupId, definitions, state, instanceId);
+            const groupEnabled = isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens());
             const selected = Object.fromEntries(score.criteria.flatMap((criterion) => {
                 const phrase = currentPhrase(criterion.phraseId, instanceId);
                 return groupEnabled &&
@@ -1166,7 +1171,7 @@ const handleClick = async (module, event) => {
     else if (action === "toggle-group") {
         const groupId = requireData(button, "groupId");
         const scope = scopeFor(instanceId);
-        const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+        const enabled = isGroupEnabled(groupId, definitions, state, instanceId, getSymptomLens());
         scope.groupOverrides[groupId] = !enabled;
         const context = {
             groupId,
@@ -1191,7 +1196,8 @@ const handleClick = async (module, event) => {
     else if (action === "toggle-compact") {
         const groupId = requireData(button, "groupId");
         const key = phraseKey(groupId, instanceId);
-        const compact = module.compactOverrides[key] ?? (groupId !== module.rootId);
+        const compact = module.compactOverrides[key] ??
+            groupStartsCompact(module, groupId, instanceId);
         const groupNode = button.closest(".group[data-group-id]");
         if (compact && groupNode !== null) {
             compactFlowSiblings(module, groupNode);
@@ -1259,7 +1265,7 @@ const handleClick = async (module, event) => {
     }
     else if (action === "copy-text" || action === "copy-data") {
         const rootId = requireData(button, "rootId");
-        resolved = resolveDocument(definitions, state);
+        resolved = resolveDocument(definitions, state, getSymptomLens());
         const document = structuredDocument(rootId, definitions, state, resolved);
         try {
             await copyToClipboard(action === "copy-text"
@@ -1452,13 +1458,13 @@ export const display = async (parentId, params) => {
 export const getValue = async (id) => {
     await ensureGroup(id);
     initialiseRepeatables(id);
-    resolved = resolveDocument(definitions, state);
+    resolved = resolveDocument(definitions, state, getSymptomLens());
     return renderGroupText(id, definitions, state, resolved);
 };
 export const getStructuredValue = async (id) => {
     await ensureGroup(id);
     initialiseRepeatables(id);
-    resolved = resolveDocument(definitions, state);
+    resolved = resolveDocument(definitions, state, getSymptomLens());
     return structuredDocument(id, definitions, state, resolved);
 };
 export const receive = (message) => {

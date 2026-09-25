@@ -116,13 +116,13 @@ G @root @subgroups(break): Dokument
 jede direkte Untergruppe in einer eigenen Zeile beginnen; innerhalb dieser
 Zeile bleiben Überschrift, Phrasen und Disclosure inline. Die Untergruppe fällt
 für ihre eigenen Kinder wieder auf `flow` zurück, sofern sie nicht selbst
-`@subgroups(break)` trägt. Die Modulwurzel beginnt erweitert, Untergruppen
-beginnen kompakt. Das kompakte Minimum enthält nur effektiv
+`@subgroups(break)` trägt. Gruppen beginnen erweitert. Erst eine eigene oder
+geerbte `@autocompact`-Grenze lässt sie kompakt beginnen; `@reveal(initial)`
+öffnet und hält den nötigen Pfad bis zur ersten Bedienung. Das kompakte Minimum enthält nur effektiv
 aufgenommene Phrasen, Vorschläge und deren Überschriftenpfade; die Überschrift
 der Grenze bleibt als Einstieg erhalten. Die Quellreihenfolge ändert sich nicht.
-Kompaktwerden ändert weder Auswahl noch Ausgabe. `@autocompact` setzt lediglich
-eine Inaktivitätsfrist für den ganzen Teilbaum. `@reveal(initial)` kann diese
-Frist bis zur ersten Bedienung verzögern.
+Kompaktwerden ändert weder Auswahl noch Ausgabe. `@autocompact` setzt zusätzlich
+eine Inaktivitätsfrist für den ganzen Teilbaum.
 
 ## Einen großen Auswahlkatalog pflegen
 

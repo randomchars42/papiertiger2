@@ -142,6 +142,7 @@ Eine Gruppe kann folgende voneinander unabhängige Annotationen tragen:
 | `@autocompact` | setzt für die Gruppe und ihren Teilbaum eine Inaktivitätsfrist |
 | `@reveal(...)` | öffnet die Gruppe vorübergehend, sobald die angegebene Bedingung neu erfüllt ist |
 | `@reveal(initial)` | beginnt erweitert und bleibt bis zur ersten Bedienung offen |
+| `@active(linse; ...)` | initial nur in den genannten Linsen aktiv |
 | `@inactive` | initial nicht in die Ausgabe eingeschlossen |
 | `@repeat(...)` | wiederholbare Gruppe |
 | `@score(...)` | erzeugt einen additiven Rechner aus markierten Werten |
@@ -157,7 +158,13 @@ Doppelpunkt wird nicht verdoppelt.
 Gruppeneinschluss, Offenlegung und Untergruppenlayout bleiben getrennte
 Zustände, werden bei einem Überschriftenklick aber gemeinsam bedient:
 Deaktivieren deaktiviert und kompaktiert die Gruppe; Aktivieren aktiviert sie
-und öffnet den nötigen Pfad. `@inactive` bestimmt nur den Anfangszustand. Eine
+und öffnet den nötigen Pfad. Ohne Annotation beginnt eine Gruppe aktiv.
+`@inactive` setzt einen generell inaktiven Anfangszustand;
+`@active(rettungsdienst; kernteam)` setzt stattdessen einen von der globalen
+Linse abhängigen aktiven Anfangszustand. Beide Annotationen schließen einander
+aus. Eine ausdrückliche Benutzerentscheidung hat Vorrang und bleibt beim
+Linsenwechsel erhalten; Zurücksetzen entfernt sie und stellt den gegenwärtigen
+linsenabhängigen Anfangszustand wieder her. Eine
 inaktive Gruppe behält Auswahl und Attribute ihrer Kinder, unterdrückt aber
 deren effektiven Einschluss in Ausgabe, Bedingungen und aktive Hervorhebung.
 Von außen ausgelöste Vorschläge bleiben sichtbar, ohne die Gruppe oder ihre
@@ -189,9 +196,12 @@ ersten Rendern und eine damit markierte neue Wiederholungsinstanz beim Anlegen.
 Die erste Bedienung im offengehaltenen Pfad löst den Halt; erst dann beginnt die
 normale `@autocompact`-Frist.
 
-Für die anfängliche Offenlegung gilt eine universelle Regel: Die Wurzel des
-gerenderten Textblockmoduls beginnt erweitert, jede darunter gerenderte Gruppe
-kompakt. Das gilt auch für die importierte Wurzel eines anderen Pakets. Eine
+Eine Gruppe beginnt erweitert, solange weder sie selbst noch ein Vorfahr eine
+`@autocompact`-Grenze bildet. Die markierte Grenze und ihr gesamter Teilbaum
+beginnen kompakt. `@reveal(initial)`, eine neu erfüllte Offenlegungsbedingung
+oder ein neuer Vorschlag erweitert den jeweils nötigen Pfad vorübergehend. Eine
+über **+** neu angelegte Wiederholungsinstanz wird als unmittelbare
+Benutzeraktion ebenfalls geöffnet. Eine
 kompakte Grenze zeigt als Minimum ausschließlich effektiv aufgenommene Phrasen,
 offene Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die Überschriften
 auf deren Pfaden. Ihre eigene Überschrift bleibt unabhängig davon erhalten.
@@ -261,10 +271,14 @@ G @repeat(initial=0,add="Blutung hinzufügen",empty="Blutung") @reset: Blutung|a
 |---|---|
 | `initial` | anfängliche Instanzzahl, Standard `0` |
 | `add` | zugängliche Beschriftung und Tooltip der Hinzufügen-Schaltfläche; erforderlich |
-| `empty` | Titel der Phrase, die ohne Instanz den leeren/normalen Zustand vertritt |
+| `empty` | Titel der Phrase, die ohne vollständig aufgenommene Instanz den leeren/normalen Zustand vertritt |
 
 Jede Instanz erhält eigenen Zustand und eigene Attribute. Verschachtelte
-wiederholbare Gruppen werden derzeit nicht unterstützt.
+wiederholbare Gruppen werden derzeit nicht unterstützt. Eine Instanz gilt für
+`empty` als vollständig, sobald mindestens eine ihrer Phrasen effektiv
+aufgenommen und alle dafür erforderlichen Attribute ausgefüllt sind. Eine nur
+angelegte, noch leere oder vollständig ausgeschlossene Instanz verdrängt die
+Leeren-Phrase daher nicht.
 
 Die sichtbare Hinzufügen-Schaltfläche verwendet den kompakten Gruppentitel mit
 `+`, beispielsweise `Schmerz +`. Dieses Zeichen ist ausschließlich dem Anlegen

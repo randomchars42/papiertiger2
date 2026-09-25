@@ -8,7 +8,6 @@ import {
     groupPhrasePresence,
     groupItems,
     isGroupConditionMet,
-    isGroupEnabled,
     phraseKey,
     scopeState,
     summarizeGroup,
@@ -548,6 +547,7 @@ const renderCompactContents = (
     highlightedSuggestions: ReadonlySet<string>,
     compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
+    insideAutoCompact: boolean,
     path: readonly CompactGroupPathEntry[],
     instanceId?: string,
 ): void => {
@@ -605,6 +605,7 @@ const renderCompactContents = (
                     childInstanceId,
                     index,
                     path,
+                    insideAutoCompact,
                 );
             }
         } else {
@@ -622,6 +623,7 @@ const renderCompactContents = (
                 instanceId,
                 undefined,
                 path,
+                insideAutoCompact,
             );
         }
     }
@@ -639,6 +641,7 @@ const renderRepeatable = (
     highlightedSuggestions: ReadonlySet<string>,
     compactOverrides: Readonly<Record<string, boolean>>,
     pickerQueries: Readonly<Record<string, string>>,
+    insideAutoCompact: boolean,
 ): void => {
     const group = definitions.groups[groupId];
     const container = element("div", "repeatable");
@@ -657,6 +660,8 @@ const renderRepeatable = (
             pickerQueries,
             instanceId,
             index,
+            undefined,
+            insideAutoCompact,
         );
     }
     const title = parseValue(group.title).text;
@@ -690,12 +695,14 @@ function renderGroup(
     instanceId?: string,
     instanceIndex?: number,
     compactPath?: readonly CompactGroupPathEntry[],
+    insideAutoCompact = false,
 ): void {
     const group = definitions.groups[groupId];
     if (!isGroupConditionMet(groupId, resolved, instanceId)) return;
     const isInstanceRoot = instanceIndex !== undefined;
     const compactSummary = compactPath !== undefined;
-    const enabled = isGroupEnabled(groupId, definitions, state, instanceId);
+    const enabled =
+        resolved.groups[phraseKey(groupId, instanceId)]?.enabled ?? false;
     const { included, suggested } = groupPhrasePresence(
         groupId,
         resolved,
@@ -709,8 +716,9 @@ function renderGroup(
           ]
         : undefined;
     const compactKey = phraseKey(groupId, instanceId);
+    const compactByDefault = insideAutoCompact || group.autoCompact === true;
     const compact =
-        compactSummary || (compactOverrides[compactKey] ?? (level > 1));
+        compactSummary || (compactOverrides[compactKey] ?? compactByDefault);
     const section = element(
         "section",
         [
@@ -890,6 +898,7 @@ function renderGroup(
                     highlightedSuggestions,
                     compactOverrides,
                     pickerQueries,
+                    compactByDefault,
                 );
             } else {
                 renderGroup(
@@ -904,6 +913,9 @@ function renderGroup(
                     compactOverrides,
                     pickerQueries,
                     instanceId,
+                    undefined,
+                    undefined,
+                    compactByDefault,
                 );
             }
         }
@@ -923,6 +935,7 @@ function renderGroup(
                 highlightedSuggestions,
                 compactOverrides,
                 pickerQueries,
+                compactByDefault,
                 nextCompactPath ?? [
                     { groupId, ...(instanceId === undefined ? {} : { instanceId }) },
                 ],

@@ -110,6 +110,9 @@ Die Frist gehört einer ganzen markierten Gruppe einschließlich ihrer
 Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie
 neu. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
 die Gruppe offen. Nach **Fertig** oder **Enter** beginnt die Frist erneut.
+Gruppen außerhalb einer solchen Grenze beginnen erweitert. Eine
+`@autocompact`-Grenze und ihr Teilbaum beginnen kompakt, sofern kein
+Offenlegungsereignis den benötigten Pfad vorübergehend öffnet.
 
 Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, offene
 Vorschläge, gegenwärtig bedingt sichtbare Gruppen und die dafür nötigen

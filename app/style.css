@@ -636,6 +636,7 @@ select:focus-visible {
 }
 
 .group--instance {
+    flex: 1 0 100%;
     border-inline-start-width: 2px !important;
 }
 

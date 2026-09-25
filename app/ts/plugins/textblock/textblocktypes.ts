@@ -106,6 +106,7 @@ export type GroupDefinition = {
     items: GroupItemDefinition[];
     sets?: string[];
     default?: boolean;
+    activeLenses?: string[];
     content?: string;
     note?: string;
     kind?: ItemKind;
@@ -274,7 +275,12 @@ export type ResolvedDocument = {
     phrases: Record<string, ResolvedPhrase>;
     groups: Record<
         string,
-        { conditionMet: boolean; included: boolean; suggested: boolean }
+        {
+            enabled: boolean;
+            conditionMet: boolean;
+            included: boolean;
+            suggested: boolean;
+        }
     >;
 };
 
