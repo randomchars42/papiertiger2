@@ -56,6 +56,16 @@ const editorMatches = (
     editor.phraseId === phraseId &&
     editor.instanceId === instanceId;
 
+const attributeEditorMatches = (
+    editor: OpenEditor,
+    phraseId: string,
+    attributeId: string,
+    instanceId?: string,
+): boolean =>
+    editorMatches(editor, "attribute", phraseId, instanceId) &&
+    editor?.type === "attribute" &&
+    editor.attributeId === attributeId;
+
 const instanceLabel = (
     instanceId: string | undefined,
     definitions: Definitions,
@@ -366,7 +376,7 @@ const renderAttributeEditor = (
     const editorId = definitions.phrases[phraseId].attributes?.[attributeId];
     const definition = definitions.editors[editorId ?? ""];
     const value = editorValue(state, phraseId, attributeId, instanceId);
-    const node = element("div", "inline-editor attribute-editor");
+    const node = element("span", "inline-editor attribute-editor");
     node.dataset.editorFor = phraseKey(phraseId, instanceId);
     node.setAttribute("role", "group");
     node.setAttribute("aria-label", definition.label ?? attributeId);
@@ -479,6 +489,7 @@ const renderPhrase = (
     if (instanceId !== undefined) phraseNode.dataset.instanceId = instanceId;
     phraseNode.title = definitions.phrases[phraseId].note ?? "";
 
+    let renderedOpenAttribute = false;
     for (const part of phrase.parts) {
         if (part.type === "text") {
             if (part.text.trim() === "") continue;
@@ -490,6 +501,25 @@ const renderPhrase = (
             );
             button.setAttribute("aria-pressed", String(phrase.included));
             phraseNode.append(button);
+        } else if (
+            !renderedOpenAttribute &&
+            attributeEditorMatches(
+                openEditor,
+                phraseId,
+                part.id,
+                instanceId,
+            )
+        ) {
+            phraseNode.append(
+                renderAttributeEditor(
+                    phraseId,
+                    part.id,
+                    instanceId,
+                    definitions,
+                    state,
+                ),
+            );
+            renderedOpenAttribute = true;
         } else {
             const button = actionButton(
                 part.text,
@@ -512,19 +542,6 @@ const renderPhrase = (
                 definitions,
                 phrase,
                 pickerQueries[phrase.key] ?? "",
-            ),
-        );
-    } else if (editorMatches(openEditor, "attribute", phraseId, instanceId)) {
-        const attributeEditor = openEditor as Exclude<OpenEditor, null> & {
-            type: "attribute";
-        };
-        parent.append(
-            renderAttributeEditor(
-                phraseId,
-                attributeEditor.attributeId,
-                instanceId,
-                definitions,
-                state,
             ),
         );
     }

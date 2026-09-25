@@ -417,8 +417,10 @@ select:focus-visible {
 
 .phrase {
     display: inline-flex;
+    flex-wrap: wrap;
     align-items: stretch;
     min-width: 0;
+    max-width: 100%;
     border: 1px solid transparent;
     border-radius: var(--radius);
     color: var(--kind-muted);
@@ -603,6 +605,22 @@ select:focus-visible {
     border: 1px solid var(--accent);
     border-inline-start-width: 3px;
     background: var(--surface-alt);
+}
+
+.phrase > .attribute-editor {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    margin-block: 0;
+    padding: 0.15rem;
+    border-inline-start-width: 1px;
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.phrase > .attribute-editor .editor-input {
+    flex: 1 1 5rem;
+    min-width: 4rem;
 }
 
 .repeatable {

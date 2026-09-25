@@ -7,6 +7,9 @@ const scopedData = (data, instanceId) => instanceId === undefined ? data : { ...
 const editorMatches = (editor, type, phraseId, instanceId) => editor?.type === type &&
     editor.phraseId === phraseId &&
     editor.instanceId === instanceId;
+const attributeEditorMatches = (editor, phraseId, attributeId, instanceId) => editorMatches(editor, "attribute", phraseId, instanceId) &&
+    editor?.type === "attribute" &&
+    editor.attributeId === attributeId;
 const instanceLabel = (instanceId, definitions, state) => {
     if (instanceId === undefined)
         return "";
@@ -166,7 +169,7 @@ const renderAttributeEditor = (phraseId, attributeId, instanceId, definitions, s
     const editorId = definitions.phrases[phraseId].attributes?.[attributeId];
     const definition = definitions.editors[editorId ?? ""];
     const value = editorValue(state, phraseId, attributeId, instanceId);
-    const node = element("div", "inline-editor attribute-editor");
+    const node = element("span", "inline-editor attribute-editor");
     node.dataset.editorFor = phraseKey(phraseId, instanceId);
     node.setAttribute("role", "group");
     node.setAttribute("aria-label", definition.label ?? attributeId);
@@ -224,6 +227,7 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
     if (instanceId !== undefined)
         phraseNode.dataset.instanceId = instanceId;
     phraseNode.title = definitions.phrases[phraseId].note ?? "";
+    let renderedOpenAttribute = false;
     for (const part of phrase.parts) {
         if (part.type === "text") {
             if (part.text.trim() === "")
@@ -231,6 +235,11 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
             const button = actionButton(part.text, "phrase", scopedData({ phraseId }, instanceId), "phrase__part phrase__text");
             button.setAttribute("aria-pressed", String(phrase.included));
             phraseNode.append(button);
+        }
+        else if (!renderedOpenAttribute &&
+            attributeEditorMatches(openEditor, phraseId, part.id, instanceId)) {
+            phraseNode.append(renderAttributeEditor(phraseId, part.id, instanceId, definitions, state));
+            renderedOpenAttribute = true;
         }
         else {
             const button = actionButton(part.text, "attribute", scopedData({ phraseId, attributeId: part.id }, instanceId), "phrase__part phrase__attribute");
@@ -242,10 +251,6 @@ const renderPhrase = (parent, phraseId, instanceId, definitions, state, resolved
     parent.append(phraseNode);
     if (editorMatches(openEditor, "phrase", phraseId, instanceId)) {
         parent.append(renderPhraseEditor(phraseId, instanceId, definitions, phrase, pickerQueries[phrase.key] ?? ""));
-    }
-    else if (editorMatches(openEditor, "attribute", phraseId, instanceId)) {
-        const attributeEditor = openEditor;
-        parent.append(renderAttributeEditor(phraseId, attributeEditor.attributeId, instanceId, definitions, state));
     }
 };
 const renderCompactContents = (parent, groupId, level, definitions, state, resolved, openEditor, highlightedSuggestions, compactOverrides, pickerQueries, insideAutoCompact, path, instanceId) => {

@@ -78,8 +78,11 @@ beispielsweise `?lens=kernteam`.
 ## Inline-Eingaben
 
 Attribute wie Seite, Zahl, Zeitraum, Datum oder Freitext werden innerhalb des
-Textes bearbeitet. Erforderliche Felder öffnen sich der Reihe nach. Zum Beispiel
-führt eine neue Blutung zuerst durch Lokalisation und danach durch Seite.
+Textes bearbeitet. Beim Öffnen ersetzt der Editor genau den angeklickten
+Platzhalter; die umgebenden Wörter der Phrase bleiben stehen. Breitere
+Auswahl- und Zeitraumeingaben dürfen dabei innerhalb der Phrase umbrechen.
+Erforderliche Felder öffnen sich der Reihe nach. Zum Beispiel führt eine neue
+Blutung zuerst durch Lokalisation und danach durch Seite.
 
 Auf Geräten mit Maus und Tastatur wird ein neu geöffnetes Text- oder Zahlenfeld
 fokussiert. Auf Touchgeräten bleibt es zunächst unfokussiert, damit die
