@@ -77,9 +77,9 @@ in `documents.pt`; der URL-Parameter `lens` überschreibt den Standard,
 beispielsweise `?lens=kernteam`.
 
 Enthält eine gewöhnliche Auswahlliste einen frei ausfüllbaren Wert, zeigt sie
-dessen Editorbezeichnung statt der technischen Platzhaltersyntax, zum Beispiel
-**Diagnose oder Zustand eingeben …**. Ein Klick wählt diesen Wert und öffnet
-seinen Editor direkt in der Phrase.
+dessen Eingabefeld direkt neben den festen Werten, zum Beispiel
+**Diagnose oder Zustand**. **Enter** oder **Übernehmen** wählt den frei
+eingegebenen Wert; ein fester Wert bleibt weiterhin mit einem Klick wählbar.
 
 ## Inline-Eingaben
 

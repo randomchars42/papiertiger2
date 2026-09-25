@@ -743,7 +743,8 @@ select:focus-visible {
     text-align: center;
 }
 
-.catalog-picker__search {
+.catalog-picker__search,
+.picker-entry__input {
     flex: 1 1 14rem;
     width: auto;
 }

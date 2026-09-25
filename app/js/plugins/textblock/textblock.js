@@ -500,9 +500,7 @@ const focusOpenEditor = (module) => {
     const editor = module.openEditor;
     const parent = document.getElementById(module.parentId);
     if (editor?.type === "phrase") {
-        if (definitions.phrases[editor.phraseId]?.catalog === undefined)
-            return;
-        const search = [...(parent?.querySelectorAll('input[data-input="catalog-search"]') ?? [])].find((field) => field.dataset.phraseId === editor.phraseId &&
+        const search = [...(parent?.querySelectorAll('input[data-input="picker-query"]') ?? [])].find((field) => field.dataset.phraseId === editor.phraseId &&
             field.dataset.instanceId === editor.instanceId);
         search?.focus();
         search?.setSelectionRange(search.value.length, search.value.length);
@@ -1353,7 +1351,7 @@ const handleInput = (module, event) => {
     cancelAutoCompactForTarget(module, event.target);
     const target = event.target;
     if (target instanceof HTMLInputElement &&
-        target.dataset.input === "catalog-search") {
+        target.dataset.input === "picker-query") {
         const phraseId = target.dataset.phraseId;
         const instanceId = target.dataset.instanceId;
         if (phraseId === undefined)
@@ -1366,7 +1364,7 @@ const handleInput = (module, event) => {
             return;
         previous.replaceWith(renderPhraseEditor(phraseId, instanceId, definitions, phrase, target.value));
         const parent = document.getElementById(module.parentId);
-        const next = [...(parent?.querySelectorAll('input[data-input="catalog-search"]') ?? [])].find((input) => input.dataset.phraseId === phraseId &&
+        const next = [...(parent?.querySelectorAll('input[data-input="picker-query"]') ?? [])].find((input) => input.dataset.phraseId === phraseId &&
             input.dataset.instanceId === instanceId);
         next?.focus();
         next?.setSelectionRange(next.value.length, next.value.length);
@@ -1389,10 +1387,21 @@ const handleKeydown = (module, event) => {
     cancelAutoCompactForTarget(module, target);
     if (event.key !== "Enter" ||
         event.isComposing ||
-        !(target instanceof HTMLInputElement) ||
-        target.dataset.input !== "attribute") {
+        !(target instanceof HTMLInputElement)) {
         return;
     }
+    if (target.dataset.input === "picker-query") {
+        const accept = target
+            .closest(".phrase-editor")
+            ?.querySelector('button[data-action="choose-freetext"]');
+        if (accept === undefined || accept === null || accept.disabled)
+            return;
+        event.preventDefault();
+        accept.click();
+        return;
+    }
+    if (target.dataset.input !== "attribute")
+        return;
     if (!updateFromInput(target))
         return;
     const finish = target

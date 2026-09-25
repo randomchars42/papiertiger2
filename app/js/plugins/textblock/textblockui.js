@@ -61,6 +61,32 @@ const pickerValueLabel = (text, attributes, definitions) => {
     }
     return { text: rendered, opensEditor: true };
 };
+const directTextEntry = (values, attributes, definitions) => {
+    const entries = values.flatMap(([valueId, value]) => {
+        const text = parseValue(value).text;
+        const placeholders = attributePlaceholders(text);
+        if (placeholders.length !== 1)
+            return [];
+        const placeholder = placeholders[0];
+        if (!placeholder.required ||
+            text.slice(0, placeholder.start).trim() !== "" ||
+            text.slice(placeholder.end).trim() !== "") {
+            return [];
+        }
+        const editorId = attributes?.[placeholder.id];
+        const editor = definitions.editors[editorId ?? ""];
+        if (editor?.type !== "text")
+            return [];
+        return [
+            {
+                valueId,
+                value,
+                editor,
+            },
+        ];
+    });
+    return entries.length === 1 ? entries[0] : undefined;
+};
 export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, query = "") => {
     const editor = element("div", "inline-editor phrase-editor");
     editor.dataset.editorFor = resolved.key;
@@ -91,7 +117,30 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
     const tokens = searchTokens(query);
     const freeText = Object.entries(phrase.values).find(([, value]) => value.freeText === true);
     if (catalog === undefined) {
-        appendCandidates(editor, catalogValues);
+        const textEntry = directTextEntry(catalogValues, phrase.attributes, definitions);
+        appendCandidates(editor, textEntry === undefined
+            ? catalogValues
+            : catalogValues.filter(([valueId]) => valueId !== textEntry.valueId));
+        if (textEntry !== undefined) {
+            const field = element("input", "editor-input picker-entry__input");
+            field.type = "text";
+            field.value = query;
+            field.autocomplete = "off";
+            field.placeholder =
+                textEntry.editor.placeholder ?? textEntry.editor.label ?? "Wert";
+            field.dataset.input = "picker-query";
+            field.dataset.phraseId = phraseId;
+            if (instanceId !== undefined)
+                field.dataset.instanceId = instanceId;
+            field.setAttribute("aria-label", `${textEntry.editor.label ?? resolved.title} eingeben`);
+            const accept = actionButton(query.trim() === "" ? "Übernehmen" : `„${query.trim()}“ übernehmen`, "choose-freetext", scopedData({
+                phraseId,
+                valueId: textEntry.valueId,
+                value: query.trim(),
+            }, instanceId), `choice choice--${textEntry.value.kind}`);
+            accept.disabled = query.trim() === "";
+            editor.append(field, accept);
+        }
     }
     else {
         const selectedLens = getSymptomLens();
@@ -115,7 +164,7 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
         search.autocomplete = "off";
         search.spellcheck = false;
         search.placeholder = `Nicht dabei? ${resolved.title} suchen oder frei eingeben …`;
-        search.dataset.input = "catalog-search";
+        search.dataset.input = "picker-query";
         search.dataset.phraseId = phraseId;
         if (instanceId !== undefined)
             search.dataset.instanceId = instanceId;

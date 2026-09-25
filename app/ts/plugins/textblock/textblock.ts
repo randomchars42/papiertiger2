@@ -742,9 +742,8 @@ const focusOpenEditor = (module: Module): void => {
     const editor = module.openEditor;
     const parent = document.getElementById(module.parentId);
     if (editor?.type === "phrase") {
-        if (definitions.phrases[editor.phraseId]?.catalog === undefined) return;
         const search = [...(parent?.querySelectorAll<HTMLInputElement>(
-            'input[data-input="catalog-search"]',
+            'input[data-input="picker-query"]',
         ) ?? [])].find(
             (field) =>
                 field.dataset.phraseId === editor.phraseId &&
@@ -1888,7 +1887,7 @@ const handleInput = (module: Module, event: Event): void => {
     const target = event.target;
     if (
         target instanceof HTMLInputElement &&
-        target.dataset.input === "catalog-search"
+        target.dataset.input === "picker-query"
     ) {
         const phraseId = target.dataset.phraseId;
         const instanceId = target.dataset.instanceId;
@@ -1909,7 +1908,7 @@ const handleInput = (module: Module, event: Event): void => {
         );
         const parent = document.getElementById(module.parentId);
         const next = [...(parent?.querySelectorAll<HTMLInputElement>(
-            'input[data-input="catalog-search"]',
+            'input[data-input="picker-query"]',
         ) ?? [])].find(
             (input) =>
                 input.dataset.phraseId === phraseId &&
@@ -1937,11 +1936,22 @@ const handleKeydown = (module: Module, event: KeyboardEvent): void => {
     if (
         event.key !== "Enter" ||
         event.isComposing ||
-        !(target instanceof HTMLInputElement) ||
-        target.dataset.input !== "attribute"
+        !(target instanceof HTMLInputElement)
     ) {
         return;
     }
+    if (target.dataset.input === "picker-query") {
+        const accept = target
+            .closest<HTMLElement>(".phrase-editor")
+            ?.querySelector<HTMLButtonElement>(
+                'button[data-action="choose-freetext"]',
+            );
+        if (accept === undefined || accept === null || accept.disabled) return;
+        event.preventDefault();
+        accept.click();
+        return;
+    }
+    if (target.dataset.input !== "attribute") return;
     if (!updateFromInput(target)) return;
     const finish = target
         .closest<HTMLElement>(".inline-editor")
