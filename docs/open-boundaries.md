@@ -32,7 +32,21 @@ Additive Rechner umgehen diese Grenze nicht: Ihre Punktwerte gehören typisiert
 zu ausgewählten Werten. Sie berechnen derzeit weder aus freien Zahlenattributen
 noch aus Vergleichsbedingungen automatisch einen Score.
 
-## Nicht additive oder kontextabhängige Scores
+## Gruppenweite Aufmerksamkeit
+
+Gruppen unterstützen `condition(...)`, aber keine eigenen Modi `suggest(...)`
+oder `require(...)`. Für solche Gruppenmodi fehlt ein eindeutiges
+Erledigungskriterium:
+
+- irgendein vollständig aufgenommener Nachfahre;
+- alle gegenwärtig sichtbaren Nachfahren;
+- eine ausdrücklich definierte Zielmenge.
+
+Diese Varianten sind fachlich nicht gleichwertig. Bis ein konkreter Bedarf das
+Kriterium festlegt, sitzt Aufmerksamkeit daher an den zu erledigenden Phrasen.
+`@reveal(...)` übernimmt eine rein darstellerische Gruppenoffenlegung.
+
+## Komplexe oder aus externen Werten berechnete Scores
 
 `@score` summiert genau einen Punktwert je vollständig ausgewähltem Kriterium.
 Gewichtete Formeln, Altersvarianten, „nicht prüfbar“-Zustände und Scores aus

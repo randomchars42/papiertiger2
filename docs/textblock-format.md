@@ -162,119 +162,26 @@ einen abschließenden Doppelpunkt. Er gehört nicht zum Titel und muss deshalb
 in der `.pt`-Quelle nicht wiederholt werden; ein bereits vorhandener
 Doppelpunkt wird nicht verdoppelt.
 
-Gruppeneinschluss, Offenlegung und Untergruppenlayout bleiben getrennte
-Zustände, werden bei einem Überschriftenklick aber gemeinsam bedient:
-Deaktivieren deaktiviert und kompaktiert die Gruppe; Aktivieren aktiviert sie
-und öffnet den nötigen Pfad. Ohne Annotation beginnt eine Gruppe aktiv.
-`@inactive` setzt einen generell inaktiven Anfangszustand;
-`@active(rettungsdienst; kernteam)` setzt stattdessen einen von der globalen
-Linse abhängigen aktiven Anfangszustand. Beide Annotationen schließen einander
-aus. Eine ausdrückliche Benutzerentscheidung hat Vorrang und bleibt beim
-Linsenwechsel erhalten; Zurücksetzen entfernt sie und stellt den gegenwärtigen
-linsenabhängigen Anfangszustand wieder her. Eine
-inaktive Gruppe behält Auswahl und Attribute ihrer Kinder, unterdrückt aber
-deren effektiven Einschluss in Ausgabe, Bedingungen und aktive Hervorhebung.
-Sie bildet ein hartes Gate: Nur ihre eigene Überschrift bleibt sichtbar;
-Kinder, bedingte Phrasen, Aufmerksamkeitshinweise, Offenlegungen und
-Darstellungswerkzeuge werden erst nach
-einem aktivierenden Überschriftenklick wieder berücksichtigt. Das gilt auch,
-wenn `@active(...)` die Gruppe beim Linsenwechsel inaktiv werden lässt. Eine
-ausdrückliche Benutzeraktivierung behält wie beschrieben Vorrang.
-`@lens(...)` beschreibt dagegen strukturelle Anwendbarkeit: Außerhalb der
-genannten Linsen wird die Gruppe einschließlich ihrer Überschrift nicht
-dargestellt und kann nicht manuell aktiviert werden. Ihre Phrasen wirken dort
-weder auf Ausgabe noch auf Bedingungen oder Aufmerksamkeitshinweise. Auswahl
-und Attribute
-bleiben gespeichert und werden beim Rückwechsel in eine passende Linse wieder
-wirksam. `@active(...)` und `@inactive` können innerhalb einer anwendbaren
-Gruppe weiterhin deren anfänglichen Einschluss steuern; in `@active(...)`
-genannte Linsen müssen dann eine Teilmenge von `@lens(...)` sein.
-Von außen ausgelöste bedingte, vorgeschlagene oder erforderliche Phrasen in
-aktiven Gruppen bleiben sichtbar, ohne die Gruppe oder ihre Vorfahren zu
-aktivieren. Bei aktiven Gruppen verändern
-`@subgroups(...)` und eine reine Bedienung über **…** beziehungsweise **≪** nur
-die Darstellung.
+### Sichtbarkeit und Kompaktierung
 
-`@reveal(...)` verwendet dieselben Bedingungsreferenzen wie `G<...>` und die
-Phrasenmodi `condition(...)`, `suggest(...)` und `require(...)`, verändert aber
-weder Sichtbarkeit noch Einschluss. Beim Übergang der
-Bedingung von nicht erfüllt zu erfüllt wird der vollständige Pfad zur
-Zielgruppe erweitert und bis zur ersten Bedienung in diesem Pfad offengehalten:
+Die vollständigen, normativen Regeln stehen zentral unter
+[Sichtbarkeit und Kompaktierung](visibility-and-compaction.md). Für die Syntax
+gelten insbesondere:
 
-```pt
-C hinweise_noetig: Kritischer Befund
+- `condition(...)` steht bei Gruppen wie bei Phrasen direkt nach `G`
+  beziehungsweise `P`;
+- `@inactive`, `@active(...)` und `@lens(...)` steuern unterschiedliche
+  Stufen und sind nicht mit Kompaktierung gleichzusetzen;
+- `@reveal(...)` und `@reveal(initial)` ändern nur die Offenlegung;
+- `@subgroups(flow|break)` ändert nur das Layout direkter Gruppen-Kinder;
+- `@autocompact` definiert eine kompakte Grenze samt Zeitgeber.
 
-G @reveal(hinweise_noetig): Hinweise
-  P: ärztliche Rücksprache empfohlen|-
-```
+Die früheren Formen `G<...>`, `@collapsed`, `@inline` und `@autocollapse` sind
+nicht mehr Teil des Formats.
 
-Wird die Bedingung später erneut falsch und wieder wahr, kann die Gruppe erneut
-offengelegt werden. Eine bereits erfüllte Bedingung gilt beim ersten Rendern
-ebenfalls als Offenlegungsereignis. Verschwindet die Bedingung vor der ersten
-Bedienung im offengelegten Pfad, wird dessen vorheriger kompakter Zustand
-wiederhergestellt. Aufmerksamkeitsbedingte Offenlegung folgt derselben Regel.
-
-`@reveal(initial)` benötigt keine Bedingung. Es erweitert die Zielgruppe beim
-ersten Rendern und eine damit markierte neue Wiederholungsinstanz beim Anlegen.
-Die erste Bedienung im offengehaltenen Pfad löst den Halt; erst dann beginnt die
-normale `@autocompact`-Frist.
-
-Eine Gruppe beginnt erweitert, solange weder sie selbst noch ein Vorfahr eine
-`@autocompact`-Grenze bildet. Die markierte Grenze und ihr gesamter Teilbaum
-beginnen kompakt. `@reveal(initial)`, eine neu erfüllte Offenlegungsbedingung
-oder eine neue Aufmerksamkeitsstufe erweitert den jeweils nötigen Pfad
-vorübergehend. Eine
-über **+** neu angelegte Wiederholungsinstanz wird als unmittelbare
-Benutzeraktion ebenfalls geöffnet. Eine
-kompakte Grenze zeigt als Minimum ausschließlich effektiv aufgenommene Phrasen,
-Phrasen mit offener Aufmerksamkeit, gegenwärtig bedingt sichtbare Gruppen und
-die Überschriften
-auf deren Pfaden. Ihre eigene Überschrift bleibt unabhängig davon erhalten.
-Nur Gruppen mit effektiv
-aufgenommenen Nachfahren erhalten die aktive Überschriftenmarkierung;
-Aufmerksamkeit aktiviert oder markiert ihre Vorfahren nicht. Die Reihenfolge
-bleibt stabil wie in der `.pt`-Quelle und wird nicht nach Aktivität sortiert.
-Die früheren Annotationen `@collapsed`, `@inline` und `@autocollapse` sind
-daher nicht mehr Teil des Formats.
-
-Ein Klick auf eine Gruppenüberschrift schaltet ihren Einschluss samt dem oben
-beschriebenen Kompakt-/Offenlegungsschritt um. **…** erweitert nur die
-Darstellung; im erweiterten Zustand ersetzt **≪** dieses Zeichen am Ende
-derselben Inhaltszeile. Die Bedienung eines anderen sichtbaren Elements im
-Minimum öffnet zuerst die umgebende `@autocompact`-Grenze und führt danach die
-ursprüngliche Aktion aus. Untergruppen benötigen deshalb in diesem Minimum kein
-eigenes Disclosure. Nur die Überschrift der `@autocompact`-Grenze ist
-ausgenommen: Sie deaktiviert und kompaktiert unmittelbar. **+** ist
-ausschließlich die Aktion zum Anlegen einer wiederholbaren Instanz; **×**
-entfernt eine Instanz. Ein erweiterter Block der ersten Ebene zeigt
-**↺ Zurücksetzen** ausgeschrieben, verschachtelte beziehungsweise kompakte
-Gruppen zeigen nur **↺** mit zugänglicher Beschriftung. Auswahl und Attribute
-bleiben beim Deaktivieren oder Kompaktwerden erhalten.
-
-Die Überschrift einer Untergruppe, ihre direkten Phrasen und ihr abschließendes
-Disclosure bilden ohne weitere Annotation einen gemeinsamen umbrechenden
-Fluss. `@subgroups(flow)` und `@subgroups(break)` steuern ausschließlich die
-direkten Gruppen-Kinder, nicht die Phrasen. `flow` ist der Standard und bildet
-zusätzlich ein Akkordeon: Öffnen einer Untergruppe macht ihre offenen
-Geschwister kompakt. Bei `break` beginnt jede direkte Untergruppe in einer
-eigenen Zeile, bleibt darin aber selbst inline. Deren eigene Untergruppen
-fließen wieder, sofern die Untergruppe nicht ihrerseits `@subgroups(break)`
-trägt. Im kompakten Zustand sehen beide Layouts gleich aus und fließen in die
-Zeile der Elterngruppe zurück. Reihenfolge und Gruppenzugehörigkeit bleiben aus
-der `.pt`-Quelle erhalten.
-
-`@autocompact` markiert eine Zeitgebergrenze. Bedienung in der Gruppe oder einem
-beliebig tiefen Kind setzt ausschließlich die nächstgelegene solche Frist
-zurück. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
-die Grenze offen. Nach **Fertig** oder **Enter** läuft die Frist erneut. Die
-Dauer wird über `autoCompactSeconds` konfiguriert; `0` schaltet die Automatik
-aus. Expansion und Kompaktierung sind mit einer ruhigen, längeren
-Transition sichtbar und respektieren reduzierte Bewegung. Das Kompaktwerden
-ändert weder Gruppeneinschluss noch gespeicherte Kindzustände.
-
-Ein Klick außerhalb einer geöffneten Phrase und ihres Inline-Editors beendet
-die Bearbeitung, bevor die angeklickte Bedienung ausgeführt wird. Nicht leere
-einzeilige Eingaben wählen ihren Inhalt beim ersten Fokus vollständig aus.
+Ein Klick außerhalb einer geöffneten Phrase oder ihres Inline-Editors beendet
+die Bearbeitung vor der angeklickten Aktion. Nicht leere einzeilige Eingaben
+wählen ihren Inhalt beim ersten Fokus vollständig aus.
 
 Eine importierte Wurzelgruppe wird mit `U:` eingefügt:
 
@@ -338,13 +245,13 @@ unmittelbar als aktive Benutzerauswahl mit Rechnerprovenienz.
 ```pt
 G @repeat(initial=0,add="Schmerz hinzufügen"): Schmerz
   P: Schmerz => Brustschmerz|a / Bauchschmerz|a
-  G<Schmerz>: Ausstrahlung
+  G condition(Schmerz): Ausstrahlung
     P: in den Rücken|-
     P: in den Arm|-
 ```
 
-`G<Bedingung>:` zeigt eine verschachtelte Gruppe nur, solange die Bedingung
-erfüllt ist. Ist sie nicht erfüllt, erscheint die Gruppe weder in der
+`G condition(Bedingung):` zeigt eine verschachtelte Gruppe nur, solange die
+Bedingung erfüllt ist. Ist sie nicht erfüllt, erscheint die Gruppe weder in der
 Oberfläche noch in Text-, Daten- oder Zusammenfassungsausgaben; ihr vorhandener
 Zustand bleibt erhalten. Innerhalb einer wiederholbaren Gruppe wird die
 Bedingung ausschließlich gegen die Werte derselben Instanz geprüft. Eine
@@ -355,6 +262,11 @@ erscheinen, sobald mindestens eine Instanz den Wert `Brustschmerz` enthält.
 
 Die wiederholbare Gruppe selbst kann nicht bedingt sein. Eine bedingte Gruppe
 innerhalb einer Wiederholung ist dagegen zulässig.
+
+Gruppen unterstützen ausschließlich `condition(...)`. `suggest(...)` und
+`require(...)` gehören zu Phrasen, weil nur dort ein eindeutiger zu erledigender
+Wert existiert. Gruppenweite Aufmerksamkeit bleibt eine
+[offene Grenze](open-boundaries.md#gruppenweite-aufmerksamkeit).
 
 ## Phrasen und Werte
 
@@ -506,14 +418,14 @@ Eine Phrase mit erforderlichen Attributen gilt erst nach deren Vervollständigun
 als aktiver Auslöser.
 
 Mehrere Referenzen werden mit `;` getrennt und als Alternativen behandelt: Eine
-davon muss aktiv sein. Das gilt einheitlich für `C`, `G<...>`,
+davon muss aktiv sein. Das gilt einheitlich für `C`, `G condition(...)`,
 `condition(...)`, `suggest(...)`, `require(...)` und `@reveal(...)`. `/` ist
 dagegen ausschließlich der Trenner zwischen auswählbaren Werten rechts von
 `=>`. Für die einfache Negation erhält jede Referenz ein vorangestelltes `!`:
 
 ```pt
 P condition(!Schmerz): schmerzfreie Vorstellung|n
-G<!Schmerz>: Andere Beschwerden
+G condition(!Schmerz): Andere Beschwerden
   P: Übelkeit|a
 ```
 

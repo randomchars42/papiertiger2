@@ -36,22 +36,10 @@ vorbelegt und für einen konkreten Aufruf per URL überschrieben werden. Der
 Zeitgeber gehört der nächstgelegenen
 `@autocompact`-Grenze einschließlich ihres gesamten Teilbaums.
 
-Offenlegung und Layout sind Definitionseigenschaften nicht gleichgesetzt:
-Gruppen außerhalb einer `@autocompact`-Grenze starten erweitert; die Grenze und
-ihr Teilbaum starten kompakt. `@reveal(...)` kann den nötigen Pfad temporär
-öffnen;
-`@subgroups(flow|break)` steuert nur die Anordnung direkter Gruppen-Kinder.
-Ohne Annotation gilt `flow`; `break` wirkt genau eine Ebene. `flow` schließt
-offene Geschwister als zeitgeberfreies Akkordeon. Die kompakte Darstellung
-bildet effektiv aufgenommene Phrasen, offene Aufmerksamkeitsstufen, bedingt
-sichtbare Gruppen und ihre Überschriftenpfade in stabiler Quellreihenfolge ab.
-Die Überschrift der
-Grenze selbst bleibt stets erreichbar. Ein Disclosure verändert nur
-Offenlegung. Andere Aktionen aus dem Minimum öffnen zunächst ihre nächste
-kompakte `@autocompact`-Grenze und laufen danach unverändert weiter; die
-Grenzüberschrift selbst deaktiviert ohne vorherige Expansion. Ein gewöhnlicher
-Überschriftenklick koppelt Aktivierung mit Öffnen beziehungsweise Deaktivierung
-mit Kompaktierung.
+Anwendbarkeit, Aktivität, Sichtbarkeit und Offenlegung bleiben getrennte
+Zustände. Die Laufzeit leitet daraus Darstellung und Ausgabe ab; die normative
+Zustands- und Interaktionsreihenfolge steht unter
+[Sichtbarkeit und Kompaktierung](visibility-and-compaction.md).
 
 ## Komponenten
 

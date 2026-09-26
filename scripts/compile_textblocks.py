@@ -271,22 +271,76 @@ def parse_annotations(value: str, path: Path, line: int) -> dict[str, Any]:
     return annotations
 
 
+PHRASE_MODES = frozenset({"condition", "suggest", "require"})
+GROUP_MODES = frozenset({"condition"})
+
+
+def parse_mode_prefix(
+    value: str,
+    path: Path,
+    line: int,
+    allowed: frozenset[str],
+    subject: str,
+) -> tuple[str | None, list[str], str]:
+    """Return a leading mode, its references, and the remaining head."""
+    head = value.strip()
+    mode_match = re.match(r"^([a-z]+)\(", head)
+    if mode_match is None:
+        return None, [], head
+    mode = mode_match.group(1)
+    if mode not in allowed:
+        raise CompileError(path, line, f"unknown {subject} mode '{mode}'")
+    start = mode_match.end()
+    index = start
+    quote = ""
+    escaped = False
+    depth = 1
+    while index < len(head) and depth:
+        character = head[index]
+        if escaped:
+            escaped = False
+        elif character == "\\" and quote:
+            escaped = True
+        elif quote:
+            if character == quote:
+                quote = ""
+        elif character in {'"', "'"}:
+            quote = character
+        elif character == "(":
+            depth += 1
+        elif character == ")":
+            depth -= 1
+        index += 1
+    if depth:
+        raise CompileError(path, line, f"unclosed {mode}(...) {subject} mode")
+    references = parse_reference_list(
+        head[start : index - 1].strip(),
+        path,
+        line,
+        f"{mode}(...)",
+    )
+    return mode, references, head[index:].strip()
+
+
 def parse_group_head(
     value: str,
     path: Path,
     line: int,
-) -> tuple[str | None, dict[str, Any]]:
-    """Return an optional stable source ID and the group annotations."""
-    head = value.strip()
+) -> tuple[str | None, dict[str, Any], list[str]]:
+    """Return an optional stable ID, annotations, and condition references."""
+    _, references, head = parse_mode_prefix(
+        value,
+        path,
+        line,
+        GROUP_MODES,
+        "group",
+    )
     identifier: str | None = None
     match = re.search(r"(?:^|\s)([a-z][a-z0-9_]*)\s*$", head)
     if match is not None:
         identifier = match.group(1)
         head = head[: match.start(1)].strip()
-    return identifier, parse_annotations(head, path, line)
-
-
-PHRASE_MODES = frozenset({"condition", "suggest", "require"})
+    return identifier, parse_annotations(head, path, line), references
 
 
 def parse_phrase_head(
@@ -295,46 +349,13 @@ def parse_phrase_head(
     line: int,
 ) -> tuple[str | None, list[str], str | None]:
     """Return an optional mode, its condition references, and a stable ID."""
-    head = value.strip()
-    mode: str | None = None
-    references: list[str] = []
-    mode_match = re.match(r"^([a-z]+)\(", head)
-    if mode_match is not None:
-        candidate = mode_match.group(1)
-        if candidate not in PHRASE_MODES:
-            raise CompileError(path, line, f"unknown phrase mode '{candidate}'")
-        mode = candidate
-        start = mode_match.end()
-        index = start
-        quote = ""
-        escaped = False
-        depth = 1
-        while index < len(head) and depth:
-            character = head[index]
-            if escaped:
-                escaped = False
-            elif character == "\\" and quote:
-                escaped = True
-            elif quote:
-                if character == quote:
-                    quote = ""
-            elif character in {'"', "'"}:
-                quote = character
-            elif character == "(":
-                depth += 1
-            elif character == ")":
-                depth -= 1
-            index += 1
-        if depth:
-            raise CompileError(path, line, f"unclosed {mode}(...) phrase mode")
-        raw_references = head[start : index - 1].strip()
-        references = parse_reference_list(
-            raw_references,
-            path,
-            line,
-            f"{mode}(...)",
-        )
-        head = head[index:].strip()
+    mode, references, head = parse_mode_prefix(
+        value,
+        path,
+        line,
+        PHRASE_MODES,
+        "phrase",
+    )
     if head and not re.fullmatch(r"[a-z][a-z0-9_]*", head):
         raise CompileError(path, line, f"invalid phrase head '{head}'")
     return mode, references, head or None
@@ -622,20 +643,21 @@ def parse_source(path: Path) -> dict[str, Any]:
             }
             continue
 
-        group_match = re.match(r"^G(?:<([\s\S]*?)>)?\s*([:\s][\s\S]*)$", text)
-        if group_match is not None:
-            conditions = (
-                parse_reference_list(
-                    group_match.group(1),
-                    path,
-                    line_number,
-                    "G<...>",
-                )
-                if group_match.group(1) is not None
-                else []
+        if text.startswith("G<"):
+            fail(
+                source,
+                line_number,
+                "G<...> was removed; use G condition(...) instead",
             )
-            head, body = split_directive(group_match.group(2).lstrip(), path, line_number)
-            identifier, annotations = parse_group_head(head, path, line_number)
+
+        group_match = re.match(r"^G\s*([:\s][\s\S]*)$", text)
+        if group_match is not None:
+            head, body = split_directive(group_match.group(1).lstrip(), path, line_number)
+            identifier, annotations, conditions = parse_group_head(
+                head,
+                path,
+                line_number,
+            )
             title, kind = parse_kind_suffix(body, path, line_number)
             while group_stack and group_stack[-1]["indent"] >= indent:
                 group_stack.pop()

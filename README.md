@@ -19,6 +19,7 @@ Wähle den Einstieg passend zur Aufgabe:
 | Einen Befund dokumentieren | [Anwendung benutzen](docs/using.md) |
 | Textbausteine, Editoren oder Dokumente pflegen | [Definitionen schreiben](docs/authoring.md) |
 | Syntax nachschlagen | [`.pt`-Referenz](docs/textblock-format.md) |
+| Sichtbarkeit und Kompaktierung verstehen | [Zentrale Regeln](docs/visibility-and-compaction.md) |
 | Code und Datenfluss verstehen | [Architektur](docs/architecture.md) |
 | Noch nicht festgelegte Grenzen prüfen | [Offene Grenzen](docs/open-boundaries.md) |
 

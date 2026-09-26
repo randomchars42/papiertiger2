@@ -170,6 +170,69 @@ G @root: Sample
             ):
                 parse_source(path)
 
+    def test_legacy_group_condition_syntax_is_rejected(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P: Trigger|-
+  G<Trigger>: Details
+    P: Finding|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CompileError,
+                r"G<\.\.\.> was removed; use G condition\(\.\.\.\) instead",
+            ):
+                parse_source(path)
+
+    def test_group_conditions_use_the_same_mode_syntax_as_phrases(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P first: First|-
+  P second: Second|-
+  G condition(first; second) @summary details: Details
+    P: Finding|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            package = compile_source(parse_source(path))
+
+        self.assertEqual(
+            package["groups"]["sample_gruppe_details"]["condition"],
+            {
+                "values": [
+                    "sample_eintrag_first_wert_first",
+                    "sample_eintrag_second_wert_second",
+                ],
+                "negated": False,
+            },
+        )
+        self.assertTrue(package["groups"]["sample_gruppe_details"]["summary"])
+
+    def test_groups_reject_phrase_attention_modes(self) -> None:
+        source_text = """\
+N: sample
+
+G @root: Sample
+  P trigger: Trigger|-
+  G suggest(trigger): Details
+    P: Finding|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CompileError,
+                "unknown group mode 'suggest'",
+            ):
+                parse_source(path)
+
     def test_groups_and_phrases_can_decouple_ids_from_repeated_titles(self) -> None:
         source_text = """\
 N: sample

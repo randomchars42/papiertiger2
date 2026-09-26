@@ -115,45 +115,18 @@ mit `@autocompact` markierten Gruppen. Die Voreinstellung beträgt 12 Sekunden.
 die lokale Konfiguration, beispielsweise `?autoCompactSeconds=20` oder
 `?autoCompactSeconds=0`.
 
-Die Frist gehört einer ganzen markierten Gruppe einschließlich ihrer
-Untergruppen. Bedienung an beliebiger Stelle in diesem Teilbaum startet sie
-neu. Zeiger- und Fokusaktivität pausieren sie; ein offener Inline-Editor hält
-die Gruppe offen. Nach **Fertig** oder **Enter** beginnt die Frist erneut.
-Gruppen außerhalb einer solchen Grenze beginnen erweitert. Eine
-`@autocompact`-Grenze und ihr Teilbaum beginnen kompakt, sofern kein
-Offenlegungsereignis den benötigten Pfad vorübergehend öffnet.
+Für die Bedienung gilt kurz:
 
-Kompakte Gruppen zeigen als Minimum nur aufgenommene Einträge, bedingt
-sichtbare sowie vorgeschlagene oder erforderliche Phrasen, gegenwärtig bedingt
-sichtbare Gruppen und die dafür nötigen Gruppenüberschriften. Die Überschrift
-der kompakten Grenze selbst bleibt immer
-sichtbar, damit sie über **…** wieder geöffnet werden kann.
-Offene Aufmerksamkeit macht ihre Überschriften dabei nicht aktiv. Inaktive Überschriften
-tragen eine Linie in ihrer abgeschwächten Farbe; erst die kräftige Schrift und
-die Linie in der aktiven semantischen Farbe bedeuten zusammen mit dem
-umrandeten Eintrag, dass tatsächlich etwas in die Ausgabe aufgenommen ist. Die
-Reihenfolge bleibt auch im Minimum dieselbe wie in der Definition. Untergruppen,
-die über `@subgroups(flow)` angeordnet sind, bilden unabhängig davon ein
-zeitgeberfreies Akkordeon: Beim Öffnen wird ein offenes Geschwister kompakt.
-Expansion und Kompaktierung werden bewusst langsam genug animiert, um die
-Layoutänderung zu erklären; bei systemweit reduzierter Bewegung entfällt die
-Animation.
+- **…** erweitert nur die Darstellung; **≪** kompaktiert sie wieder.
+- Ein Überschriftenklick aktiviert oder deaktiviert die Gruppe.
+- Kompaktieren verändert weder Auswahl noch Ausgabe.
+- **+** fügt eine Wiederholungsinstanz hinzu; **×** entfernt sie.
+- Bedienung, Fokus und offene Editoren verhindern ein verfrühtes
+  Kompaktwerden.
 
-Ein Klick auf eine Gruppenüberschrift schaltet den Einschluss der Gruppe ein
-oder aus, ohne die Auswahl ihrer Kinder zu löschen. Deaktivieren kompaktiert die
-Gruppe zugleich; Aktivieren öffnet den dafür nötigen Pfad. **…** öffnet
-ausschließlich die Darstellung. Jede andere Bedienung eines sichtbaren Elements
-im Minimum öffnet zuerst die zugehörige `@autocompact`-Grenze und führt danach
-die gewählte Aktion aus. Deshalb erscheinen dort keine zusätzlichen
-Disclosure-Symbole für die dargestellten Untergruppen. Einzige Ausnahme ist die
-Überschrift der kompakten Grenze selbst: Ihr Klick deaktiviert und kompaktiert
-sie unmittelbar. Im erweiterten Zustand ersetzt **≪** das **…** am Ende
-derselben Inhaltszeile. **+** ist allein dem Anlegen einer weiteren Instanz
-vorbehalten, **×** entfernt eine solche Instanz. Nur erweiterte Blöcke der
-ersten Ebene schreiben **↺ Zurücksetzen** aus; verschachtelte Gruppen verwenden
-das zugänglich beschriftete Symbol **↺**. Wird in einer nur zur Ansicht
-geöffneten inaktiven Gruppe ein Kind ausdrücklich ausgewählt oder bearbeitet,
-aktiviert diese Bedienung den Gruppenpfad mit.
+Das kompakte Minimum, die genaue Zeitgeberlogik, Aufmerksamkeitsereignisse und
+die Ausnahme für die Überschrift einer kompakten Grenze sind zentral unter
+[Sichtbarkeit und Kompaktierung](visibility-and-compaction.md) festgelegt.
 
 ## Bedingungen, Aufmerksamkeit und Vorgaben
 
@@ -173,12 +146,10 @@ Phrase bleibt dagegen unerledigt, bis ihr erwarteter Wert vollständig
 aufgenommen wurde. Eine fachlich zulässige Nichterhebung muss daher als eigener
 Wert auswählbar sein.
 
-Autoren können eine reine vorübergehende Offenlegung mit `@reveal(...)` an der
-Zielgruppe auslösen. `@reveal(initial)` hält eine Gruppe stattdessen von Beginn
-an bis zur ersten Bedienung offen. Werden gleichzeitig mehrere Geschwister
-offengelegt, dürfen sie während dieser Aufmerksamkeitsspanne ausnahmsweise
-nebeneinander offen sein. Verschwindet die auslösende Bedingung schon vor einer
-Bedienung, kehrt der Pfad in seinen vorherigen kompakten Zustand zurück.
+Autoren können eine reine vorübergehende Offenlegung mit `@reveal(...)`
+auslösen. `@reveal(initial)` hält eine Gruppe von Beginn an bis zur ersten
+Bedienung offen. Die vollständigen Offenlegungsregeln stehen ebenfalls unter
+[Sichtbarkeit und Kompaktierung](visibility-and-compaction.md).
 
 Eine Vorgabe setzt mehrere Phrasen gemeinsam, zum Beispiel den Beispielsatz
 „Pneumonie“. Anschließende manuelle Änderungen haben Vorrang. Herkunft,

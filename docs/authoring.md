@@ -63,7 +63,7 @@ Das Sternchen macht das Attribut erforderlich. Ohne Sternchen ist es optional.
 Gemeinsamer Freitext benötigt nur `{:freitext*:}`, wenn `gemeinsam` importiert
 ist.
 
-## Bedingte, vorgeschlagene und erforderliche Phrasen
+## Bedingungen und Aufmerksamkeit
 
 Referenziere vorzugsweise den Titel links von `=>`:
 
@@ -71,10 +71,11 @@ Referenziere vorzugsweise den Titel links von `=>`:
 P: Blutungslokalisation => Blutung {:ort=gemeinsam.blutungslokalisation*:} {:seite=gemeinsam.seite*:}|a*
 C blutung_vorhanden: Blutungslokalisation
 P condition(blutung_vorhanden): Kompression|i
+G condition(blutung_vorhanden): Blutungskontrolle
 ```
 
-`condition(...)` verbirgt die Phrase, bis die Bedingung greift. Soll die Phrase
-immer verfügbar bleiben und bei erfüllter Bedingung nur zusätzliche
+`condition(...)` verbirgt die Phrase oder Gruppe, bis die Bedingung greift. Soll
+eine Phrase immer verfügbar bleiben und bei erfüllter Bedingung nur zusätzliche
 Aufmerksamkeit erhalten, verwende `suggest(...)`. `require(...)` verwendet die
 stärkste Markierung und bleibt auch nach **Weglassen** unerledigt:
 
@@ -144,16 +145,18 @@ G @root @subgroups(break): Dokument
 
 `flow` erzeugt den standardmäßigen umbrechenden Akkordeonfluss. `break` lässt
 jede direkte Untergruppe in einer eigenen Zeile beginnen; innerhalb dieser
-Zeile bleiben Überschrift, Phrasen und Disclosure inline. Die Untergruppe fällt
-für ihre eigenen Kinder wieder auf `flow` zurück, sofern sie nicht selbst
-`@subgroups(break)` trägt. Gruppen beginnen erweitert. Erst eine eigene oder
-geerbte `@autocompact`-Grenze lässt sie kompakt beginnen; `@reveal(initial)`
-öffnet und hält den nötigen Pfad bis zur ersten Bedienung. Das kompakte Minimum enthält nur effektiv
-aufgenommene Phrasen, offene Aufmerksamkeitsstufen und deren
-Überschriftenpfade; die Überschrift
-der Grenze bleibt als Einstieg erhalten. Die Quellreihenfolge ändert sich nicht.
-Kompaktwerden ändert weder Auswahl noch Ausgabe. `@autocompact` setzt zusätzlich
-eine Inaktivitätsfrist für den ganzen Teilbaum.
+Zeile bleiben Überschrift, Phrasen und Disclosure inline.
+
+Für Kompaktierung genügen beim Schreiben meist vier Regeln:
+
+- Gruppen beginnen erweitert, sofern keine `@autocompact`-Grenze gilt.
+- `@reveal(initial)` hält den nötigen Pfad bis zur ersten Bedienung offen.
+- Kompaktieren ändert weder Auswahl noch Ausgabe.
+- Die Quellreihenfolge bleibt stabil.
+
+Die vollständigen Regeln für Minimum, Zeitgeber, Aktivierung und Offenlegung
+stehen zentral unter
+[Sichtbarkeit und Kompaktierung](visibility-and-compaction.md).
 
 ## Einen großen Auswahlkatalog pflegen
 

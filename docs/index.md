@@ -14,6 +14,7 @@ Die Dokumentation hat zwei einfache Einstiege:
 | Wie wähle ich Befunde, bearbeite Werte und erhalte die Ausgabe? | [Anwendung benutzen](using.md) |
 | Wie ergänze ich eine Gruppe, Phrase, Vorgabe oder ein Dokument? | [Definitionen schreiben](authoring.md) |
 | Welche Direktiven und Kurzzeichen kennt `.pt` genau? | [`.pt`-Referenz](textblock-format.md) |
+| Welche Regeln steuern Sichtbarkeit, Aktivität und Kompaktierung? | [Sichtbarkeit und Kompaktierung](visibility-and-compaction.md) |
 
 Der Autorenablauf ist bewusst vom generierten JSON getrennt:
 
