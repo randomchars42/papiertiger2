@@ -49,9 +49,15 @@ Kriterium festlegt, sitzt Aufmerksamkeit daher an den zu erledigenden Phrasen.
 ## Komplexe oder aus externen Werten berechnete Scores
 
 `@score` summiert genau einen Punktwert je vollständig ausgewähltem Kriterium.
-Gewichtete Formeln, Altersvarianten, „nicht prüfbar“-Zustände und Scores aus
-Vitalparametern benötigen vor einer Erweiterung eigene fachliche und technische
-Regeln. Sie werden nicht aus sichtbarem Text abgeleitet.
+Ein Wert kann mit `@points=UN` ausdrücklich nicht bewertbar sein; dann wird kein
+Punkt für dieses Kriterium addiert, die `UN`-Auswahl aber dokumentiert und der
+numerische Gesamtwert weiterhin ausgegeben. Direkte Score-Regeln können genau
+eine ausgewählte Alternative auf weitere zwingende Alternativen desselben
+Rechners abbilden.
+
+Gewichtete Formeln, Altersvarianten, freie boolesche Ausdrücke und Scores aus
+Vitalparametern benötigen weiterhin eigene fachliche und technische Regeln. Sie
+werden weder aus sichtbarem Text noch aus Attributen abgeleitet.
 
 ## Zusammengesetzte SNOMED-CT-Ausdrücke
 
@@ -70,7 +76,8 @@ Ausgaben sind noch nicht spezifiziert.
 
 ## Komplexere Inline-Editoren
 
-Auswahl, Text, Zahl, Dauer, Datum und Datum/Zeit sind vorhanden. Komplexe
+Auswahl, ein- und mehrzeiliger Text, Zahl, Dauer, Datum und Datum/Zeit sind
+vorhanden. Komplexe
 mehrteilige Editoren bleiben inline zu erproben, besonders bei eingeblendeter
 Tablet-Tastatur. Modale Dialoge sind kein vorgesehener Standardweg.
 

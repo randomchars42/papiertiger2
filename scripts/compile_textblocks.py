@@ -380,12 +380,13 @@ def parse_value(value: str, path: Path, line: int) -> dict[str, Any]:
         raise CompileError(path, line, "empty value")
     snomed: str | None = None
     snomed_display: str | None = None
-    points: int | None = None
+    points: int | str | None = None
     text = body
-    points_match = re.fullmatch(r"([\s\S]*?)\s+@points=(-?\d+)", text)
+    points_match = re.fullmatch(r"([\s\S]*?)\s+@points=(-?\d+|UN)", text)
     if points_match is not None:
         text = points_match.group(1).strip()
-        points = int(points_match.group(2))
+        raw_points = points_match.group(2)
+        points = raw_points if raw_points == "UN" else int(raw_points)
     if "@sct=" in body:
         coding = re.fullmatch(
             r"([\s\S]*?)\s+@sct=([^\s\[\]]+)\[([^\[\]\r\n]+)\]",
@@ -532,7 +533,7 @@ def parse_source(path: Path) -> dict[str, Any]:
             current_catalog_value = None
 
         if current_set is not None and indent > current_set["indent"] and not re.match(
-            r"^(?:N|I|E|C|G(?:<[^>]+>)?|U|P(?:<[^>]+>)?|S)\s*[: ]", text
+            r"^(?:N|I|E|C|G(?:<[^>]+>)?|U|P(?:<[^>]+>)?|R<[^>]+>|S)\s*[: ]", text
         ):
             if "=" not in text:
                 fail(source, line_number, "set assignment needs 'Phrase = Value'")
@@ -676,12 +677,49 @@ def parse_source(path: Path) -> dict[str, Any]:
                 "phrases": [],
                 "items": [],
                 "sets": [],
+                "score_rules": [],
             }
             if parent is not None:
                 parent["children"].append(group)
                 parent["items"].append({"type": "group", "definition": group})
             source["groups"].append(group)
             group_stack.append(group)
+            current_set = None
+            continue
+
+        score_rule_match = re.match(r"^R<([\s\S]*?)>\s*:\s*([\s\S]+)$", text)
+        if score_rule_match is not None:
+            parent = nearest_group(source, group_stack, indent, line_number)
+            trigger = score_rule_match.group(1).strip()
+            if not trigger:
+                fail(source, line_number, "score rule trigger cannot be empty")
+            assignments: list[tuple[str, str]] = []
+            for assignment in split_top_level(score_rule_match.group(2), ";"):
+                if "=" not in assignment:
+                    fail(
+                        source,
+                        line_number,
+                        "score rule assignment needs 'Phrase = Value'",
+                    )
+                phrase_title, value_text = (
+                    part.strip() for part in assignment.split("=", 1)
+                )
+                if not phrase_title or not value_text:
+                    fail(
+                        source,
+                        line_number,
+                        "score rule assignment needs both phrase and value",
+                    )
+                assignments.append((phrase_title, value_text))
+            if not assignments:
+                fail(source, line_number, "score rule needs at least one assignment")
+            parent["score_rules"].append(
+                {
+                    "line": line_number,
+                    "trigger": trigger,
+                    "assignments": assignments,
+                }
+            )
             current_set = None
             continue
 
@@ -806,6 +844,7 @@ def compile_editor(source: dict[str, Any], editor: dict[str, Any]) -> tuple[str,
         "date": {"label", "prefix"},
         "datetime": {"label", "prefix", "default"},
         "text": {"label", "prefix", "placeholder"},
+        "multiline": {"label", "prefix", "placeholder", "rows", "maxrows"},
         "choice": {"label"},
     }
     if editor_type not in allowed:
@@ -851,6 +890,20 @@ def compile_editor(source: dict[str, Any], editor: dict[str, Any]) -> tuple[str,
         for name in ("min", "max", "step", "default"):
             if name in options and not isinstance(options[name], (int, float)):
                 fail(source, editor["line"], f"{name} must be a number")
+    if editor_type == "multiline":
+        for name in ("rows", "maxrows"):
+            if name in options and (
+                not isinstance(options[name], int) or options[name] < 1
+            ):
+                fail(source, editor["line"], f"{name} must be a positive integer")
+        if (
+            "rows" in options
+            and "maxrows" in options
+            and options["maxrows"] < options["rows"]
+        ):
+            fail(source, editor["line"], "maxrows must not be smaller than rows")
+        if "maxrows" in options:
+            compiled["maxRows"] = options.pop("maxrows")
     if editor_type == "datetime" and "default" in options and options["default"] != "now":
         fail(source, editor["line"], "datetime default must be 'now'")
     compiled.update(options)
@@ -1355,6 +1408,8 @@ def compile_source(
             if "empty" in options:
                 repeatable["empty"] = unique_phrase(str(options["empty"]), group["line"])["id"]
             compiled_group["repeatable"] = repeatable
+        if group["score_rules"] and "score" not in annotations:
+            fail(source, group["score_rules"][0]["line"], "R rule needs an enclosing @score group")
         if "score" in annotations:
             options = annotations["score"]
             assert isinstance(options, dict)
@@ -1411,13 +1466,32 @@ def compile_source(
                 )
             if not criteria:
                 fail(source, group["line"], "@score needs at least one phrase with @points values")
-            minimum = sum(min(option["points"] for option in criterion["options"]) for criterion in criteria)
-            maximum = sum(max(option["points"] for option in criterion["options"]) for criterion in criteria)
+            scored_options: list[list[int]] = []
+            for criterion in criteria:
+                numeric = [
+                    option["points"]
+                    for option in criterion["options"]
+                    if isinstance(option["points"], int)
+                ]
+                if not numeric:
+                    fail(
+                        source,
+                        group["line"],
+                        "each score criterion needs at least one numeric @points value",
+                    )
+                scored_options.append(
+                    [
+                        0 if option["points"] == "UN" else option["points"]
+                        for option in criterion["options"]
+                    ]
+                )
+            minimum = sum(min(options) for options in scored_options)
+            maximum = sum(max(options) for options in scored_options)
             if target_editor.get("min") is not None and target_editor["min"] != minimum:
                 fail(source, group["line"], f"@score minimum {minimum} differs from target editor minimum")
             if target_editor.get("max") is not None and target_editor["max"] != maximum:
                 fail(source, group["line"], f"@score maximum {maximum} differs from target editor maximum")
-            compiled_group["score"] = {
+            compiled_score: dict[str, Any] = {
                 "id": score_id,
                 "label": label,
                 "minimum": minimum,
@@ -1429,6 +1503,111 @@ def compile_source(
                     "attributeId": attribute,
                 },
             }
+            if group["score_rules"]:
+                criteria_by_phrase = {
+                    criterion["phraseId"]: criterion for criterion in criteria
+                }
+                compiled_rules: list[dict[str, Any]] = []
+                rule_targets: dict[str, str] = {}
+                for rule in group["score_rules"]:
+                    triggers = resolve_reference(rule["trigger"], rule["line"])
+                    if len(triggers) != 1:
+                        fail(
+                            source,
+                            rule["line"],
+                            "score rule trigger must resolve to exactly one value",
+                        )
+                    trigger_id = triggers[0]["id"]
+                    trigger_criterion = next(
+                        (
+                            criterion
+                            for criterion in criteria
+                            if any(
+                                option["valueId"] == trigger_id
+                                for option in criterion["options"]
+                            )
+                        ),
+                        None,
+                    )
+                    if trigger_criterion is None:
+                        fail(
+                            source,
+                            rule["line"],
+                            "score rule trigger must be a value of the same score",
+                        )
+                    compiled_assignments: list[dict[str, str]] = []
+                    assigned_phrases: set[str] = set()
+                    for phrase_title, value_text in rule["assignments"]:
+                        phrase = unique_phrase(phrase_title, rule["line"])
+                        criterion = criteria_by_phrase.get(phrase["id"])
+                        if criterion is None:
+                            fail(
+                                source,
+                                rule["line"],
+                                "score rule target must be a criterion of the same score",
+                            )
+                        if phrase["id"] == trigger_criterion["phraseId"]:
+                            fail(
+                                source,
+                                rule["line"],
+                                "score rule cannot set its trigger criterion",
+                            )
+                        matches = [
+                            option
+                            for option in criterion["options"]
+                            if next(
+                                value["raw_text"]
+                                for value in phrase["values"]
+                                if value["id"] == option["valueId"]
+                            )
+                            == value_text
+                        ]
+                        if len(matches) != 1:
+                            fail(
+                                source,
+                                rule["line"],
+                                f"unknown or ambiguous value '{value_text}' in phrase '{phrase_title}'",
+                            )
+                        if phrase["id"] in assigned_phrases:
+                            fail(
+                                source,
+                                rule["line"],
+                                f"score rule assigns phrase '{phrase_title}' more than once",
+                            )
+                        assigned_phrases.add(phrase["id"])
+                        value_id = matches[0]["valueId"]
+                        prior = rule_targets.get(phrase["id"])
+                        if prior is not None and prior != value_id:
+                            fail(
+                                source,
+                                rule["line"],
+                                f"score rules assign conflicting values to phrase '{phrase_title}'",
+                            )
+                        rule_targets[phrase["id"]] = value_id
+                        compiled_assignments.append(
+                            {"phraseId": phrase["id"], "valueId": value_id}
+                        )
+                    compiled_rules.append(
+                        {
+                            "when": {
+                                "phraseId": trigger_criterion["phraseId"],
+                                "valueId": trigger_id,
+                            },
+                            "set": compiled_assignments,
+                        }
+                    )
+                trigger_phrases = {
+                    rule["when"]["phraseId"] for rule in compiled_rules
+                }
+                chained = trigger_phrases.intersection(rule_targets)
+                if chained:
+                    fail(
+                        source,
+                        group["score_rules"][0]["line"],
+                        "score rules cannot target another rule's trigger criterion",
+                    )
+                compiled_score["rules"] = compiled_rules
+            compiled_group["score"] = compiled_score
         compiled_groups[group["id"]] = compiled_group
 
     package: dict[str, Any] = {"version": 2}

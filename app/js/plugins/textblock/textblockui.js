@@ -50,7 +50,7 @@ const pickerValueLabel = (text, attributes, definitions) => {
     if (placeholders.length === 1 &&
         literalText.trim() === "" &&
         onlyEditor !== undefined) {
-        const prompt = onlyEditor.type === "text"
+        const prompt = onlyEditor.type === "text" || onlyEditor.type === "multiline"
             ? (onlyEditor.placeholder ?? onlyEditor.label)
             : onlyEditor.label;
         const action = onlyEditor.type === "choice" ? "auswählen" : "eingeben";
@@ -96,6 +96,8 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
     const catalog = phrase.catalog === undefined
         ? undefined
         : definitions.catalogs[phrase.catalog];
+    let candidateIndex = 0;
+    const candidatePrefix = `picker-${resolved.key.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
     const appendCandidates = (parent, candidates, searchResults = false) => {
         const visible = catalog === undefined
             ? candidates
@@ -106,7 +108,17 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
             const button = actionButton(label.text, "choose-value", scopedData({ phraseId, valueId }, instanceId), `choice choice--${parsed.kind ?? "neutral"}`);
             if (label.opensEditor)
                 button.title = "Öffnet eine Eingabe";
-            button.setAttribute("aria-pressed", String(resolved.included && resolved.valueId === valueId));
+            button.id = `${candidatePrefix}-${candidateIndex}`;
+            button.dataset.pickerCandidate = "true";
+            candidateIndex += 1;
+            if (catalog === undefined) {
+                button.setAttribute("aria-pressed", String(resolved.included && resolved.valueId === valueId));
+            }
+            else {
+                button.setAttribute("role", "option");
+                button.setAttribute("aria-selected", "false");
+                button.setAttribute("aria-current", String(resolved.included && resolved.valueId === valueId));
+            }
             parent.append(button);
         }
         if (catalog !== undefined && candidates.length > visible.length) {
@@ -148,9 +160,20 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
         const recommendations = catalogValues.filter(([, value]) => !filtersByLens
             ? true
             : value.lenses?.includes(activeLens ?? "") === true);
-        const searchResults = catalogValues.filter(([, value]) => {
+        const normalizedQuery = normaliseSearch(query);
+        const searchResults = catalogValues
+            .filter(([, value]) => {
             const searchable = value.search ?? normaliseSearch(parseValue(value).text);
             return matchesSearchTokens(searchable, tokens);
+        })
+            .sort(([, left], [, right]) => {
+            const exact = (value) => {
+                const terms = [parseValue(value).text, ...(value.aliases ?? [])];
+                return terms.some((term) => normaliseSearch(term) === normalizedQuery)
+                    ? 0
+                    : 1;
+            };
+            return exact(left) - exact(right);
         });
         editor.classList.add("catalog-picker");
         if (tokens.length > 0) {
@@ -167,21 +190,39 @@ export const renderPhraseEditor = (phraseId, instanceId, definitions, resolved, 
         if (instanceId !== undefined)
             search.dataset.instanceId = instanceId;
         search.setAttribute("aria-label", `${resolved.title} suchen`);
+        search.setAttribute("role", "combobox");
+        search.setAttribute("aria-autocomplete", "list");
+        search.setAttribute("aria-expanded", "true");
         const recommendationList = element("div", "catalog-picker__recommendations");
+        recommendationList.id = `${candidatePrefix}-recommendations`;
+        recommendationList.setAttribute("role", "listbox");
         appendCandidates(recommendationList, recommendations);
         editor.append(recommendationList, search);
         const resultList = element("div", "catalog-picker__results");
+        resultList.id = `${candidatePrefix}-results`;
+        resultList.setAttribute("role", "listbox");
         if (tokens.length > 0) {
             appendCandidates(resultList, searchResults, true);
             if (freeText !== undefined) {
-                resultList.append(actionButton(`„${query.trim()}“ übernehmen`, "choose-freetext", scopedData({
+                const acceptFreeText = actionButton(`„${query.trim()}“ übernehmen`, "choose-freetext", scopedData({
                     phraseId,
                     valueId: freeText[0],
                     value: query.trim(),
-                }, instanceId), "choice choice--abnormal"));
+                }, instanceId), "choice choice--abnormal");
+                acceptFreeText.title = "Freitext mit Strg+Enter übernehmen";
+                resultList.append(acceptFreeText);
             }
         }
         editor.append(resultList);
+        const activeList = tokens.length > 0 ? resultList : recommendationList;
+        search.setAttribute("aria-controls", activeList.id);
+        const initial = activeList.querySelector('button[data-picker-candidate="true"]');
+        if (initial !== null) {
+            initial.classList.add("choice--keyboard-active");
+            initial.setAttribute("aria-selected", "true");
+            search.dataset.pickerIndex = "0";
+            search.setAttribute("aria-activedescendant", initial.id);
+        }
     }
     editor.append(actionButton("− Weglassen", "exclude-phrase", scopedData({ phraseId }, instanceId)), iconActionButton("↺", "Phrase zurücksetzen", "reset-phrase", scopedData({ phraseId }, instanceId), "control"), actionButton("Fertig", "close-editor", {}, "control control--primary"));
     return editor;
@@ -194,6 +235,19 @@ const input = (type, phraseId, attributeId, value, instanceId) => {
     field.dataset.input = "attribute";
     if (value !== "")
         field.dataset.selectOnFocus = "true";
+    field.dataset.phraseId = phraseId;
+    field.dataset.attributeId = attributeId;
+    if (instanceId !== undefined)
+        field.dataset.instanceId = instanceId;
+    field.setAttribute("aria-label", attributeId);
+    return field;
+};
+const multilineInput = (phraseId, attributeId, value, rows, maxRows, instanceId) => {
+    const field = element("textarea", "editor-input editor-input--multiline");
+    field.value = value;
+    field.rows = rows;
+    field.dataset.maxRows = String(maxRows);
+    field.dataset.input = "attribute";
     field.dataset.phraseId = phraseId;
     field.dataset.attributeId = attributeId;
     if (instanceId !== undefined)
@@ -281,6 +335,12 @@ const renderAttributeEditor = (phraseId, attributeId, instanceId, definitions, s
     }
     else if (definition.type === "datetime") {
         node.append(input("datetime-local", phraseId, attributeId, isDateTimeValue(value) ? value.local : "", instanceId));
+    }
+    else if (definition.type === "multiline") {
+        node.classList.add("attribute-editor--multiline");
+        const field = multilineInput(phraseId, attributeId, typeof value === "string" ? value : "", definition.rows ?? 2, definition.maxRows ?? 6, instanceId);
+        field.placeholder = definition.placeholder ?? definition.label ?? "";
+        node.append(field);
     }
     else {
         const field = input("text", phraseId, attributeId, typeof value === "string" ? value : "", instanceId);

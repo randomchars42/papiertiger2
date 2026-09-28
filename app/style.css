@@ -604,7 +604,8 @@ select:focus-visible {
     color: var(--choice-kind);
 }
 
-.choice[class*="choice--"][aria-pressed="true"] {
+.choice[class*="choice--"][aria-pressed="true"],
+.choice[class*="choice--"][aria-current="true"] {
     border-color: var(--choice-kind);
     color: var(--choice-kind);
     background: var(--choice-soft);
@@ -635,6 +636,11 @@ select:focus-visible {
 .phrase > .attribute-editor .editor-input {
     flex: 1 1 5rem;
     min-width: 4rem;
+}
+
+.phrase > .attribute-editor--multiline {
+    flex: 1 0 100%;
+    width: 100%;
 }
 
 .repeatable {
@@ -757,6 +763,15 @@ select:focus-visible {
     text-align: center;
 }
 
+.editor-input--multiline {
+    flex: 1 0 100%;
+    width: 100%;
+    min-height: 4.25rem;
+    line-height: 1.35;
+    resize: none;
+    overflow-y: hidden;
+}
+
 .catalog-picker__search,
 .picker-entry__input {
     flex: 1 1 14rem;
@@ -782,6 +797,11 @@ select:focus-visible {
 
 .catalog-picker__status {
     flex: 0 1 auto;
+}
+
+.choice--keyboard-active {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .choice--small {
@@ -877,6 +897,12 @@ select:focus-visible {
     border: 1px solid var(--line);
 }
 
+.score-progress {
+    margin-block: 0.4rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
 .score-criterion__title {
     padding-inline: 0.2rem;
     font-weight: 700;
@@ -890,6 +916,11 @@ select:focus-visible {
 .score-option {
     justify-content: flex-start;
     text-align: start;
+}
+
+.score-option:disabled {
+    cursor: not-allowed;
+    opacity: 1;
 }
 
 .score-result {

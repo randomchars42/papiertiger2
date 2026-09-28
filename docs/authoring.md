@@ -8,7 +8,7 @@ in der [`.pt`-Referenz](textblock-format.md).
 Die `.pt`-Datei ist die Quelle; das gleichnamige JSON ist ein Buildprodukt.
 
 ```text
-app/data/ankunft.pt  --Compiler-->  app/data/ankunft.json
+app/data/umstaende.pt  --Compiler-->  app/data/umstaende.json
 ```
 
 Nach einer Änderung:
@@ -62,6 +62,14 @@ P: Rekapillarisierungszeit => Rekapillarisierungszeit {:sekunden=rekap*:}|-
 Das Sternchen macht das Attribut erforderlich. Ohne Sternchen ist es optional.
 Gemeinsamer Freitext benötigt nur `{:freitext*:}`, wenn `gemeinsam` importiert
 ist.
+
+Für längere klinische Beschreibungen steht ein mehrzeiliger Editor zur
+Verfügung. Er bleibt inline und wächst nur bis zur angegebenen Zeilenzahl:
+
+```pt
+E symptomtext: multiline label="Ergänzende Beschreibung" rows=2 maxrows=6
+P: Ergänzende Beschreibung => {:ergaenzung=symptomtext*:}|-
+```
 
 ## Bedingungen und Aufmerksamkeit
 
@@ -220,6 +228,16 @@ CEDIS-Code, CEDIS-Originalbezeichnung und Beziehung werden direkt am Wert
 geführt. Der Compiler gleicht alle drei Angaben mit dem gebündelten Katalog ab
 und verlangt für den Symptomkatalog mindestens eine Zuordnung zu jedem
 enthaltenen CEDIS-PCL-Code. Zusätzliche Werte sind ausdrücklich zulässig.
+Die Beziehung liest sich vom konkreten Katalogwert zum CEDIS-Ziel: `broader`
+kennzeichnet einen breiteren CEDIS-Begriff, etwa wenn ein präziser
+**Hüftschmerz** den Sammelbegriff **Schmerzen untere Extremität** vorschlägt.
+
+Breite PCL-Begriffe sollen nicht die klinische Erfassung bestimmen. Ein
+präziser Symptomwert trägt deshalb Tags für passende Folgefragen, zum Beispiel
+Körperregion, neurologisches Profil oder psychiatrische Beschreibung, und kann
+trotzdem denselben breiteren PCL-Eintrag vorschlagen. Seite und andere Merkmale
+werden als Attribute der wiederholten Symptominstanz erfasst statt als eigene
+Kombinationswerte in den Katalog aufgenommen zu werden.
 
 Der Symptomkatalog bleibt zunächst in einer Datei, damit Reihenfolge und
 Zuordnungen gemeinsam prüfbar sind. Eine spätere Aufteilung muss die globale
@@ -245,7 +263,7 @@ LG klinik: kernteam; trauma_orthopaedie; neurochirurgie
 LG praeklinik: rettungsdienst
 
 D*: Rettungsdienst
-  B: textblock ankunft controls=false
+  B: textblock umstaende controls=false
   B: textblock anamnese controls=false
   B: textblock abcde controls=false
 ```
@@ -280,11 +298,27 @@ Alle Werte einer Kriterienphrase benötigen Punkte; eine teilweise markierte
 Phrase ist ein Compilerfehler. Die Zielphrase muss direkt in der Gruppe liegen,
 genau einen Wert besitzen und das angegebene Zahlenattribut verwenden.
 
+`@points=UN` bildet eine fachlich erlaubte nicht prüfbare Auswahl ab. Sie zählt
+als vollständig ausgewähltes Kriterium, bleibt als `UN` dokumentiert und trägt
+`0` zum Gesamtwert bei. Eine zwingende Abhängigkeit zwischen Scorewerten wird
+direkt in derselben Gruppe angegeben:
+
+```pt
+R<Koma>: Sensibilität = schwere Sensibilitätsstörung; Sprache = globale Aphasie
+```
+
+Eine solche Regel ist eine typisierte Auswahl-Implikation und keine allgemeine
+Bedingungssprache. Sichtbarkeit und Aufmerksamkeit bleiben Aufgabe von
+`condition(...)`, `suggest(...)` und `require(...)`. Score-Regeln setzen
+ausschließlich andere Kriterien
+desselben Rechners.
+
 Die fachliche Prüfung einer Score-Definition bleibt Teil der Inhaltspflege. Die
 mitgelieferten Definitionen wurden anhand der offiziellen
 [Glasgow-Coma-Scale-Dokumentation](https://www.glasgowcomascale.org/) und der
 gemeinsamen [APGAR-Stellungnahme von ACOG und AAP](https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2015/10/the-apgar-score)
-geprüft.
+geprüft. Die NIHSS-Definition folgt dem
+[NINDS-Formular vom März 2025](https://www.ninds.nih.gov/sites/default/files/2025-03/KnowStroke_NIHStrokeScale_March2025_508c.pdf).
 
 ## Kollisionsfehler
 

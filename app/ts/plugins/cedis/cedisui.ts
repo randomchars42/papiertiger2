@@ -12,6 +12,13 @@ const entriesByCode = (catalog: CedisCatalog): Map<string, CedisEntry> =>
 const categoryNames = (catalog: CedisCatalog): Map<string, string> =>
     new Map(catalog.categories.map((category) => [category.code, category.label]));
 
+const relationLabels: Record<CedisSuggestion["relations"][number], string> = {
+    equivalent: "inhaltlich entsprechend",
+    related: "inhaltlich verwandt",
+    broader: "breiterer CEDIS-Begriff",
+    narrower: "engerer CEDIS-Begriff",
+};
+
 const selectionRow = (
     entry: CedisEntry,
     category: string,
@@ -61,7 +68,9 @@ const suggestionRow = (
         element(
             "span",
             "status cedis-choice__context",
-            `${category} · aus ${suggestion.sources.join(", ")}`,
+            `${category} · ${suggestion.relations
+                .map((relation) => relationLabels[relation])
+                .join(", ")} · aus ${suggestion.sources.join(", ")}`,
         ),
     );
     return row;

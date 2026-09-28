@@ -40,7 +40,7 @@ export type CedisSelection = {
 export type CedisSuggestion = {
     code: string;
     sources: string[];
-    relations: string[];
+    relations: Array<"equivalent" | "related" | "broader" | "narrower">;
 };
 
 export type CedisStructuredValue = {

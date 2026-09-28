@@ -170,7 +170,10 @@ export const receive = async (message) => {
         Array.isArray(candidate.sources) &&
         candidate.sources.every((source) => typeof source === "string") &&
         Array.isArray(candidate.relations) &&
-        candidate.relations.every((relation) => typeof relation === "string"));
+        candidate.relations.every((relation) => relation === "equivalent" ||
+            relation === "related" ||
+            relation === "broader" ||
+            relation === "narrower"));
     stateFor(rootId).suggestions = suggestions;
     await renderRoot(rootId);
     notifyStatus(rootId);

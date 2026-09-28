@@ -25,11 +25,15 @@ bezeichnete Übernahmeaktion kann aktive Einträge setzen.
 Gelesen-Status wird lokal im Browser gespeichert; klinischer Dokumentzustand
 bleibt davon getrennt.
 
-Eine Gruppe mit Rechner besitzt eine Schaltfläche wie **GCS berechnen** oder
-**APGAR berechnen**. Nach vollständiger Auswahl setzt **In Textbaustein
-übernehmen** Kriterien und Summe unmittelbar als aktive Einträge im
-zugehörigen Textbaustein. Eine bestehende Auswahl dieser Einträge wird dabei
-durch die ausdrücklich übernommene Rechnerauswahl ersetzt.
+Eine Gruppe mit Rechner besitzt eine Schaltfläche wie **GCS berechnen**,
+**APGAR berechnen** oder **NIHSS berechnen**. Nach vollständiger Auswahl setzt
+**In Textbaustein übernehmen** Kriterien und die Summe unmittelbar
+als aktive Einträge im zugehörigen Textbaustein. Eine bestehende Auswahl dieser
+Einträge wird dabei durch die ausdrücklich übernommene Rechnerauswahl ersetzt.
+Fachlich zwingende Auswahlen zeigt der Rechner als automatisch gesetzt und
+sperrt sie, solange ihr Auslöser gilt. Ein als `UN` markiertes nicht prüfbares
+Kriterium bleibt in den Einzelangaben dokumentiert und zählt in der Summe als
+`0`.
 
 **CEDIS PCL** zeigt im Dokument die Anzahl der aus den Symptomen abgeleiteten
 Vorschläge beziehungsweise die bestätigte geordnete Auswahl. **Auswählen**
@@ -70,6 +74,13 @@ der Aliase. Passt kein Wert, kann der eingegebene Text ausdrücklich übernommen
 werden;
 für CEDIS wird dann lediglich **Unbekannt** vorgeschlagen.
 
+Mit der Tastatur markieren **Pfeil hoch** und **Pfeil runter** einen Treffer;
+**Enter** übernimmt den markierten strukturierten Wert. Freitext wird bewusst
+mit **Strg+Enter** beziehungsweise **Cmd+Enter** übernommen. Dadurch bleibt
+beispielsweise „Hüftschmerz“ ein kodierter Katalogwert und wird nicht
+versehentlich als gleichlautender Freitext gespeichert. **Escape** schließt die
+Auswahl ohne neue Übernahme.
+
 Andere Katalogauswahlen wie **Allergie** folgen derselben Regel. Ein `*` am
 Phrasentitel öffnet eine solche Auswahl wie bisher automatisch. Die aktive
 **Linse** wird global in der Kopfzeile gewählt. Definition und Standard stehen
@@ -102,6 +113,10 @@ sequenziellen Pflichtangaben kann dadurch direkt der nächste Editor geöffnet
 werden. Ein Klick außerhalb der geöffneten Phrase und ihres Editors schließt
 die Bearbeitung ebenfalls; das angeklickte Bedienelement wird anschließend
 normal ausgeführt.
+
+Mehrzeilige Eingaben wachsen bis zu ihrer festgelegten Maximalhöhe. Dort fügt
+**Enter** einen Zeilenumbruch ein; **Strg+Enter** beziehungsweise **Cmd+Enter**
+übernimmt den Inhalt und schließt den Editor.
 
 **Leeren** entfernt den Attributwert. Wird ein erforderliches Feld geleert oder
 leer mit **Fertig** abgeschlossen, bleibt die unvollständige Phrase außerhalb

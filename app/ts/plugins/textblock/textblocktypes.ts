@@ -26,7 +26,7 @@ export type ValueDefinition = {
     snomed?: string;
     snomedDisplay?: string;
     kind: ItemKind;
-    points?: number;
+    points?: number | "UN";
     aliases?: string[];
     search?: string;
     lenses?: string[];
@@ -74,7 +74,7 @@ export type ScoreOptionDefinition = {
     valueId: string;
     text: string;
     kind: ItemKind;
-    points: number;
+    points: number | "UN";
 };
 
 export type ScoreCriterionDefinition = {
@@ -83,12 +83,23 @@ export type ScoreCriterionDefinition = {
     options: ScoreOptionDefinition[];
 };
 
+export type ScoreRuleSelectionDefinition = {
+    phraseId: string;
+    valueId: string;
+};
+
+export type ScoreRuleDefinition = {
+    when: ScoreRuleSelectionDefinition;
+    set: ScoreRuleSelectionDefinition[];
+};
+
 export type ScoreDefinition = {
     id: string;
     label: string;
     minimum: number;
     maximum: number;
     criteria: ScoreCriterionDefinition[];
+    rules?: ScoreRuleDefinition[];
     target: {
         phraseId: string;
         valueId: string;
@@ -181,13 +192,23 @@ export type TextEditor = {
     placeholder?: string;
 };
 
+export type MultilineEditor = {
+    type: "multiline";
+    label?: string;
+    prefix?: string;
+    placeholder?: string;
+    rows?: number;
+    maxRows?: number;
+};
+
 export type EditorDefinition =
     | ChoiceEditor
     | NumberEditor
     | DurationEditor
     | DateEditor
     | DateTimeEditor
-    | TextEditor;
+    | TextEditor
+    | MultilineEditor;
 
 export type PackageDefinition = {
     version: 2;

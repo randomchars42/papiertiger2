@@ -1,6 +1,12 @@
 import { actionButton, element } from "@lib/dom.js";
 const entriesByCode = (catalog) => new Map(catalog.entries.map((entry) => [entry.code, entry]));
 const categoryNames = (catalog) => new Map(catalog.categories.map((category) => [category.code, category.label]));
+const relationLabels = {
+    equivalent: "inhaltlich entsprechend",
+    related: "inhaltlich verwandt",
+    broader: "breiterer CEDIS-Begriff",
+    narrower: "engerer CEDIS-Begriff",
+};
 const selectionRow = (entry, category, index, count) => {
     const row = element("div", "cedis-choice");
     row.append(element("span", "cedis-code", entry.code), element("span", "cedis-choice__label", entry.label), element("span", "status", category));
@@ -21,7 +27,9 @@ const suggestionRow = (suggestion, entry, category) => {
     const row = element("div", "cedis-choice");
     const select = actionButton(`${entry.code} · ${entry.label}`, "add-code", { code: entry.code }, "choice choice--neutral cedis-choice__select");
     select.setAttribute("aria-label", `${entry.code} ${entry.label} übernehmen`);
-    row.append(select, element("span", "status cedis-choice__context", `${category} · aus ${suggestion.sources.join(", ")}`));
+    row.append(select, element("span", "status cedis-choice__context", `${category} · ${suggestion.relations
+        .map((relation) => relationLabels[relation])
+        .join(", ")} · aus ${suggestion.sources.join(", ")}`));
     return row;
 };
 const renderSources = (catalog) => {

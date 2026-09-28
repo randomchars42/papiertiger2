@@ -57,7 +57,8 @@ app/ts/plugins/cedis/
     geordnete Bestätigung der aus Textblöcken vorgeschlagenen CEDIS-Einträge
 
 app/ts/plugins/score/
-    additive Rechner aus kompilierten Textblock-Metadaten
+    additive Rechner, UN-Werte und direkte Auswahlregeln aus kompilierten
+    Textblock-Metadaten
 
 app/ts/plugins/updates/
     gebündelte Anwendungshinweise und lokaler Gelesen-Status
@@ -83,9 +84,10 @@ zur Dokumentausgabe bei.
 Textblöcke fordern ein kontextbezogenes Werkzeug über ein aufsteigendes
 Anwendungsereignis an. Ein Rechner sendet sein Ergebnis als typisierte Nachricht
 an die Anwendung zurück; diese leitet es an die sichtbaren Dokument-Plug-ins.
-Das Textblock-Plug-in prüft Werte und Summe erneut gegen seine geladene
-Definition, bevor es sie als aktive Benutzerauswahl mit Rechnerprovenienz
-speichert.
+Das Textblock-Plug-in prüft Werte, direkte Auswahlregeln und Summe erneut gegen
+seine geladene Definition, bevor es sie als aktive Benutzerauswahl mit
+Rechnerprovenienz speichert. `UN`-Werte bleiben als Kriterienauswahl erhalten
+und werden für die numerische Summe als `0` behandelt.
 
 ## Textblock-Pakete
 
@@ -109,6 +111,9 @@ verändert die globale Linse nur die initial sichtbare Teilmenge, nicht Katalog,
 Auswahl oder Ausgabe.
 Eine nachgestellte Suche wechselt mit dem ersten Suchzeichen in einen eigenen
 Ergebniszustand und durchsucht weiterhin den gesamten Katalog.
+Die aktive Tastaturauswahl lebt nur im gerenderten Kombinationsfeld; erst ihre
+Bestätigung erzeugt eine normale Wertauswahl im Dokumentzustand. Freitext
+benötigt eine getrennte, ausdrückliche Tastenkombination.
 
 Paketlokale Katalog-Tags werden ebenfalls ausschließlich beim Build aufgelöst.
 Eine Bedingungsabfrage wie `@tag(symptome.schmerz)` wird in die stabilen IDs der
@@ -120,7 +125,9 @@ Vorschläge an das CEDIS-Plug-in. Dieses hält eine eigene, vom Benutzer
 bestätigte und geordnete Liste. Weder ein Symptom noch eine SNOMED-Kodierung
 wählt automatisch einen PCL-Eintrag aus. Der Dokumentblock zeigt die knappe
 Zusammenfassung, während das gleichnamige Werkzeug Auswahl und Reihenfolge
-bearbeitet.
+bearbeitet. Die Beziehung zum konkreten Symptom bleibt am Vorschlag erhalten
+und wird im Werkzeug sichtbar gemacht; insbesondere bedeutet `broader`, dass
+der CEDIS-Zielbegriff breiter als das erfasste Symptom ist.
 
 ## Zustandsmodell
 

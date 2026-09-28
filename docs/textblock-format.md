@@ -10,7 +10,7 @@ einer Einrückung nicht gemischt werden.
 ### Namespace
 
 ```pt
-N: ankunft
+N: umstaende
 ```
 
 Der Namespace muss mit dem Dateinamen übereinstimmen und besteht aus
@@ -65,6 +65,10 @@ V freitext: {:freitext=gemeinsam.freitext*:}|a
 | `@freetext` | markiert genau einen Freitextwert des Katalogs |
 
 CEDIS-Beziehungen sind `equivalent`, `related`, `broader` oder `narrower`.
+Sie beschreiben den CEDIS-Zielbegriff aus Sicht des Katalogwerts:
+`broader` bedeutet beispielsweise, dass der vorgeschlagene CEDIS-Eintrag
+breiter ist als das konkret erfasste Symptom. Die Oberfläche zeigt diese
+Beziehung bei jedem Vorschlag an.
 Code und Bezeichnung werden beim Kompilieren gegen `cedis.json` geprüft. Die
 Zuordnung erzeugt nur Vorschläge für das CEDIS-Plug-in; sie wählt keinen
 PCL-Eintrag automatisch aus.
@@ -81,8 +85,12 @@ G @root: SAMPLER
 Katalogphrasen verwenden die global gewählte Linse. Sie zeigen zuerst deren
 Werte und danach ein echtes Suchfeld als letzte Alternative. Mit dem ersten
 Suchzeichen ersetzt die Suche die Vorauswahl und durchsucht den vollständigen
-Katalog. Das bereits etablierte `*` am Ende des Phrasentitels öffnet auch eine
-Katalogauswahl initial; eine zusätzliche Katalogoption ist nicht nötig.
+Katalog. In diesem Feld bewegen `Pfeil hoch` und `Pfeil runter` die aktive
+strukturierte Auswahl, `Enter` übernimmt sie und `Strg+Enter` beziehungsweise
+`Cmd+Enter` übernimmt den Suchtext ausdrücklich als Freitext. `Escape` schließt
+die Auswahl ohne neue Übernahme. Das bereits etablierte `*` am Ende des
+Phrasentitels öffnet auch eine Katalogauswahl initial; eine zusätzliche
+Katalogoption ist nicht nötig.
 
 Bedingungen können einen Katalogwert stabil über `paket.wert` referenzieren:
 
@@ -232,13 +240,34 @@ G @score(id=gcs,label="GCS berechnen",target="GCS-Summe",attribute=summe): Glasg
 `id` und `label` benennen Rechner und Schaltfläche. `target` verweist auf eine
 direkte Phrase derselben Gruppe; `attribute` benennt deren Zahlenattribut. Jede
 Kriterienphrase wird durch `@points=<ganze Zahl>` an allen ihren Werten
-gekennzeichnet. Phrasen ganz ohne `@points` gehören nicht zum Rechner.
+gekennzeichnet. `@points=UN` markiert eine vollständig ausgewählte, nicht
+prüfbare Alternative. Sie bleibt als `UN` dokumentiert und trägt `0` zur Summe
+bei. Phrasen ganz ohne `@points` gehören nicht zum Rechner. Jedes Kriterium
+benötigt mindestens eine numerische Alternative.
+
+Eine direkte `R`-Zeile kann eine fachlich zwingende Auswahl innerhalb desselben
+Scores ableiten:
+
+```pt
+R<Koma>: Sensibilität = schwere Sensibilitätsstörung; Sprache = globale Aphasie
+```
+
+Der Auslöser muss genau einen Wert des Scores bezeichnen. Jede mit Semikolon
+getrennte Zuweisung nennt eine Kriterienphrase und einen ihrer Werte. Abgeleitete
+Auswahlen ersetzen im Rechner eine vorhandene manuelle Auswahl, sind dort
+sichtbar als automatisch gesetzt gekennzeichnet und bleiben gesperrt, solange
+der Auslöser ausgewählt ist. Fällt der Auslöser weg, werden sie geleert. Regeln
+dürfen nicht eine Kriterienphrase setzen, die selbst eine weitere Regel
+auslöst; widersprüchliche Zuweisungen sind ebenfalls ein Compilerfehler.
 
 Der Compiler prüft vollständige Punktangaben, das Zahlenattribut sowie die aus
 den Kriterien abgeleiteten Minimal- und Maximalwerte gegen den Editor. Das
 Textblock-Plug-in prüft ein übergebenes Rechnerergebnis erneut. **In
 Textbaustein übernehmen** setzt die gewählten Kriterien und den Gesamtwert
-unmittelbar als aktive Benutzerauswahl mit Rechnerprovenienz.
+unmittelbar als aktive Benutzerauswahl mit Rechnerprovenienz. `UN`-Auswahlen
+bleiben dabei als Einzelangaben erhalten und werden für den Gesamtwert als `0`
+gerechnet. Die Laufzeit prüft Score-Regeln, Werte und Summe erneut vor der
+Übernahme.
 
 ### Abhängige Gruppen
 
@@ -463,6 +492,19 @@ E bemerkung: text label="Bemerkung" placeholder="Freitext" prefix=""
 
 Optionen: `label`, `prefix`, `placeholder`.
 
+### Mehrzeiliger Text
+
+```pt
+E verlauf: multiline label="Ergänzende Beschreibung" placeholder="Freier Verlauf" rows=2 maxrows=6
+```
+
+Optionen: `label`, `prefix`, `placeholder`, `rows`, `maxrows`. Das Feld wächst
+bis `maxrows` automatisch mit. `Enter` erzeugt einen Zeilenumbruch;
+`Strg+Enter` beziehungsweise `Cmd+Enter` übernimmt den Inhalt und schließt den
+Editor. `Escape` schließt ihn ebenfalls. Ein mehrzeiliger Wert bleibt wie
+einzeiliger Text ein gewöhnlicher String im Zustand und in der strukturierten
+Ausgabe.
+
 ### Zahl
 
 ```pt
@@ -529,7 +571,7 @@ LG klinik: kernteam; trauma_orthopaedie; neurochirurgie
 LG praeklinik: rettungsdienst
 
 D*: Rettungsdienst
-  B: textblock ankunft controls=false
+  B: textblock umstaende controls=false
 
 D: Erstbefund
   B: textblock abcde controls=false

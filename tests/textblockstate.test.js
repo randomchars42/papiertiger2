@@ -532,7 +532,7 @@ test("inactive groups start compact without coupling compactness to activity", (
 
 test("compiled groups use only the ordered items representation", async () => {
     const packageDefinition = JSON.parse(
-        await readFile(new URL("../app/data/ankunft.json", import.meta.url), "utf8"),
+        await readFile(new URL("../app/data/sampler.json", import.meta.url), "utf8"),
     );
     for (const group of Object.values(packageDefinition.groups)) {
         assert.ok(Array.isArray(group.items));

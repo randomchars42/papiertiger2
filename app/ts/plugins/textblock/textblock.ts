@@ -753,8 +753,8 @@ const focusOpenEditor = (module: Module): void => {
         return;
     }
     if (isTouchDevice() || editor?.type !== "attribute") return;
-    const input = [...(parent?.querySelectorAll<HTMLInputElement>(
-        'input[data-input="attribute"]',
+    const input = [...(parent?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+        'input[data-input="attribute"], textarea[data-input="attribute"]',
     ) ?? [])].find(
         (field) =>
             field.dataset.phraseId === editor.phraseId &&
@@ -762,6 +762,22 @@ const focusOpenEditor = (module: Module): void => {
             field.dataset.instanceId === editor.instanceId,
     );
     input?.focus();
+    if (input instanceof HTMLTextAreaElement) resizeMultilineInput(input);
+};
+
+const resizeMultilineInput = (field: HTMLTextAreaElement): void => {
+    const maxRows = Number(field.dataset.maxRows ?? "6");
+    const style = window.getComputedStyle(field);
+    const lineHeight = Number.parseFloat(style.lineHeight) || 20;
+    const padding =
+        (Number.parseFloat(style.paddingTop) || 0) +
+        (Number.parseFloat(style.paddingBottom) || 0);
+    const border =
+        (Number.parseFloat(style.borderTopWidth) || 0) +
+        (Number.parseFloat(style.borderBottomWidth) || 0);
+    field.style.height = "auto";
+    field.style.height = `${Math.min(field.scrollHeight, maxRows * lineHeight + padding + border)}px`;
+    field.style.overflowY = field.scrollHeight > field.clientHeight ? "auto" : "hidden";
 };
 
 const selectInitialInputValue = (target: EventTarget | null): void => {
@@ -1829,7 +1845,10 @@ const handleClick = async (module: Module, event: Event): Promise<void> => {
 };
 
 const updateFromInput = (field: EventTarget | null): boolean => {
-    if (!(field instanceof HTMLInputElement) || field.dataset.input !== "attribute") {
+    if (
+        !(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) ||
+        field.dataset.input !== "attribute"
+    ) {
         return false;
     }
     const phraseId = field.dataset.phraseId;
@@ -1917,6 +1936,7 @@ const handleInput = (module: Module, event: Event): void => {
         next?.setSelectionRange(next.value.length, next.value.length);
         return;
     }
+    if (target instanceof HTMLTextAreaElement) resizeMultilineInput(target);
     if (updateFromInput(event.target)) module.status = "";
 };
 
@@ -1928,35 +1948,103 @@ const handleChange = (module: Module, event: Event): void => {
     renderAll();
 };
 
+const catalogPickerCandidates = (
+    field: HTMLInputElement,
+): HTMLButtonElement[] => {
+    const picker = field.closest<HTMLElement>(".catalog-picker");
+    if (picker === null) return [];
+    const list = picker.classList.contains("catalog-picker--searching")
+        ? picker.querySelector<HTMLElement>(".catalog-picker__results")
+        : picker.querySelector<HTMLElement>(".catalog-picker__recommendations");
+    return [...(list?.querySelectorAll<HTMLButtonElement>(
+        'button[data-picker-candidate="true"]',
+    ) ?? [])];
+};
+
+const moveCatalogPickerSelection = (
+    field: HTMLInputElement,
+    delta: number,
+): void => {
+    const candidates = catalogPickerCandidates(field);
+    if (candidates.length === 0) return;
+    const current = Number(field.dataset.pickerIndex ?? "0");
+    const next = Math.max(0, Math.min(candidates.length - 1, current + delta));
+    for (const [index, candidate] of candidates.entries()) {
+        const active = index === next;
+        candidate.classList.toggle("choice--keyboard-active", active);
+        candidate.setAttribute("aria-selected", String(active));
+    }
+    field.dataset.pickerIndex = String(next);
+    field.setAttribute("aria-activedescendant", candidates[next].id);
+    candidates[next].scrollIntoView({ block: "nearest", inline: "nearest" });
+};
+
 const handleKeydown = (module: Module, event: KeyboardEvent): void => {
     const target = event.target;
     releaseRevealHoldsForTarget(module, target);
     cancelAutoCompactForTarget(module, target);
+    if (event.isComposing) return;
     if (
-        event.key !== "Enter" ||
-        event.isComposing ||
-        !(target instanceof HTMLInputElement)
+        target instanceof HTMLInputElement &&
+        target.dataset.input === "picker-query"
     ) {
-        return;
-    }
-    if (target.dataset.input === "picker-query") {
-        const accept = target
+        const catalogPicker = target.closest<HTMLElement>(".catalog-picker");
+        if (event.key === "Escape") {
+            event.preventDefault();
+            dismissEditor(module);
+            renderAll();
+            return;
+        }
+        if (
+            catalogPicker !== null &&
+            (event.key === "ArrowDown" || event.key === "ArrowUp")
+        ) {
+            event.preventDefault();
+            moveCatalogPickerSelection(target, event.key === "ArrowDown" ? 1 : -1);
+            return;
+        }
+        if (event.key !== "Enter") return;
+        const freeText = target
             .closest<HTMLElement>(".phrase-editor")
             ?.querySelector<HTMLButtonElement>(
                 'button[data-action="choose-freetext"]',
             );
-        if (accept === undefined || accept === null || accept.disabled) return;
+        if (catalogPicker !== null && !(event.ctrlKey || event.metaKey)) {
+            const candidates = catalogPickerCandidates(target);
+            const index = Number(target.dataset.pickerIndex ?? "0");
+            const selected = candidates[index] ?? candidates[0];
+            if (selected === undefined) return;
+            event.preventDefault();
+            selected.click();
+            return;
+        }
+        if (freeText === undefined || freeText === null || freeText.disabled) return;
         event.preventDefault();
-        accept.click();
+        freeText.click();
         return;
     }
-    if (target.dataset.input !== "attribute") return;
+    if (
+        !(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) ||
+        target.dataset.input !== "attribute"
+    ) {
+        return;
+    }
+    const multiline = target instanceof HTMLTextAreaElement;
+    if (event.key === "Escape") {
+        event.preventDefault();
+    } else if (
+        event.key !== "Enter" ||
+        (multiline && !(event.ctrlKey || event.metaKey))
+    ) {
+        return;
+    } else {
+        event.preventDefault();
+    }
     if (!updateFromInput(target)) return;
     const finish = target
         .closest<HTMLElement>(".inline-editor")
         ?.querySelector<HTMLButtonElement>('button[data-action="close-editor"]');
     if (finish === undefined || finish === null) return;
-    event.preventDefault();
     finish.click();
 };
 
@@ -2085,7 +2173,28 @@ export const receive = (message: PluginMessage): void => {
         }
         return { criterion, option };
     });
-    const total = verified.reduce((sum, entry) => sum + entry.option.points, 0);
+    const selectedByPhrase = Object.fromEntries(
+        verified.map(({ criterion, option }) => [
+            criterion.phraseId,
+            option.valueId,
+        ]),
+    );
+    for (const rule of score.rules ?? []) {
+        if (selectedByPhrase[rule.when.phraseId] !== rule.when.valueId) continue;
+        if (
+            rule.set.some(
+                (assignment) =>
+                    selectedByPhrase[assignment.phraseId] !== assignment.valueId,
+            )
+        ) {
+            throw new Error("Das Rechnerergebnis verletzt eine Score-Regel.");
+        }
+    }
+    const total = verified.reduce(
+        (sum, entry) =>
+            sum + (typeof entry.option.points === "number" ? entry.option.points : 0),
+        0,
+    );
     if (total < score.minimum || total > score.maximum) {
         throw new Error("Das Rechnerergebnis liegt außerhalb des gültigen Bereichs.");
     }

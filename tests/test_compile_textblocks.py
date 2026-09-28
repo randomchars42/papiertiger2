@@ -379,5 +379,50 @@ G @root: Sample
                 compile_source(parse_source(path))
 
 
+class EditorTests(unittest.TestCase):
+    def test_multiline_editor_compiles_row_limits(self) -> None:
+        source_text = """\
+N: sample
+
+E narrative: multiline label="Narrative" placeholder="Details" rows=2 maxrows=6
+
+G @root: Sample
+  P: Details => {:details=narrative*:}|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            package = compile_source(parse_source(path))
+
+        self.assertEqual(
+            package["editors"]["sample_eingabe_narrative"],
+            {
+                "type": "multiline",
+                "label": "Narrative",
+                "placeholder": "Details",
+                "rows": 2,
+                "maxRows": 6,
+            },
+        )
+
+    def test_multiline_editor_rejects_inverted_row_limits(self) -> None:
+        source_text = """\
+N: sample
+
+E narrative: multiline rows=5 maxrows=2
+
+G @root: Sample
+  P: Details => {:details=narrative*:}|-
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "sample.pt"
+            path.write_text(source_text, encoding="utf-8")
+            with self.assertRaisesRegex(
+                CompileError,
+                "maxrows must not be smaller than rows",
+            ):
+                compile_source(parse_source(path))
+
+
 if __name__ == "__main__":
     unittest.main()
