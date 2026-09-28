@@ -495,15 +495,19 @@ Optionen: `label`, `prefix`, `placeholder`.
 ### Mehrzeiliger Text
 
 ```pt
-E verlauf: multiline label="Ergänzende Beschreibung" placeholder="Freier Verlauf" rows=2 maxrows=6
+E verlauf: multiline label="Ergänzende Beschreibung" placeholder="Freier Verlauf" rows=3 maxrows=12
 ```
 
-Optionen: `label`, `prefix`, `placeholder`, `rows`, `maxrows`. Das Feld wächst
-bis `maxrows` automatisch mit. `Enter` erzeugt einen Zeilenumbruch;
+Optionen: `label`, `prefix`, `placeholder`, `rows`, `maxrows`. Der geöffnete
+Editor belegt unabhängig von der kurzen Phrase die gesamte verfügbare Zeile.
+Das Feld bricht Text an dieser Breite um und wächst mit jeder sichtbaren Zeile
+bis `maxrows`; erst danach scrollt der Feldinhalt selbst. Ohne `maxrows` gilt
+ein Standard von zwölf Zeilen. `Enter` erzeugt einen Zeilenumbruch;
 `Strg+Enter` beziehungsweise `Cmd+Enter` übernimmt den Inhalt und schließt den
-Editor. `Escape` schließt ihn ebenfalls. Ein mehrzeiliger Wert bleibt wie
-einzeiliger Text ein gewöhnlicher String im Zustand und in der strukturierten
-Ausgabe.
+Editor. `Escape` schließt ihn ebenfalls. `Tab` und `Shift+Tab` behalten ihre
+übliche Fokusnavigation zu den benachbarten Bedienelementen und fügen kein
+Tabulatorzeichen ein. Ein mehrzeiliger Wert bleibt wie einzeiliger Text ein
+gewöhnlicher String im Zustand und in der strukturierten Ausgabe.
 
 ### Zahl
 

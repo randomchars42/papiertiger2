@@ -520,7 +520,7 @@ const focusOpenEditor = (module) => {
         resizeMultilineInput(input);
 };
 const resizeMultilineInput = (field) => {
-    const maxRows = Number(field.dataset.maxRows ?? "6");
+    const maxRows = Number(field.dataset.maxRows ?? "12");
     const style = window.getComputedStyle(field);
     const lineHeight = Number.parseFloat(style.lineHeight) || 20;
     const padding = (Number.parseFloat(style.paddingTop) || 0) +
@@ -528,8 +528,10 @@ const resizeMultilineInput = (field) => {
     const border = (Number.parseFloat(style.borderTopWidth) || 0) +
         (Number.parseFloat(style.borderBottomWidth) || 0);
     field.style.height = "auto";
-    field.style.height = `${Math.min(field.scrollHeight, maxRows * lineHeight + padding + border)}px`;
-    field.style.overflowY = field.scrollHeight > field.clientHeight ? "auto" : "hidden";
+    const contentHeight = field.scrollHeight;
+    const maxContentHeight = maxRows * lineHeight + padding;
+    field.style.height = `${Math.min(contentHeight, maxContentHeight) + border}px`;
+    field.style.overflowY = contentHeight > maxContentHeight ? "auto" : "hidden";
 };
 const selectInitialInputValue = (target) => {
     if (!(target instanceof HTMLInputElement) ||

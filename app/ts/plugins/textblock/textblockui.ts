@@ -641,7 +641,7 @@ const renderAttributeEditor = (
             attributeId,
             typeof value === "string" ? value : "",
             definition.rows ?? 2,
-            definition.maxRows ?? 6,
+            definition.maxRows ?? 12,
             instanceId,
         );
         field.placeholder = definition.placeholder ?? definition.label ?? "";
@@ -697,6 +697,16 @@ const renderPhrase = (
     }
     if (phrase.touched) classes.push("phrase--touched");
     if (phrase.source === "set") classes.push("phrase--set");
+    if (
+        openEditor?.type === "attribute" &&
+        openEditor.phraseId === phraseId &&
+        openEditor.instanceId === instanceId &&
+        definitions.editors[
+            definitions.phrases[phraseId].attributes?.[openEditor.attributeId] ?? ""
+        ]?.type === "multiline"
+    ) {
+        classes.push("phrase--multiline-open");
+    }
     const phraseNode = element("span", classes.join(" "));
     phraseNode.dataset.phraseId = phraseId;
     if (instanceId !== undefined) phraseNode.dataset.instanceId = instanceId;

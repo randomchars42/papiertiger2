@@ -59,6 +59,7 @@ button {
 
 button:focus-visible,
 input:focus-visible,
+textarea:focus-visible,
 select:focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 1px;
@@ -427,6 +428,11 @@ select:focus-visible {
     background: transparent;
 }
 
+.phrase--multiline-open {
+    flex: 1 0 100%;
+    width: 100%;
+}
+
 .phrase--normal,
 .group--normal {
     --kind: var(--normal);
@@ -643,6 +649,11 @@ select:focus-visible {
     width: 100%;
 }
 
+.phrase > .attribute-editor--multiline .editor-input--multiline {
+    flex: 1 0 100%;
+    width: 100%;
+}
+
 .repeatable {
     margin-block: 0.3rem;
 }
@@ -770,6 +781,8 @@ select:focus-visible {
     line-height: 1.35;
     resize: none;
     overflow-y: hidden;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
 }
 
 .catalog-picker__search,

@@ -114,9 +114,12 @@ werden. Ein Klick außerhalb der geöffneten Phrase und ihres Editors schließt
 die Bearbeitung ebenfalls; das angeklickte Bedienelement wird anschließend
 normal ausgeführt.
 
-Mehrzeilige Eingaben wachsen bis zu ihrer festgelegten Maximalhöhe. Dort fügt
-**Enter** einen Zeilenumbruch ein; **Strg+Enter** beziehungsweise **Cmd+Enter**
-übernimmt den Inhalt und schließt den Editor.
+Mehrzeilige Eingaben belegen die gesamte verfügbare Zeile und wachsen mit dem
+umgebrochenen Text bis zu ihrer festgelegten Maximalhöhe. Erst danach scrollt
+der Feldinhalt selbst. **Enter** fügt einen Zeilenumbruch ein;
+**Strg+Enter** beziehungsweise **Cmd+Enter** übernimmt den Inhalt und schließt
+den Editor. **Tab** wechselt zu **Leeren**, danach zu **Fertig**;
+**Shift+Tab** navigiert rückwärts. Ein Tabulatorzeichen wird nicht eingefügt.
 
 **Leeren** entfernt den Attributwert. Wird ein erforderliches Feld geleert oder
 leer mit **Fertig** abgeschlossen, bleibt die unvollständige Phrase außerhalb

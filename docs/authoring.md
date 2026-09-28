@@ -67,9 +67,12 @@ Für längere klinische Beschreibungen steht ein mehrzeiliger Editor zur
 Verfügung. Er bleibt inline und wächst nur bis zur angegebenen Zeilenzahl:
 
 ```pt
-E symptomtext: multiline label="Ergänzende Beschreibung" rows=2 maxrows=6
+E symptomtext: multiline label="Ergänzende Beschreibung" rows=3 maxrows=12
 P: Ergänzende Beschreibung => {:ergaenzung=symptomtext*:}|-
 ```
+
+Der geöffnete Editor spannt die verfügbare Zeile auf und wächst bis
+`maxrows`; danach verwendet er natives vertikales Scrollen.
 
 ## Bedingungen und Aufmerksamkeit
 
