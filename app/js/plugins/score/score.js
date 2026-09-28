@@ -1,18 +1,27 @@
-import { renderModule, scoreTotal } from "./scoreui.js";
+import { renderModule } from "./scoreui.js";
 import { isRecord } from "@lib/guards.js";
+import { applyScoreRules, calculateScore, effectiveScoreSelections, } from "./scorelib.js";
 const modules = new Map();
 const isOption = (value) => isRecord(value) &&
     typeof value.valueId === "string" &&
     typeof value.text === "string" &&
     typeof value.kind === "string" &&
-    typeof value.points === "number" &&
-    Number.isFinite(value.points);
+    ((typeof value.points === "number" && Number.isFinite(value.points)) ||
+        value.points === "UN");
 const isCriterion = (value) => isRecord(value) &&
     typeof value.phraseId === "string" &&
     typeof value.title === "string" &&
     Array.isArray(value.options) &&
     value.options.length > 0 &&
     value.options.every(isOption);
+const isRuleSelection = (value) => isRecord(value) &&
+    typeof value.phraseId === "string" &&
+    typeof value.valueId === "string";
+const isRule = (value) => isRecord(value) &&
+    isRuleSelection(value.when) &&
+    Array.isArray(value.set) &&
+    value.set.length > 0 &&
+    value.set.every(isRuleSelection);
 const isScore = (value) => isRecord(value) &&
     typeof value.id === "string" &&
     typeof value.label === "string" &&
@@ -21,6 +30,8 @@ const isScore = (value) => isRecord(value) &&
     Array.isArray(value.criteria) &&
     value.criteria.length > 0 &&
     value.criteria.every(isCriterion) &&
+    (value.rules === undefined ||
+        (Array.isArray(value.rules) && value.rules.every(isRule))) &&
     isRecord(value.target) &&
     typeof value.target.phraseId === "string" &&
     typeof value.target.valueId === "string" &&
@@ -50,18 +61,24 @@ const handleClick = (module, event) => {
         if (phraseId === undefined || valueId === undefined)
             return;
         const criterion = module.score.criteria.find((candidate) => candidate.phraseId === phraseId);
-        if (!criterion?.options.some((option) => option.valueId === valueId))
+        if (module.derived[phraseId] !== undefined ||
+            !criterion?.options.some((option) => option.valueId === valueId)) {
             return;
+        }
         module.selected[phraseId] = valueId;
+        const ruled = applyScoreRules(module.score, module.selected);
+        module.selected = ruled.selected;
+        module.derived = ruled.derived;
         module.status = "";
         renderModule(parent, module);
         return;
     }
     if (button.dataset.action !== "apply-score")
         return;
-    const total = scoreTotal(module);
-    if (total === null)
+    const calculation = calculateScore(module.score, module.selected, module.derived);
+    if (calculation.kind === "incomplete")
         return;
+    const effective = effectiveScoreSelections(module.selected, module.derived);
     parent.dispatchEvent(new CustomEvent("papiertiger:plugin-message", {
         bubbles: true,
         detail: {
@@ -73,12 +90,14 @@ const handleClick = (module, event) => {
                     : { instanceId: module.instanceId }),
                 selections: module.score.criteria.map((criterion) => ({
                     phraseId: criterion.phraseId,
-                    valueId: module.selected[criterion.phraseId],
+                    valueId: effective[criterion.phraseId],
                 })),
             },
         },
     }));
-    module.status = `${total} übernommen`;
+    module.status = `${calculation.total} übernommen${calculation.unavailablePhraseIds.length > 0
+        ? "; UN als 0 gewertet"
+        : ""}`;
     renderModule(parent, module);
 };
 export const display = async (parentId, params) => {
@@ -91,6 +110,7 @@ export const display = async (parentId, params) => {
     if (params.instanceId !== undefined && typeof params.instanceId !== "string") {
         throw new Error("Die Score-Instanz ist ungültig.");
     }
+    const initial = applyScoreRules(params.score, selectedValues(params.selected, params.score));
     const module = {
         parentId,
         groupId: params.groupId,
@@ -98,7 +118,8 @@ export const display = async (parentId, params) => {
             ? {}
             : { instanceId: params.instanceId }),
         score: params.score,
-        selected: selectedValues(params.selected, params.score),
+        selected: initial.selected,
+        derived: initial.derived,
         status: "",
     };
     modules.set(parentId, module);

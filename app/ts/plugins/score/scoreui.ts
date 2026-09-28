@@ -1,17 +1,14 @@
 import type { ScoreModuleState } from "./scoretypes.js";
 import { actionButton, element } from "@lib/dom.js";
+import { calculateScore, effectiveScoreSelections } from "./scorelib.js";
 
 export const scoreTotal = (module: ScoreModuleState): number | null => {
-    let total = 0;
-    for (const criterion of module.score.criteria) {
-        const selected = module.selected[criterion.phraseId];
-        const option = criterion.options.find(
-            (candidate) => candidate.valueId === selected,
-        );
-        if (option === undefined) return null;
-        total += option.points;
-    }
-    return total;
+    const calculation = calculateScore(
+        module.score,
+        module.selected,
+        module.derived,
+    );
+    return calculation.kind === "total" ? calculation.total : null;
 };
 
 export const renderModule = (
@@ -23,17 +20,41 @@ export const renderModule = (
         element(
             "p",
             "group__content",
-            "Alle Kriterien auswählen. Mit Übernehmen werden Kriterien und Gesamtwert als aktive Einträge in den Textbaustein übernommen.",
+            "Alle Kriterien auswählen. Mit Übernehmen werden die Kriterien und der Gesamtwert als aktive Einträge in den Textbaustein übernommen. UN bleibt dokumentiert und zählt für die Summe als 0.",
         ),
     );
+
+    const calculation = calculateScore(
+        module.score,
+        module.selected,
+        module.derived,
+    );
+    const progress = element(
+        "p",
+        "score-progress",
+        `${calculation.completed} von ${module.score.criteria.length} Kriterien ausgewählt`,
+    );
+    progress.setAttribute("role", "status");
+    article.append(progress);
+    const effective = effectiveScoreSelections(module.selected, module.derived);
 
     for (const criterion of module.score.criteria) {
         const fieldset = element("fieldset", "score-criterion");
         fieldset.append(element("legend", "score-criterion__title", criterion.title));
         const choices = element("div", "score-criterion__choices");
+        const derived = module.derived[criterion.phraseId];
         for (const option of criterion.options) {
+            const ruleNote =
+                derived?.valueId === option.valueId
+                    ? ` · automatisch aus ${
+                          module.score.criteria.find(
+                              (candidate) =>
+                                  candidate.phraseId === derived.triggerPhraseId,
+                          )?.title ?? "Score-Regel"
+                      }`
+                    : "";
             const button = actionButton(
-                `${option.text} · ${option.points}`,
+                `${option.text} · ${option.points}${ruleNote}`,
                 "choose-score",
                 {
                     phraseId: criterion.phraseId,
@@ -43,20 +64,28 @@ export const renderModule = (
             );
             button.setAttribute(
                 "aria-pressed",
-                String(module.selected[criterion.phraseId] === option.valueId),
+                String(effective[criterion.phraseId] === option.valueId),
             );
+            button.disabled = derived !== undefined;
             choices.append(button);
         }
         fieldset.append(choices);
         article.append(fieldset);
     }
 
-    const total = scoreTotal(module);
     const result = element("section", "score-result");
+    const resultText =
+        calculation.kind === "total"
+            ? `Gesamt: ${calculation.total}${
+                  calculation.unavailablePhraseIds.length > 0
+                      ? " (UN als 0 gewertet)"
+                      : ""
+              }`
+            : "Gesamt: –";
     const output = element(
         "output",
         "score-result__value",
-        total === null ? "Gesamt: –" : `Gesamt: ${total}`,
+        resultText,
     );
     output.setAttribute("aria-live", "polite");
     const apply = actionButton(
@@ -65,7 +94,7 @@ export const renderModule = (
         {},
         "control control--primary",
     );
-    apply.disabled = total === null;
+    apply.disabled = calculation.kind === "incomplete";
     result.append(output, apply);
     if (module.status !== "") {
         const status = element("span", "status", module.status);

@@ -1,10 +1,17 @@
-import { renderModule, scoreTotal } from "./scoreui.js";
+import { renderModule } from "./scoreui.js";
 import { isRecord } from "@lib/guards.js";
+import {
+    applyScoreRules,
+    calculateScore,
+    effectiveScoreSelections,
+} from "./scorelib.js";
 import type {
     ScoreCriterion,
     ScoreDefinition,
     ScoreModuleState,
     ScoreOption,
+    ScoreRule,
+    ScoreRuleSelection,
 } from "./scoretypes.js";
 
 const modules = new Map<string, ScoreModuleState>();
@@ -14,8 +21,8 @@ const isOption = (value: unknown): value is ScoreOption =>
     typeof value.valueId === "string" &&
     typeof value.text === "string" &&
     typeof value.kind === "string" &&
-    typeof value.points === "number" &&
-    Number.isFinite(value.points);
+    ((typeof value.points === "number" && Number.isFinite(value.points)) ||
+        value.points === "UN");
 
 const isCriterion = (value: unknown): value is ScoreCriterion =>
     isRecord(value) &&
@@ -24,6 +31,18 @@ const isCriterion = (value: unknown): value is ScoreCriterion =>
     Array.isArray(value.options) &&
     value.options.length > 0 &&
     value.options.every(isOption);
+
+const isRuleSelection = (value: unknown): value is ScoreRuleSelection =>
+    isRecord(value) &&
+    typeof value.phraseId === "string" &&
+    typeof value.valueId === "string";
+
+const isRule = (value: unknown): value is ScoreRule =>
+    isRecord(value) &&
+    isRuleSelection(value.when) &&
+    Array.isArray(value.set) &&
+    value.set.length > 0 &&
+    value.set.every(isRuleSelection);
 
 const isScore = (value: unknown): value is ScoreDefinition =>
     isRecord(value) &&
@@ -34,6 +53,8 @@ const isScore = (value: unknown): value is ScoreDefinition =>
     Array.isArray(value.criteria) &&
     value.criteria.length > 0 &&
     value.criteria.every(isCriterion) &&
+    (value.rules === undefined ||
+        (Array.isArray(value.rules) && value.rules.every(isRule))) &&
     isRecord(value.target) &&
     typeof value.target.phraseId === "string" &&
     typeof value.target.valueId === "string" &&
@@ -69,16 +90,29 @@ const handleClick = (module: ScoreModuleState, event: Event): void => {
         const criterion = module.score.criteria.find(
             (candidate) => candidate.phraseId === phraseId,
         );
-        if (!criterion?.options.some((option) => option.valueId === valueId)) return;
+        if (
+            module.derived[phraseId] !== undefined ||
+            !criterion?.options.some((option) => option.valueId === valueId)
+        ) {
+            return;
+        }
         module.selected[phraseId] = valueId;
+        const ruled = applyScoreRules(module.score, module.selected);
+        module.selected = ruled.selected;
+        module.derived = ruled.derived;
         module.status = "";
         renderModule(parent, module);
         return;
     }
 
     if (button.dataset.action !== "apply-score") return;
-    const total = scoreTotal(module);
-    if (total === null) return;
+    const calculation = calculateScore(
+        module.score,
+        module.selected,
+        module.derived,
+    );
+    if (calculation.kind === "incomplete") return;
+    const effective = effectiveScoreSelections(module.selected, module.derived);
     parent.dispatchEvent(
         new CustomEvent("papiertiger:plugin-message", {
             bubbles: true,
@@ -91,13 +125,17 @@ const handleClick = (module: ScoreModuleState, event: Event): void => {
                         : { instanceId: module.instanceId }),
                     selections: module.score.criteria.map((criterion) => ({
                         phraseId: criterion.phraseId,
-                        valueId: module.selected[criterion.phraseId],
+                        valueId: effective[criterion.phraseId],
                     })),
                 },
             },
         }),
     );
-    module.status = `${total} übernommen`;
+    module.status = `${calculation.total} übernommen${
+        calculation.unavailablePhraseIds.length > 0
+            ? "; UN als 0 gewertet"
+            : ""
+    }`;
     renderModule(parent, module);
 };
 
@@ -114,6 +152,10 @@ export const display = async (
         throw new Error("Die Score-Instanz ist ungültig.");
     }
 
+    const initial = applyScoreRules(
+        params.score,
+        selectedValues(params.selected, params.score),
+    );
     const module: ScoreModuleState = {
         parentId,
         groupId: params.groupId,
@@ -121,7 +163,8 @@ export const display = async (
             ? {}
             : { instanceId: params.instanceId }),
         score: params.score,
-        selected: selectedValues(params.selected, params.score),
+        selected: initial.selected,
+        derived: initial.derived,
         status: "",
     };
     modules.set(parentId, module);
