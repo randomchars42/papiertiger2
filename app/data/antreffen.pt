@@ -1,0 +1,56 @@
+N: antreffen
+I: gemeinsam
+
+G @root @reset @subgroups(break) @autocompact: Antreffen
+  G @lens(klinik) @reveal(initial): Vorstellung
+    P: selbstständig|-
+    P condition(selbstständig): ärztlich eingewiesen|-
+    P: durch den Rettungsdienst|-
+    P: durch die Notärztin|-
+    P: durch den Notarzt|-
+    P: aus anderer Einrichtung verlegt|-
+    P: andere Vorstellung => {:freitext*:}|-
+
+  G condition(aus anderer Einrichtung verlegt): Einrichtung
+    P: Krankenhaus|-
+    P: Pflegewohnheim|-
+    P: Pflegewohngemeinschaft|-
+    P: Intensivpflegewohngemeinschaft|-
+    P: andere Einrichtung => {:freitext*:}|-
+
+  G @lens(praeklinik) @reveal(initial): Auffindeort
+    P: auf der Fahrbahn|-
+    P: auf öffentlichen Flächen|-
+    P: im RTW|-
+    P: in der Wohnstätte|-
+    P: dem Bett|-
+    P: auf dem Boden|-
+    P: Sonstiger Auffindeort => {:freitext*:}|-
+
+  G @lens(praeklinik) @reveal(initial): angetroffen
+    P: öffnet die Tür|-
+    P: stehend|-
+    P: sitzend|-
+    P: liegend|-
+    P: weitere Umstände => {:freitext*:}|-
+
+  G @lens(praeklinik) @reveal(initial): Anwesende
+    P: Partnerin|-
+    P: Partner|-
+    P: Mutter|-
+    P: Vater|-
+    P: Tochter|-
+    P: Sohn|-
+    P: Enkelin|-
+    P: Enkel|-
+    P: Zugehörige|-
+    P: Zugehöriger|-
+    P: Weitere anwesende Personen => {:freitext*:}|-
+
+  G @lens(praeklinik) @reveal(initial): Weitere Kräfte
+    P: Rettungsdienst|-
+    P: Ersthelfer|-
+    P: Krankenpflegekraft|-
+    P: Ärztin|-
+    P: Arzt|-
+    P: Weitere Kräfte => {:freitext*:}|-

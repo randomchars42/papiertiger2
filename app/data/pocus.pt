@@ -1,6 +1,0 @@
-# Auswahl fokussierter Point-of-Care-Ultraschall-Untersuchungen
-N: pocus
-I: pocus_rush, pocus_abdomen, pocus_tvt
-
-G @root @collapsed @reset: Point-of-Care-Ultraschall
-  U: pocus_rush, pocus_abdomen, pocus_tvt

@@ -3,85 +3,37 @@ T: dokumente
 W: updates updates label="Neuigkeiten"
 W: cedis cedis label="CEDIS PCL" mode=editor
 
-D*: Rettungsdienst
-  B: textblock ankunft controls=false
+L* rettungsdienst: Rettungsdienst
+L kernteam: Kernteam
+L trauma_orthopaedie: Trauma & Orthopädie
+L allgemeinchirurgie: Allgemeinchirurgie
+L thorax_gefaesschirurgie: Thorax- & Gefäßchirurgie
+L neurochirurgie: Neurochirurgie
+L hno: HNO
+L auge: Auge
+L gynaekologie_geburtshilfe: Gynäkologie & Geburtshilfe
+L paediatrie: Pädiatrie
+L psychiatrie: Psychiatrie
+L wiedervorstellung_kontrolle: Wiedervorstellung & Kontrolle
+
+LG klinik: kernteam; trauma_orthopaedie; allgemeinchirurgie; thorax_gefaesschirurgie; neurochirurgie; hno; auge; gynaekologie_geburtshilfe; paediatrie; psychiatrie; wiedervorstellung_kontrolle;
+LG praeklinik: rettungsdienst
+
+D*: Repo
+  B: textblock antreffen controls=false
+  B: textblock kommunikation controls=false
   B: cedis cedis mode=summary
   B: textblock sampler controls=false
-  B: textblock abcde controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock diagnostik controls=false
-  B: textblock massnahmen controls=false
-  B: textblock status controls=false
-  B: textblock procedere controls=false
-
-D: Erstbefund
-  B: textblock vorstellung controls=false
-  B: textblock abcde controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock status controls=false
-  B: textblock diagnostik controls=false
-
-D: Notaufnahme
-  B: textblock vorstellung controls=false
-  B: cedis cedis mode=summary
-  B: textblock sampler controls=false
-  B: textblock abcde controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock status controls=false
-  B: textblock diagnostik controls=false
-  B: textblock massnahmen controls=false
-  B: textblock procedere controls=false
-
-D: Notaufnahme – Unfallchirurgie
-  B: textblock vorstellung controls=false
-  B: cedis cedis mode=summary
-  B: textblock sampler controls=false
-  B: textblock abcde controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock trauma controls=false
-  B: textblock status controls=false
-  B: textblock diagnostik controls=false
-  B: textblock massnahmen controls=false
-  B: textblock procedere controls=false
-
-D: Neurologie
-  B: textblock vorstellung controls=false
-  B: cedis cedis mode=summary
-  B: textblock sampler controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock neurostatus controls=false
-  B: textblock diagnostik controls=false
-  B: textblock massnahmen controls=false
-  B: textblock procedere controls=false
-
-D: Telemedizinische Akutversorgung
-  B: textblock tma_kontext controls=false
-  B: textblock vorstellung controls=false
-  B: cedis cedis mode=summary
-  B: textblock sampler controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock status controls=false
-  B: textblock tma_entscheidung controls=false
-
-D: Pädiatrische Praxis
-  B: textblock vorstellung controls=false
-  B: cedis cedis mode=summary
-  B: textblock sampler controls=false
+  B: textblock soziales_acp controls=false
   B: textblock paed_pat controls=false
-  B: textblock vitalparameter controls=false
-  B: textblock paed_status controls=false
-  B: textblock diagnostik controls=false
-  B: textblock massnahmen controls=false
-  B: textblock procedere controls=false
-
-D: Medikationsabgleich
-  B: textblock allergie controls=false
-  B: textblock dauermedikation controls=false
-  B: textblock medikationsgabe controls=false
-
-D: Neugeborenenbeurteilung
+  B: textblock abcde controls=false
+  B: textblock status controls=false
+  B: textblock neurostatus controls=false
+  B: textblock katheter controls=false
   B: textblock apgar controls=false
-  B: textblock vitalparameter controls=false
-
-D: Point-of-Care-Ultraschall
-  B: textblock pocus controls=false
+  B: textblock ekg controls=false
+  B: textblock pocus_rush controls=false
+  B: textblock pocus_abdomen controls=false
+  B: textblock pocus_tvt controls=false
+  B: textblock et_intubation controls=false
+  B: textblock reanimation controls=false

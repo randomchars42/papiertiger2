@@ -84,12 +84,6 @@
   "groups": {
     "medikationsgabe": {
       "title": "Medikamentengaben",
-      "children": [
-        "medikationsgabe_gruppe_medikamentengabe"
-      ],
-      "phrases": [
-        "medikationsgabe_eintrag_medikamentengaben"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -100,18 +94,10 @@
           "id": "medikationsgabe_gruppe_medikamentengabe"
         }
       ],
-      "reset": true,
-      "collapsed": true
+      "reset": true
     },
     "medikationsgabe_gruppe_medikamentengabe": {
       "title": "Medikamentengabe",
-      "kind": "intervention",
-      "phrases": [
-        "medikationsgabe_eintrag_medikamentengabe",
-        "medikationsgabe_eintrag_wirkung_der_medikamentengabe",
-        "medikationsgabe_eintrag_unerwuenschte_wirkung",
-        "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -130,6 +116,7 @@
           "id": "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe"
         }
       ],
+      "kind": "intervention",
       "reset": true,
       "repeatable": {
         "initial": 0,
@@ -190,8 +177,12 @@
           "snomedDisplay": "Adverse drug reaction"
         }
       },
-      "suggestions": {
-        "medikationsgabe_eintrag_medikamentengabe_wert_um": null
+      "condition": {
+        "values": [
+          "medikationsgabe_eintrag_medikamentengabe_wert_um"
+        ],
+        "negated": false,
+        "value": null
       }
     },
     "medikationsgabe_eintrag_unerwuenschte_wirkung": {
@@ -207,8 +198,12 @@
       "attributes": {
         "freitext": "gemeinsam_eingabe_freitext"
       },
-      "suggestions": {
-        "medikationsgabe_eintrag_wirkung_der_medikamentengabe_wert_unerwuenschte_wirkung_nach_medikamentengabe": "medikationsgabe_eintrag_unerwuenschte_wirkung_wert_unerwuenschte_wirkung"
+      "condition": {
+        "values": [
+          "medikationsgabe_eintrag_wirkung_der_medikamentengabe_wert_unerwuenschte_wirkung_nach_medikamentengabe"
+        ],
+        "negated": false,
+        "value": "medikationsgabe_eintrag_unerwuenschte_wirkung_wert_unerwuenschte_wirkung"
       }
     },
     "medikationsgabe_eintrag_ergaenzung_zur_medikamentengabe": {

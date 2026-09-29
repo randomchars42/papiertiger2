@@ -1,20 +1,78 @@
-# Point-of-Care-Ultraschall für Schock und Dyspnoe
+# Fokussierter Point-of-Care-Ultraschall bei Schock und Dyspnoe
 N: pocus_rush
 I: gemeinsam
 
-G @root @inactive @reset: POCUS Herz, Thorax und Kreislauf|-
-  P: POCUS-Untersuchung => Point-of-Care-Ultraschall durchgeführt @sct=870384002[Point of care ultrasound]|i*
+G @root @inactive @summary @reset @subgroups(break): Notfallsonographie|-
 
-  G @collapsed: Herz
-    P: Perikarderguss => kein Perikarderguss @sct=413350009:{246090004=373945007},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pericardial effusion; current; subject of record]|n* / Perikarderguss @sct=373945007[Pericardial effusion]|a
-    P: Rechtsventrikel => rechter Ventrikel nicht dilatiert|n* / rechter Ventrikel dilatiert @sct=253522006[Right cardiac ventricular dilatation]|a
-    P: Herzaktivität => Herzaktivität nachweisbar|n* / keine Herzaktivität, Asystolie @sct=397829000[Asystole]|a
+  S: Normalbefund|n
+    Untersuchung = Notfallsonographie durchgeführt
+    Linksventrikuläre Funktion = linksventrikuläre Ejektionsfraktion erhalten
+    Wandbewegung = keine groben regionalen Wandbewegungsstörungen
+    Perikard = kein relevanter Perikarderguss
+    Rechtsventrikel = rechtsventrikulärer Durchmesser kleiner als linksventrikulärer Durchmesser
+    TAPSE = TAPSE über 17 mm
+    Herzaktivität = Herzaktivität nachweisbar
+    Durchmesser der Vena cava inferior = Durchmesser der Vena cava inferior unter 2,5 cm
+    Atemvariabilität der Vena cava inferior = Vena cava inferior atemmoduliert
+    Morrison-Pouch = keine freie Flüssigkeit im Morrison-Pouch
+    Koller-Pouch = keine freie Flüssigkeit im Koller-Pouch
+    Kleines Becken = keine freie Flüssigkeit im kleinen Becken
+    Aszites = kein Aszites
+    Leber = Leber orientierend unauffällig
+    Milz = Milz orientierend unauffällig
+    Nieren = Nieren beidseits orientierend unauffällig
+    Harnstau = kein Harnstau
+    Darstellung der Bauchaorta = Bauchaorta vollständig einsehbar
+    Kontur der Bauchaorta = Bauchaorta glatt konturiert
+    Weite der Bauchaorta = Bauchaorta normal weit
+    Lungengleiten links = Lungengleiten links nachweisbar
+    Lungengleiten rechts = Lungengleiten rechts nachweisbar
+    Pneumothorax = kein sonographischer Hinweis auf Pneumothorax
+    B-Linien = keine vermehrten B-Linien
+    Pleuraerguss links = kein Pleuraerguss links
+    Pleuraerguss rechts = kein Pleuraerguss rechts
+    Vena femoralis links = Vena femoralis links vollständig komprimierbar
+    Vena femoralis rechts = Vena femoralis rechts vollständig komprimierbar
 
-  G @collapsed: Thorax
-    P: Lungengleiten => Lungengleiten beidseits nachweisbar|n* / Lungengleiten links aufgehoben|a / Lungengleiten rechts aufgehoben|a
-    P: Pneumothorax => kein sonographischer Hinweis auf Pneumothorax @sct=413350009:{246090004=36118008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pneumothorax; current; subject of record]|n* / Pneumothorax links @sct=109364007[Left pneumothorax]|a / Pneumothorax rechts @sct=109363001[Right pneumothorax]|a
-    P: B-Linien => keine vermehrten B-Linien|n* / vermehrte B-Linien @sct=1217292008[Lung B-lines]|a
-    P: Pleuraerguss => kein Pleuraerguss @sct=413350009:{246090004=60046008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pleural effusion; current; subject of record]|n* / Pleuraerguss links @sct=1366511008[Left pleural effusion]|a / Pleuraerguss rechts @sct=1366512001[Right pleural effusion]|a / Pleuraerguss beidseits @sct=60046008[Pleural effusion]|a
-    P: Lungenkonsolidierung => keine Lungenkonsolidierung @sct=413350009:{246090004=95436008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Lung consolidation; current; subject of record]|n* / Lungenkonsolidierung @sct=95436008[Lung consolidation]|a
+  P: Untersuchung => Notfallsonographie durchgeführt @sct=870384002[Point of care ultrasound]|i
 
-  P: Ergänzung zum POCUS Herz und Thorax => {:freitext*:}|-
+  G @autocompact @reveal(initial): Herz
+    P: Linksventrikuläre Funktion => linksventrikuläre Ejektionsfraktion erhalten|n / linksventrikuläre Ejektionsfraktion reduziert|a / linksventrikuläre Ejektionsfraktion hochgradig reduziert|a
+    P: Wandbewegung => keine groben regionalen Wandbewegungsstörungen|n / regionale Wandbewegungsstörung|a / globale Wandbewegungsstörung|a
+    P: Perikard => kein relevanter Perikarderguss @sct=413350009:{246090004=373945007},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pericardial effusion; current; subject of record]|n / relevanter Perikarderguss @sct=373945007[Pericardial effusion]|a / Perikardtamponade|a
+    P: Rechtsventrikel => rechtsventrikulärer Durchmesser kleiner als linksventrikulärer Durchmesser|n / rechtsventrikulärer und linksventrikulärer Durchmesser gleich|a / rechtsventrikulärer Durchmesser größer als linksventrikulärer Durchmesser @sct=253522006[Right cardiac ventricular dilatation]|a
+    P: TAPSE => TAPSE über 17 mm|n / TAPSE bis 17 mm|a / TAPSE nicht erhoben|-
+    P: Herzaktivität => Herzaktivität nachweisbar|n / keine Herzaktivität, Asystolie @sct=397829000[Asystole]|a
+
+  G @autocompact @reveal(initial): Vena cava inferior
+    P: Durchmesser der Vena cava inferior => Durchmesser der Vena cava inferior unter 2,5 cm|n / Durchmesser der Vena cava inferior über 2,5 cm|a / Vena cava inferior nicht beurteilbar|-
+    P: Atemvariabilität der Vena cava inferior => Vena cava inferior atemmoduliert|n / Vena cava inferior nicht atemmoduliert|a / Vena cava inferior atemkollaptisch|a
+
+  G @autocompact @reveal(initial): FAST und Organe
+    P: Morrison-Pouch => keine freie Flüssigkeit im Morrison-Pouch|n / freie Flüssigkeit im Morrison-Pouch|a
+    P: Koller-Pouch => keine freie Flüssigkeit im Koller-Pouch|n / freie Flüssigkeit im Koller-Pouch|a
+    P: Kleines Becken => keine freie Flüssigkeit im kleinen Becken|n / freie Flüssigkeit im kleinen Becken|a
+    P: Aszites => kein Aszites|n / Aszites @sct=389026000[Ascites]|a
+    P: Leber => Leber orientierend unauffällig|n / Leber orientierend auffällig|a
+    P: Milz => Milz orientierend unauffällig|n / Milz orientierend auffällig|a
+    P: Nieren => Nieren beidseits orientierend unauffällig|n / Niere links orientierend auffällig|a / Niere rechts orientierend auffällig|a / Nieren beidseits orientierend auffällig|a
+    P: Harnstau => kein Harnstau @sct=413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Hydronephrosis; current; subject of record]|n / Harnstau links @sct=43064006[Hydronephrosis]|a / Harnstau rechts @sct=43064006[Hydronephrosis]|a / Harnstau beidseits @sct=43064006[Hydronephrosis]|a
+
+  G @autocompact @reveal(initial): Bauchaorta
+    P: Darstellung der Bauchaorta => Bauchaorta vollständig einsehbar|n / Bauchaorta teilweise einsehbar|- / Bauchaorta nicht einsehbar|-
+    P: Kontur der Bauchaorta => Bauchaorta glatt konturiert|n / Bauchaorta unregelmäßig konturiert|a
+    P: Weite der Bauchaorta => Bauchaorta normal weit @sct=413350009:{246090004=233985008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Abdominal aortic aneurysm; current; subject of record]|n / Bauchaorta erweitert|a / Bauchaortenaneurysma @sct=233985008[Abdominal aortic aneurysm]|a / sonographischer Hinweis auf Aortendissektion|a
+
+  G @autocompact @reveal(initial): Lunge und Pleura
+    P: Lungengleiten links => Lungengleiten links nachweisbar|n / Lungengleiten links aufgehoben|a
+    P: Lungengleiten rechts => Lungengleiten rechts nachweisbar|n / Lungengleiten rechts aufgehoben|a
+    P: Pneumothorax => kein sonographischer Hinweis auf Pneumothorax @sct=413350009:{246090004=36118008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Pneumothorax; current; subject of record]|n / Pneumothorax links @sct=109364007[Left pneumothorax]|a / Pneumothorax rechts @sct=109363001[Right pneumothorax]|a / Pneumothorax beidseits|a
+    P: B-Linien => keine vermehrten B-Linien|n / vermehrte B-Linien links @sct=1217292008[Lung B-lines]|a / vermehrte B-Linien rechts @sct=1217292008[Lung B-lines]|a / vermehrte B-Linien beidseits @sct=1217292008[Lung B-lines]|a
+    P: Pleuraerguss links => kein Pleuraerguss links|n / Pleuraerguss links @sct=1366511008[Left pleural effusion]|a
+    P: Pleuraerguss rechts => kein Pleuraerguss rechts|n / Pleuraerguss rechts @sct=1366512001[Right pleural effusion]|a
+
+  G @autocompact @reveal(initial): Femoralvenen
+    P: Vena femoralis links => Vena femoralis links vollständig komprimierbar|n / Vena femoralis links nicht vollständig komprimierbar|a
+    P: Vena femoralis rechts => Vena femoralis rechts vollständig komprimierbar|n / Vena femoralis rechts nicht vollständig komprimierbar|a
+
+  P: Ergänzung zur Notfallsonographie => {:freitext*:}|-

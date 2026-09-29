@@ -2,7 +2,41 @@
 N: pocus_tvt
 I: gemeinsam
 
-G @root @inactive @reset: POCUS tiefe Beinvenen|-
-  P: Kompressionssonographie => Point-of-Care-Ultraschall der tiefen Beinvenen durchgeführt @sct=870384002[Point of care ultrasound]|i*
-  P: Tiefe Venenthrombose => kein sonographischer Hinweis auf tiefe Venenthrombose @sct=1141709008[No deep vein thrombosis]|n* / tiefe Venenthrombose links @sct=128053003[Deep venous thrombosis]|a / tiefe Venenthrombose rechts @sct=128053003[Deep venous thrombosis]|a / tiefe Venenthrombose beidseits @sct=128053003[Deep venous thrombosis]|a
-  P: Ergänzung zum POCUS der tiefen Beinvenen => {:freitext*:}|-
+G @root @inactive @summary @reset @subgroups(break): Kompressionssonographie der Beinvenen|-
+
+  S: Untersuchung durchgeführt|i
+    Untersuchung = Kompressionssonographie der tiefen Beinvenen durchgeführt
+
+  P: Untersuchung => Kompressionssonographie der tiefen Beinvenen durchgeführt @sct=870384002[Point of care ultrasound]|i
+  P: Untersuchte Extremitäten => keine untersuchte Extremität dokumentiert|-
+
+  G @repeat(initial=0,add="Extremität hinzufügen",empty="Untersuchte Extremitäten") @reset: Untersuchte Extremität|-
+    S: Normalbefund|n
+      Atemmodulation = Atemmodulation der Vena femoralis communis regelrecht
+      Vena femoralis communis = Vena femoralis communis vollständig komprimierbar
+      Krosse der Vena saphena magna = Krosse der Vena saphena magna vollständig komprimierbar
+      Vena femoralis = Vena femoralis vollständig komprimierbar
+      Vena profunda femoris = Vena profunda femoris vollständig komprimierbar
+      Vena poplitea = Vena poplitea vollständig komprimierbar
+      Unterschenkelvenen = Unterschenkelvenen durchgehend dargestellt
+      Venae tibiales anteriores = Venae tibiales anteriores vollständig komprimierbar
+      Venae tibiales posteriores = Venae tibiales posteriores vollständig komprimierbar
+      Venae fibulares = Venae fibulares vollständig komprimierbar
+
+    P: Seite* => linke untere Extremität|- / rechte untere Extremität|-
+    P: Atemmodulation => Atemmodulation der Vena femoralis communis regelrecht|n / Atemmodulation der Vena femoralis communis aufgehoben|a
+    P: Vena femoralis communis => Vena femoralis communis vollständig komprimierbar|n / Vena femoralis communis nicht vollständig komprimierbar|a
+    P: Krosse der Vena saphena magna => Krosse der Vena saphena magna vollständig komprimierbar|n / Krosse der Vena saphena magna nicht vollständig komprimierbar|a
+    P: Vena femoralis => Vena femoralis vollständig komprimierbar|n / Vena femoralis nicht vollständig komprimierbar|a
+    P: Vena profunda femoris => Vena profunda femoris vollständig komprimierbar|n / Vena profunda femoris nicht vollständig komprimierbar|a
+    P: Vena poplitea => Vena poplitea vollständig komprimierbar|n / Vena poplitea nicht vollständig komprimierbar|a
+    P: Unterschenkelvenen => Unterschenkelvenen durchgehend dargestellt|n / Unterschenkelvenen nur proximal dargestellt|-
+    P: Venae tibiales anteriores => Venae tibiales anteriores vollständig komprimierbar|n / Venae tibiales anteriores nicht vollständig komprimierbar|a
+    P: Venae tibiales posteriores => Venae tibiales posteriores vollständig komprimierbar|n / Venae tibiales posteriores nicht vollständig komprimierbar|a
+    P: Venae fibulares => Venae fibulares vollständig komprimierbar|n / Venae fibulares nicht vollständig komprimierbar|a
+
+  G @autocompact @reveal(initial): Beurteilung
+    P: Tiefe Venenthrombose => kein sonographischer Hinweis auf tiefe Venenthrombose @sct=1141709008[No deep vein thrombosis]|n / tiefe Venenthrombose links @sct=128053003[Deep venous thrombosis]|a / tiefe Venenthrombose rechts @sct=128053003[Deep venous thrombosis]|a / tiefe Venenthrombose beidseits @sct=128053003[Deep venous thrombosis]|a
+    P: Verlaufskontrolle => Wiedervorstellung zur sonographischen Verlaufskontrolle nach Vier- bis Sieben-Tages-Kompressionssonographie empfohlen|-
+
+  P: Ergänzung zur Kompressionssonographie => {:freitext*:}|-

@@ -4,11 +4,11 @@ I: gemeinsam
 
 E lokalisation: choice label="Lokalisation" => am linken Handrücken|- / am rechten Handrücken|- / am linken Unterarm|- / am rechten Unterarm|- / in der linken Ellenbeuge|- / in der rechten Ellenbeuge|- / an der linken proximalen Tibia|- / an der rechten proximalen Tibia|- / an der linken V. jugularis interna|- / an der rechten V. jugularis interna|- / an der linken V. femoralis|- / an der rechten V. femoralis|-
 
-G @root @collapsed @reset: Gefäßzugänge
+G @root @reset: Gefäßzugänge
   P: Gefäßzugänge => kein Gefäßzugang dokumentiert|-
 
   G @repeat(initial=0,add="Gefäßzugang hinzufügen",empty="Gefäßzugänge") @reset: Gefäßzugang|i
     P: Gefäßzugang => peripher-venöser Zugang {:ort=lokalisation*:} um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=233520008[Peripheral venous cannula insertion]|i* / intraossärer Zugang {:ort=lokalisation*:} um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=440009003[Insertion of needle for intraosseous infusion]|i / zentralvenöser Zugang {:ort=lokalisation*:} um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:} @sct=449860009[Nontunnelled central venous catheterisation]|i
-    P<Gefäßzugang>: Größe des Gefäßzugangs => Größe 14 G|- / Größe 16 G|- / Größe 18 G|- / Größe 20 G|- / Größe 22 G|- / Größe 24 G|-
-    P<Gefäßzugang>: Funktion des Gefäßzugangs => Gefäßzugang durchgängig|i / Gefäßzugang nicht durchgängig|a
+    P condition(Gefäßzugang): Größe des Gefäßzugangs => Größe 14 G|- / Größe 16 G|- / Größe 18 G|- / Größe 20 G|- / Größe 22 G|- / Größe 24 G|-
+    P condition(Gefäßzugang): Funktion des Gefäßzugangs => Gefäßzugang durchgängig|i / Gefäßzugang nicht durchgängig|a
     P: Ergänzung zum Gefäßzugang => {:freitext*:}|-

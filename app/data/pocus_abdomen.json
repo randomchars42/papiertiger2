@@ -3,76 +3,965 @@
   "imports": [
     "gemeinsam"
   ],
+  "editors": {
+    "pocus_abdomen_eingabe_millimeter": {
+      "type": "number",
+      "label": "Millimeter",
+      "suffix": " mm",
+      "min": 0,
+      "step": 1
+    },
+    "pocus_abdomen_eingabe_zentimeter": {
+      "type": "number",
+      "label": "Zentimeter",
+      "suffix": " cm",
+      "min": 0,
+      "step": 0.1
+    },
+    "pocus_abdomen_eingabe_ausdehnung": {
+      "type": "text",
+      "label": "Ausdehnung",
+      "placeholder": "Länge × Breite × Tiefe in cm",
+      "prefix": ""
+    }
+  },
+  "sets": {
+    "pocus_abdomen_vorgabe_normalbefund": {
+      "title": "Normalbefund",
+      "values": {
+        "pocus_abdomen_eintrag_untersuchung": "pocus_abdomen_eintrag_untersuchung_wert_abdomensonographie_durchgefuehrt",
+        "pocus_abdomen_eintrag_leberkontur": "pocus_abdomen_eintrag_leberkontur_wert_leber_glatt_konturiert",
+        "pocus_abdomen_eintrag_leberparenchym": "pocus_abdomen_eintrag_leberparenchym_wert_leberparenchym_homogen",
+        "pocus_abdomen_eintrag_echogenitaet_der_leber": "pocus_abdomen_eintrag_echogenitaet_der_leber_wert_leberparenchym_isoechogen_zur_niere",
+        "pocus_abdomen_eintrag_leberrand": "pocus_abdomen_eintrag_leberrand_wert_leberrand_spitzwinklig",
+        "pocus_abdomen_eintrag_perihepatische_fluessigkeit": "pocus_abdomen_eintrag_perihepatische_fluessigkeit_wert_keine_freie_perihepatische_fluessigkeit",
+        "pocus_abdomen_eintrag_lebervenen": "pocus_abdomen_eintrag_lebervenen_wert_orthograder_fluss_in_den_lebervenen",
+        "pocus_abdomen_eintrag_pfortader": "pocus_abdomen_eintrag_pfortader_wert_pfortader_regelrecht",
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase": "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_gallenblase_gefuellt",
+        "pocus_abdomen_eintrag_gallenblaseninhalt": "pocus_abdomen_eintrag_gallenblaseninhalt_wert_gallenblase_ohne_echogene_binnenstrukturen",
+        "pocus_abdomen_eintrag_gallenblasenwand": "pocus_abdomen_eintrag_gallenblasenwand_wert_gallenblasenwand_schlank",
+        "pocus_abdomen_eintrag_ductus_hepatocholedochus": "pocus_abdomen_eintrag_ductus_hepatocholedochus_wert_ductus_hepatocholedochus_schlank",
+        "pocus_abdomen_eintrag_darstellung_des_pankreas": "pocus_abdomen_eintrag_darstellung_des_pankreas_wert_pankreas_vollstaendig_einsehbar",
+        "pocus_abdomen_eintrag_pankreasparenchym": "pocus_abdomen_eintrag_pankreasparenchym_wert_pankreasparenchym_homogen",
+        "pocus_abdomen_eintrag_ductus_pancreaticus": "pocus_abdomen_eintrag_ductus_pancreaticus_wert_ductus_pancreaticus_schlank",
+        "pocus_abdomen_eintrag_peripankreatische_fluessigkeit": "pocus_abdomen_eintrag_peripankreatische_fluessigkeit_wert_keine_peripankreatische_fluessigkeit",
+        "pocus_abdomen_eintrag_milzparenchym": "pocus_abdomen_eintrag_milzparenchym_wert_milzparenchym_homogen",
+        "pocus_abdomen_eintrag_milzgroesse": "pocus_abdomen_eintrag_milzgroesse_wert_milz_normal_gross",
+        "pocus_abdomen_eintrag_perisplenische_fluessigkeit": "pocus_abdomen_eintrag_perisplenische_fluessigkeit_wert_keine_freie_perisplenische_fluessigkeit",
+        "pocus_abdomen_eintrag_lage_der_linken_niere": "pocus_abdomen_eintrag_lage_der_linken_niere_wert_linke_niere_orthotop",
+        "pocus_abdomen_eintrag_harnstau_links": "pocus_abdomen_eintrag_harnstau_links_wert_kein_harnstau_links",
+        "pocus_abdomen_eintrag_zyste_der_linken_niere": "pocus_abdomen_eintrag_zyste_der_linken_niere_wert_keine_zyste_der_linken_niere",
+        "pocus_abdomen_eintrag_lage_der_rechten_niere": "pocus_abdomen_eintrag_lage_der_rechten_niere_wert_rechte_niere_orthotop",
+        "pocus_abdomen_eintrag_harnstau_rechts": "pocus_abdomen_eintrag_harnstau_rechts_wert_kein_harnstau_rechts",
+        "pocus_abdomen_eintrag_zyste_der_rechten_niere": "pocus_abdomen_eintrag_zyste_der_rechten_niere_wert_keine_zyste_der_rechten_niere",
+        "pocus_abdomen_eintrag_fuellung_der_harnblase": "pocus_abdomen_eintrag_fuellung_der_harnblase_wert_harnblase_gut_gefuellt",
+        "pocus_abdomen_eintrag_harnblaseninhalt": "pocus_abdomen_eintrag_harnblaseninhalt_wert_harnblase_ohne_echogene_binnenstrukturen",
+        "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch": "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch_wert_keine_freie_fluessigkeit_im_unterbauch",
+        "pocus_abdomen_eintrag_darmlumen": "pocus_abdomen_eintrag_darmlumen_wert_darmschlingen_nicht_dilatiert",
+        "pocus_abdomen_eintrag_darmmotilitaet": "pocus_abdomen_eintrag_darmmotilitaet_wert_regelrechte_darmmotilitaet",
+        "pocus_abdomen_eintrag_darmwand": "pocus_abdomen_eintrag_darmwand_wert_darmwand_nicht_verdickt",
+        "pocus_abdomen_eintrag_appendix": "pocus_abdomen_eintrag_appendix_wert_appendix_unauffaellig"
+      },
+      "kind": "normal"
+    }
+  },
   "groups": {
     "pocus_abdomen": {
-      "title": "POCUS Abdomen",
-      "kind": "neutral",
-      "phrases": [
-        "pocus_abdomen_eintrag_abdomensonographie",
-        "pocus_abdomen_eintrag_freie_fluessigkeit",
-        "pocus_abdomen_eintrag_gallenblase",
-        "pocus_abdomen_eintrag_harnstau",
-        "pocus_abdomen_eintrag_bauchaorta",
-        "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen"
-      ],
+      "title": "Abdomensonographie",
       "items": [
         {
           "type": "phrase",
-          "id": "pocus_abdomen_eintrag_abdomensonographie"
+          "id": "pocus_abdomen_eintrag_untersuchung"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_leber"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_gallenblase_und_gallenwege"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_pankreas"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_milz"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_linke_niere"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_rechte_niere"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_harnblase"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_unterbauch"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_darm"
+        },
+        {
+          "type": "group",
+          "id": "pocus_abdomen_gruppe_beurteilung"
         },
         {
           "type": "phrase",
-          "id": "pocus_abdomen_eintrag_freie_fluessigkeit"
-        },
-        {
-          "type": "phrase",
-          "id": "pocus_abdomen_eintrag_gallenblase"
-        },
-        {
-          "type": "phrase",
-          "id": "pocus_abdomen_eintrag_harnstau"
-        },
-        {
-          "type": "phrase",
-          "id": "pocus_abdomen_eintrag_bauchaorta"
-        },
-        {
-          "type": "phrase",
-          "id": "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen"
+          "id": "pocus_abdomen_eintrag_ergaenzung_zur_abdomensonographie"
         }
       ],
+      "kind": "neutral",
+      "sets": [
+        "pocus_abdomen_vorgabe_normalbefund"
+      ],
       "default": false,
+      "subgroups": "break",
+      "summary": true,
       "reset": true
+    },
+    "pocus_abdomen_gruppe_leber": {
+      "title": "Leber",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_leberkontur"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_leberparenchym"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_echogenitaet_der_leber"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_leberrand"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_perihepatische_fluessigkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_lebervenen"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_pfortader"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_gallenblase_und_gallenwege": {
+      "title": "Gallenblase und Gallenwege",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_fuellung_der_gallenblase"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_gallenblaseninhalt"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_gallenblasenwand"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_ductus_hepatocholedochus"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_pankreas": {
+      "title": "Pankreas",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_darstellung_des_pankreas"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_pankreasparenchym"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_ductus_pancreaticus"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_peripankreatische_fluessigkeit"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_milz": {
+      "title": "Milz",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_milzparenchym"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_milzgroesse"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_perisplenische_fluessigkeit"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_linke_niere": {
+      "title": "Linke Niere",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_lage_der_linken_niere"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_harnstau_links"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_zyste_der_linken_niere"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_masse_der_linken_niere"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_rechte_niere": {
+      "title": "Rechte Niere",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_lage_der_rechten_niere"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_harnstau_rechts"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_zyste_der_rechten_niere"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_masse_der_rechten_niere"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_harnblase": {
+      "title": "Harnblase",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_fuellung_der_harnblase"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_harnblaseninhalt"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_unterbauch": {
+      "title": "Unterbauch",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_darm": {
+      "title": "Darm",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_darmlumen"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_darmmotilitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_darmwand"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_appendix"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_abdomen_gruppe_beurteilung": {
+      "title": "Beurteilung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_unauffaelliger_abdomenbefund"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_cholezystolithiasis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_cholezystitis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_cholestase"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_choledocholithiasis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_mechanischer_ileus"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_paralytischer_ileus"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_terminale_ileitis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_sigmadivertikulitis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_abdomen_eintrag_appendizitis"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
     }
   },
   "phrases": {
-    "pocus_abdomen_eintrag_abdomensonographie": {
-      "title": "Abdomensonographie",
+    "pocus_abdomen_eintrag_untersuchung": {
+      "title": "Untersuchung",
       "kind": "intervention",
-      "default": "pocus_abdomen_eintrag_abdomensonographie_wert_point_of_care_ultraschall_des_abdomens_durchgefuehrt",
+      "default": "",
       "values": {
-        "pocus_abdomen_eintrag_abdomensonographie_wert_point_of_care_ultraschall_des_abdomens_durchgefuehrt": {
+        "pocus_abdomen_eintrag_untersuchung_wert_abdomensonographie_durchgefuehrt": {
           "kind": "intervention",
-          "text": "Point-of-Care-Ultraschall des Abdomens durchgeführt",
+          "text": "Abdomensonographie durchgeführt",
           "snomed": "870384002",
           "snomedDisplay": "Point of care ultrasound"
         }
       }
     },
-    "pocus_abdomen_eintrag_freie_fluessigkeit": {
-      "title": "Freie Flüssigkeit",
+    "pocus_abdomen_eintrag_leberkontur": {
+      "title": "Leberkontur",
       "kind": "neutral",
-      "default": "pocus_abdomen_eintrag_freie_fluessigkeit_wert_keine_freie_intraabdominelle_fluessigkeit",
+      "default": "",
       "values": {
-        "pocus_abdomen_eintrag_freie_fluessigkeit_wert_keine_freie_intraabdominelle_fluessigkeit": {
+        "pocus_abdomen_eintrag_leberkontur_wert_leber_glatt_konturiert": {
           "kind": "normal",
-          "text": "keine freie intraabdominelle Flüssigkeit"
+          "text": "Leber glatt konturiert"
         },
-        "pocus_abdomen_eintrag_freie_fluessigkeit_wert_freie_intraabdominelle_fluessigkeit": {
+        "pocus_abdomen_eintrag_leberkontur_wert_leber_wellig_konturiert": {
           "kind": "abnormal",
-          "text": "freie intraabdominelle Flüssigkeit"
+          "text": "Leber wellig konturiert"
         },
-        "pocus_abdomen_eintrag_freie_fluessigkeit_wert_aszites": {
+        "pocus_abdomen_eintrag_leberkontur_wert_leber_knotig_konturiert": {
+          "kind": "abnormal",
+          "text": "Leber knotig konturiert"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_leberparenchym": {
+      "title": "Leberparenchym",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_leberparenchym_wert_leberparenchym_homogen": {
+          "kind": "normal",
+          "text": "Leberparenchym homogen"
+        },
+        "pocus_abdomen_eintrag_leberparenchym_wert_leberparenchym_inhomogen": {
+          "kind": "abnormal",
+          "text": "Leberparenchym inhomogen"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_echogenitaet_der_leber": {
+      "title": "Echogenität der Leber",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_echogenitaet_der_leber_wert_leberparenchym_isoechogen_zur_niere": {
+          "kind": "normal",
+          "text": "Leberparenchym isoechogen zur Niere"
+        },
+        "pocus_abdomen_eintrag_echogenitaet_der_leber_wert_leberparenchym_echoreicher_als_die_niere": {
+          "kind": "abnormal",
+          "text": "Leberparenchym echoreicher als die Niere"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_leberrand": {
+      "title": "Leberrand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_leberrand_wert_leberrand_spitzwinklig": {
+          "kind": "normal",
+          "text": "Leberrand spitzwinklig"
+        },
+        "pocus_abdomen_eintrag_leberrand_wert_leberrand_abgerundet": {
+          "kind": "abnormal",
+          "text": "Leberrand abgerundet"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_perihepatische_fluessigkeit": {
+      "title": "Perihepatische Flüssigkeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_perihepatische_fluessigkeit_wert_keine_freie_perihepatische_fluessigkeit": {
+          "kind": "normal",
+          "text": "keine freie perihepatische Flüssigkeit"
+        },
+        "pocus_abdomen_eintrag_perihepatische_fluessigkeit_wert_freie_perihepatische_fluessigkeit": {
+          "kind": "abnormal",
+          "text": "freie perihepatische Flüssigkeit"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_lebervenen": {
+      "title": "Lebervenen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_lebervenen_wert_orthograder_fluss_in_den_lebervenen": {
+          "kind": "normal",
+          "text": "orthograder Fluss in den Lebervenen"
+        },
+        "pocus_abdomen_eintrag_lebervenen_wert_retrograder_fluss_in_den_lebervenen": {
+          "kind": "abnormal",
+          "text": "retrograder Fluss in den Lebervenen"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_pfortader": {
+      "title": "Pfortader",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_pfortader_wert_pfortader_regelrecht": {
+          "kind": "normal",
+          "text": "Pfortader regelrecht"
+        },
+        "pocus_abdomen_eintrag_pfortader_wert_pfortader_auffaellig": {
+          "kind": "abnormal",
+          "text": "Pfortader auffällig"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_fuellung_der_gallenblase": {
+      "title": "Füllung der Gallenblase",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_gallenblase_gefuellt": {
+          "kind": "normal",
+          "text": "Gallenblase gefüllt"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_gallenblase_gering_gefuellt": {
+          "kind": "neutral",
+          "text": "Gallenblase gering gefüllt"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_gallenblase_leer": {
+          "kind": "neutral",
+          "text": "Gallenblase leer"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_gallenblase_prall_gefuellt": {
+          "kind": "abnormal",
+          "text": "Gallenblase prall gefüllt"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_gallenblasenhydrops": {
+          "kind": "abnormal",
+          "text": "Gallenblasenhydrops"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_gallenblase_wert_zustand_nach_cholezystektomie": {
+          "kind": "neutral",
+          "text": "Zustand nach Cholezystektomie"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_gallenblaseninhalt": {
+      "title": "Gallenblaseninhalt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_gallenblaseninhalt_wert_gallenblase_ohne_echogene_binnenstrukturen": {
+          "kind": "normal",
+          "text": "Gallenblase ohne echogene Binnenstrukturen",
+          "snomed": "413350009:{246090004=235919008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Gallstone; current; subject of record"
+        },
+        "pocus_abdomen_eintrag_gallenblaseninhalt_wert_gallenstein": {
+          "kind": "abnormal",
+          "text": "Gallenstein",
+          "snomed": "235919008",
+          "snomedDisplay": "Gallstone"
+        },
+        "pocus_abdomen_eintrag_gallenblaseninhalt_wert_mehrere_gallensteine": {
+          "kind": "abnormal",
+          "text": "mehrere Gallensteine",
+          "snomed": "235919008",
+          "snomedDisplay": "Gallstone"
+        },
+        "pocus_abdomen_eintrag_gallenblaseninhalt_wert_gallengries": {
+          "kind": "abnormal",
+          "text": "Gallengries"
+        },
+        "pocus_abdomen_eintrag_gallenblaseninhalt_wert_gallenblasenpolyp_mit": {
+          "kind": "abnormal",
+          "text": "Gallenblasenpolyp mit {:millimeter*:}"
+        }
+      },
+      "attributes": {
+        "millimeter": "pocus_abdomen_eingabe_millimeter"
+      }
+    },
+    "pocus_abdomen_eintrag_gallenblasenwand": {
+      "title": "Gallenblasenwand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_gallenblasenwand_wert_gallenblasenwand_schlank": {
+          "kind": "normal",
+          "text": "Gallenblasenwand schlank"
+        },
+        "pocus_abdomen_eintrag_gallenblasenwand_wert_gallenblasenwand_verdickt": {
+          "kind": "abnormal",
+          "text": "Gallenblasenwand verdickt"
+        },
+        "pocus_abdomen_eintrag_gallenblasenwand_wert_gallenblasenwand_oedematoes": {
+          "kind": "abnormal",
+          "text": "Gallenblasenwand ödematös"
+        },
+        "pocus_abdomen_eintrag_gallenblasenwand_wert_pericholezystische_fluessigkeit": {
+          "kind": "abnormal",
+          "text": "pericholezystische Flüssigkeit"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_ductus_hepatocholedochus": {
+      "title": "Ductus hepatocholedochus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_ductus_hepatocholedochus_wert_ductus_hepatocholedochus_schlank": {
+          "kind": "normal",
+          "text": "Ductus hepatocholedochus schlank"
+        },
+        "pocus_abdomen_eintrag_ductus_hepatocholedochus_wert_ductus_hepatocholedochus": {
+          "kind": "neutral",
+          "text": "Ductus hepatocholedochus {:millimeter*:}"
+        },
+        "pocus_abdomen_eintrag_ductus_hepatocholedochus_wert_ductus_hepatocholedochus_erweitert": {
+          "kind": "abnormal",
+          "text": "Ductus hepatocholedochus erweitert"
+        },
+        "pocus_abdomen_eintrag_ductus_hepatocholedochus_wert_ductus_hepatocholedochus_nach_cholezystektomie_erweitert": {
+          "kind": "neutral",
+          "text": "Ductus hepatocholedochus nach Cholezystektomie erweitert"
+        }
+      },
+      "attributes": {
+        "millimeter": "pocus_abdomen_eingabe_millimeter"
+      }
+    },
+    "pocus_abdomen_eintrag_darstellung_des_pankreas": {
+      "title": "Darstellung des Pankreas",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_darstellung_des_pankreas_wert_pankreas_vollstaendig_einsehbar": {
+          "kind": "normal",
+          "text": "Pankreas vollständig einsehbar"
+        },
+        "pocus_abdomen_eintrag_darstellung_des_pankreas_wert_pankreas_teilweise_einsehbar": {
+          "kind": "neutral",
+          "text": "Pankreas teilweise einsehbar"
+        },
+        "pocus_abdomen_eintrag_darstellung_des_pankreas_wert_pankreas_nicht_einsehbar": {
+          "kind": "neutral",
+          "text": "Pankreas nicht einsehbar"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_pankreasparenchym": {
+      "title": "Pankreasparenchym",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_pankreasparenchym_wert_pankreasparenchym_homogen": {
+          "kind": "normal",
+          "text": "Pankreasparenchym homogen"
+        },
+        "pocus_abdomen_eintrag_pankreasparenchym_wert_pankreasparenchym_inhomogen": {
+          "kind": "abnormal",
+          "text": "Pankreasparenchym inhomogen"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_ductus_pancreaticus": {
+      "title": "Ductus pancreaticus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_ductus_pancreaticus_wert_ductus_pancreaticus_schlank": {
+          "kind": "normal",
+          "text": "Ductus pancreaticus schlank"
+        },
+        "pocus_abdomen_eintrag_ductus_pancreaticus_wert_ductus_pancreaticus": {
+          "kind": "neutral",
+          "text": "Ductus pancreaticus {:millimeter*:}"
+        },
+        "pocus_abdomen_eintrag_ductus_pancreaticus_wert_ductus_pancreaticus_erweitert": {
+          "kind": "abnormal",
+          "text": "Ductus pancreaticus erweitert"
+        }
+      },
+      "attributes": {
+        "millimeter": "pocus_abdomen_eingabe_millimeter"
+      }
+    },
+    "pocus_abdomen_eintrag_peripankreatische_fluessigkeit": {
+      "title": "Peripankreatische Flüssigkeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_peripankreatische_fluessigkeit_wert_keine_peripankreatische_fluessigkeit": {
+          "kind": "normal",
+          "text": "keine peripankreatische Flüssigkeit"
+        },
+        "pocus_abdomen_eintrag_peripankreatische_fluessigkeit_wert_peripankreatische_fluessigkeit": {
+          "kind": "abnormal",
+          "text": "peripankreatische Flüssigkeit"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_milzparenchym": {
+      "title": "Milzparenchym",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_milzparenchym_wert_milzparenchym_homogen": {
+          "kind": "normal",
+          "text": "Milzparenchym homogen"
+        },
+        "pocus_abdomen_eintrag_milzparenchym_wert_milzparenchym_inhomogen": {
+          "kind": "abnormal",
+          "text": "Milzparenchym inhomogen"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_milzgroesse": {
+      "title": "Milzgröße",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_milzgroesse_wert_milz_normal_gross": {
+          "kind": "normal",
+          "text": "Milz normal groß"
+        },
+        "pocus_abdomen_eintrag_milzgroesse_wert_milz_lang": {
+          "kind": "neutral",
+          "text": "Milz {:zentimeter*:} lang"
+        },
+        "pocus_abdomen_eintrag_milzgroesse_wert_splenomegalie": {
+          "kind": "abnormal",
+          "text": "Splenomegalie"
+        }
+      },
+      "attributes": {
+        "zentimeter": "pocus_abdomen_eingabe_zentimeter"
+      }
+    },
+    "pocus_abdomen_eintrag_perisplenische_fluessigkeit": {
+      "title": "Perisplenische Flüssigkeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_perisplenische_fluessigkeit_wert_keine_freie_perisplenische_fluessigkeit": {
+          "kind": "normal",
+          "text": "keine freie perisplenische Flüssigkeit"
+        },
+        "pocus_abdomen_eintrag_perisplenische_fluessigkeit_wert_freie_perisplenische_fluessigkeit": {
+          "kind": "abnormal",
+          "text": "freie perisplenische Flüssigkeit"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_lage_der_linken_niere": {
+      "title": "Lage der linken Niere",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_lage_der_linken_niere_wert_linke_niere_orthotop": {
+          "kind": "normal",
+          "text": "linke Niere orthotop"
+        },
+        "pocus_abdomen_eintrag_lage_der_linken_niere_wert_linke_niere_dystop": {
+          "kind": "abnormal",
+          "text": "linke Niere dystop"
+        },
+        "pocus_abdomen_eintrag_lage_der_linken_niere_wert_linke_niere_nicht_darstellbar": {
+          "kind": "abnormal",
+          "text": "linke Niere nicht darstellbar"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_harnstau_links": {
+      "title": "Harnstau links",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_harnstau_links_wert_kein_harnstau_links": {
+          "kind": "normal",
+          "text": "kein Harnstau links",
+          "snomed": "413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Hydronephrosis; current; subject of record"
+        },
+        "pocus_abdomen_eintrag_harnstau_links_wert_harnstau_links_grad_i": {
+          "kind": "abnormal",
+          "text": "Harnstau links Grad I",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_links_wert_harnstau_links_grad_ii": {
+          "kind": "abnormal",
+          "text": "Harnstau links Grad II",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_links_wert_harnstau_links_grad_iii": {
+          "kind": "abnormal",
+          "text": "Harnstau links Grad III",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_links_wert_harnstau_links_grad_iv": {
+          "kind": "abnormal",
+          "text": "Harnstau links Grad IV",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_zyste_der_linken_niere": {
+      "title": "Zyste der linken Niere",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_zyste_der_linken_niere_wert_keine_zyste_der_linken_niere": {
+          "kind": "normal",
+          "text": "keine Zyste der linken Niere"
+        },
+        "pocus_abdomen_eintrag_zyste_der_linken_niere_wert_blande_zyste_der_linken_niere": {
+          "kind": "normal",
+          "text": "blande Zyste der linken Niere"
+        },
+        "pocus_abdomen_eintrag_zyste_der_linken_niere_wert_komplizierte_zyste_der_linken_niere": {
+          "kind": "abnormal",
+          "text": "komplizierte Zyste der linken Niere"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_masse_der_linken_niere": {
+      "title": "Maße der linken Niere",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_masse_der_linken_niere_wert_linke_niere": {
+          "kind": "neutral",
+          "text": "linke Niere {:ausdehnung*:}"
+        }
+      },
+      "attributes": {
+        "ausdehnung": "pocus_abdomen_eingabe_ausdehnung"
+      }
+    },
+    "pocus_abdomen_eintrag_lage_der_rechten_niere": {
+      "title": "Lage der rechten Niere",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_lage_der_rechten_niere_wert_rechte_niere_orthotop": {
+          "kind": "normal",
+          "text": "rechte Niere orthotop"
+        },
+        "pocus_abdomen_eintrag_lage_der_rechten_niere_wert_rechte_niere_dystop": {
+          "kind": "abnormal",
+          "text": "rechte Niere dystop"
+        },
+        "pocus_abdomen_eintrag_lage_der_rechten_niere_wert_rechte_niere_nicht_darstellbar": {
+          "kind": "abnormal",
+          "text": "rechte Niere nicht darstellbar"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_harnstau_rechts": {
+      "title": "Harnstau rechts",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_harnstau_rechts_wert_kein_harnstau_rechts": {
+          "kind": "normal",
+          "text": "kein Harnstau rechts",
+          "snomed": "413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Hydronephrosis; current; subject of record"
+        },
+        "pocus_abdomen_eintrag_harnstau_rechts_wert_harnstau_rechts_grad_i": {
+          "kind": "abnormal",
+          "text": "Harnstau rechts Grad I",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_rechts_wert_harnstau_rechts_grad_ii": {
+          "kind": "abnormal",
+          "text": "Harnstau rechts Grad II",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_rechts_wert_harnstau_rechts_grad_iii": {
+          "kind": "abnormal",
+          "text": "Harnstau rechts Grad III",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_abdomen_eintrag_harnstau_rechts_wert_harnstau_rechts_grad_iv": {
+          "kind": "abnormal",
+          "text": "Harnstau rechts Grad IV",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_zyste_der_rechten_niere": {
+      "title": "Zyste der rechten Niere",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_zyste_der_rechten_niere_wert_keine_zyste_der_rechten_niere": {
+          "kind": "normal",
+          "text": "keine Zyste der rechten Niere"
+        },
+        "pocus_abdomen_eintrag_zyste_der_rechten_niere_wert_blande_zyste_der_rechten_niere": {
+          "kind": "normal",
+          "text": "blande Zyste der rechten Niere"
+        },
+        "pocus_abdomen_eintrag_zyste_der_rechten_niere_wert_komplizierte_zyste_der_rechten_niere": {
+          "kind": "abnormal",
+          "text": "komplizierte Zyste der rechten Niere"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_masse_der_rechten_niere": {
+      "title": "Maße der rechten Niere",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_masse_der_rechten_niere_wert_rechte_niere": {
+          "kind": "neutral",
+          "text": "rechte Niere {:ausdehnung*:}"
+        }
+      },
+      "attributes": {
+        "ausdehnung": "pocus_abdomen_eingabe_ausdehnung"
+      }
+    },
+    "pocus_abdomen_eintrag_fuellung_der_harnblase": {
+      "title": "Füllung der Harnblase",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_fuellung_der_harnblase_wert_harnblase_gut_gefuellt": {
+          "kind": "normal",
+          "text": "Harnblase gut gefüllt"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_harnblase_wert_harnblase_maessig_gefuellt": {
+          "kind": "neutral",
+          "text": "Harnblase mäßig gefüllt"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_harnblase_wert_harnblase_gering_gefuellt": {
+          "kind": "neutral",
+          "text": "Harnblase gering gefüllt"
+        },
+        "pocus_abdomen_eintrag_fuellung_der_harnblase_wert_harnblase_leer": {
+          "kind": "neutral",
+          "text": "Harnblase leer"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_harnblaseninhalt": {
+      "title": "Harnblaseninhalt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_harnblaseninhalt_wert_harnblase_ohne_echogene_binnenstrukturen": {
+          "kind": "normal",
+          "text": "Harnblase ohne echogene Binnenstrukturen"
+        },
+        "pocus_abdomen_eintrag_harnblaseninhalt_wert_echogene_binnenstrukturen_in_der_harnblase": {
+          "kind": "abnormal",
+          "text": "echogene Binnenstrukturen in der Harnblase"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch": {
+      "title": "Freie Flüssigkeit im Unterbauch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch_wert_keine_freie_fluessigkeit_im_unterbauch": {
+          "kind": "normal",
+          "text": "keine freie Flüssigkeit im Unterbauch"
+        },
+        "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch_wert_freie_fluessigkeit_im_unterbauch": {
+          "kind": "abnormal",
+          "text": "freie Flüssigkeit im Unterbauch"
+        },
+        "pocus_abdomen_eintrag_freie_fluessigkeit_im_unterbauch_wert_aszites": {
           "kind": "abnormal",
           "text": "Aszites",
           "snomed": "389026000",
@@ -80,85 +969,201 @@
         }
       }
     },
-    "pocus_abdomen_eintrag_gallenblase": {
-      "title": "Gallenblase",
-      "kind": "neutral",
-      "default": "pocus_abdomen_eintrag_gallenblase_wert_keine_gallensteine",
-      "values": {
-        "pocus_abdomen_eintrag_gallenblase_wert_keine_gallensteine": {
-          "kind": "normal",
-          "text": "keine Gallensteine",
-          "snomed": "413350009:{246090004=235919008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
-          "snomedDisplay": "Known absent: Gallstone; current; subject of record"
-        },
-        "pocus_abdomen_eintrag_gallenblase_wert_gallensteine": {
-          "kind": "abnormal",
-          "text": "Gallensteine",
-          "snomed": "235919008",
-          "snomedDisplay": "Gallstone"
-        },
-        "pocus_abdomen_eintrag_gallenblase_wert_sonographische_zeichen_einer_cholezystitis": {
-          "kind": "abnormal",
-          "text": "sonographische Zeichen einer Cholezystitis"
-        }
-      }
-    },
-    "pocus_abdomen_eintrag_harnstau": {
-      "title": "Harnstau",
-      "kind": "neutral",
-      "default": "pocus_abdomen_eintrag_harnstau_wert_kein_harnstau",
-      "values": {
-        "pocus_abdomen_eintrag_harnstau_wert_kein_harnstau": {
-          "kind": "normal",
-          "text": "kein Harnstau",
-          "snomed": "413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
-          "snomedDisplay": "Known absent: Hydronephrosis; current; subject of record"
-        },
-        "pocus_abdomen_eintrag_harnstau_wert_harnstau_links": {
-          "kind": "abnormal",
-          "text": "Harnstau links",
-          "snomed": "43064006",
-          "snomedDisplay": "Hydronephrosis"
-        },
-        "pocus_abdomen_eintrag_harnstau_wert_harnstau_rechts": {
-          "kind": "abnormal",
-          "text": "Harnstau rechts",
-          "snomed": "43064006",
-          "snomedDisplay": "Hydronephrosis"
-        },
-        "pocus_abdomen_eintrag_harnstau_wert_harnstau_beidseits": {
-          "kind": "abnormal",
-          "text": "Harnstau beidseits",
-          "snomed": "43064006",
-          "snomedDisplay": "Hydronephrosis"
-        }
-      }
-    },
-    "pocus_abdomen_eintrag_bauchaorta": {
-      "title": "Bauchaorta",
-      "kind": "neutral",
-      "default": "pocus_abdomen_eintrag_bauchaorta_wert_bauchaorta_ohne_aneurysma",
-      "values": {
-        "pocus_abdomen_eintrag_bauchaorta_wert_bauchaorta_ohne_aneurysma": {
-          "kind": "normal",
-          "text": "Bauchaorta ohne Aneurysma",
-          "snomed": "413350009:{246090004=233985008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
-          "snomedDisplay": "Known absent: Abdominal aortic aneurysm; current; subject of record"
-        },
-        "pocus_abdomen_eintrag_bauchaorta_wert_bauchaortenaneurysma": {
-          "kind": "abnormal",
-          "text": "Bauchaortenaneurysma",
-          "snomed": "233985008",
-          "snomedDisplay": "Abdominal aortic aneurysm"
-        }
-      }
-    },
-    "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen": {
-      "title": "Ergänzung zum POCUS Abdomen",
+    "pocus_abdomen_eintrag_darmlumen": {
+      "title": "Darmlumen",
       "kind": "neutral",
       "default": "",
       "values": {
-        "pocus_abdomen_eintrag_ergaenzung_zum_pocus_abdomen_wert_value": {
+        "pocus_abdomen_eintrag_darmlumen_wert_darmschlingen_nicht_dilatiert": {
+          "kind": "normal",
+          "text": "Darmschlingen nicht dilatiert"
+        },
+        "pocus_abdomen_eintrag_darmlumen_wert_dilatierte_darmschlingen": {
+          "kind": "abnormal",
+          "text": "dilatierte Darmschlingen"
+        },
+        "pocus_abdomen_eintrag_darmlumen_wert_maximaler_darmdurchmesser": {
+          "kind": "neutral",
+          "text": "maximaler Darmdurchmesser {:millimeter*:}"
+        }
+      },
+      "attributes": {
+        "millimeter": "pocus_abdomen_eingabe_millimeter"
+      }
+    },
+    "pocus_abdomen_eintrag_darmmotilitaet": {
+      "title": "Darmmotilität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_darmmotilitaet_wert_regelrechte_darmmotilitaet": {
+          "kind": "normal",
+          "text": "regelrechte Darmmotilität"
+        },
+        "pocus_abdomen_eintrag_darmmotilitaet_wert_aufgehobene_darmmotilitaet": {
+          "kind": "abnormal",
+          "text": "aufgehobene Darmmotilität"
+        },
+        "pocus_abdomen_eintrag_darmmotilitaet_wert_gesteigerte_darmmotilitaet": {
+          "kind": "abnormal",
+          "text": "gesteigerte Darmmotilität"
+        },
+        "pocus_abdomen_eintrag_darmmotilitaet_wert_pendelperistaltik": {
+          "kind": "abnormal",
+          "text": "Pendelperistaltik"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_darmwand": {
+      "title": "Darmwand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_darmwand_wert_darmwand_nicht_verdickt": {
+          "kind": "normal",
+          "text": "Darmwand nicht verdickt"
+        },
+        "pocus_abdomen_eintrag_darmwand_wert_darmwand_verdickt": {
+          "kind": "abnormal",
+          "text": "Darmwand verdickt"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_appendix": {
+      "title": "Appendix",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_appendix_wert_appendix_unauffaellig": {
+          "kind": "normal",
+          "text": "Appendix unauffällig"
+        },
+        "pocus_abdomen_eintrag_appendix_wert_appendix_verdickt_und_fluessigkeitsgefuellt": {
+          "kind": "abnormal",
+          "text": "Appendix verdickt und flüssigkeitsgefüllt"
+        },
+        "pocus_abdomen_eintrag_appendix_wert_appendix_nicht_darstellbar": {
+          "kind": "neutral",
+          "text": "Appendix nicht darstellbar"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_unauffaelliger_abdomenbefund": {
+      "title": "Unauffälliger Abdomenbefund",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_unauffaelliger_abdomenbefund_wert_sonographisch_unauffaelliger_abdomenbefund": {
+          "kind": "normal",
+          "text": "sonographisch unauffälliger Abdomenbefund"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_cholezystolithiasis": {
+      "title": "Cholezystolithiasis",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_cholezystolithiasis_wert_sonographischer_befund_einer_cholezystolithiasis": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer Cholezystolithiasis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_cholezystitis": {
+      "title": "Cholezystitis",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_cholezystitis_wert_sonographischer_befund_einer_cholezystitis": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer Cholezystitis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_cholestase": {
+      "title": "Cholestase",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_cholestase_wert_sonographischer_befund_einer_cholestase": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer Cholestase"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_choledocholithiasis": {
+      "title": "Choledocholithiasis",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_choledocholithiasis_wert_sonographischer_befund_einer_choledocholithiasis": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer Choledocholithiasis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_mechanischer_ileus": {
+      "title": "Mechanischer Ileus",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_mechanischer_ileus_wert_sonographischer_befund_eines_mechanischen_ileus": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund eines mechanischen Ileus"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_paralytischer_ileus": {
+      "title": "Paralytischer Ileus",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_paralytischer_ileus_wert_sonographischer_befund_eines_paralytischen_ileus": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund eines paralytischen Ileus"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_terminale_ileitis": {
+      "title": "Terminale Ileitis",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_terminale_ileitis_wert_sonographischer_befund_einer_terminalen_ileitis": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer terminalen Ileitis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_sigmadivertikulitis": {
+      "title": "Sigmadivertikulitis",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_sigmadivertikulitis_wert_sonographischer_befund_einer_sigmadivertikulitis": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer Sigmadivertikulitis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_appendizitis": {
+      "title": "Appendizitis",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_appendizitis_wert_sonographischer_befund_einer_appendizitis": {
+          "kind": "abnormal",
+          "text": "sonographischer Befund einer Appendizitis"
+        }
+      }
+    },
+    "pocus_abdomen_eintrag_ergaenzung_zur_abdomensonographie": {
+      "title": "Ergänzung zur Abdomensonographie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_abdomen_eintrag_ergaenzung_zur_abdomensonographie_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }

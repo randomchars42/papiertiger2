@@ -6,14 +6,6 @@
   "groups": {
     "orientierung": {
       "title": "Orientierung",
-      "kind": "normal",
-      "phrases": [
-        "orientierung_eintrag_orientierung_zur_zeit",
-        "orientierung_eintrag_orientierung_zum_ort",
-        "orientierung_eintrag_orientierung_zur_person",
-        "orientierung_eintrag_orientierung_zur_situation",
-        "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -36,6 +28,7 @@
           "id": "orientierung_eintrag_weitere_auffaelligkeit_der_orientierung"
         }
       ],
+      "kind": "normal",
       "default": false
     }
   },

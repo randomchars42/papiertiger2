@@ -2,31 +2,35 @@
   "version": 2,
   "imports": [
     "gemeinsam",
-    "orientierung"
+    "orientierung",
+    "nihss"
   ],
-  "editors": {
-    "neurostatus_eingabe_nihss": {
-      "type": "number",
-      "label": "NIHSS-Gesamtwert",
-      "min": 0,
-      "max": 42,
-      "step": 1
+  "sets": {
+    "neurostatus_vorgabe_normalbefund": {
+      "title": "Normalbefund",
+      "values": {
+        "neurostatus_eintrag_bewusstseinszustand": "neurostatus_eintrag_bewusstseinszustand_wert_wach",
+        "neurostatus_eintrag_gesichtsfeld": "neurostatus_eintrag_gesichtsfeld_wert_gesichtsfeld_unauffaellig",
+        "neurostatus_eintrag_augenbewegungen": "neurostatus_eintrag_augenbewegungen_wert_augenbewegungen_frei",
+        "neurostatus_eintrag_pupillen": "neurostatus_eintrag_pupillen_wert_pupillen_isokor",
+        "neurostatus_eintrag_mimik": "neurostatus_eintrag_mimik_wert_mimik_symmetrisch",
+        "neurostatus_eintrag_schlucken": "neurostatus_eintrag_schlucken_wert_schlucken_unauffaellig",
+        "neurostatus_eintrag_sprache": "neurostatus_eintrag_sprache_wert_sprache_unauffaellig",
+        "neurostatus_eintrag_sprechen": "neurostatus_eintrag_sprechen_wert_artikulation_unauffaellig",
+        "neurostatus_eintrag_kraft": "neurostatus_eintrag_kraft_wert_kraft_seitengleich",
+        "neurostatus_eintrag_armhalteversuch": "neurostatus_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig",
+        "neurostatus_eintrag_koordination": "neurostatus_eintrag_koordination_wert_koordination_unauffaellig",
+        "neurostatus_eintrag_sensibilitaet": "neurostatus_eintrag_sensibilitaet_wert_sensibilitaet_seitengleich",
+        "neurostatus_eintrag_neglect": "neurostatus_eintrag_neglect_wert_kein_neglect",
+        "neurostatus_eintrag_meningismus": "neurostatus_eintrag_meningismus_wert_kein_meningismus",
+        "neurostatus_eintrag_gang_und_stand": "neurostatus_eintrag_gang_und_stand_wert_gang_und_stand_sicher"
+      },
+      "kind": "normal"
     }
   },
   "groups": {
     "neurostatus": {
       "title": "Neurologischer Status",
-      "children": [
-        "neurostatus_gruppe_hirnnerven",
-        "neurostatus_gruppe_sprache_und_sprechen",
-        "neurostatus_gruppe_motorik_koordination_und_sensibilitaet",
-        "neurostatus_gruppe_weitere_befunde_und_skalen",
-        "orientierung"
-      ],
-      "phrases": [
-        "neurostatus_eintrag_bewusstseinszustand",
-        "neurostatus_eintrag_ergaenzung_zum_neurologischen_status"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -50,24 +54,26 @@
         },
         {
           "type": "group",
-          "id": "neurostatus_gruppe_weitere_befunde_und_skalen"
+          "id": "neurostatus_gruppe_weitere_befunde"
+        },
+        {
+          "type": "group",
+          "id": "nihss"
         },
         {
           "type": "phrase",
           "id": "neurostatus_eintrag_ergaenzung_zum_neurologischen_status"
         }
       ],
+      "sets": [
+        "neurostatus_vorgabe_normalbefund"
+      ],
+      "subgroups": "break",
+      "summary": true,
       "reset": true
     },
     "neurostatus_gruppe_hirnnerven": {
       "title": "Hirnnerven",
-      "phrases": [
-        "neurostatus_eintrag_gesichtsfeld",
-        "neurostatus_eintrag_augenbewegungen",
-        "neurostatus_eintrag_pupillen",
-        "neurostatus_eintrag_mimik",
-        "neurostatus_eintrag_schlucken"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -90,14 +96,11 @@
           "id": "neurostatus_eintrag_schlucken"
         }
       ],
-      "collapsed": true
+      "autoCompact": true,
+      "reveal": "initial"
     },
     "neurostatus_gruppe_sprache_und_sprechen": {
       "title": "Sprache und Sprechen",
-      "phrases": [
-        "neurostatus_eintrag_sprache",
-        "neurostatus_eintrag_sprechen"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -108,17 +111,11 @@
           "id": "neurostatus_eintrag_sprechen"
         }
       ],
-      "collapsed": true
+      "autoCompact": true,
+      "reveal": "initial"
     },
     "neurostatus_gruppe_motorik_koordination_und_sensibilitaet": {
       "title": "Motorik, Koordination und Sensibilität",
-      "phrases": [
-        "neurostatus_eintrag_kraft",
-        "neurostatus_eintrag_armhalteversuch",
-        "neurostatus_eintrag_koordination",
-        "neurostatus_eintrag_sensibilitaet",
-        "neurostatus_eintrag_neglect"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -141,15 +138,11 @@
           "id": "neurostatus_eintrag_neglect"
         }
       ],
-      "collapsed": true
+      "autoCompact": true,
+      "reveal": "initial"
     },
-    "neurostatus_gruppe_weitere_befunde_und_skalen": {
-      "title": "Weitere Befunde und Skalen",
-      "phrases": [
-        "neurostatus_eintrag_meningismus",
-        "neurostatus_eintrag_gang_und_stand",
-        "neurostatus_eintrag_nihss"
-      ],
+    "neurostatus_gruppe_weitere_befunde": {
+      "title": "Weitere Befunde",
       "items": [
         {
           "type": "phrase",
@@ -158,13 +151,10 @@
         {
           "type": "phrase",
           "id": "neurostatus_eintrag_gang_und_stand"
-        },
-        {
-          "type": "phrase",
-          "id": "neurostatus_eintrag_nihss"
         }
       ],
-      "collapsed": true
+      "autoCompact": true,
+      "reveal": "initial"
     }
   },
   "phrases": {
@@ -509,22 +499,6 @@
           "kind": "neutral",
           "text": "nicht prüfbar"
         }
-      }
-    },
-    "neurostatus_eintrag_nihss": {
-      "title": "NIHSS",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "neurostatus_eintrag_nihss_wert_nihss": {
-          "kind": "neutral",
-          "text": "NIHSS {:wert*:}",
-          "snomed": "450743008",
-          "snomedDisplay": "National Institutes of Health stroke scale score"
-        }
-      },
-      "attributes": {
-        "wert": "neurostatus_eingabe_nihss"
       }
     },
     "neurostatus_eintrag_ergaenzung_zum_neurologischen_status": {

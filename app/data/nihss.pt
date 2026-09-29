@@ -1,0 +1,28 @@
+# NIH Stroke Scale nach dem NINDS-Formular, Stand März 2025
+# https://www.ninds.nih.gov/sites/default/files/2025-03/KnowStroke_NIHStrokeScale_March2025_508c.pdf
+N: nihss
+I: gemeinsam
+
+E gesamt: number label="NIHSS-Gesamtwert" min=0 max=42 step=1
+
+G @root @inactive @reset @score(id=nihss,label="NIHSS berechnen",target="NIHSS-Gesamtwert",attribute=wert): NIHSS|-
+  P: 1a Bewusstseinslage => NIHSS 1a: wach und unmittelbar reagierend @points=0|n / NIHSS 1a: nicht voll wach, durch geringe Stimulation ansprechbar @points=1|a / NIHSS 1a: nur durch wiederholte oder starke Stimulation aufmerksam @points=2|a / NIHSS 1a: keine Reaktion außer Reflexbewegungen (Koma) @points=3|a
+  P: 1b Fragen zu Monat und Alter => NIHSS 1b: Monat und Alter korrekt beantwortet @points=0|n / NIHSS 1b: eine Frage korrekt beantwortet @points=1|a / NIHSS 1b: keine Frage korrekt beantwortet @points=2|a
+  P: 1c Aufforderungen => NIHSS 1c: beide Aufforderungen korrekt ausgeführt @points=0|n / NIHSS 1c: eine Aufforderung korrekt ausgeführt @points=1|a / NIHSS 1c: keine Aufforderung korrekt ausgeführt @points=2|a
+  P: 2 Blickbewegung => NIHSS 2: normale Blickbewegung @points=0|n / NIHSS 2: partielle Blickparese @points=1|a / NIHSS 2: forcierte Blickdeviation oder totale Blickparese @points=2|a
+  P: 3 Gesichtsfeld => NIHSS 3: kein Gesichtsfeldausfall @points=0|n / NIHSS 3: partielle Hemianopsie @points=1|a / NIHSS 3: komplette Hemianopsie @points=2|a / NIHSS 3: bilaterale Hemianopsie oder kortikale Blindheit @points=3|a
+  P: 4 Fazialisparese => NIHSS 4: normale symmetrische Gesichtsbewegung @points=0|n / NIHSS 4: geringe Fazialisparese @points=1|a / NIHSS 4: partielle Fazialisparese, besonders der unteren Gesichtshälfte @points=2|a / NIHSS 4: vollständige ein- oder beidseitige Fazialisparese @points=3|a
+  P: 5a Motorik linker Arm (10 Sekunden) => NIHSS 5a: linker Arm ohne Absinken @points=0|n / NIHSS 5a: linker Arm sinkt ab, erreicht die Unterlage nicht @points=1|a / NIHSS 5a: linker Arm mit Schwerkraftüberwindung, sinkt auf die Unterlage @points=2|a / NIHSS 5a: linker Arm ohne Schwerkraftüberwindung @points=3|a / NIHSS 5a: keine Bewegung des linken Arms @points=4|a / NIHSS 5a: linker Arm wegen Amputation oder Schulterversteifung nicht prüfbar @points=UN|-
+  P: 5b Motorik rechter Arm (10 Sekunden) => NIHSS 5b: rechter Arm ohne Absinken @points=0|n / NIHSS 5b: rechter Arm sinkt ab, erreicht die Unterlage nicht @points=1|a / NIHSS 5b: rechter Arm mit Schwerkraftüberwindung, sinkt auf die Unterlage @points=2|a / NIHSS 5b: rechter Arm ohne Schwerkraftüberwindung @points=3|a / NIHSS 5b: keine Bewegung des rechten Arms @points=4|a / NIHSS 5b: rechter Arm wegen Amputation oder Schulterversteifung nicht prüfbar @points=UN|-
+  P: 6a Motorik linkes Bein (5 Sekunden) => NIHSS 6a: linkes Bein ohne Absinken @points=0|n / NIHSS 6a: linkes Bein sinkt ab, erreicht die Unterlage nicht @points=1|a / NIHSS 6a: linkes Bein mit Schwerkraftüberwindung, sinkt auf die Unterlage @points=2|a / NIHSS 6a: linkes Bein ohne Schwerkraftüberwindung @points=3|a / NIHSS 6a: keine Bewegung des linken Beins @points=4|a / NIHSS 6a: linkes Bein wegen Amputation oder Hüftversteifung nicht prüfbar @points=UN|-
+  P: 6b Motorik rechtes Bein (5 Sekunden) => NIHSS 6b: rechtes Bein ohne Absinken @points=0|n / NIHSS 6b: rechtes Bein sinkt ab, erreicht die Unterlage nicht @points=1|a / NIHSS 6b: rechtes Bein mit Schwerkraftüberwindung, sinkt auf die Unterlage @points=2|a / NIHSS 6b: rechtes Bein ohne Schwerkraftüberwindung @points=3|a / NIHSS 6b: keine Bewegung des rechten Beins @points=4|a / NIHSS 6b: rechtes Bein wegen Amputation oder Hüftversteifung nicht prüfbar @points=UN|-
+  P: 7 Extremitätenataxie => NIHSS 7: keine Extremitätenataxie @points=0|n / NIHSS 7: Ataxie in einer Extremität @points=1|a / NIHSS 7: Ataxie in zwei Extremitäten @points=2|a / NIHSS 7: wegen Amputation oder Gelenkversteifung nicht prüfbar @points=UN|-
+  P: 8 Sensibilität => NIHSS 8: keine Sensibilitätsstörung @points=0|n / NIHSS 8: leichte bis mittelschwere Sensibilitätsstörung @points=1|a / NIHSS 8: schwere oder vollständige Sensibilitätsstörung @points=2|a
+  P: 9 Sprache => NIHSS 9: keine Aphasie @points=0|n / NIHSS 9: leichte bis mittelschwere Aphasie @points=1|a / NIHSS 9: schwere Aphasie @points=2|a / NIHSS 9: stumm oder globale Aphasie @points=3|a
+  P: 10 Dysarthrie => NIHSS 10: keine Dysarthrie @points=0|n / NIHSS 10: leichte bis mittelschwere Dysarthrie @points=1|a / NIHSS 10: schwere Dysarthrie oder Anarthrie @points=2|a / NIHSS 10: wegen Intubation oder anderer mechanischer Sprechbarriere nicht prüfbar @points=UN|-
+  P: 11 Extinktion und Neglect => NIHSS 11: keine Extinktion und kein Neglect @points=0|n / NIHSS 11: Extinktion oder Neglect in einer Modalität @points=1|a / NIHSS 11: ausgeprägter Neglect in mehr als einer Modalität @points=2|a
+
+  R<NIHSS 1a: keine Reaktion außer Reflexbewegungen (Koma)>: 8 Sensibilität = NIHSS 8: schwere oder vollständige Sensibilitätsstörung; 9 Sprache = NIHSS 9: stumm oder globale Aphasie
+
+  P: NIHSS-Gesamtwert => NIHSS {:wert=gesamt*:} @sct=450743008[National Institutes of Health stroke scale score]|-
+  P: Ergänzung zum NIHSS => NIHSS-Ergänzung: {:freitext*:}|-

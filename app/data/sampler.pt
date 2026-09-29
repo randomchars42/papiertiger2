@@ -1,73 +1,242 @@
 # SAMPLER
 N: sampler
-I: gemeinsam, schmerz, allergie, dauermedikation, vorerkrankungen, symptome
+I: gemeinsam, allergie, symptome
 
-E ort: choice label="Lokalisation" => im Thorax|- / im Oberbauch|- / im Unterbauch|- / im Rücken|- / im Kopf|- / im Arm|- / im Bein|- / diffus|-
 E nrs: number label="NRS" min=0 max=10 step=1
-E seit: duration label="Beginn" prefix=" seit " units=minute,hour,day,week,month,year default=hour
+E vor: duration label="Beginn" prefix=" vor " units=minute,hour,day,week,month,year default=hour
 E dauer: duration label="Dauer" prefix=" für " units=minute,hour,day,week,month,year default=hour
-E qualitaet: choice label="Qualität" => drückend|- / stechend|- / brennend|- / ziehend|- / kolikartig|- / dumpf|-
 E symptom_seit: duration label="Beginn" prefix=" seit " units=minute,hour,day,week,month,year default=hour
 E seite: choice label="Seite" => rechten|- / linken|-
+E symptomseite: choice label="Seite" => linksseitig|- / rechtsseitig|- / beidseits|-
+E obere_extremitaet: choice label="Abschnitt" => Schulter|- / Oberarm|- / Ellenbogen|- / Unterarm|- / Handgelenk|- / Hand|-
+E untere_extremitaet: choice label="Abschnitt" => Hüfte|- / Oberschenkel|- / Knie|- / Unterschenkel|- / Sprunggelenk|- / Fuß|-
+E thoraxregion: choice label="Thoraxregion" => links|- / rechts|- / zentral|- / diffus|-
+E abdomenregion: choice label="Bauchregion" => rechter Oberbauch|- / linker Oberbauch|- / Epigastrium|- / periumbilikal|- / rechter Unterbauch|- / linker Unterbauch|- / diffus|-
+E wirbelsaeulenregion: choice label="Wirbelsäulenabschnitt" => HWS|- / BWS|- / LWS|- / Sakralregion|-
+E symptomtext: multiline label="Ergänzende Beschreibung" placeholder="Freie ergänzende Beschreibung" rows=3 maxrows=12
+E arzneimittel: text label="Arzneimittel" placeholder="Wirkstoff oder Präparat" prefix=""
+E vorerkrankung: text label="Vorerkrankung" placeholder="Diagnose oder Zustand" prefix=""
+E packyears: number label="packyears" min=0 max=300 step=1 suffix=" py"
+E haeufigkeittag: number label="Häufigkeit" min=0 max=100 step=1 suffix=" x / Tag"
+E haeufigkeitwoche: number label="Häufigkeit" min=0 max=100 step=1 suffix=" x / Woche"
+E substanzform: choice label="Form" => nasal|- / inhalativ|- / oral|- / i.v.|-
 
-C schmerz: symptome.brustschmerz / symptome.bauchschmerz / symptome.kopfschmerz / symptome.rueckenschmerz / symptome.schulter_arm_schmerz / symptome.bein_hueft_knieschmerz / symptome.gelenkschwellung
+C schmerz: @tag(symptome.schmerz)
+C lokalisation: @tag(symptome.lokalisation)
+C extremitaet_oben: @tag(symptome.extremitaet_oben)
+C extremitaet_unten: @tag(symptome.extremitaet_unten)
+C extremitaet_oben_offen: @tag(symptome.extremitaet_oben_offen)
+C extremitaet_unten_offen: @tag(symptome.extremitaet_unten_offen)
+C lok_thorax: @tag(symptome.lok_thorax)
+C lok_abdomen: @tag(symptome.lok_abdomen)
+C lok_wirbelsaeule: @tag(symptome.lok_wirbelsaeule)
+C lok_flanke: @tag(symptome.lok_flanke)
+C neuro_fokal: @tag(symptome.neuro_fokal)
+C neuro_anfall: @tag(symptome.neuro_anfall)
+C neuro_bewusstsein: @tag(symptome.neuro_bewusstsein)
+C neuro_schwindel: @tag(symptome.neuro_schwindel)
+C psychiatrisch: @tag(symptome.psychiatrisch)
+C psych_depression: @tag(symptome.psych_depression)
+C psych_angst: @tag(symptome.psych_angst)
+C psych_wahrnehmung: @tag(symptome.psych_wahrnehmung)
+C psych_fremdgefahr: @tag(symptome.psych_fremdgefahr)
+C antibiotika: @tag(allergie.antibiotikum)
 
-G @root: SAMPLER
-  G @repeat(initial=0,add="Symptom hinzufügen") @reset @inline: Symptom|a
-    P: Symptom* => @values(symptome)
-    P: Beginn => Beginn {:beginn=seit*:}|-
-    G<schmerz> @collapsed @inline @autocollapse: Provokation
-      P: durch Belastung|-
-      P: durch Bewegung|-
-      P: durch Rotation|-
-      P: durch Trauma|-
-      P: durch Atembewegung|-
-      P: sonstige Provokation => durch {:freitext:}|-
-      P: nicht provozierbar|-
-    P<durch Trauma>: Trauma => {:freitext:}|-
-    G<schmerz> @collapsed @inline @autocollapse: Linderung
-      P: durch Ruhe|-
-      P: durch Dunkelheit|-
-      P: durch Wärme|-
-      P: durch Kälte|-
-      P: sonstige Linderung => durch {:freitext:}|-
-      P: keine|-
-    P<schmerz>: Schmerzqualität => Qualität: {:qualitaet=qualitaet*:}|-
-    P<schmerz>: Schmerzlokalisation => Lokalisation: {:ort=ort*:}|-
-    G<schmerz> @collapsed @inline @autocollapse: Ausstrahlung
-      P: in den Rücken|-
-      P: zwischen die Schulterblätter|-
-      P: in den {:seite:} Arm|- 
-      P: in den Hals|-
-      P: in den Kiefer|-
-      P: in den Unterbauch|-
-      P: in die Flanke|-
-      P: ins Genital|-
-      P: sonstiges => {:freitext:}|-
-    P<schmerz>: Schmerzstärke => NRS {:wert=nrs*:}|-
-    P: Dauer => Dauer {:dauer*:}|-
-    P: Verlauf => zunehmend|- / rückläufig|- / wellenförmig|- / spontanes Sistieren|- / Sistieren unter Analgesie|- / {:freitext:}|-
-    P: Freitext => {:freitext*:}|-
+G @root @subgroups(break) @reset: SAMPLER
+  G @autocompact @reveal(initial): Symptom(e)
+    G @repeat(initial=0,add="Symptom hinzufügen") @subgroups(break) @autocompact: Symptom|a
+      P: Symptom* => @values(symptome)
+      P: Beginn => Beginn {:beginn=vor*:}|-
+      P: Dauer => Dauer {:dauer*:}|-
 
-  U: allergie
+      G: Verlauf
+        P: zunehmend|-
+        P: gleichbleibend|-
+        P: rückläufig|-
+        P: intermittierend|-
+        P: wellenförmig|-
+        P: spontanes Sistieren|-
+        P: Sistieren unter Therapie|-
+        P: Verlauf => {:freitext*:}|-
 
-  U: dauermedikation
+      G condition(lokalisation) @subgroups(flow): Lokalisation
+        P condition(extremitaet_oben_offen) obere_extremitaetenregion: Abschnitt => {:obere_extremitaetenregion=obere_extremitaet*:}|-
+        P condition(extremitaet_unten_offen) untere_extremitaetenregion: Abschnitt => {:untere_extremitaetenregion=untere_extremitaet*:}|-
+        P condition(extremitaet_oben; extremitaet_unten) extremitaetenseite: Seite => {:extremitaetenseite=symptomseite*:}|-
+        P condition(lok_thorax) thoraxlokalisation: Thoraxregion => {:thoraxlokalisation=thoraxregion*:}|-
+        P condition(lok_abdomen) abdomenlokalisation: Bauchregion => {:abdomenlokalisation=abdomenregion*:}|-
+        P condition(lok_wirbelsaeule) wirbelsaeulenlokalisation: Wirbelsäulenabschnitt => {:wirbelsaeulenlokalisation=wirbelsaeulenregion*:}|-
+        P condition(lok_wirbelsaeule) wirbelsaeulenseite: Seite => {:wirbelsaeulenseite=symptomseite*:}|-
+        P condition(lok_flanke) flankenseite: Seite => {:flankenseite=symptomseite*:}|-
+        P: sonstige Lokalisation => {:freitext*:}|-
 
-  U: vorerkrankungen
+      G condition(schmerz): Provokation
+        P: durch Belastung|-
+        P: durch Bewegung|-
+        P: durch Rotation|-
+        P: durch Trauma|-
+        P condition(durch Trauma): Trauma => {:freitext*:}|-
+        P: durch Atembewegung|-
+        P: sonstige Provokation => durch {:freitext*:}|-
+        P: nicht provozierbar|-
+      G condition(schmerz): Linderung
+        P: durch Ruhe|-
+        P: durch Dunkelheit|-
+        P: durch Wärme|-
+        P: durch Kälte|-
+        P: sonstige Linderung => durch {:freitext*:}|-
+        P: keine|-
+      G condition(schmerz): Schmerzqualität
+        P: dumpf|-
+        P: drückend|-
+        P: stechend|-
+        P: brennend|-
+        P: ziehend|-
+        P: kolikartig|-
+        P: Qualität => {:freitext*:}|-
+      G condition(schmerz): Ausstrahlung
+        P: in den Rücken|-
+        P: zwischen die Schulterblätter|-
+        P: in den {:seite:} Arm|-
+        P: in den Hals|-
+        P: in den Kiefer|-
+        P: in den Unterbauch|-
+        P: in die Flanke|-
+        P: ins Genital|-
+        P: sonstiges => {:freitext*:}|-
+      P condition(schmerz): Schmerzstärke => NRS {:wert=nrs*:}|-
 
-  G: Letzte
-    P<symptome.brustschmerz / symptome.synkope / symptome.atemnot / symptome.herzklopfen>: letzte Koronarangiographie|-
+      G condition(neuro_fokal): Fokal-neurologische Beschreibung
+        P neurologische_seite: Betroffene Seite => links|- / rechts|- / beidseits|- / wechselnd|-
+        P: Verteilung => Gesicht|- / Arm|- / Bein|- / Gesicht und Arm|- / Arm und Bein|- / Gesicht, Arm und Bein|-
+        P: Ausprägung => vollständig|a / teilweise|a / fluktuierend|a
 
-  G: Ereignisvorgeschichte
-    P<!symptome.atemnot>: keine Atemnot|n
-    P<!symptome.synkope>: keine Synkope|n
-    P<!symptome.herzklopfen>: kein Herzklopfen|n
-    P<!symptome.fieber>: kein Fieber|n
-    P<!symptome.husten>: kein Husten|n
-    P<!symptome.uebelkeit>: keine Übelkeit|n
-    P<!symptome.erbrechen>: kein Erbrechen|n
-    P<!symptome.algurie>: keine Algurie|n
-    P<!symptome.pollakisurie>: keine Pollakisurie|n
-    P<!symptome.schwindel>: kein Schwindel|n
-    P<!symptome.krampfanfall>: kein Krampfanfall|n
-    P<!symptome.schwaeche>: keine Schwäche|n
+      G condition(neuro_anfall): Anfallsbeschreibung
+        P: Beobachtung => fremdbeobachtet|- / eigenberichtet|- / nicht beobachtet|-
+        P: Anfallsbild => generalisiert tonisch-klonisch|a / fokal motorisch|a / fokal nicht motorisch|a / unklar|-
+        P: Bewusstseinslage im Ereignis => erhalten|- / beeinträchtigt|a / unklar|-
+        P: Erholung => unmittelbar|- / verzögert|a / postiktal|a / keine Rückkehr zum Ausgangszustand|a
+
+      G condition(neuro_bewusstsein): Bewusstseinsbeschreibung
+        P: Verlauf der Bewusstseinsstörung => konstant|a / fluktuierend|a / progredient|a / rückläufig|-
+        P: Ausgangszustand => wieder erreicht|- / nicht wieder erreicht|a / unbekannt|-
+
+      G condition(neuro_schwindel): Schwindelbeschreibung
+        P: Charakter => Drehschwindel|a / Schwankschwindel|a / Benommenheit|a / unklar|-
+        P: Muster => anfallsartig|a / kontinuierlich|a / rezidivierend|a
+        P: Auslöser => Lagewechsel|- / Kopfbewegung|- / Aufstehen|- / Belastung|- / kein Auslöser erinnerlich|-
+
+      G condition(psychiatrisch) @subgroups(break): Psychiatrische Beschreibung
+        G condition(psych_depression): Stimmung und Eigengefährdung
+          P: Stimmung => gedrückt|a / verzweifelt|a / gereizt|a / affektarm|a / situationsangemessen|-
+          P require(psych_depression): Eigengefährdung => verneint|- / passive Todeswünsche|a / Suizidgedanken ohne Handlungsabsicht|a / Handlungsabsicht oder Plan|a / nach Selbstschädigung|a / nicht beurteilbar|-
+
+        G condition(psych_angst): Angst und Krise
+          P: Erscheinungsbild => akute Angst|a / Panik|a / Übererregung|a / Erstarrung|a / situationsbezogene Krise|a
+
+        G condition(psych_wahrnehmung): Wahrnehmung und Denken
+          P: Wahrnehmung => akustische Halluzinationen|a / optische Halluzinationen|a / andere Halluzinationen|a / keine Halluzinationen berichtet|-
+          P: Denkinhalt => wahnhafte Überzeugungen|a / paranoides Erleben|a / keine wahnhaften Inhalte berichtet|-
+          P: Imperative Stimmen => bejaht|a / verneint|- / nicht beurteilbar|-
+
+        G condition(psych_fremdgefahr): Fremdgefährdung
+          P require(psych_fremdgefahr): Gefährdungseinschätzung => verneint|- / Drohung oder aggressive Impulse|a / konkrete Absicht oder Zielperson|a / tätlicher Übergriff|a / nicht beurteilbar|-
+
+      P: Ergänzende Beschreibung => {:ergaenzung=symptomtext*:}|-
+
+  G @autocompact @reveal(initial): Allergien
+    P: Allergiestatus => keine bekannten Allergien @sct=716186003[No known allergy]|n / Allergiestatus unbekannt|-
+
+    G @repeat(initial=0,add="Allergie hinzufügen",empty="Allergiestatus") @reset: Allergie|a
+      P: Allergie* => @values(allergie)
+      P condition(Allergie): Allergische Reaktion => allergische Reaktion: {:reaktion=allergie.reaktion*:}|a
+      P condition(Allergie): Schweregrad der Allergie => leichte allergische Reaktion|a / mittelschwere allergische Reaktion|a / schwere allergische Reaktion|a / Anaphylaxie|a
+      P: Ergänzung zur Allergie => {:freitext*:}|-
+
+  G @autocompact @reveal(initial): Vorbestehende Medikation
+    P: Medikationsstatus => keine Dauermedikation|n / Dauermedikation unbekannt|-
+
+    G @lens(praeklinik) @reveal(initial) medikationsquellen_praeklinik: Quelle
+      P med_praeklinik_pflege: s. Pflegeüberleitungsbogen|-
+      P med_praeklinik_arztbrief: s. Arztbrief|-
+      P med_praeklinik_plan: s. bundeseinheitlichem Medikationsplan|-
+      P med_praeklinik_bild: s. Bild|-
+
+    G @lens(klinik) @reveal(initial) medikationsquellen_klinik: Quelle
+      P: s. ID Medics|-
+
+    G @repeat(initial=0,add="relevantes Arzneimittel hinzufügen",empty="Medikationsstatus") @reset: relevantes Arzneimittel|-
+      P: Arzneimittel* => Apixaban|a / Rivaroxaban|a / Edoxaban|a / Phenprocoumon|a / niedermolekularem Heparin|a / Acetylsalicylsäure|a / Clopidogrel|a / Metoprolol|- / Bisoprolol|- / Candesartan|- / Ramipril|- / Risperidon|- / Melperon|- / {:arzneimittel=arzneimittel*:}|-
+
+  G @autocompact @reveal(initial): Vorbestehende Erkrankungen
+    P: Vorerkrankungsstatus => keine relevanten Vorerkrankungen|n / Vorerkrankungen unbekannt|-
+
+    G @lens(praeklinik) vorerkrankungsquellen_praeklinik: siehe
+      P vor_praeklinik_pflege: Pflegeüberleitungsbogen|-
+      P vor_praeklinik_arztbrief: Arztbrief|-
+      P vor_praeklinik_plan: bundeseinheitlichem Medikationsplan|-
+      P vor_praeklinik_bild: Bild|-
+
+    G @lens(klinik) vorerkrankungsquellen_klinik: siehe
+      P: System|-
+      P vor_klinik_pflege: Pflegeüberleitungsbogen|-
+      P vor_klinik_arztbrief: Arztbrief|-
+      P vor_klinik_system: System|-
+
+    G @repeat(initial=0,add="Vorerkrankung hinzufügen",empty="Vorerkrankungsstatus") @reset: Vorerkrankung|a
+      P: Vorerkrankung* => Vorhofflimmern|a / Koronare Herzerkrankung|a / arterielle Hypertonie|a / chronisch-obstruktive Lungenerkrankung|a / chronische Nierenerkrankung|a / Zustand nach Schlaganfall|a / Diabetes mellitus Typ 1|a / Diabetes mellitus Typ 2|a / Demenz|a / Zustand nach Appendektomie|- / Zustand nach Cholezystektomie|- / {:vorerkrankung=vorerkrankung*:}|a
+      P condition(Demenz): Demenzschweregrad => milde Demenz|a / schwere Demenz|a / weit fortgeschrittene Demenz|a
+      P: Ergänzung zur Erkrankung => {:freitext*:}|-
+
+  G @autocompact @reveal(initial): Letzte
+    P: letzte Mahlzeit => letzte Mahlzeit {:mahlzeit=vor*:}|-
+    P: letzte Flüssigkeitsaufnahme => letzte Flüssigkeitsaufnahme {:fluessigkeit=vor*:}|-
+    P: letzter Krankenhausaufenthalt => letzter Krankenhausaufenthalt {:krankenhausaufenthalt=vor*:}|-
+    P: letzter Stuhlgang => letzter Stuhlgang {:stuhlgang=vor*:}|-
+    P suggest(symptome.brustschmerz; symptome.synkope; symptome.atemnot; symptome.herzklopfen): letzte Koronarangiographie => letzte Koronarangiographie {:koronarangiographie=vor*:}|-
+
+  G @autocompact @reveal(initial): Ereignisvorgeschichte
+    P: Vorgeschichte => {:freitext*:}|-
+    P condition(!symptome.atemnot): keine Atemnot|n
+    P condition(!symptome.synkope): keine Synkope|n
+    P condition(!symptome.herzklopfen): kein Herzklopfen|n
+    P condition(!symptome.fieber): kein Fieber|n
+    P condition(!symptome.husten): kein Husten|n
+    P condition(!symptome.uebelkeit): keine Übelkeit|n
+    P condition(!symptome.erbrechen): kein Erbrechen|n
+    P condition(!symptome.algurie): keine Algurie|n
+    P condition(!symptome.pollakisurie): keine Pollakisurie|n
+    P condition(!symptome.schwindel): kein Schwindel|n
+    P condition(!symptome.krampfanfall): kein Krampfanfall|n
+    P condition(!symptome.schwaeche): keine Schwäche|n
+
+  G @subgroups(break): Risikofaktoren
+    G @autocompact @reveal(initial): Nikotinkonsum
+      P nikotinstatus: Nikotinstatus => verneint|n / vormals|a / gelegentlich|a / aktiv|a / passiv|a
+      P condition(nikotinstatus=vormals; nikotinstatus=aktiv): Nikotinart => Zigaretten|- / Zigarren|- / Schnupftaback|- / Kautaback|-
+      P condition(nikotinstatus=vormals; nikotinstatus=aktiv) nikotinhaeufigkeit: Häufigkeit: {:nikotinhaeufigkeit=haeufigkeittag*:}|-
+      P condition(nikotinstatus=vormals; nikotinstatus=aktiv): packyears: {:packyears=packyears*:}|-
+      P: weitere Angaben zum Nikotinkonsum => {:nikotinsonstiges=gemeinsam.freitext*:}|-
+
+    G @autocompact @reveal(initial): Vaping oder Dampfen
+      P vapingdampfenstatus: Vapingstatus => verneint|n / vormals|a / aktiv|a / passiv|a
+      P condition(vapingdampfenstatus=aktiv) vapingdampfenhaeufigkeit: Häufigkeit: {:vapingdampfenhaeufigkeit=haeufigkeittag*:}|-
+      P: weitere Angaben zum Vaping oder Dampfen => {:vapingdampfensonstiges=gemeinsam.freitext*:}|-
+
+    G @autocompact @reveal(initial): Alkoholkonsum
+      P alkoholstatus: Alkoholstatus => verneint|n / vormals|a / gelegentlich|a / aktiv|a
+      P condition(alkoholstatus=vormals; alkoholstatus=aktiv): Häufigkeit: {:alkoholhaeufigkeit=haeufigkeitwoche*:}|-
+      P: weitere Angaben zum Alkoholkonsum => {:alkoholsonstiges=gemeinsam.freitext*:}|-
+
+    G @autocompact @reveal(initial): THC-Konsum
+      P thcstatus: THC-Status => verneint|n / vormals|a / gelegentlich|a / aktiv|a
+      P condition(thcstatus=aktiv) thchaeufigkeit: Häufigkeit: {:thchaeufigkeit=haeufigkeittag*:}|-
+      P: weitere Angaben zum THC-Konsumkonsum => {:thcsonstiges=gemeinsam.freitext*:}|-
+
+    G @autocompact @reveal(initial): sonstiger Substanzkonsum
+      P sonstigesubstanzenstatus: Substanzkonsum => verneint|n
+
+      G @repeat(initial=0,add="Substanz hinzufügen",empty="sonstigesubstanzenstatus") @reset: Substanz|-
+        P: Substanz* => Kokain (und Crack) {:kokainform=substanzform:}|a / Amphetamin (Speed) {:amphetaminform=substanzform:}|a / Diamorphin (Heroin) {:heroinform=substanzform:}|a / Methamphetamin (Crystal) {:methamphetaminform=substanzform:}|a / MDMA (Ecstasy) {:methamphetaminform=substanzform:}|a / LSD|a / Mephedron (Badesalz) {:mephedronform=substanzform:}|a / GHB oder GBL|a / {:sonstigesubstanz=gemeinsam.freitext*:}|a
+        P: Konsumstatus => vormals|a / gelegentlich|a / aktiv|a
+        P: Häufigkeit => {:haeufigkeit=haeufigkeitwoche*:}|-

@@ -27,15 +27,6 @@
   "groups": {
     "tma_entscheidung": {
       "title": "Telemedizinische Entscheidung",
-      "phrases": [
-        "tma_entscheidung_eintrag_arbeitshypothese",
-        "tma_entscheidung_eintrag_news2_gesamtwert",
-        "tma_entscheidung_eintrag_dringlichkeit",
-        "tma_entscheidung_eintrag_versorgungsentscheidung",
-        "tma_entscheidung_eintrag_uebergabe",
-        "tma_entscheidung_eintrag_sicherheitsnetz",
-        "tma_entscheidung_eintrag_ergaenzung_zur_telemedizinischen_entscheidung"
-      ],
       "items": [
         {
           "type": "phrase",

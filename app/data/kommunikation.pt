@@ -1,0 +1,64 @@
+N: kommunikation
+I: gemeinsam
+
+C verstaendigung: eingeschränkt bei Demenz; eingeschränkt bei Vigilanzstörung; eingeschränkt bei Sprachstörung; nicht möglich bei fortgeschrittener Demenz; nicht möglich bei Sprachstörung; nicht möglich bei Vigilanzminderung
+C sprache: eingeschränkt bei Sprachbarriere
+
+G @root @reset @subgroups(break) @autocompact @active(klinik): Kommunikation
+  G @reveal(initial): Verständigung
+    P: uneingeschränkt möglich|n
+    P: eingeschränkt bei Demenz|a
+    P: eingeschränkt bei Vigilanzstörung|a
+    P: eingeschränkt bei Sprachstörung|a
+    P: eingeschränkt bei Sprachbarriere|a
+    P: nicht möglich bei fortgeschrittener Demenz|a
+    P: nicht möglich bei Sprachstörung|a
+    P: nicht möglich bei Vigilanzminderung|a
+
+  G @reveal(initial): Begleitung
+    P: keine|-
+    P: Partnerin|-
+    P: Partner|-
+    P: Mutter|-
+    P: Vater|-
+    P: Tochter|-
+    P: Sohn|-
+    P: Enkelin|-
+    P: Enkel|-
+    P: Zugehörige|-
+    P: Zugehöriger|-
+    P: Betreuerin|n
+    P: Betreuer|n
+    P: Bevollmächtigte|n
+    P: Bevollmächtigter|n
+    P: Begleitperson der Einrichtung|-
+    P: Weitere anwesende Personen => {:freitext*:}|-
+
+  G condition(sprache): Übersetzung durch
+    P uebersetzung_anwesende: Anwesende|-
+    P: Personal|-
+    P: telefonische, professionelle Übersetzung|-
+    P: telefonisch durch Angehörige|-
+    P: mittels technischer Hilfsmittel|-
+    P: Übersetzung durch => {:freitext*:}|-
+
+  G condition(verstaendigung): Informationsquelle
+    P informationsquelle_anwesende: Anwesende|-
+    G: telefonisch
+      P telefon_partnerin: Partnerin|-
+      P telefon_partner: Partner|-
+      P telefon_mutter: Mutter|-
+      P telefon_vater: Vater|-
+      P telefon_tochter: Tochter|-
+      P telefon_sohn: Sohn|-
+      P telefon_enkelin: Enkelin|-
+      P telefon_enkel: Enkel|-
+      P telefon_zugehoerige: Zugehörige => Angehörige|-
+      P telefon_zugehoeriger: Zugehöriger => Angehöriger|-
+      P telefon_betreuerin: Betreuerin|n
+      P telefon_betreuer: Betreuer|n
+      P telefon_bevollmaechtigte: Bevollmächtigte|n
+      P telefon_bevollmaechtigter: Bevollmächtigter|n
+      P: entsendende Einrichtung nicht erreichbar|a
+      P: gesetzl. Betreuer:in nicht erreichbar|a
+    P: Weitere Informationsquelle => {:freitext*:}|-

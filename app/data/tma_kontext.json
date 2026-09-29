@@ -20,16 +20,6 @@
   "groups": {
     "tma_kontext": {
       "title": "Telemedizinischer Kontext",
-      "phrases": [
-        "tma_kontext_eintrag_kontaktart",
-        "tma_kontext_eintrag_standort",
-        "tma_kontext_eintrag_kontaktperson_vor_ort",
-        "tma_kontext_eintrag_identitaetspruefung",
-        "tma_kontext_eintrag_einwilligung",
-        "tma_kontext_eintrag_verbindungsqualitaet",
-        "tma_kontext_eintrag_untersuchungsmoeglichkeit",
-        "tma_kontext_eintrag_ergaenzung_zum_telemedizinischen_kontext"
-      ],
       "items": [
         {
           "type": "phrase",

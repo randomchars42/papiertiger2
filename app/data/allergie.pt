@@ -11,22 +11,27 @@ E reaktion: text label="Reaktion" placeholder="beobachtete Reaktion" prefix=""
 V penicillin: Allergie gegen Penicillin|a
   @sct=91936005[Allergy to penicillin]
   @alias=Penicillinallergie; Betalaktam; Beta-Laktam
+  @tag=antibiotikum
 
 V amoxicillin: Allergie gegen Amoxicillin|a
   @sct=294505008[Amoxicillin allergy]
   @alias=Amoxi; Aminopenicillin
+  @tag=antibiotikum
 
 V cephalosporin: Allergie gegen Cephalosporine|a
   @sct=294532003[Cephalosporin allergy]
   @alias=Cefalosporin; Cefuroxim; Ceftriaxon; Cefazolin
+  @tag=antibiotikum
 
 V sulfonamid: Allergie gegen Sulfonamide|a
   @sct=91939003[Sulfonamide allergy]
   @alias=Sulfonamidallergie; Sulfa; Cotrimoxazol; Sulfamethoxazol
+  @tag=antibiotikum
 
 V makrolid: Allergie gegen Makrolide|a
   @sct=860907004[Allergy to macrolide]
   @alias=Makrolidantibiotikum; Azithromycin; Clarithromycin; Erythromycin
+  @tag=antibiotikum
 
 V metamizol: Allergie gegen Metamizol|a
   @sct=830172001[Allergy to metamizole]
@@ -107,12 +112,3 @@ V wespengift: Allergie gegen Wespengift|a
 V freitext: Allergie gegen {:ausloeser=ausloeser*:}|a
   @sct=609328004[Allergic disposition]
   @freetext
-
-G @root @collapsed @reset: Allergien
-  P: Allergiestatus => keine bekannten Allergien @sct=716186003[No known allergy]|n / Allergiestatus unbekannt|-
-
-  G @repeat(initial=0,add="Allergie hinzufügen",empty="Allergiestatus") @reset: Allergie|a
-    P: Allergie* => @values(allergie)
-    P<Allergie>: Allergische Reaktion => allergische Reaktion: {:reaktion=reaktion*:}|a
-    P<Allergie>: Schweregrad der Allergie => leichte allergische Reaktion|a / mittelschwere allergische Reaktion|a / schwere allergische Reaktion|a / Anaphylaxie|a
-    P: Ergänzung zur Allergie => {:freitext*:}|-

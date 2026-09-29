@@ -3,22 +3,49 @@
   "imports": [
     "gemeinsam"
   ],
+  "sets": {
+    "pocus_rush_vorgabe_normalbefund": {
+      "title": "Normalbefund",
+      "values": {
+        "pocus_rush_eintrag_untersuchung": "pocus_rush_eintrag_untersuchung_wert_notfallsonographie_durchgefuehrt",
+        "pocus_rush_eintrag_linksventrikulaere_funktion": "pocus_rush_eintrag_linksventrikulaere_funktion_wert_linksventrikulaere_ejektionsfraktion_erhalten",
+        "pocus_rush_eintrag_wandbewegung": "pocus_rush_eintrag_wandbewegung_wert_keine_groben_regionalen_wandbewegungsstoerungen",
+        "pocus_rush_eintrag_perikard": "pocus_rush_eintrag_perikard_wert_kein_relevanter_perikarderguss",
+        "pocus_rush_eintrag_rechtsventrikel": "pocus_rush_eintrag_rechtsventrikel_wert_rechtsventrikulaerer_durchmesser_kleiner_als_linksventrikulaerer_durchmesser",
+        "pocus_rush_eintrag_tapse": "pocus_rush_eintrag_tapse_wert_tapse_ueber_17_mm",
+        "pocus_rush_eintrag_herzaktivitaet": "pocus_rush_eintrag_herzaktivitaet_wert_herzaktivitaet_nachweisbar",
+        "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior": "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior_wert_durchmesser_der_vena_cava_inferior_unter_2_5_cm",
+        "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior": "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior_wert_vena_cava_inferior_atemmoduliert",
+        "pocus_rush_eintrag_morrison_pouch": "pocus_rush_eintrag_morrison_pouch_wert_keine_freie_fluessigkeit_im_morrison_pouch",
+        "pocus_rush_eintrag_koller_pouch": "pocus_rush_eintrag_koller_pouch_wert_keine_freie_fluessigkeit_im_koller_pouch",
+        "pocus_rush_eintrag_kleines_becken": "pocus_rush_eintrag_kleines_becken_wert_keine_freie_fluessigkeit_im_kleinen_becken",
+        "pocus_rush_eintrag_aszites": "pocus_rush_eintrag_aszites_wert_kein_aszites",
+        "pocus_rush_eintrag_leber": "pocus_rush_eintrag_leber_wert_leber_orientierend_unauffaellig",
+        "pocus_rush_eintrag_milz": "pocus_rush_eintrag_milz_wert_milz_orientierend_unauffaellig",
+        "pocus_rush_eintrag_nieren": "pocus_rush_eintrag_nieren_wert_nieren_beidseits_orientierend_unauffaellig",
+        "pocus_rush_eintrag_harnstau": "pocus_rush_eintrag_harnstau_wert_kein_harnstau",
+        "pocus_rush_eintrag_darstellung_der_bauchaorta": "pocus_rush_eintrag_darstellung_der_bauchaorta_wert_bauchaorta_vollstaendig_einsehbar",
+        "pocus_rush_eintrag_kontur_der_bauchaorta": "pocus_rush_eintrag_kontur_der_bauchaorta_wert_bauchaorta_glatt_konturiert",
+        "pocus_rush_eintrag_weite_der_bauchaorta": "pocus_rush_eintrag_weite_der_bauchaorta_wert_bauchaorta_normal_weit",
+        "pocus_rush_eintrag_lungengleiten_links": "pocus_rush_eintrag_lungengleiten_links_wert_lungengleiten_links_nachweisbar",
+        "pocus_rush_eintrag_lungengleiten_rechts": "pocus_rush_eintrag_lungengleiten_rechts_wert_lungengleiten_rechts_nachweisbar",
+        "pocus_rush_eintrag_pneumothorax": "pocus_rush_eintrag_pneumothorax_wert_kein_sonographischer_hinweis_auf_pneumothorax",
+        "pocus_rush_eintrag_b_linien": "pocus_rush_eintrag_b_linien_wert_keine_vermehrten_b_linien",
+        "pocus_rush_eintrag_pleuraerguss_links": "pocus_rush_eintrag_pleuraerguss_links_wert_kein_pleuraerguss_links",
+        "pocus_rush_eintrag_pleuraerguss_rechts": "pocus_rush_eintrag_pleuraerguss_rechts_wert_kein_pleuraerguss_rechts",
+        "pocus_rush_eintrag_vena_femoralis_links": "pocus_rush_eintrag_vena_femoralis_links_wert_vena_femoralis_links_vollstaendig_komprimierbar",
+        "pocus_rush_eintrag_vena_femoralis_rechts": "pocus_rush_eintrag_vena_femoralis_rechts_wert_vena_femoralis_rechts_vollstaendig_komprimierbar"
+      },
+      "kind": "normal"
+    }
+  },
   "groups": {
     "pocus_rush": {
-      "title": "POCUS Herz, Thorax und Kreislauf",
-      "kind": "neutral",
-      "children": [
-        "pocus_rush_gruppe_herz",
-        "pocus_rush_gruppe_thorax"
-      ],
-      "phrases": [
-        "pocus_rush_eintrag_pocus_untersuchung",
-        "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax"
-      ],
+      "title": "Notfallsonographie",
       "items": [
         {
           "type": "phrase",
-          "id": "pocus_rush_eintrag_pocus_untersuchung"
+          "id": "pocus_rush_eintrag_untersuchung"
         },
         {
           "type": "group",
@@ -26,27 +53,52 @@
         },
         {
           "type": "group",
-          "id": "pocus_rush_gruppe_thorax"
+          "id": "pocus_rush_gruppe_vena_cava_inferior"
+        },
+        {
+          "type": "group",
+          "id": "pocus_rush_gruppe_fast_und_organe"
+        },
+        {
+          "type": "group",
+          "id": "pocus_rush_gruppe_bauchaorta"
+        },
+        {
+          "type": "group",
+          "id": "pocus_rush_gruppe_lunge_und_pleura"
+        },
+        {
+          "type": "group",
+          "id": "pocus_rush_gruppe_femoralvenen"
         },
         {
           "type": "phrase",
-          "id": "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax"
+          "id": "pocus_rush_eintrag_ergaenzung_zur_notfallsonographie"
         }
       ],
+      "kind": "neutral",
+      "sets": [
+        "pocus_rush_vorgabe_normalbefund"
+      ],
       "default": false,
+      "subgroups": "break",
+      "summary": true,
       "reset": true
     },
     "pocus_rush_gruppe_herz": {
       "title": "Herz",
-      "phrases": [
-        "pocus_rush_eintrag_perikarderguss",
-        "pocus_rush_eintrag_rechtsventrikel",
-        "pocus_rush_eintrag_herzaktivitaet"
-      ],
       "items": [
         {
           "type": "phrase",
-          "id": "pocus_rush_eintrag_perikarderguss"
+          "id": "pocus_rush_eintrag_linksventrikulaere_funktion"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_wandbewegung"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_perikard"
         },
         {
           "type": "phrase",
@@ -54,24 +106,99 @@
         },
         {
           "type": "phrase",
+          "id": "pocus_rush_eintrag_tapse"
+        },
+        {
+          "type": "phrase",
           "id": "pocus_rush_eintrag_herzaktivitaet"
         }
       ],
-      "collapsed": true
+      "autoCompact": true,
+      "reveal": "initial"
     },
-    "pocus_rush_gruppe_thorax": {
-      "title": "Thorax",
-      "phrases": [
-        "pocus_rush_eintrag_lungengleiten",
-        "pocus_rush_eintrag_pneumothorax",
-        "pocus_rush_eintrag_b_linien",
-        "pocus_rush_eintrag_pleuraerguss",
-        "pocus_rush_eintrag_lungenkonsolidierung"
-      ],
+    "pocus_rush_gruppe_vena_cava_inferior": {
+      "title": "Vena cava inferior",
       "items": [
         {
           "type": "phrase",
-          "id": "pocus_rush_eintrag_lungengleiten"
+          "id": "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_rush_gruppe_fast_und_organe": {
+      "title": "FAST und Organe",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_morrison_pouch"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_koller_pouch"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_kleines_becken"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_aszites"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_leber"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_milz"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_nieren"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_harnstau"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_rush_gruppe_bauchaorta": {
+      "title": "Bauchaorta",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_darstellung_der_bauchaorta"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_kontur_der_bauchaorta"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_weite_der_bauchaorta"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_rush_gruppe_lunge_und_pleura": {
+      "title": "Lunge und Pleura",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_lungengleiten_links"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_lungengleiten_rechts"
         },
         {
           "type": "phrase",
@@ -83,70 +210,151 @@
         },
         {
           "type": "phrase",
-          "id": "pocus_rush_eintrag_pleuraerguss"
+          "id": "pocus_rush_eintrag_pleuraerguss_links"
         },
         {
           "type": "phrase",
-          "id": "pocus_rush_eintrag_lungenkonsolidierung"
+          "id": "pocus_rush_eintrag_pleuraerguss_rechts"
         }
       ],
-      "collapsed": true
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "pocus_rush_gruppe_femoralvenen": {
+      "title": "Femoralvenen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_vena_femoralis_links"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_rush_eintrag_vena_femoralis_rechts"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
     }
   },
   "phrases": {
-    "pocus_rush_eintrag_pocus_untersuchung": {
-      "title": "POCUS-Untersuchung",
+    "pocus_rush_eintrag_untersuchung": {
+      "title": "Untersuchung",
       "kind": "intervention",
-      "default": "pocus_rush_eintrag_pocus_untersuchung_wert_point_of_care_ultraschall_durchgefuehrt",
+      "default": "",
       "values": {
-        "pocus_rush_eintrag_pocus_untersuchung_wert_point_of_care_ultraschall_durchgefuehrt": {
+        "pocus_rush_eintrag_untersuchung_wert_notfallsonographie_durchgefuehrt": {
           "kind": "intervention",
-          "text": "Point-of-Care-Ultraschall durchgeführt",
+          "text": "Notfallsonographie durchgeführt",
           "snomed": "870384002",
           "snomedDisplay": "Point of care ultrasound"
         }
       }
     },
-    "pocus_rush_eintrag_perikarderguss": {
-      "title": "Perikarderguss",
+    "pocus_rush_eintrag_linksventrikulaere_funktion": {
+      "title": "Linksventrikuläre Funktion",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_perikarderguss_wert_kein_perikarderguss",
+      "default": "",
       "values": {
-        "pocus_rush_eintrag_perikarderguss_wert_kein_perikarderguss": {
+        "pocus_rush_eintrag_linksventrikulaere_funktion_wert_linksventrikulaere_ejektionsfraktion_erhalten": {
           "kind": "normal",
-          "text": "kein Perikarderguss",
+          "text": "linksventrikuläre Ejektionsfraktion erhalten"
+        },
+        "pocus_rush_eintrag_linksventrikulaere_funktion_wert_linksventrikulaere_ejektionsfraktion_reduziert": {
+          "kind": "abnormal",
+          "text": "linksventrikuläre Ejektionsfraktion reduziert"
+        },
+        "pocus_rush_eintrag_linksventrikulaere_funktion_wert_linksventrikulaere_ejektionsfraktion_hochgradig_reduziert": {
+          "kind": "abnormal",
+          "text": "linksventrikuläre Ejektionsfraktion hochgradig reduziert"
+        }
+      }
+    },
+    "pocus_rush_eintrag_wandbewegung": {
+      "title": "Wandbewegung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_wandbewegung_wert_keine_groben_regionalen_wandbewegungsstoerungen": {
+          "kind": "normal",
+          "text": "keine groben regionalen Wandbewegungsstörungen"
+        },
+        "pocus_rush_eintrag_wandbewegung_wert_regionale_wandbewegungsstoerung": {
+          "kind": "abnormal",
+          "text": "regionale Wandbewegungsstörung"
+        },
+        "pocus_rush_eintrag_wandbewegung_wert_globale_wandbewegungsstoerung": {
+          "kind": "abnormal",
+          "text": "globale Wandbewegungsstörung"
+        }
+      }
+    },
+    "pocus_rush_eintrag_perikard": {
+      "title": "Perikard",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_perikard_wert_kein_relevanter_perikarderguss": {
+          "kind": "normal",
+          "text": "kein relevanter Perikarderguss",
           "snomed": "413350009:{246090004=373945007},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
           "snomedDisplay": "Known absent: Pericardial effusion; current; subject of record"
         },
-        "pocus_rush_eintrag_perikarderguss_wert_perikarderguss": {
+        "pocus_rush_eintrag_perikard_wert_relevanter_perikarderguss": {
           "kind": "abnormal",
-          "text": "Perikarderguss",
+          "text": "relevanter Perikarderguss",
           "snomed": "373945007",
           "snomedDisplay": "Pericardial effusion"
+        },
+        "pocus_rush_eintrag_perikard_wert_perikardtamponade": {
+          "kind": "abnormal",
+          "text": "Perikardtamponade"
         }
       }
     },
     "pocus_rush_eintrag_rechtsventrikel": {
       "title": "Rechtsventrikel",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_rechtsventrikel_wert_rechter_ventrikel_nicht_dilatiert",
+      "default": "",
       "values": {
-        "pocus_rush_eintrag_rechtsventrikel_wert_rechter_ventrikel_nicht_dilatiert": {
+        "pocus_rush_eintrag_rechtsventrikel_wert_rechtsventrikulaerer_durchmesser_kleiner_als_linksventrikulaerer_durchmesser": {
           "kind": "normal",
-          "text": "rechter Ventrikel nicht dilatiert"
+          "text": "rechtsventrikulärer Durchmesser kleiner als linksventrikulärer Durchmesser"
         },
-        "pocus_rush_eintrag_rechtsventrikel_wert_rechter_ventrikel_dilatiert": {
+        "pocus_rush_eintrag_rechtsventrikel_wert_rechtsventrikulaerer_und_linksventrikulaerer_durchmesser_gleich": {
           "kind": "abnormal",
-          "text": "rechter Ventrikel dilatiert",
+          "text": "rechtsventrikulärer und linksventrikulärer Durchmesser gleich"
+        },
+        "pocus_rush_eintrag_rechtsventrikel_wert_rechtsventrikulaerer_durchmesser_groesser_als_linksventrikulaerer_durchmesser": {
+          "kind": "abnormal",
+          "text": "rechtsventrikulärer Durchmesser größer als linksventrikulärer Durchmesser",
           "snomed": "253522006",
           "snomedDisplay": "Right cardiac ventricular dilatation"
+        }
+      }
+    },
+    "pocus_rush_eintrag_tapse": {
+      "title": "TAPSE",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_tapse_wert_tapse_ueber_17_mm": {
+          "kind": "normal",
+          "text": "TAPSE über 17 mm"
+        },
+        "pocus_rush_eintrag_tapse_wert_tapse_bis_17_mm": {
+          "kind": "abnormal",
+          "text": "TAPSE bis 17 mm"
+        },
+        "pocus_rush_eintrag_tapse_wert_tapse_nicht_erhoben": {
+          "kind": "neutral",
+          "text": "TAPSE nicht erhoben"
         }
       }
     },
     "pocus_rush_eintrag_herzaktivitaet": {
       "title": "Herzaktivität",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_herzaktivitaet_wert_herzaktivitaet_nachweisbar",
+      "default": "",
       "values": {
         "pocus_rush_eintrag_herzaktivitaet_wert_herzaktivitaet_nachweisbar": {
           "kind": "normal",
@@ -160,20 +368,276 @@
         }
       }
     },
-    "pocus_rush_eintrag_lungengleiten": {
-      "title": "Lungengleiten",
+    "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior": {
+      "title": "Durchmesser der Vena cava inferior",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_beidseits_nachweisbar",
+      "default": "",
       "values": {
-        "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_beidseits_nachweisbar": {
+        "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior_wert_durchmesser_der_vena_cava_inferior_unter_2_5_cm": {
           "kind": "normal",
-          "text": "Lungengleiten beidseits nachweisbar"
+          "text": "Durchmesser der Vena cava inferior unter 2,5 cm"
         },
-        "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_links_aufgehoben": {
+        "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior_wert_durchmesser_der_vena_cava_inferior_ueber_2_5_cm": {
+          "kind": "abnormal",
+          "text": "Durchmesser der Vena cava inferior über 2,5 cm"
+        },
+        "pocus_rush_eintrag_durchmesser_der_vena_cava_inferior_wert_vena_cava_inferior_nicht_beurteilbar": {
+          "kind": "neutral",
+          "text": "Vena cava inferior nicht beurteilbar"
+        }
+      }
+    },
+    "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior": {
+      "title": "Atemvariabilität der Vena cava inferior",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior_wert_vena_cava_inferior_atemmoduliert": {
+          "kind": "normal",
+          "text": "Vena cava inferior atemmoduliert"
+        },
+        "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior_wert_vena_cava_inferior_nicht_atemmoduliert": {
+          "kind": "abnormal",
+          "text": "Vena cava inferior nicht atemmoduliert"
+        },
+        "pocus_rush_eintrag_atemvariabilitaet_der_vena_cava_inferior_wert_vena_cava_inferior_atemkollaptisch": {
+          "kind": "abnormal",
+          "text": "Vena cava inferior atemkollaptisch"
+        }
+      }
+    },
+    "pocus_rush_eintrag_morrison_pouch": {
+      "title": "Morrison-Pouch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_morrison_pouch_wert_keine_freie_fluessigkeit_im_morrison_pouch": {
+          "kind": "normal",
+          "text": "keine freie Flüssigkeit im Morrison-Pouch"
+        },
+        "pocus_rush_eintrag_morrison_pouch_wert_freie_fluessigkeit_im_morrison_pouch": {
+          "kind": "abnormal",
+          "text": "freie Flüssigkeit im Morrison-Pouch"
+        }
+      }
+    },
+    "pocus_rush_eintrag_koller_pouch": {
+      "title": "Koller-Pouch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_koller_pouch_wert_keine_freie_fluessigkeit_im_koller_pouch": {
+          "kind": "normal",
+          "text": "keine freie Flüssigkeit im Koller-Pouch"
+        },
+        "pocus_rush_eintrag_koller_pouch_wert_freie_fluessigkeit_im_koller_pouch": {
+          "kind": "abnormal",
+          "text": "freie Flüssigkeit im Koller-Pouch"
+        }
+      }
+    },
+    "pocus_rush_eintrag_kleines_becken": {
+      "title": "Kleines Becken",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_kleines_becken_wert_keine_freie_fluessigkeit_im_kleinen_becken": {
+          "kind": "normal",
+          "text": "keine freie Flüssigkeit im kleinen Becken"
+        },
+        "pocus_rush_eintrag_kleines_becken_wert_freie_fluessigkeit_im_kleinen_becken": {
+          "kind": "abnormal",
+          "text": "freie Flüssigkeit im kleinen Becken"
+        }
+      }
+    },
+    "pocus_rush_eintrag_aszites": {
+      "title": "Aszites",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_aszites_wert_kein_aszites": {
+          "kind": "normal",
+          "text": "kein Aszites"
+        },
+        "pocus_rush_eintrag_aszites_wert_aszites": {
+          "kind": "abnormal",
+          "text": "Aszites",
+          "snomed": "389026000",
+          "snomedDisplay": "Ascites"
+        }
+      }
+    },
+    "pocus_rush_eintrag_leber": {
+      "title": "Leber",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_leber_wert_leber_orientierend_unauffaellig": {
+          "kind": "normal",
+          "text": "Leber orientierend unauffällig"
+        },
+        "pocus_rush_eintrag_leber_wert_leber_orientierend_auffaellig": {
+          "kind": "abnormal",
+          "text": "Leber orientierend auffällig"
+        }
+      }
+    },
+    "pocus_rush_eintrag_milz": {
+      "title": "Milz",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_milz_wert_milz_orientierend_unauffaellig": {
+          "kind": "normal",
+          "text": "Milz orientierend unauffällig"
+        },
+        "pocus_rush_eintrag_milz_wert_milz_orientierend_auffaellig": {
+          "kind": "abnormal",
+          "text": "Milz orientierend auffällig"
+        }
+      }
+    },
+    "pocus_rush_eintrag_nieren": {
+      "title": "Nieren",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_nieren_wert_nieren_beidseits_orientierend_unauffaellig": {
+          "kind": "normal",
+          "text": "Nieren beidseits orientierend unauffällig"
+        },
+        "pocus_rush_eintrag_nieren_wert_niere_links_orientierend_auffaellig": {
+          "kind": "abnormal",
+          "text": "Niere links orientierend auffällig"
+        },
+        "pocus_rush_eintrag_nieren_wert_niere_rechts_orientierend_auffaellig": {
+          "kind": "abnormal",
+          "text": "Niere rechts orientierend auffällig"
+        },
+        "pocus_rush_eintrag_nieren_wert_nieren_beidseits_orientierend_auffaellig": {
+          "kind": "abnormal",
+          "text": "Nieren beidseits orientierend auffällig"
+        }
+      }
+    },
+    "pocus_rush_eintrag_harnstau": {
+      "title": "Harnstau",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_harnstau_wert_kein_harnstau": {
+          "kind": "normal",
+          "text": "kein Harnstau",
+          "snomed": "413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Hydronephrosis; current; subject of record"
+        },
+        "pocus_rush_eintrag_harnstau_wert_harnstau_links": {
+          "kind": "abnormal",
+          "text": "Harnstau links",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_rush_eintrag_harnstau_wert_harnstau_rechts": {
+          "kind": "abnormal",
+          "text": "Harnstau rechts",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        },
+        "pocus_rush_eintrag_harnstau_wert_harnstau_beidseits": {
+          "kind": "abnormal",
+          "text": "Harnstau beidseits",
+          "snomed": "43064006",
+          "snomedDisplay": "Hydronephrosis"
+        }
+      }
+    },
+    "pocus_rush_eintrag_darstellung_der_bauchaorta": {
+      "title": "Darstellung der Bauchaorta",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_darstellung_der_bauchaorta_wert_bauchaorta_vollstaendig_einsehbar": {
+          "kind": "normal",
+          "text": "Bauchaorta vollständig einsehbar"
+        },
+        "pocus_rush_eintrag_darstellung_der_bauchaorta_wert_bauchaorta_teilweise_einsehbar": {
+          "kind": "neutral",
+          "text": "Bauchaorta teilweise einsehbar"
+        },
+        "pocus_rush_eintrag_darstellung_der_bauchaorta_wert_bauchaorta_nicht_einsehbar": {
+          "kind": "neutral",
+          "text": "Bauchaorta nicht einsehbar"
+        }
+      }
+    },
+    "pocus_rush_eintrag_kontur_der_bauchaorta": {
+      "title": "Kontur der Bauchaorta",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_kontur_der_bauchaorta_wert_bauchaorta_glatt_konturiert": {
+          "kind": "normal",
+          "text": "Bauchaorta glatt konturiert"
+        },
+        "pocus_rush_eintrag_kontur_der_bauchaorta_wert_bauchaorta_unregelmaessig_konturiert": {
+          "kind": "abnormal",
+          "text": "Bauchaorta unregelmäßig konturiert"
+        }
+      }
+    },
+    "pocus_rush_eintrag_weite_der_bauchaorta": {
+      "title": "Weite der Bauchaorta",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_weite_der_bauchaorta_wert_bauchaorta_normal_weit": {
+          "kind": "normal",
+          "text": "Bauchaorta normal weit",
+          "snomed": "413350009:{246090004=233985008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Abdominal aortic aneurysm; current; subject of record"
+        },
+        "pocus_rush_eintrag_weite_der_bauchaorta_wert_bauchaorta_erweitert": {
+          "kind": "abnormal",
+          "text": "Bauchaorta erweitert"
+        },
+        "pocus_rush_eintrag_weite_der_bauchaorta_wert_bauchaortenaneurysma": {
+          "kind": "abnormal",
+          "text": "Bauchaortenaneurysma",
+          "snomed": "233985008",
+          "snomedDisplay": "Abdominal aortic aneurysm"
+        },
+        "pocus_rush_eintrag_weite_der_bauchaorta_wert_sonographischer_hinweis_auf_aortendissektion": {
+          "kind": "abnormal",
+          "text": "sonographischer Hinweis auf Aortendissektion"
+        }
+      }
+    },
+    "pocus_rush_eintrag_lungengleiten_links": {
+      "title": "Lungengleiten links",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_lungengleiten_links_wert_lungengleiten_links_nachweisbar": {
+          "kind": "normal",
+          "text": "Lungengleiten links nachweisbar"
+        },
+        "pocus_rush_eintrag_lungengleiten_links_wert_lungengleiten_links_aufgehoben": {
           "kind": "abnormal",
           "text": "Lungengleiten links aufgehoben"
+        }
+      }
+    },
+    "pocus_rush_eintrag_lungengleiten_rechts": {
+      "title": "Lungengleiten rechts",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_lungengleiten_rechts_wert_lungengleiten_rechts_nachweisbar": {
+          "kind": "normal",
+          "text": "Lungengleiten rechts nachweisbar"
         },
-        "pocus_rush_eintrag_lungengleiten_wert_lungengleiten_rechts_aufgehoben": {
+        "pocus_rush_eintrag_lungengleiten_rechts_wert_lungengleiten_rechts_aufgehoben": {
           "kind": "abnormal",
           "text": "Lungengleiten rechts aufgehoben"
         }
@@ -182,7 +646,7 @@
     "pocus_rush_eintrag_pneumothorax": {
       "title": "Pneumothorax",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_pneumothorax_wert_kein_sonographischer_hinweis_auf_pneumothorax",
+      "default": "",
       "values": {
         "pocus_rush_eintrag_pneumothorax_wert_kein_sonographischer_hinweis_auf_pneumothorax": {
           "kind": "normal",
@@ -201,82 +665,112 @@
           "text": "Pneumothorax rechts",
           "snomed": "109363001",
           "snomedDisplay": "Right pneumothorax"
+        },
+        "pocus_rush_eintrag_pneumothorax_wert_pneumothorax_beidseits": {
+          "kind": "abnormal",
+          "text": "Pneumothorax beidseits"
         }
       }
     },
     "pocus_rush_eintrag_b_linien": {
       "title": "B-Linien",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_b_linien_wert_keine_vermehrten_b_linien",
+      "default": "",
       "values": {
         "pocus_rush_eintrag_b_linien_wert_keine_vermehrten_b_linien": {
           "kind": "normal",
           "text": "keine vermehrten B-Linien"
         },
-        "pocus_rush_eintrag_b_linien_wert_vermehrte_b_linien": {
+        "pocus_rush_eintrag_b_linien_wert_vermehrte_b_linien_links": {
           "kind": "abnormal",
-          "text": "vermehrte B-Linien",
+          "text": "vermehrte B-Linien links",
+          "snomed": "1217292008",
+          "snomedDisplay": "Lung B-lines"
+        },
+        "pocus_rush_eintrag_b_linien_wert_vermehrte_b_linien_rechts": {
+          "kind": "abnormal",
+          "text": "vermehrte B-Linien rechts",
+          "snomed": "1217292008",
+          "snomedDisplay": "Lung B-lines"
+        },
+        "pocus_rush_eintrag_b_linien_wert_vermehrte_b_linien_beidseits": {
+          "kind": "abnormal",
+          "text": "vermehrte B-Linien beidseits",
           "snomed": "1217292008",
           "snomedDisplay": "Lung B-lines"
         }
       }
     },
-    "pocus_rush_eintrag_pleuraerguss": {
-      "title": "Pleuraerguss",
+    "pocus_rush_eintrag_pleuraerguss_links": {
+      "title": "Pleuraerguss links",
       "kind": "neutral",
-      "default": "pocus_rush_eintrag_pleuraerguss_wert_kein_pleuraerguss",
+      "default": "",
       "values": {
-        "pocus_rush_eintrag_pleuraerguss_wert_kein_pleuraerguss": {
+        "pocus_rush_eintrag_pleuraerguss_links_wert_kein_pleuraerguss_links": {
           "kind": "normal",
-          "text": "kein Pleuraerguss",
-          "snomed": "413350009:{246090004=60046008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
-          "snomedDisplay": "Known absent: Pleural effusion; current; subject of record"
+          "text": "kein Pleuraerguss links"
         },
-        "pocus_rush_eintrag_pleuraerguss_wert_pleuraerguss_links": {
+        "pocus_rush_eintrag_pleuraerguss_links_wert_pleuraerguss_links": {
           "kind": "abnormal",
           "text": "Pleuraerguss links",
           "snomed": "1366511008",
           "snomedDisplay": "Left pleural effusion"
+        }
+      }
+    },
+    "pocus_rush_eintrag_pleuraerguss_rechts": {
+      "title": "Pleuraerguss rechts",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_pleuraerguss_rechts_wert_kein_pleuraerguss_rechts": {
+          "kind": "normal",
+          "text": "kein Pleuraerguss rechts"
         },
-        "pocus_rush_eintrag_pleuraerguss_wert_pleuraerguss_rechts": {
+        "pocus_rush_eintrag_pleuraerguss_rechts_wert_pleuraerguss_rechts": {
           "kind": "abnormal",
           "text": "Pleuraerguss rechts",
           "snomed": "1366512001",
           "snomedDisplay": "Right pleural effusion"
-        },
-        "pocus_rush_eintrag_pleuraerguss_wert_pleuraerguss_beidseits": {
-          "kind": "abnormal",
-          "text": "Pleuraerguss beidseits",
-          "snomed": "60046008",
-          "snomedDisplay": "Pleural effusion"
         }
       }
     },
-    "pocus_rush_eintrag_lungenkonsolidierung": {
-      "title": "Lungenkonsolidierung",
-      "kind": "neutral",
-      "default": "pocus_rush_eintrag_lungenkonsolidierung_wert_keine_lungenkonsolidierung",
-      "values": {
-        "pocus_rush_eintrag_lungenkonsolidierung_wert_keine_lungenkonsolidierung": {
-          "kind": "normal",
-          "text": "keine Lungenkonsolidierung",
-          "snomed": "413350009:{246090004=95436008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
-          "snomedDisplay": "Known absent: Lung consolidation; current; subject of record"
-        },
-        "pocus_rush_eintrag_lungenkonsolidierung_wert_lungenkonsolidierung": {
-          "kind": "abnormal",
-          "text": "Lungenkonsolidierung",
-          "snomed": "95436008",
-          "snomedDisplay": "Lung consolidation"
-        }
-      }
-    },
-    "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax": {
-      "title": "Ergänzung zum POCUS Herz und Thorax",
+    "pocus_rush_eintrag_vena_femoralis_links": {
+      "title": "Vena femoralis links",
       "kind": "neutral",
       "default": "",
       "values": {
-        "pocus_rush_eintrag_ergaenzung_zum_pocus_herz_und_thorax_wert_value": {
+        "pocus_rush_eintrag_vena_femoralis_links_wert_vena_femoralis_links_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Vena femoralis links vollständig komprimierbar"
+        },
+        "pocus_rush_eintrag_vena_femoralis_links_wert_vena_femoralis_links_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Vena femoralis links nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_rush_eintrag_vena_femoralis_rechts": {
+      "title": "Vena femoralis rechts",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_vena_femoralis_rechts_wert_vena_femoralis_rechts_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Vena femoralis rechts vollständig komprimierbar"
+        },
+        "pocus_rush_eintrag_vena_femoralis_rechts_wert_vena_femoralis_rechts_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Vena femoralis rechts nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_rush_eintrag_ergaenzung_zur_notfallsonographie": {
+      "title": "Ergänzung zur Notfallsonographie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_rush_eintrag_ergaenzung_zur_notfallsonographie_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }

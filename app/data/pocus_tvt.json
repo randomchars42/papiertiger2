@@ -3,51 +3,335 @@
   "imports": [
     "gemeinsam"
   ],
+  "sets": {
+    "pocus_tvt_vorgabe_untersuchung_durchgefuehrt": {
+      "title": "Untersuchung durchgeführt",
+      "values": {
+        "pocus_tvt_eintrag_untersuchung": "pocus_tvt_eintrag_untersuchung_wert_kompressionssonographie_der_tiefen_beinvenen_durchgefuehrt"
+      },
+      "kind": "intervention"
+    },
+    "pocus_tvt_vorgabe_normalbefund": {
+      "title": "Normalbefund",
+      "values": {
+        "pocus_tvt_eintrag_atemmodulation": "pocus_tvt_eintrag_atemmodulation_wert_atemmodulation_der_vena_femoralis_communis_regelrecht",
+        "pocus_tvt_eintrag_vena_femoralis_communis": "pocus_tvt_eintrag_vena_femoralis_communis_wert_vena_femoralis_communis_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_krosse_der_vena_saphena_magna": "pocus_tvt_eintrag_krosse_der_vena_saphena_magna_wert_krosse_der_vena_saphena_magna_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_vena_femoralis": "pocus_tvt_eintrag_vena_femoralis_wert_vena_femoralis_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_vena_profunda_femoris": "pocus_tvt_eintrag_vena_profunda_femoris_wert_vena_profunda_femoris_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_vena_poplitea": "pocus_tvt_eintrag_vena_poplitea_wert_vena_poplitea_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_unterschenkelvenen": "pocus_tvt_eintrag_unterschenkelvenen_wert_unterschenkelvenen_durchgehend_dargestellt",
+        "pocus_tvt_eintrag_venae_tibiales_anteriores": "pocus_tvt_eintrag_venae_tibiales_anteriores_wert_venae_tibiales_anteriores_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_venae_tibiales_posteriores": "pocus_tvt_eintrag_venae_tibiales_posteriores_wert_venae_tibiales_posteriores_vollstaendig_komprimierbar",
+        "pocus_tvt_eintrag_venae_fibulares": "pocus_tvt_eintrag_venae_fibulares_wert_venae_fibulares_vollstaendig_komprimierbar"
+      },
+      "kind": "normal"
+    }
+  },
   "groups": {
     "pocus_tvt": {
-      "title": "POCUS tiefe Beinvenen",
-      "kind": "neutral",
-      "phrases": [
-        "pocus_tvt_eintrag_kompressionssonographie",
-        "pocus_tvt_eintrag_tiefe_venenthrombose",
-        "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen"
-      ],
+      "title": "Kompressionssonographie der Beinvenen",
       "items": [
         {
           "type": "phrase",
-          "id": "pocus_tvt_eintrag_kompressionssonographie"
+          "id": "pocus_tvt_eintrag_untersuchung"
         },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_untersuchte_extremitaeten"
+        },
+        {
+          "type": "group",
+          "id": "pocus_tvt_gruppe_untersuchte_extremitaet"
+        },
+        {
+          "type": "group",
+          "id": "pocus_tvt_gruppe_beurteilung"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_ergaenzung_zur_kompressionssonographie"
+        }
+      ],
+      "kind": "neutral",
+      "sets": [
+        "pocus_tvt_vorgabe_untersuchung_durchgefuehrt"
+      ],
+      "default": false,
+      "subgroups": "break",
+      "summary": true,
+      "reset": true
+    },
+    "pocus_tvt_gruppe_untersuchte_extremitaet": {
+      "title": "Untersuchte Extremität",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_seite"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_atemmodulation"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_vena_femoralis_communis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_krosse_der_vena_saphena_magna"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_vena_femoralis"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_vena_profunda_femoris"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_vena_poplitea"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_unterschenkelvenen"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_venae_tibiales_anteriores"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_venae_tibiales_posteriores"
+        },
+        {
+          "type": "phrase",
+          "id": "pocus_tvt_eintrag_venae_fibulares"
+        }
+      ],
+      "kind": "neutral",
+      "sets": [
+        "pocus_tvt_vorgabe_normalbefund"
+      ],
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Extremität hinzufügen",
+        "empty": "pocus_tvt_eintrag_untersuchte_extremitaeten"
+      }
+    },
+    "pocus_tvt_gruppe_beurteilung": {
+      "title": "Beurteilung",
+      "items": [
         {
           "type": "phrase",
           "id": "pocus_tvt_eintrag_tiefe_venenthrombose"
         },
         {
           "type": "phrase",
-          "id": "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen"
+          "id": "pocus_tvt_eintrag_verlaufskontrolle"
         }
       ],
-      "default": false,
-      "reset": true
+      "autoCompact": true,
+      "reveal": "initial"
     }
   },
   "phrases": {
-    "pocus_tvt_eintrag_kompressionssonographie": {
-      "title": "Kompressionssonographie",
+    "pocus_tvt_eintrag_untersuchung": {
+      "title": "Untersuchung",
       "kind": "intervention",
-      "default": "pocus_tvt_eintrag_kompressionssonographie_wert_point_of_care_ultraschall_der_tiefen_beinvenen_durchgefuehrt",
+      "default": "",
       "values": {
-        "pocus_tvt_eintrag_kompressionssonographie_wert_point_of_care_ultraschall_der_tiefen_beinvenen_durchgefuehrt": {
+        "pocus_tvt_eintrag_untersuchung_wert_kompressionssonographie_der_tiefen_beinvenen_durchgefuehrt": {
           "kind": "intervention",
-          "text": "Point-of-Care-Ultraschall der tiefen Beinvenen durchgeführt",
+          "text": "Kompressionssonographie der tiefen Beinvenen durchgeführt",
           "snomed": "870384002",
           "snomedDisplay": "Point of care ultrasound"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_untersuchte_extremitaeten": {
+      "title": "Untersuchte Extremitäten",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_untersuchte_extremitaeten_wert_keine_untersuchte_extremitaet_dokumentiert": {
+          "kind": "neutral",
+          "text": "keine untersuchte Extremität dokumentiert"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_seite": {
+      "title": "Seite",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_seite_wert_linke_untere_extremitaet": {
+          "kind": "neutral",
+          "text": "linke untere Extremität"
+        },
+        "pocus_tvt_eintrag_seite_wert_rechte_untere_extremitaet": {
+          "kind": "neutral",
+          "text": "rechte untere Extremität"
+        }
+      },
+      "prompt": true
+    },
+    "pocus_tvt_eintrag_atemmodulation": {
+      "title": "Atemmodulation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_atemmodulation_wert_atemmodulation_der_vena_femoralis_communis_regelrecht": {
+          "kind": "normal",
+          "text": "Atemmodulation der Vena femoralis communis regelrecht"
+        },
+        "pocus_tvt_eintrag_atemmodulation_wert_atemmodulation_der_vena_femoralis_communis_aufgehoben": {
+          "kind": "abnormal",
+          "text": "Atemmodulation der Vena femoralis communis aufgehoben"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_vena_femoralis_communis": {
+      "title": "Vena femoralis communis",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_vena_femoralis_communis_wert_vena_femoralis_communis_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Vena femoralis communis vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_vena_femoralis_communis_wert_vena_femoralis_communis_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Vena femoralis communis nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_krosse_der_vena_saphena_magna": {
+      "title": "Krosse der Vena saphena magna",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_krosse_der_vena_saphena_magna_wert_krosse_der_vena_saphena_magna_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Krosse der Vena saphena magna vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_krosse_der_vena_saphena_magna_wert_krosse_der_vena_saphena_magna_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Krosse der Vena saphena magna nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_vena_femoralis": {
+      "title": "Vena femoralis",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_vena_femoralis_wert_vena_femoralis_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Vena femoralis vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_vena_femoralis_wert_vena_femoralis_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Vena femoralis nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_vena_profunda_femoris": {
+      "title": "Vena profunda femoris",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_vena_profunda_femoris_wert_vena_profunda_femoris_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Vena profunda femoris vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_vena_profunda_femoris_wert_vena_profunda_femoris_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Vena profunda femoris nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_vena_poplitea": {
+      "title": "Vena poplitea",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_vena_poplitea_wert_vena_poplitea_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Vena poplitea vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_vena_poplitea_wert_vena_poplitea_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Vena poplitea nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_unterschenkelvenen": {
+      "title": "Unterschenkelvenen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_unterschenkelvenen_wert_unterschenkelvenen_durchgehend_dargestellt": {
+          "kind": "normal",
+          "text": "Unterschenkelvenen durchgehend dargestellt"
+        },
+        "pocus_tvt_eintrag_unterschenkelvenen_wert_unterschenkelvenen_nur_proximal_dargestellt": {
+          "kind": "neutral",
+          "text": "Unterschenkelvenen nur proximal dargestellt"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_venae_tibiales_anteriores": {
+      "title": "Venae tibiales anteriores",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_venae_tibiales_anteriores_wert_venae_tibiales_anteriores_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Venae tibiales anteriores vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_venae_tibiales_anteriores_wert_venae_tibiales_anteriores_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Venae tibiales anteriores nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_venae_tibiales_posteriores": {
+      "title": "Venae tibiales posteriores",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_venae_tibiales_posteriores_wert_venae_tibiales_posteriores_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Venae tibiales posteriores vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_venae_tibiales_posteriores_wert_venae_tibiales_posteriores_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Venae tibiales posteriores nicht vollständig komprimierbar"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_venae_fibulares": {
+      "title": "Venae fibulares",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_venae_fibulares_wert_venae_fibulares_vollstaendig_komprimierbar": {
+          "kind": "normal",
+          "text": "Venae fibulares vollständig komprimierbar"
+        },
+        "pocus_tvt_eintrag_venae_fibulares_wert_venae_fibulares_nicht_vollstaendig_komprimierbar": {
+          "kind": "abnormal",
+          "text": "Venae fibulares nicht vollständig komprimierbar"
         }
       }
     },
     "pocus_tvt_eintrag_tiefe_venenthrombose": {
       "title": "Tiefe Venenthrombose",
       "kind": "neutral",
-      "default": "pocus_tvt_eintrag_tiefe_venenthrombose_wert_kein_sonographischer_hinweis_auf_tiefe_venenthrombose",
+      "default": "",
       "values": {
         "pocus_tvt_eintrag_tiefe_venenthrombose_wert_kein_sonographischer_hinweis_auf_tiefe_venenthrombose": {
           "kind": "normal",
@@ -75,12 +359,23 @@
         }
       }
     },
-    "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen": {
-      "title": "Ergänzung zum POCUS der tiefen Beinvenen",
+    "pocus_tvt_eintrag_verlaufskontrolle": {
+      "title": "Verlaufskontrolle",
       "kind": "neutral",
       "default": "",
       "values": {
-        "pocus_tvt_eintrag_ergaenzung_zum_pocus_der_tiefen_beinvenen_wert_value": {
+        "pocus_tvt_eintrag_verlaufskontrolle_wert_wiedervorstellung_zur_sonographischen_verlaufskontrolle_nach_vier_bis_sieben_tages_kompressionssonographie_empfohlen": {
+          "kind": "neutral",
+          "text": "Wiedervorstellung zur sonographischen Verlaufskontrolle nach Vier- bis Sieben-Tages-Kompressionssonographie empfohlen"
+        }
+      }
+    },
+    "pocus_tvt_eintrag_ergaenzung_zur_kompressionssonographie": {
+      "title": "Ergänzung zur Kompressionssonographie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "pocus_tvt_eintrag_ergaenzung_zur_kompressionssonographie_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }

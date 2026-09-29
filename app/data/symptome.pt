@@ -4,19 +4,6 @@
 N: symptome
 I: gemeinsam
 
-L rettungsdienst: Rettungsdienst
-L kernteam: Kernteam
-L trauma_orthopaedie: Trauma & Orthopädie
-L allgemeinchirurgie: Allgemeinchirurgie
-L thorax_gefaesschirurgie: Thorax- & Gefäßchirurgie
-L neurochirurgie: Neurochirurgie
-L hno: HNO
-L auge: Auge
-L gynaekologie_geburtshilfe: Gynäkologie / Geburtshilfe
-L paediatrie: Pädiatrie
-L psychiatrie: Psychiatrie
-L wiedervorstellung_kontrolle: Wiedervorstellung & Kontrolle
-
 V atemnot: Atemnot|a
   @sct=267036007[Dyspnoea]
   @alias=Luftnot; Dyspnoe; Kurzatmigkeit
@@ -28,12 +15,14 @@ V brustschmerz: Brustschmerz|a
   @alias=Thoraxschmerz; Brustenge
   @cedis=003[Brustschmerz (kardial)] related; 004[Brustschmerz (nicht kardial)] related
   @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+  @tag=schmerz; lokalisation; lok_thorax
 
 V bauchschmerz: Bauchschmerz|a
   @sct=21522001[Abdominal pain]
   @alias=Abdominalschmerz; akutes Abdomen
   @cedis=251[Bauchschmerzen] equivalent
   @lens=rettungsdienst; kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe; paediatrie
+  @tag=schmerz; lokalisation; lok_abdomen
 
 V schwaeche: Schwäche|a
   @sct=13791008[Asthenia]
@@ -52,12 +41,14 @@ V kopfschmerz: Kopfschmerz|a
   @alias=Cephalgie; Migräne
   @cedis=404[Kopfschmerz] equivalent
   @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+  @tag=schmerz
 
 V schwindel: Schwindel|a
   @sct=404640003[Dizziness]
   @alias=Drehschwindel; Vertigo; Benommenheit
   @cedis=403[Schwindel] equivalent
   @lens=rettungsdienst; kernteam; hno
+  @tag=neuro_schwindel
 
 V uebelkeit: Übelkeit|a
   @sct=422587007[Nausea]
@@ -87,8 +78,20 @@ V rueckenschmerz: Rückenschmerz|a
   @alias=Rückenschmerzen; Kreuzschmerz; Lumbago
   @cedis=551[Rückenschmerzen] equivalent
   @lens=rettungsdienst; kernteam; trauma_orthopaedie; neurochirurgie
+  @tag=schmerz; lokalisation; lok_wirbelsaeule
 
 V herzklopfen: Herzklopfen|a
+  @sct=80313002[Palpitations]
+  @alias=Herzrasen; Herzstolpern; Palpitationen
+  @cedis=005[Palpitationen/unregelmäßiger Herzschlag] equivalent
+
+V herzrasen: Herzrasen|a
+  @sct=80313002[Palpitations]
+  @alias=Herzrasen; Herzstolpern; Palpitationen
+  @cedis=005[Palpitationen/unregelmäßiger Herzschlag] equivalent
+  @lens=rettungsdienst; kernteam; thorax_gefaesschirurgie
+
+V herzstolpern: Herzstolpern|a
   @sct=80313002[Palpitations]
   @alias=Herzrasen; Herzstolpern; Palpitationen
   @cedis=005[Palpitationen/unregelmäßiger Herzschlag] equivalent
@@ -109,31 +112,37 @@ V krampfanfall: Krampfanfall|a
   @alias=epileptischer Anfall; Konvulsion
   @cedis=405[Krampfanfall] equivalent
   @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+  @tag=neuro_anfall
 
 V bewusstseinsstoerung: Bewusstseinsstörung|a
   @alias=Bewusstseinstrübung; Somnolenz; Sopor; Koma
   @cedis=401[Veränderter Bewusstseinszustand] equivalent
   @lens=rettungsdienst; kernteam; neurochirurgie; paediatrie
+  @tag=neuro_bewusstsein
 
 V verwirrtheit: Verwirrtheit|a
   @alias=Desorientierung; Delir
   @cedis=402[Verwirrtheit] equivalent
   @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+  @tag=neuro_bewusstsein
 
 V extremitaetenschwaeche: Extremitätenschwäche|a
   @alias=Parese; Lähmung; FAST-positiv; Schlaganfallsymptom
   @cedis=409[Schwäche in den Extremitäten/Symptome eines Schlaganfalls oder TIA] equivalent
   @lens=rettungsdienst; kernteam; neurochirurgie
+  @tag=neuro_fokal
 
 V sensibilitaetsstoerung: Sensibilitätsstörung|a
   @alias=Parästhesie; Taubheit; Kribbeln; Hypästhesie
   @cedis=410[Sensibilitätsstörung/Parästhesie] equivalent
   @lens=rettungsdienst; kernteam; neurochirurgie
+  @tag=neuro_fokal
 
 V flanken_schmerz: Flankenschmerz|a
   @alias=Nierenschmerz
   @cedis=301[Flankenschmerz] equivalent
   @lens=rettungsdienst; kernteam; allgemeinchirurgie
+  @tag=schmerz; lokalisation; lok_flanke
 
 V algurie: Algurie|a
   @alias=Dysurie; Schmerzen beim Wasserlassen; Harnwegsinfekt
@@ -256,19 +265,94 @@ V kopfverletzung: Kopfverletzung|a
   @lens=rettungsdienst; trauma_orthopaedie; neurochirurgie; paediatrie
 
 V schulter_arm_schmerz: Schulter- oder Armschmerz|a
-  @alias=Schulterschmerz; Armschmerz; Schmerz obere Extremität
+  @alias=unspezifischer Armschmerz; Schmerz obere Extremität
   @cedis=554[Schmerzen obere Extremität] equivalent
   @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben; extremitaet_oben_offen
+
+V schulterschmerz: Schulterschmerz|a
+  @alias=Schmerzen der Schulter
+  @cedis=554[Schmerzen obere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben
+
+V oberarmschmerz: Oberarmschmerz|a
+  @alias=Schmerzen am Oberarm
+  @cedis=554[Schmerzen obere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben
+
+V ellenbogenschmerz: Ellenbogenschmerz|a
+  @alias=Schmerzen am Ellenbogen
+  @cedis=554[Schmerzen obere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben
+
+V unterarmschmerz: Unterarmschmerz|a
+  @alias=Schmerzen am Unterarm
+  @cedis=554[Schmerzen obere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben
+
+V handgelenkschmerz: Handgelenkschmerz|a
+  @alias=Schmerzen am Handgelenk
+  @cedis=554[Schmerzen obere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben
+
+V handschmerz: Handschmerz|a
+  @alias=Schmerzen an der Hand
+  @cedis=554[Schmerzen obere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_oben
 
 V bein_hueft_knieschmerz: Bein-, Hüft- oder Knieschmerz|a
-  @alias=Beinschmerz; Hüftschmerz; Knieschmerz; Schmerz untere Extremität
+  @alias=unspezifischer Beinschmerz; Schmerz untere Extremität
   @cedis=555[Schmerzen untere Extremität] equivalent
   @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten; extremitaet_unten_offen
+
+V hueftschmerz: Hüftschmerz|a
+  @alias=Schmerzen an der Hüfte
+  @cedis=555[Schmerzen untere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten
+
+V oberschenkelschmerz: Oberschenkelschmerz|a
+  @alias=Schmerzen am Oberschenkel
+  @cedis=555[Schmerzen untere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten
+
+V knieschmerz: Knieschmerz|a
+  @alias=Schmerzen am Knie
+  @cedis=555[Schmerzen untere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten
+
+V unterschenkelschmerz: Unterschenkelschmerz|a
+  @alias=Schmerzen am Unterschenkel
+  @cedis=555[Schmerzen untere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten
+
+V sprunggelenkschmerz: Sprunggelenkschmerz|a
+  @alias=Knöchelschmerz; Schmerzen am Sprunggelenk
+  @cedis=555[Schmerzen untere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten
+
+V fussschmerz: Fußschmerz|a
+  @alias=Schmerzen am Fuß
+  @cedis=555[Schmerzen untere Extremität] broader
+  @lens=rettungsdienst; kernteam; trauma_orthopaedie
+  @tag=schmerz; lokalisation; extremitaet_unten
 
 V gelenkschwellung: Gelenkschwellung|a
   @alias=Gelenkschmerz; Arthritis; Erguss
   @cedis=558[Gelenkschwellung] related
   @lens=kernteam; trauma_orthopaedie; paediatrie
+  @tag=schmerz
 
 V verletzung_obere_extremitaet: Verletzung der oberen Extremität|a
   @alias=Armverletzung; Schulterverletzung; Handverletzung
@@ -389,21 +473,25 @@ V depression_suizidalitaet: Depression oder Suizidalität|a
   @alias=Selbstschädigung; Suizidgedanken; depressive Krise
   @cedis=351[Depression/Suizidalität/absichtliche Selbstschädigung] equivalent
   @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+  @tag=psychiatrisch; psych_depression
 
 V angst_krise: Angst oder akute Krise|a
   @alias=Panikattacke; Belastungsreaktion
   @cedis=352[Angst/situationsbezogene Krise] equivalent
   @lens=rettungsdienst; kernteam; psychiatrie; paediatrie
+  @tag=psychiatrisch; psych_angst
 
 V halluzination_wahn: Halluzination oder Wahn|a
   @alias=Psychose; Stimmenhören; paranoides Erleben
   @cedis=353[Halluzinationen/Wahnvorstellungen] equivalent
   @lens=rettungsdienst; kernteam; psychiatrie
+  @tag=psychiatrisch; psych_wahrnehmung
 
 V fremdgefaehrdung: Fremdgefährdung|a
   @alias=gewalttätiges Verhalten; Aggression
   @cedis=355[Gewalttätiges Verhalten/Fremdgefährdung] equivalent
   @lens=rettungsdienst; kernteam; psychiatrie
+  @tag=psychiatrisch; psych_fremdgefahr
 
 V intoxikation: Intoxikation|a
   @alias=Substanzmissbrauch; Vergiftung; Drogenintoxikation
@@ -836,7 +924,7 @@ V polyurie: Polyurie|a
   @lens=kernteam
 
 V rektal_perinealer_schmerz: Rektaler oder perinealer Schmerz|a
-  @alias=Analschmerz; Dammschmerz
+  @alias=Analschmerz; Dammschmerstolpern
   @cedis=258[Rektale/perineale Schmerzen] equivalent
   @lens=kernteam; allgemeinchirurgie; gynaekologie_geburtshilfe
 

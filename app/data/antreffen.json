@@ -1,0 +1,748 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "antreffen": {
+      "title": "Antreffen",
+      "items": [
+        {
+          "type": "group",
+          "id": "antreffen_gruppe_vorstellung"
+        },
+        {
+          "type": "group",
+          "id": "antreffen_gruppe_einrichtung"
+        },
+        {
+          "type": "group",
+          "id": "antreffen_gruppe_auffindeort"
+        },
+        {
+          "type": "group",
+          "id": "antreffen_gruppe_angetroffen"
+        },
+        {
+          "type": "group",
+          "id": "antreffen_gruppe_anwesende"
+        },
+        {
+          "type": "group",
+          "id": "antreffen_gruppe_weitere_kraefte"
+        }
+      ],
+      "subgroups": "break",
+      "autoCompact": true,
+      "reset": true
+    },
+    "antreffen_gruppe_vorstellung": {
+      "title": "Vorstellung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_selbststaendig"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_aerztlich_eingewiesen"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_durch_den_rettungsdienst"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_durch_die_notaerztin"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_durch_den_notarzt"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_aus_anderer_einrichtung_verlegt"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_andere_vorstellung"
+        }
+      ],
+      "lenses": [
+        "kernteam",
+        "trauma_orthopaedie",
+        "allgemeinchirurgie",
+        "thorax_gefaesschirurgie",
+        "neurochirurgie",
+        "hno",
+        "auge",
+        "gynaekologie_geburtshilfe",
+        "paediatrie",
+        "psychiatrie",
+        "wiedervorstellung_kontrolle"
+      ],
+      "reveal": "initial"
+    },
+    "antreffen_gruppe_einrichtung": {
+      "title": "Einrichtung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_krankenhaus"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_pflegewohnheim"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_pflegewohngemeinschaft"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_intensivpflegewohngemeinschaft"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_andere_einrichtung"
+        }
+      ],
+      "condition": {
+        "values": [
+          "antreffen_eintrag_aus_anderer_einrichtung_verlegt_wert_aus_anderer_einrichtung_verlegt"
+        ],
+        "negated": false
+      }
+    },
+    "antreffen_gruppe_auffindeort": {
+      "title": "Auffindeort",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_auf_der_fahrbahn"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_auf_oeffentlichen_flaechen"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_im_rtw"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_in_der_wohnstaette"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_dem_bett"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_auf_dem_boden"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_sonstiger_auffindeort"
+        }
+      ],
+      "lenses": [
+        "rettungsdienst"
+      ],
+      "reveal": "initial"
+    },
+    "antreffen_gruppe_angetroffen": {
+      "title": "angetroffen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_oeffnet_die_tuer"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_stehend"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_sitzend"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_liegend"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_weitere_umstaende"
+        }
+      ],
+      "lenses": [
+        "rettungsdienst"
+      ],
+      "reveal": "initial"
+    },
+    "antreffen_gruppe_anwesende": {
+      "title": "Anwesende",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_partnerin"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_partner"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_mutter"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_vater"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_tochter"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_sohn"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_enkelin"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_enkel"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_zugehoerige"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_zugehoeriger"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_weitere_anwesende_personen"
+        }
+      ],
+      "lenses": [
+        "rettungsdienst"
+      ],
+      "reveal": "initial"
+    },
+    "antreffen_gruppe_weitere_kraefte": {
+      "title": "Weitere Kräfte",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_rettungsdienst"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_ersthelfer"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_krankenpflegekraft"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_aerztin"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_arzt"
+        },
+        {
+          "type": "phrase",
+          "id": "antreffen_eintrag_weitere_kraefte"
+        }
+      ],
+      "lenses": [
+        "rettungsdienst"
+      ],
+      "reveal": "initial"
+    }
+  },
+  "phrases": {
+    "antreffen_eintrag_selbststaendig": {
+      "title": "selbstständig",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_selbststaendig_wert_selbststaendig": {
+          "kind": "neutral",
+          "text": "selbstständig"
+        }
+      }
+    },
+    "antreffen_eintrag_aerztlich_eingewiesen": {
+      "title": "ärztlich eingewiesen",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "antreffen_eintrag_aerztlich_eingewiesen_wert_aerztlich_eingewiesen": {
+          "kind": "neutral",
+          "text": "ärztlich eingewiesen"
+        }
+      },
+      "condition": {
+        "values": [
+          "antreffen_eintrag_selbststaendig_wert_selbststaendig"
+        ],
+        "negated": false,
+        "value": "antreffen_eintrag_aerztlich_eingewiesen_wert_aerztlich_eingewiesen"
+      }
+    },
+    "antreffen_eintrag_durch_den_rettungsdienst": {
+      "title": "durch den Rettungsdienst",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_durch_den_rettungsdienst_wert_durch_den_rettungsdienst": {
+          "kind": "neutral",
+          "text": "durch den Rettungsdienst"
+        }
+      }
+    },
+    "antreffen_eintrag_durch_die_notaerztin": {
+      "title": "durch die Notärztin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_durch_die_notaerztin_wert_durch_die_notaerztin": {
+          "kind": "neutral",
+          "text": "durch die Notärztin"
+        }
+      }
+    },
+    "antreffen_eintrag_durch_den_notarzt": {
+      "title": "durch den Notarzt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_durch_den_notarzt_wert_durch_den_notarzt": {
+          "kind": "neutral",
+          "text": "durch den Notarzt"
+        }
+      }
+    },
+    "antreffen_eintrag_aus_anderer_einrichtung_verlegt": {
+      "title": "aus anderer Einrichtung verlegt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_aus_anderer_einrichtung_verlegt_wert_aus_anderer_einrichtung_verlegt": {
+          "kind": "neutral",
+          "text": "aus anderer Einrichtung verlegt"
+        }
+      }
+    },
+    "antreffen_eintrag_andere_vorstellung": {
+      "title": "andere Vorstellung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_andere_vorstellung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "antreffen_eintrag_krankenhaus": {
+      "title": "Krankenhaus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_krankenhaus_wert_krankenhaus": {
+          "kind": "neutral",
+          "text": "Krankenhaus"
+        }
+      }
+    },
+    "antreffen_eintrag_pflegewohnheim": {
+      "title": "Pflegewohnheim",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_pflegewohnheim_wert_pflegewohnheim": {
+          "kind": "neutral",
+          "text": "Pflegewohnheim"
+        }
+      }
+    },
+    "antreffen_eintrag_pflegewohngemeinschaft": {
+      "title": "Pflegewohngemeinschaft",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_pflegewohngemeinschaft_wert_pflegewohngemeinschaft": {
+          "kind": "neutral",
+          "text": "Pflegewohngemeinschaft"
+        }
+      }
+    },
+    "antreffen_eintrag_intensivpflegewohngemeinschaft": {
+      "title": "Intensivpflegewohngemeinschaft",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_intensivpflegewohngemeinschaft_wert_intensivpflegewohngemeinschaft": {
+          "kind": "neutral",
+          "text": "Intensivpflegewohngemeinschaft"
+        }
+      }
+    },
+    "antreffen_eintrag_andere_einrichtung": {
+      "title": "andere Einrichtung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_andere_einrichtung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "antreffen_eintrag_auf_der_fahrbahn": {
+      "title": "auf der Fahrbahn",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_auf_der_fahrbahn_wert_auf_der_fahrbahn": {
+          "kind": "neutral",
+          "text": "auf der Fahrbahn"
+        }
+      }
+    },
+    "antreffen_eintrag_auf_oeffentlichen_flaechen": {
+      "title": "auf öffentlichen Flächen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_auf_oeffentlichen_flaechen_wert_auf_oeffentlichen_flaechen": {
+          "kind": "neutral",
+          "text": "auf öffentlichen Flächen"
+        }
+      }
+    },
+    "antreffen_eintrag_im_rtw": {
+      "title": "im RTW",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_im_rtw_wert_im_rtw": {
+          "kind": "neutral",
+          "text": "im RTW"
+        }
+      }
+    },
+    "antreffen_eintrag_in_der_wohnstaette": {
+      "title": "in der Wohnstätte",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_in_der_wohnstaette_wert_in_der_wohnstaette": {
+          "kind": "neutral",
+          "text": "in der Wohnstätte"
+        }
+      }
+    },
+    "antreffen_eintrag_dem_bett": {
+      "title": "dem Bett",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_dem_bett_wert_dem_bett": {
+          "kind": "neutral",
+          "text": "dem Bett"
+        }
+      }
+    },
+    "antreffen_eintrag_auf_dem_boden": {
+      "title": "auf dem Boden",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_auf_dem_boden_wert_auf_dem_boden": {
+          "kind": "neutral",
+          "text": "auf dem Boden"
+        }
+      }
+    },
+    "antreffen_eintrag_sonstiger_auffindeort": {
+      "title": "Sonstiger Auffindeort",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_sonstiger_auffindeort_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "antreffen_eintrag_oeffnet_die_tuer": {
+      "title": "öffnet die Tür",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_oeffnet_die_tuer_wert_oeffnet_die_tuer": {
+          "kind": "neutral",
+          "text": "öffnet die Tür"
+        }
+      }
+    },
+    "antreffen_eintrag_stehend": {
+      "title": "stehend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_stehend_wert_stehend": {
+          "kind": "neutral",
+          "text": "stehend"
+        }
+      }
+    },
+    "antreffen_eintrag_sitzend": {
+      "title": "sitzend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_sitzend_wert_sitzend": {
+          "kind": "neutral",
+          "text": "sitzend"
+        }
+      }
+    },
+    "antreffen_eintrag_liegend": {
+      "title": "liegend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_liegend_wert_liegend": {
+          "kind": "neutral",
+          "text": "liegend"
+        }
+      }
+    },
+    "antreffen_eintrag_weitere_umstaende": {
+      "title": "weitere Umstände",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_weitere_umstaende_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "antreffen_eintrag_partnerin": {
+      "title": "Partnerin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_partnerin_wert_partnerin": {
+          "kind": "neutral",
+          "text": "Partnerin"
+        }
+      }
+    },
+    "antreffen_eintrag_partner": {
+      "title": "Partner",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_partner_wert_partner": {
+          "kind": "neutral",
+          "text": "Partner"
+        }
+      }
+    },
+    "antreffen_eintrag_mutter": {
+      "title": "Mutter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_mutter_wert_mutter": {
+          "kind": "neutral",
+          "text": "Mutter"
+        }
+      }
+    },
+    "antreffen_eintrag_vater": {
+      "title": "Vater",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_vater_wert_vater": {
+          "kind": "neutral",
+          "text": "Vater"
+        }
+      }
+    },
+    "antreffen_eintrag_tochter": {
+      "title": "Tochter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_tochter_wert_tochter": {
+          "kind": "neutral",
+          "text": "Tochter"
+        }
+      }
+    },
+    "antreffen_eintrag_sohn": {
+      "title": "Sohn",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_sohn_wert_sohn": {
+          "kind": "neutral",
+          "text": "Sohn"
+        }
+      }
+    },
+    "antreffen_eintrag_enkelin": {
+      "title": "Enkelin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_enkelin_wert_enkelin": {
+          "kind": "neutral",
+          "text": "Enkelin"
+        }
+      }
+    },
+    "antreffen_eintrag_enkel": {
+      "title": "Enkel",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_enkel_wert_enkel": {
+          "kind": "neutral",
+          "text": "Enkel"
+        }
+      }
+    },
+    "antreffen_eintrag_zugehoerige": {
+      "title": "Zugehörige",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_zugehoerige_wert_zugehoerige": {
+          "kind": "neutral",
+          "text": "Zugehörige"
+        }
+      }
+    },
+    "antreffen_eintrag_zugehoeriger": {
+      "title": "Zugehöriger",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_zugehoeriger_wert_zugehoeriger": {
+          "kind": "neutral",
+          "text": "Zugehöriger"
+        }
+      }
+    },
+    "antreffen_eintrag_weitere_anwesende_personen": {
+      "title": "Weitere anwesende Personen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_weitere_anwesende_personen_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "antreffen_eintrag_rettungsdienst": {
+      "title": "Rettungsdienst",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_rettungsdienst_wert_rettungsdienst": {
+          "kind": "neutral",
+          "text": "Rettungsdienst"
+        }
+      }
+    },
+    "antreffen_eintrag_ersthelfer": {
+      "title": "Ersthelfer",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_ersthelfer_wert_ersthelfer": {
+          "kind": "neutral",
+          "text": "Ersthelfer"
+        }
+      }
+    },
+    "antreffen_eintrag_krankenpflegekraft": {
+      "title": "Krankenpflegekraft",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_krankenpflegekraft_wert_krankenpflegekraft": {
+          "kind": "neutral",
+          "text": "Krankenpflegekraft"
+        }
+      }
+    },
+    "antreffen_eintrag_aerztin": {
+      "title": "Ärztin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_aerztin_wert_aerztin": {
+          "kind": "neutral",
+          "text": "Ärztin"
+        }
+      }
+    },
+    "antreffen_eintrag_arzt": {
+      "title": "Arzt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_arzt_wert_arzt": {
+          "kind": "neutral",
+          "text": "Arzt"
+        }
+      }
+    },
+    "antreffen_eintrag_weitere_kraefte": {
+      "title": "Weitere Kräfte",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "antreffen_eintrag_weitere_kraefte_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

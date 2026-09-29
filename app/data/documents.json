@@ -1,14 +1,90 @@
 {
   "version": 1,
-  "default": "rettungsdienst",
+  "default": "repo",
+  "defaultLens": "rettungsdienst",
+  "lenses": [
+    {
+      "id": "rettungsdienst",
+      "label": "Rettungsdienst"
+    },
+    {
+      "id": "kernteam",
+      "label": "Kernteam"
+    },
+    {
+      "id": "trauma_orthopaedie",
+      "label": "Trauma & Orthopädie"
+    },
+    {
+      "id": "allgemeinchirurgie",
+      "label": "Allgemeinchirurgie"
+    },
+    {
+      "id": "thorax_gefaesschirurgie",
+      "label": "Thorax- & Gefäßchirurgie"
+    },
+    {
+      "id": "neurochirurgie",
+      "label": "Neurochirurgie"
+    },
+    {
+      "id": "hno",
+      "label": "HNO"
+    },
+    {
+      "id": "auge",
+      "label": "Auge"
+    },
+    {
+      "id": "gynaekologie_geburtshilfe",
+      "label": "Gynäkologie & Geburtshilfe"
+    },
+    {
+      "id": "paediatrie",
+      "label": "Pädiatrie"
+    },
+    {
+      "id": "psychiatrie",
+      "label": "Psychiatrie"
+    },
+    {
+      "id": "wiedervorstellung_kontrolle",
+      "label": "Wiedervorstellung & Kontrolle"
+    }
+  ],
+  "lensGroups": {
+    "klinik": [
+      "kernteam",
+      "trauma_orthopaedie",
+      "allgemeinchirurgie",
+      "thorax_gefaesschirurgie",
+      "neurochirurgie",
+      "hno",
+      "auge",
+      "gynaekologie_geburtshilfe",
+      "paediatrie",
+      "psychiatrie",
+      "wiedervorstellung_kontrolle"
+    ],
+    "praeklinik": [
+      "rettungsdienst"
+    ]
+  },
   "documents": {
-    "rettungsdienst": {
-      "title": "Rettungsdienst",
+    "repo": {
+      "title": "Repo",
       "blocks": [
         {
           "plugin": "textblock",
           "params": {
-            "id": "ankunft",
+            "id": "antreffen",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "kommunikation",
             "controls": false
           }
         },
@@ -29,366 +105,7 @@
         {
           "plugin": "textblock",
           "params": {
-            "id": "abcde",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vitalparameter",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "diagnostik",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "massnahmen",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "status",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "procedere",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "erstbefund": {
-      "title": "Erstbefund",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vorstellung",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "abcde",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vitalparameter",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "status",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "diagnostik",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "notaufnahme": {
-      "title": "Notaufnahme",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vorstellung",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "cedis",
-          "params": {
-            "id": "cedis",
-            "mode": "summary"
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "sampler",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "abcde",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vitalparameter",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "status",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "diagnostik",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "massnahmen",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "procedere",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "notaufnahme_unfallchirurgie": {
-      "title": "Notaufnahme – Unfallchirurgie",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vorstellung",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "cedis",
-          "params": {
-            "id": "cedis",
-            "mode": "summary"
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "sampler",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "abcde",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vitalparameter",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "trauma",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "status",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "diagnostik",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "massnahmen",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "procedere",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "neurologie": {
-      "title": "Neurologie",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vorstellung",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "cedis",
-          "params": {
-            "id": "cedis",
-            "mode": "summary"
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "sampler",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vitalparameter",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "neurostatus",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "diagnostik",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "massnahmen",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "procedere",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "telemedizinische_akutversorgung": {
-      "title": "Telemedizinische Akutversorgung",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "tma_kontext",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vorstellung",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "cedis",
-          "params": {
-            "id": "cedis",
-            "mode": "summary"
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "sampler",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vitalparameter",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "status",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "tma_entscheidung",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "paediatrische_praxis": {
-      "title": "Pädiatrische Praxis",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "vorstellung",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "cedis",
-          "params": {
-            "id": "cedis",
-            "mode": "summary"
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "sampler",
+            "id": "soziales_acp",
             "controls": false
           }
         },
@@ -402,69 +119,31 @@
         {
           "plugin": "textblock",
           "params": {
-            "id": "vitalparameter",
+            "id": "abcde",
             "controls": false
           }
         },
         {
           "plugin": "textblock",
           "params": {
-            "id": "paed_status",
+            "id": "status",
             "controls": false
           }
         },
         {
           "plugin": "textblock",
           "params": {
-            "id": "diagnostik",
+            "id": "neurostatus",
             "controls": false
           }
         },
         {
           "plugin": "textblock",
           "params": {
-            "id": "massnahmen",
+            "id": "katheter",
             "controls": false
           }
         },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "procedere",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "medikationsabgleich": {
-      "title": "Medikationsabgleich",
-      "blocks": [
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "allergie",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "dauermedikation",
-            "controls": false
-          }
-        },
-        {
-          "plugin": "textblock",
-          "params": {
-            "id": "medikationsgabe",
-            "controls": false
-          }
-        }
-      ]
-    },
-    "neugeborenenbeurteilung": {
-      "title": "Neugeborenenbeurteilung",
-      "blocks": [
         {
           "plugin": "textblock",
           "params": {
@@ -475,19 +154,42 @@
         {
           "plugin": "textblock",
           "params": {
-            "id": "vitalparameter",
+            "id": "ekg",
             "controls": false
           }
-        }
-      ]
-    },
-    "point_of_care_ultraschall": {
-      "title": "Point-of-Care-Ultraschall",
-      "blocks": [
+        },
         {
           "plugin": "textblock",
           "params": {
-            "id": "pocus",
+            "id": "pocus_rush",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "pocus_abdomen",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "pocus_tvt",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "et_intubation",
+            "controls": false
+          }
+        },
+        {
+          "plugin": "textblock",
+          "params": {
+            "id": "reanimation",
             "controls": false
           }
         }

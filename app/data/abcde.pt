@@ -1,6 +1,181 @@
 # xABCDE-Zusammenstellung
 N: abcde
-I: x, a, b, c, d, e
+I: gemeinsam, orientierung, nihss
 
-G @root @summary @reset: ABCDE
-  U: x, a, b, c, d, e
+E blutungslokalisation: choice label="Lokalisation" => am Kopf|- / am Hals|- / am Torso|- / an der Schulter|- / am Oberarm|- / am Ellenbogen|- / am Unterarm|- / an der Hand|- / an der Hüfte|- / am Oberschenkel|- / am Unterschenkel|- / am Fuß|-
+
+E tubusgroesse: number label="Tubusgröße" prefix="ID " suffix=" mm" min=0 max=9 step=0.5
+E atemfrequenz: number label="Atemfrequenz" suffix=" / min" min=0 max=100 step=1
+E seite: choice label="Seite" => links|- / rechts|- / bilateral|-
+E lokalisation: choice label="Lokalisation" => ubiquitär|- / basal|- / über dem Oberfeld|- / über dem Mittelfeld|- / über dem Unterfeld|-
+E charakter: choice label="Charakter" => von zentral fortgeleitete|- / feinblasige|- / knisternde|- / grobblasige|-
+
+E rekapillarisierungszeit: number label="Rekapillarisierungszeit" suffix=" s" min=0 max=30 step=1
+E pulsfrequenz: number label="Pulsfrequenz" suffix=" / min" min=0 max=300 step=1
+
+E blutzucker: number label="Blutzucker" suffix=" mg/dl" min=0 max=1000 step=1
+E gcs_summe: number label="GCS-Summe" min=3 max=15 step=1
+
+E temperatur: number label="Körpertemperatur" suffix=" °C" min=20 max=45 step=0.1
+E verletzungsort: choice label="Verletzungsort" => am Kopf|- / am Hals|- / am Thorax|- / am Abdomen|- / am Becken|- / am linken Arm|- / am rechten Arm|- / an der linken Hand|- / an der rechten Hand|- / am linken Bein|- / am rechten Bein|- / am linken Fuß|- / am rechten Fuß|-
+
+C verlegter_atemweg: Atemweg durch Zunge verlegt; Atemweg zugeschwollen; Atemweg durch Blutung verlegt; Atemweg vollständig verlegt
+C atemwegsproblem: verlegter_atemweg; Atemweg wird nicht effektiv freigehalten
+
+C pneumothorax: Atemexkursion links vermindert; Atemexkursion rechts vermindert; Atemgeräusch {:seite=seite*:} {:lokalisation:} abgeschwächt; Thorax instabil
+
+C bewusstseinsstoerung: verwirrt; reagiert auf Ansprache; reagiert auf Schmerzreiz; reagiert nicht
+
+G @root @summary @reset @subgroups(break): ABCDE
+
+  S: Normalbefund|n
+    Blutung = keine relevante Blutung
+    Zustand des Atemwegs = Atemweg frei
+    Freihalten des Atemwegs = Atemweg wird effektiv freigehalten
+    Atmung = Eupnoe
+    Zyanose = keine Zyanose
+    Atemexkursion = Atemexkursion seitengleich
+    Stabilität = Thorax stabil
+    Atemgeräusch = Atemgeräusch seitengleich
+    Rasselgeräusche = keine Rasselgeräusche
+    Giemen = kein Giemen
+    Brummen = kein Brummen
+    Rekapillarisierung = Rekapillarisierung regelrecht
+    Hautkolorit = Haut rosig
+    Hauttemperatur = Haut warm
+    Pulsqualität = Puls kräftig
+    Pulsrhythmus = Puls rhythmisch
+    Pulsdefizit = kein Pulsdefizit
+    Halsvenen = Halsvenen nicht gestaut
+    Bauchdecke = Bauchdecke weich
+    Blutungsräume = große Blutungsräume unauffällig
+    Becken = Becken in vorsichtiger Palpation stabil
+    Bewusstseinslage = wach
+    Pupillenvergleich = Pupillen isokor
+    Pupillenweite = Pupillen mittelweit
+    Pupillenreaktion = Pupillen beidseits lichtreagibel
+    Augenöffnen = Augen spontan geöffnet, GCS E4
+    Verbale Reaktion = verbal orientiert, GCS V5
+    Motorische Reaktion = befolgt Aufforderungen, GCS M6
+    Mimik = Mimik symmetrisch
+    Sprache = Sprache unauffällig
+    Motorik = Motorik seitengleich
+    Armhalteversuch = Armhalteversuch beidseits unauffällig
+    Temperaturzustand = normotherm
+    Hautbefund = Haut ohne richtungsweisenden Befund
+    Verletzungen = keine offensichtliche Verletzung
+
+  G @reset @inactive: x
+    P: Blutung => keine relevante Blutung|n
+    P: Weitere x-Auffälligkeit => {:freitext*:}|a
+
+    G @repeat(initial=0,add="Blutung hinzufügen",empty="Blutung") @reset: Blutung|a
+      P: Blutungslokalisation => Blutung {:ort=blutungslokalisation*:} {:seite=gemeinsam.seite*:}|a
+      P condition(Blutungslokalisation): Kompression|i
+      P condition(Kompression): Ergebnis der Kompression => Blutung sistiert durch Kompression|i / Blutung sistiert nicht durch Kompression|a
+      P condition(Blutung sistiert nicht durch Kompression): Tourniquet => Anlage eines Tourniquets um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:}|i
+      P condition(Tourniquet): Ergebnis des Tourniquets => Blutung sistiert durch Tourniquet|i / Blutung sistiert nicht durch Tourniquet|a
+      P: Ergänzung zur Blutung => {:freitext*:}|a
+
+  G: A
+    P: Zustand des Atemwegs => Atemweg frei @sct=248553004[No obstruction of airway]|n / Atemweg durch Zunge verlegt @sct=425227004[Obstruction of airway caused by tongue]|a / Atemweg zugeschwollen|a / Atemweg durch Blutung verlegt @sct=427480003[Obstruction of airway caused by blood]|a / Atemweg vollständig verlegt @sct=248555006[Total airway obstruction]|a
+    P suggest(verlegter_atemweg): Freihalten des Atemwegs => Atemweg wird effektiv freigehalten @sct=1145305006[Able to clear airway effectively]|n / Atemweg wird nicht effektiv freigehalten @sct=67750007[Ineffective airway clearance]|a
+    P condition(Atemweg zugeschwollen): Schwellung der Uvula|a
+    P condition(Atemweg zugeschwollen): Schwellung der Zunge|a
+
+    P condition(atemwegsproblem): Güdeltubus => Atemwegsschienung: Güdeltubus|i
+    P condition(Güdeltubus): Ergebnis der Güdeltubus-Anlage => Schienung suffizient|i / Schienung nicht suffizient|a
+    P condition(atemwegsproblem): Wendeltubus => Atemwegsschienung: Wendeltubus|i
+    P condition(Wendeltubus): Ergebnis der Wendeltubus-Anlage => Schienung suffizient|i / Schienung nicht suffizient|a
+
+    P condition(atemwegsproblem): Supraglottische Atemwegshilfe => supraglottische Atemwegshilfe: iGel|i / supraglottische Atemwegshilfe: Larynxmaske|i / supraglottische Atemwegshilfe: Larynxtubus|i
+    P condition(Supraglottische Atemwegshilfe): Ergebnis der supraglottischen Atemwegshilfe => Schienung suffizient|i / Schienung nicht suffizient|a
+
+    P condition(atemwegsproblem): Endotracheale Intubation|i
+
+    P condition(atemwegsproblem): Chirurgischer Atemweg => chirurgischer Atemweg: chirurgisch|i / chirurgischer Atemweg: Quick-Trach|i
+    P condition(Chirurgischer Atemweg): Tubusgröße des chirurgischen Atemwegs => Tubusgröße: {:groesse=tubusgroesse*:}|-
+    P condition(Chirurgischer Atemweg): Bestätigung des chirurgischen Atemwegs => kapnographisch bestätigt|i / kapnometrisch bestätigt|i
+    P condition(Chirurgischer Atemweg): Ergänzung zum chirurgischen Atemweg => {:freitext*:}|-
+
+    P: Weitere A-Auffälligkeit => {:freitext*:}|a
+
+  G: B
+    P: Atmung => Eupnoe @sct=20716004[Respiratory rate normal]|n / Apnoe @sct=1023001[Apnoea]|a / Bradypnoe @sct=86684002[Bradypnoea]|a / Tachypnoe @sct=271823003[Tachypnoea]|a / agonale Atmung @sct=430546009[Agonal respiration]|a / beatmet @sct=1303532003[On artificial ventilation]|i
+    P: Atemfrequenz => Atemfrequenz {:wert=atemfrequenz*:}|-
+    P: Zyanose => keine Zyanose|n / Lippenzyanose|a / akrale Zyanose|a / generalisierte Zyanose|a
+    P: Atemexkursion => Atemexkursion seitengleich @sct=248559000[Chest movement equal]|n / Atemexkursion links vermindert|a / Atemexkursion rechts vermindert|a
+    P: Stabilität => Thorax stabil|n / Thorax instabil|a
+    P: Atemgeräusch => Atemgeräusch seitengleich|n / Atemgeräusch {:seite=seite*:} {:lokalisation:} abgeschwächt|a
+    P condition(pneumothorax): Punktion => Entlastungspunktion|i
+    P condition(Entlastungspunktion): Effekt der Punktion => es entweicht Luft|i
+    P condition(pneumothorax): Thorakostomie => Thorakostomie|i
+    P condition(Thorakostomie): Effekt der Thorakostomie => es entweicht Luft|i / es entleert sich Blut|i / es entleert sich Flüssigkeit|i
+    P condition(pneumothorax): Anlage einer Thoraxdrainage => Anlage einer Thoraxdrainage nach Bülow|i / Anlage einer Thoraxdrainage in Seldinger-Technik|i
+    P condition(Anlage einer Thoraxdrainage): Effekt der Drainagenanlage => es entweicht Luft|i / es entleert sich Blut|i / es entleert sich Flüssigkeit|i
+    P: Rasselgeräusche => keine Rasselgeräusche|n / {:charakter:} Rasselgeräusche {:seite=seite*:} {:lokalisation*:}|a
+    P: Giemen => kein Giemen|n / Giemen @sct=56018004[Wheezing]|a
+    P: Brummen => kein Brummen|n / Brummen|a
+    P: Weitere B-Auffälligkeit => {:freitext*:}|a
+
+  G: C
+    P: Rekapillarisierung => Rekapillarisierung regelrecht @sct=45332005[Normal capillary filling]|n / Rekapillarisierung verlängert @sct=50427001[Increased capillary filling time]|a
+    P: Rekapillarisierungszeit => Rekapillarisierungszeit {:wert=rekapillarisierungszeit*:}|-
+    P: Hautkolorit => Haut rosig|n / Haut blass|a / Haut zyanotisch @sct=3415004[Cyanosis]|a
+    P: Marmorierung => Haut marmoriert @sct=406128001[Mottling of skin]|a
+    P: Kaltschweißigkeit => Haut kaltschweißig @sct=83547004[Cold sweat]|a
+    P: Hauttemperatur => Haut warm @sct=102599008[Warm skin]|n / Haut kühl @sct=427733005[Cool skin]|a
+    P: Pulsqualität => Puls kräftig @sct=12146004[Normal pulse]|n / Puls schwach @sct=315225007[Weak arterial pulse]|a / kein zentraler Puls tastbar|a
+    P: Pulsrhythmus => Puls rhythmisch|n / Puls arrhythmisch @sct=698247007[Cardiac arrhythmia]|a
+    P: Pulsfrequenz => Pulsfrequenz {:wert=pulsfrequenz*:}|-
+    P: Pulsdefizit => kein Pulsdefizit|n / Pulsdefizit|a
+    P: Halsvenen => Halsvenen nicht gestaut @sct=413350009:{246090004=271653008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Jugular venous engorgement; current; subject of record]|n / Halsvenen gestaut @sct=271653008[Jugular venous engorgement]|a
+    G @inactive: Trauma
+      P: Bauchdecke => Bauchdecke weich|n / Abwehrspannung|a
+      P: Blutungsräume => große Blutungsräume unauffällig|n / Einblutung in {:freitext:}|a
+      P: Becken => Becken in vorsichtiger Palpation stabil|n / Becken instabil|a
+      P condition(Becken instabil): Beckenschlinge => Kompression mittels Beckenschlinge angelegt|i
+
+    P: Weitere C-Auffälligkeit => {:freitext*:}|a
+
+  G: D
+    P: Bewusstseinslage => wach|n / verwirrt @sct=40917007[Confusion]|a / reagiert auf Ansprache|a / reagiert auf Schmerzreiz|a / reagiert nicht @sct=418107008[Unconscious]|a
+    P condition(bewusstseinsstoerung): Blutzucker => Blutzucker {:wert=blutzucker*:}|-
+
+    P: Pupillenvergleich => Pupillen isokor @sct=301943000[Pupils equal]|n / Pupillen anisokor @sct=13045009[Anisocoria]|a
+    P condition(Pupillen anisokor): Größere Pupille => rechte Pupille weiter als linke|a / linke Pupille weiter als rechte|a
+    P: Pupillenweite => Pupillen mittelweit|n / Pupillen eng|a / Pupillen weit|a
+    P: Pupillenreaktion => Pupillen beidseits lichtreagibel @sct=386666001[Pupils equal and reacting to light]|n / Pupillenreaktion verzögert|a / Pupillen lichtstarr @sct=301944006[No pupillary reaction to light]|a
+
+    G @inactive @score(id=gcs,label="GCS berechnen",target="GCS-Summe",attribute=summe): Glasgow Coma Scale|-
+      P: Augenöffnen => Augen spontan geöffnet, GCS E4 @points=4|n / Augenöffnen auf Ansprache, GCS E3 @points=3|a / Augenöffnen auf Schmerzreiz, GCS E2 @points=2|a / kein Augenöffnen, GCS E1 @points=1|a
+      P: Verbale Reaktion => verbal orientiert, GCS V5 @points=5|n / verbal verwirrt, GCS V4 @points=4|a / unzusammenhängende Wörter, GCS V3 @points=3|a / unverständliche Laute, GCS V2 @points=2|a / keine verbale Reaktion, GCS V1 @points=1|a
+      P: Motorische Reaktion => befolgt Aufforderungen, GCS M6 @points=6|n / gezielte Schmerzabwehr, GCS M5 @points=5|a / ungezielte Schmerzabwehr, GCS M4 @points=4|a / Beugesynergismen, GCS M3 @points=3|a / Strecksynergismen, GCS M2 @points=2|a / keine motorische Reaktion, GCS M1 @points=1|a
+      P: GCS-Summe => GCS {:summe=gcs_summe*:}|-
+
+    U: nihss
+
+    G @inactive: Fokalneurologie|-
+      P: Mimik => Mimik symmetrisch|n / Facialisparese links @sct=280816001[Facial palsy]|a / Facialisparese rechts @sct=280816001[Facial palsy]|a
+      P: Sprache => Sprache unauffällig @sct=162293002[No speech problem]|n / Dysarthrie @sct=8011004[Dysarthria]|a / Aphasie @sct=87486003[Aphasia]|a / Mutismus @sct=88052002[Mutism]|a
+      P: Motorik => Motorik seitengleich|n / Hemiparese links @sct=20022000[Hemiparesis]|a / Hemiparese rechts @sct=20022000[Hemiparesis]|a / Paraparese @sct=1845001[Paraparesis]|a
+      P: Armhalteversuch => Armhalteversuch beidseits unauffällig|n / Absinken des linken Arms @sct=428334004[Pronator drift]|a / Absinken des rechten Arms @sct=428334004[Pronator drift]|a
+
+    U: orientierung
+    P: Weitere D-Auffälligkeit => {:freitext*:}|a
+
+  G: E
+    P: Temperaturzustand => normotherm|n / hypotherm|a / hypertherm|a
+    P: Körpertemperatur => Körpertemperatur {:wert=temperatur*:}|-
+    P condition(hypotherm): Wärmeerhalt => Wärmeerhalt durchgeführt|i
+
+    P: Hautbefund => Haut ohne richtungsweisenden Befund|n / Exanthem @sct=271807003[Rash]|a / Urtikaria @sct=126485001[Urticaria]|a / Petechien @sct=271813007[Petechiae]|a
+
+    P: Verletzungen => keine offensichtliche Verletzung|n
+    G @repeat(initial=0,add="Verletzung hinzufügen",empty="Verletzungen") @reset: Verletzung|a
+      P: Verletzungslokalisation => Verletzung {:ort=verletzungsort*:}|a
+      P condition(Verletzungslokalisation): Verletzungsart => Schürfwunde @sct=399963005[Abrasion]|a / Schnittwunde @sct=35933005[Laceration]|a / Platzwunde @sct=35933005[Laceration]|a / Stichverletzung @sct=425322008[Stab wound]|a / Hämatom @sct=385494008[Haematoma]|a / Schwellung @sct=442672001[Swelling]|a / Fehlstellung @sct=250087009[Joint deformity]|a / Verbrennung @sct=125666000[Burn]|a
+      P: Versorgung der Verletzung => sterile Abdeckung|i / Kühlung|i / Immobilisation|i
+      P: Ergänzung zur Verletzung => {:freitext*:}|-
+
+    P: Weitere E-Auffälligkeit => {:freitext*:}|a

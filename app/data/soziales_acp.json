@@ -1,0 +1,977 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "soziales_acp_eingabe_ergaenzung": {
+      "type": "multiline",
+      "maxRows": 12,
+      "label": "Ergänzende Angaben",
+      "placeholder": "Freie Angaben zu sozialer Situation oder Vorausplanung",
+      "rows": 3
+    }
+  },
+  "groups": {
+    "soziales_acp": {
+      "title": "Soziales / Advance Care Planning",
+      "items": [
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_wohnsituation"
+        },
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_unterstuetzung_und_pflege"
+        },
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_advance_care_planning"
+        }
+      ],
+      "activeLenses": [
+        "kernteam",
+        "trauma_orthopaedie",
+        "allgemeinchirurgie",
+        "thorax_gefaesschirurgie",
+        "neurochirurgie",
+        "hno",
+        "auge",
+        "gynaekologie_geburtshilfe",
+        "paediatrie",
+        "psychiatrie",
+        "wiedervorstellung_kontrolle"
+      ],
+      "subgroups": "break",
+      "reset": true
+    },
+    "soziales_acp_gruppe_wohnsituation": {
+      "title": "Wohnsituation",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_wohnform"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_haushaltsform"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "soziales_acp_gruppe_unterstuetzung_und_pflege": {
+      "title": "Unterstützung und Pflege",
+      "items": [
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_unterstuetzung_durch"
+        },
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_pflegedienst"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_pflegegrad"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_ergaenzung_zur_unterstuetzung"
+        }
+      ],
+      "subgroups": "break",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "soziales_acp_gruppe_unterstuetzung_durch": {
+      "title": "Unterstützung durch",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_regelmaessige_unterstuetzung"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_tochter"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_sohn"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_kinder"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_enkelin"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_enkel"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_nachbarin"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_nachbar"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_haushaltshilfe"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_andere_unterstuetzung"
+        }
+      ]
+    },
+    "soziales_acp_gruppe_pflegedienst": {
+      "title": "Pflegedienst",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_pflegedienststatus"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_umfang_des_pflegedienstes"
+        }
+      ]
+    },
+    "soziales_acp_gruppe_advance_care_planning": {
+      "title": "Advance Care Planning",
+      "items": [
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_dokumente"
+        },
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_vorausplanung_besprochen_mit"
+        },
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_aktuelle_aeusserungen_und_teilhabe"
+        },
+        {
+          "type": "group",
+          "id": "soziales_acp_gruppe_dokumentierte_behandlungsbegrenzungen"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_ergaenzende_angaben_zur_vorausplanung"
+        }
+      ],
+      "subgroups": "break",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "soziales_acp_gruppe_dokumente": {
+      "title": "Dokumente",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_patientenverfuegung"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_verfuegbarkeit_der_patientenverfuegung"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_vorsorgevollmacht"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_betreuungsverfuegung"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_notfallbogen"
+        }
+      ]
+    },
+    "soziales_acp_gruppe_vorausplanung_besprochen_mit": {
+      "title": "Vorausplanung besprochen mit",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_betroffener_person"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_angehoerigen"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_bevollmaechtigter_person"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_rechtlicher_betreuung"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_behandelnder_aerztin"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_behandelndem_arzt"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_weiteren_beteiligten"
+        }
+      ]
+    },
+    "soziales_acp_gruppe_aktuelle_aeusserungen_und_teilhabe": {
+      "title": "Aktuelle Äußerungen und Teilhabe",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_freude_am_leben_geaeussert"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_nimmt_am_leben_in_der_umgebung_teil"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_teilnahme_an_aktivitaeten"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_lebensueberdruss_geaeussert"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_nahrungsaufnahme_mehr"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_fluessigkeitsaufnahme_mehr"
+        }
+      ]
+    },
+    "soziales_acp_gruppe_dokumentierte_behandlungsbegrenzungen": {
+      "title": "Dokumentierte Behandlungsbegrenzungen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_wiederbelebungsmassnahmen_dnr"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_invasive_beatmung_dni"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_nierenersatzverfahren"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_organersatzverfahren"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_aufnahme_auf_die_intensivstation"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_antiinfektive_therapie"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_parenterale_oder_sondengestuetzte_fluessigkeitsgabe"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_parenterale_oder_sondengestuetzte_ernaehrung"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_keine_lebensverlaengernden_massnahmen"
+        },
+        {
+          "type": "phrase",
+          "id": "soziales_acp_eintrag_andere_behandlungsbegrenzung"
+        }
+      ]
+    }
+  },
+  "phrases": {
+    "soziales_acp_eintrag_wohnform": {
+      "title": "Wohnform",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_wohnform_wert_lebt_in_eigener_haeuslichkeit": {
+          "kind": "neutral",
+          "text": "lebt in eigener Häuslichkeit"
+        },
+        "soziales_acp_eintrag_wohnform_wert_lebt_in_einer_pflegewohngemeinschaft": {
+          "kind": "neutral",
+          "text": "lebt in einer Pflegewohngemeinschaft"
+        },
+        "soziales_acp_eintrag_wohnform_wert_lebt_in_einer_pflegeeinrichtung": {
+          "kind": "neutral",
+          "text": "lebt in einer Pflegeeinrichtung"
+        },
+        "soziales_acp_eintrag_wohnform_wert_andere_wohnform": {
+          "kind": "neutral",
+          "text": "andere Wohnform: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "soziales_acp_eintrag_haushaltsform": {
+      "title": "Haushaltsform",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_haushaltsform_wert_alleinlebend": {
+          "kind": "neutral",
+          "text": "alleinlebend"
+        },
+        "soziales_acp_eintrag_haushaltsform_wert_lebt_mit_partnerin_zusammen": {
+          "kind": "neutral",
+          "text": "lebt mit Partnerin zusammen"
+        },
+        "soziales_acp_eintrag_haushaltsform_wert_lebt_mit_partner_zusammen": {
+          "kind": "neutral",
+          "text": "lebt mit Partner zusammen"
+        },
+        "soziales_acp_eintrag_haushaltsform_wert_lebt_mit_angehoerigen_zusammen": {
+          "kind": "neutral",
+          "text": "lebt mit Angehörigen zusammen"
+        },
+        "soziales_acp_eintrag_haushaltsform_wert_haushaltsform_unbekannt": {
+          "kind": "neutral",
+          "text": "Haushaltsform unbekannt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_regelmaessige_unterstuetzung": {
+      "title": "keine regelmäßige Unterstützung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_regelmaessige_unterstuetzung_wert_keine_regelmaessige_unterstuetzung": {
+          "kind": "neutral",
+          "text": "keine regelmäßige Unterstützung"
+        }
+      }
+    },
+    "soziales_acp_eintrag_tochter": {
+      "title": "Tochter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_tochter_wert_tochter": {
+          "kind": "neutral",
+          "text": "Tochter"
+        }
+      }
+    },
+    "soziales_acp_eintrag_sohn": {
+      "title": "Sohn",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_sohn_wert_sohn": {
+          "kind": "neutral",
+          "text": "Sohn"
+        }
+      }
+    },
+    "soziales_acp_eintrag_kinder": {
+      "title": "Kinder",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_kinder_wert_kinder": {
+          "kind": "neutral",
+          "text": "Kinder"
+        }
+      }
+    },
+    "soziales_acp_eintrag_enkelin": {
+      "title": "Enkelin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_enkelin_wert_enkelin": {
+          "kind": "neutral",
+          "text": "Enkelin"
+        }
+      }
+    },
+    "soziales_acp_eintrag_enkel": {
+      "title": "Enkel",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_enkel_wert_enkel": {
+          "kind": "neutral",
+          "text": "Enkel"
+        }
+      }
+    },
+    "soziales_acp_eintrag_nachbarin": {
+      "title": "Nachbarin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_nachbarin_wert_nachbarin": {
+          "kind": "neutral",
+          "text": "Nachbarin"
+        }
+      }
+    },
+    "soziales_acp_eintrag_nachbar": {
+      "title": "Nachbar",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_nachbar_wert_nachbar": {
+          "kind": "neutral",
+          "text": "Nachbar"
+        }
+      }
+    },
+    "soziales_acp_eintrag_haushaltshilfe": {
+      "title": "Haushaltshilfe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_haushaltshilfe_wert_haushaltshilfe": {
+          "kind": "neutral",
+          "text": "Haushaltshilfe"
+        }
+      }
+    },
+    "soziales_acp_eintrag_andere_unterstuetzung": {
+      "title": "andere Unterstützung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_andere_unterstuetzung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "soziales_acp_eintrag_pflegedienststatus": {
+      "title": "Pflegedienst",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_pflegedienststatus_wert_kein_pflegedienst": {
+          "kind": "neutral",
+          "text": "kein Pflegedienst"
+        },
+        "soziales_acp_eintrag_pflegedienststatus_wert_unterstuetzung_durch_pflegedienst": {
+          "kind": "neutral",
+          "text": "Unterstützung durch Pflegedienst"
+        }
+      }
+    },
+    "soziales_acp_eintrag_umfang_des_pflegedienstes": {
+      "title": "Umfang des Pflegedienstes",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_24_stunden_betreuung": {
+          "kind": "neutral",
+          "text": "24-Stunden-Betreuung"
+        },
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_dreimal_taeglich": {
+          "kind": "neutral",
+          "text": "dreimal täglich"
+        },
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_zweimal_taeglich": {
+          "kind": "neutral",
+          "text": "zweimal täglich"
+        },
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_einmal_taeglich": {
+          "kind": "neutral",
+          "text": "einmal täglich"
+        },
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_mehrmals_woechentlich": {
+          "kind": "neutral",
+          "text": "mehrmals wöchentlich"
+        },
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_einmal_woechentlich": {
+          "kind": "neutral",
+          "text": "einmal wöchentlich"
+        },
+        "soziales_acp_eintrag_umfang_des_pflegedienstes_wert_anderer_umfang": {
+          "kind": "neutral",
+          "text": "anderer Umfang: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "condition": {
+        "values": [
+          "soziales_acp_eintrag_pflegedienststatus_wert_unterstuetzung_durch_pflegedienst"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "soziales_acp_eintrag_pflegegrad": {
+      "title": "Pflegegrad",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_pflegegrad_wert_kein_pflegegrad": {
+          "kind": "neutral",
+          "text": "kein Pflegegrad"
+        },
+        "soziales_acp_eintrag_pflegegrad_wert_pflegegrad_1": {
+          "kind": "neutral",
+          "text": "Pflegegrad 1"
+        },
+        "soziales_acp_eintrag_pflegegrad_wert_pflegegrad_2": {
+          "kind": "neutral",
+          "text": "Pflegegrad 2"
+        },
+        "soziales_acp_eintrag_pflegegrad_wert_pflegegrad_3": {
+          "kind": "neutral",
+          "text": "Pflegegrad 3"
+        },
+        "soziales_acp_eintrag_pflegegrad_wert_pflegegrad_4": {
+          "kind": "neutral",
+          "text": "Pflegegrad 4"
+        },
+        "soziales_acp_eintrag_pflegegrad_wert_pflegegrad_5": {
+          "kind": "neutral",
+          "text": "Pflegegrad 5"
+        },
+        "soziales_acp_eintrag_pflegegrad_wert_pflegegrad_unbekannt": {
+          "kind": "neutral",
+          "text": "Pflegegrad unbekannt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_ergaenzung_zur_unterstuetzung": {
+      "title": "Ergänzung zur Unterstützung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_ergaenzung_zur_unterstuetzung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "soziales_acp_eintrag_patientenverfuegung": {
+      "title": "Patientenverfügung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_patientenverfuegung_wert_patientenverfuegung_liegt_vor": {
+          "kind": "neutral",
+          "text": "Patientenverfügung liegt vor"
+        },
+        "soziales_acp_eintrag_patientenverfuegung_wert_patientenverfuegung_laut_angaben_vorhanden_nicht_vorliegend": {
+          "kind": "neutral",
+          "text": "Patientenverfügung laut Angaben vorhanden, nicht vorliegend"
+        },
+        "soziales_acp_eintrag_patientenverfuegung_wert_keine_patientenverfuegung": {
+          "kind": "neutral",
+          "text": "keine Patientenverfügung"
+        },
+        "soziales_acp_eintrag_patientenverfuegung_wert_status_der_patientenverfuegung_unbekannt": {
+          "kind": "neutral",
+          "text": "Status der Patientenverfügung unbekannt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_verfuegbarkeit_der_patientenverfuegung": {
+      "title": "Verfügbarkeit der Patientenverfügung",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "soziales_acp_eintrag_verfuegbarkeit_der_patientenverfuegung_wert_patientenverfuegung_im_original_vorliegend": {
+          "kind": "neutral",
+          "text": "Patientenverfügung im Original vorliegend"
+        },
+        "soziales_acp_eintrag_verfuegbarkeit_der_patientenverfuegung_wert_patientenverfuegung_als_bild_vorliegend": {
+          "kind": "neutral",
+          "text": "Patientenverfügung als Bild vorliegend"
+        },
+        "soziales_acp_eintrag_verfuegbarkeit_der_patientenverfuegung_wert_ablageort_der_patientenverfuegung": {
+          "kind": "neutral",
+          "text": "Ablageort der Patientenverfügung: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "condition": {
+        "values": [
+          "soziales_acp_eintrag_patientenverfuegung_wert_patientenverfuegung_liegt_vor"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "soziales_acp_eintrag_vorsorgevollmacht": {
+      "title": "Vorsorgevollmacht",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_vorsorgevollmacht_wert_vorsorgevollmacht_liegt_vor": {
+          "kind": "neutral",
+          "text": "Vorsorgevollmacht liegt vor"
+        },
+        "soziales_acp_eintrag_vorsorgevollmacht_wert_vorsorgevollmacht_laut_angaben_vorhanden_nicht_vorliegend": {
+          "kind": "neutral",
+          "text": "Vorsorgevollmacht laut Angaben vorhanden, nicht vorliegend"
+        },
+        "soziales_acp_eintrag_vorsorgevollmacht_wert_keine_vorsorgevollmacht": {
+          "kind": "neutral",
+          "text": "keine Vorsorgevollmacht"
+        },
+        "soziales_acp_eintrag_vorsorgevollmacht_wert_status_der_vorsorgevollmacht_unbekannt": {
+          "kind": "neutral",
+          "text": "Status der Vorsorgevollmacht unbekannt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_betreuungsverfuegung": {
+      "title": "Betreuungsverfügung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_betreuungsverfuegung_wert_betreuungsverfuegung_liegt_vor": {
+          "kind": "neutral",
+          "text": "Betreuungsverfügung liegt vor"
+        },
+        "soziales_acp_eintrag_betreuungsverfuegung_wert_betreuungsverfuegung_laut_angaben_vorhanden_nicht_vorliegend": {
+          "kind": "neutral",
+          "text": "Betreuungsverfügung laut Angaben vorhanden, nicht vorliegend"
+        },
+        "soziales_acp_eintrag_betreuungsverfuegung_wert_keine_betreuungsverfuegung": {
+          "kind": "neutral",
+          "text": "keine Betreuungsverfügung"
+        },
+        "soziales_acp_eintrag_betreuungsverfuegung_wert_status_der_betreuungsverfuegung_unbekannt": {
+          "kind": "neutral",
+          "text": "Status der Betreuungsverfügung unbekannt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_notfallbogen": {
+      "title": "Ärztlicher Notfallbogen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_notfallbogen_wert_aerztlicher_notfallbogen_liegt_vor": {
+          "kind": "neutral",
+          "text": "ärztlicher Notfallbogen liegt vor"
+        },
+        "soziales_acp_eintrag_notfallbogen_wert_aerztlicher_notfallbogen_laut_angaben_vorhanden_nicht_vorliegend": {
+          "kind": "neutral",
+          "text": "ärztlicher Notfallbogen laut Angaben vorhanden, nicht vorliegend"
+        },
+        "soziales_acp_eintrag_notfallbogen_wert_kein_aerztlicher_notfallbogen": {
+          "kind": "neutral",
+          "text": "kein ärztlicher Notfallbogen"
+        },
+        "soziales_acp_eintrag_notfallbogen_wert_status_des_aerztlichen_notfallbogens_unbekannt": {
+          "kind": "neutral",
+          "text": "Status des ärztlichen Notfallbogens unbekannt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_betroffener_person": {
+      "title": "betroffener Person",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_betroffener_person_wert_betroffener_person": {
+          "kind": "neutral",
+          "text": "betroffener Person"
+        }
+      }
+    },
+    "soziales_acp_eintrag_angehoerigen": {
+      "title": "Angehörigen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_angehoerigen_wert_angehoerigen": {
+          "kind": "neutral",
+          "text": "Angehörigen"
+        }
+      }
+    },
+    "soziales_acp_eintrag_bevollmaechtigter_person": {
+      "title": "bevollmächtigter Person",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_bevollmaechtigter_person_wert_bevollmaechtigter_person": {
+          "kind": "neutral",
+          "text": "bevollmächtigter Person"
+        }
+      }
+    },
+    "soziales_acp_eintrag_rechtlicher_betreuung": {
+      "title": "rechtlicher Betreuung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_rechtlicher_betreuung_wert_rechtlicher_betreuung": {
+          "kind": "neutral",
+          "text": "rechtlicher Betreuung"
+        }
+      }
+    },
+    "soziales_acp_eintrag_behandelnder_aerztin": {
+      "title": "behandelnder Ärztin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_behandelnder_aerztin_wert_behandelnder_aerztin": {
+          "kind": "neutral",
+          "text": "behandelnder Ärztin"
+        }
+      }
+    },
+    "soziales_acp_eintrag_behandelndem_arzt": {
+      "title": "behandelndem Arzt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_behandelndem_arzt_wert_behandelndem_arzt": {
+          "kind": "neutral",
+          "text": "behandelndem Arzt"
+        }
+      }
+    },
+    "soziales_acp_eintrag_weiteren_beteiligten": {
+      "title": "weiteren Beteiligten",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_weiteren_beteiligten_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "soziales_acp_eintrag_freude_am_leben_geaeussert": {
+      "title": "Freude am Leben geäußert",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_freude_am_leben_geaeussert_wert_freude_am_leben_geaeussert": {
+          "kind": "neutral",
+          "text": "Freude am Leben geäußert"
+        }
+      }
+    },
+    "soziales_acp_eintrag_nimmt_am_leben_in_der_umgebung_teil": {
+      "title": "nimmt am Leben in der Umgebung teil",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_nimmt_am_leben_in_der_umgebung_teil_wert_nimmt_am_leben_in_der_umgebung_teil": {
+          "kind": "neutral",
+          "text": "nimmt am Leben in der Umgebung teil"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_teilnahme_an_aktivitaeten": {
+      "title": "keine Teilnahme an Aktivitäten",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_teilnahme_an_aktivitaeten_wert_keine_teilnahme_an_aktivitaeten": {
+          "kind": "abnormal",
+          "text": "keine Teilnahme an Aktivitäten"
+        }
+      }
+    },
+    "soziales_acp_eintrag_lebensueberdruss_geaeussert": {
+      "title": "Lebensüberdruss geäußert",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_lebensueberdruss_geaeussert_wert_lebensueberdruss_geaeussert": {
+          "kind": "abnormal",
+          "text": "Lebensüberdruss geäußert"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_nahrungsaufnahme_mehr": {
+      "title": "keine Nahrungsaufnahme mehr",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_nahrungsaufnahme_mehr_wert_keine_nahrungsaufnahme_mehr": {
+          "kind": "abnormal",
+          "text": "keine Nahrungsaufnahme mehr"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_fluessigkeitsaufnahme_mehr": {
+      "title": "keine Flüssigkeitsaufnahme mehr",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_fluessigkeitsaufnahme_mehr_wert_keine_fluessigkeitsaufnahme_mehr": {
+          "kind": "abnormal",
+          "text": "keine Flüssigkeitsaufnahme mehr"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_wiederbelebungsmassnahmen_dnr": {
+      "title": "keine Wiederbelebungsmaßnahmen (DNR)",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_wiederbelebungsmassnahmen_dnr_wert_keine_wiederbelebungsmassnahmen_dnr": {
+          "kind": "neutral",
+          "text": "keine Wiederbelebungsmaßnahmen (DNR)"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_invasive_beatmung_dni": {
+      "title": "keine invasive Beatmung (DNI)",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_invasive_beatmung_dni_wert_keine_invasive_beatmung_dni": {
+          "kind": "neutral",
+          "text": "keine invasive Beatmung (DNI)"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_nierenersatzverfahren": {
+      "title": "keine Nierenersatzverfahren",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_nierenersatzverfahren_wert_keine_nierenersatzverfahren": {
+          "kind": "neutral",
+          "text": "keine Nierenersatzverfahren"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_organersatzverfahren": {
+      "title": "keine Organersatzverfahren",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_organersatzverfahren_wert_keine_organersatzverfahren": {
+          "kind": "neutral",
+          "text": "keine Organersatzverfahren"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_aufnahme_auf_die_intensivstation": {
+      "title": "keine Aufnahme auf die Intensivstation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_aufnahme_auf_die_intensivstation_wert_keine_aufnahme_auf_die_intensivstation": {
+          "kind": "neutral",
+          "text": "keine Aufnahme auf die Intensivstation"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_antiinfektive_therapie": {
+      "title": "keine antiinfektive Therapie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_antiinfektive_therapie_wert_keine_antiinfektive_therapie": {
+          "kind": "neutral",
+          "text": "keine antiinfektive Therapie"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_parenterale_oder_sondengestuetzte_fluessigkeitsgabe": {
+      "title": "keine parenterale oder sondengestützte Flüssigkeitsgabe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_parenterale_oder_sondengestuetzte_fluessigkeitsgabe_wert_keine_parenterale_oder_sondengestuetzte_fluessigkeitsgabe": {
+          "kind": "neutral",
+          "text": "keine parenterale oder sondengestützte Flüssigkeitsgabe"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_parenterale_oder_sondengestuetzte_ernaehrung": {
+      "title": "keine parenterale oder sondengestützte Ernährung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_parenterale_oder_sondengestuetzte_ernaehrung_wert_keine_parenterale_oder_sondengestuetzte_ernaehrung": {
+          "kind": "neutral",
+          "text": "keine parenterale oder sondengestützte Ernährung"
+        }
+      }
+    },
+    "soziales_acp_eintrag_keine_lebensverlaengernden_massnahmen": {
+      "title": "keine lebensverlängernden Maßnahmen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_keine_lebensverlaengernden_massnahmen_wert_keine_lebensverlaengernden_massnahmen": {
+          "kind": "neutral",
+          "text": "keine lebensverlängernden Maßnahmen"
+        }
+      }
+    },
+    "soziales_acp_eintrag_andere_behandlungsbegrenzung": {
+      "title": "andere Behandlungsbegrenzung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_andere_behandlungsbegrenzung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "soziales_acp_eintrag_ergaenzende_angaben_zur_vorausplanung": {
+      "title": "Ergänzende Angaben zur Vorausplanung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "soziales_acp_eintrag_ergaenzende_angaben_zur_vorausplanung_wert_value": {
+          "kind": "neutral",
+          "text": "{:ergaenzung*:}"
+        }
+      },
+      "attributes": {
+        "ergaenzung": "soziales_acp_eingabe_ergaenzung"
+      }
+    }
+  }
+}

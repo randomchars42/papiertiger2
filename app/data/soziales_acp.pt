@@ -1,0 +1,69 @@
+# Soziale Situation, Unterstützung und gesundheitliche Vorausplanung.
+N: soziales_acp
+I: gemeinsam
+
+E ergaenzung: multiline label="Ergänzende Angaben" placeholder="Freie Angaben zu sozialer Situation oder Vorausplanung" rows=3 maxrows=12
+
+G @root @active(klinik) @reset @subgroups(break): Soziales / Advance Care Planning
+  G @autocompact @reveal(initial): Wohnsituation
+    P: Wohnform => lebt in eigener Häuslichkeit|- / lebt in einer Pflegewohngemeinschaft|- / lebt in einer Pflegeeinrichtung|- / andere Wohnform: {:freitext*:}|-
+    P: Haushaltsform => alleinlebend|- / lebt mit Partnerin zusammen|- / lebt mit Partner zusammen|- / lebt mit Angehörigen zusammen|- / Haushaltsform unbekannt|-
+
+  G @autocompact @reveal(initial) @subgroups(break): Unterstützung und Pflege
+    G: Unterstützung durch
+      P: keine regelmäßige Unterstützung|-
+      P: Tochter|-
+      P: Sohn|-
+      P: Kinder|-
+      P: Enkelin|-
+      P: Enkel|-
+      P: Nachbarin|-
+      P: Nachbar|-
+      P: Haushaltshilfe|-
+      P: andere Unterstützung => {:freitext*:}|-
+
+    G: Pflegedienst
+      P pflegedienststatus: Pflegedienst => kein Pflegedienst|- / Unterstützung durch Pflegedienst|-
+      P condition(pflegedienststatus=Unterstützung durch Pflegedienst): Umfang des Pflegedienstes => 24-Stunden-Betreuung|- / dreimal täglich|- / zweimal täglich|- / einmal täglich|- / mehrmals wöchentlich|- / einmal wöchentlich|- / anderer Umfang: {:freitext*:}|-
+
+    P: Pflegegrad => kein Pflegegrad|- / Pflegegrad 1|- / Pflegegrad 2|- / Pflegegrad 3|- / Pflegegrad 4|- / Pflegegrad 5|- / Pflegegrad unbekannt|-
+    P: Ergänzung zur Unterstützung => {:freitext*:}|-
+
+  G @autocompact @reveal(initial) @subgroups(break): Advance Care Planning
+    G: Dokumente
+      P patientenverfuegung: Patientenverfügung => Patientenverfügung liegt vor|- / Patientenverfügung laut Angaben vorhanden, nicht vorliegend|- / keine Patientenverfügung|- / Status der Patientenverfügung unbekannt|-
+      P condition(patientenverfuegung=Patientenverfügung liegt vor): Verfügbarkeit der Patientenverfügung => Patientenverfügung im Original vorliegend|- / Patientenverfügung als Bild vorliegend|- / Ablageort der Patientenverfügung: {:freitext*:}|-
+      P vorsorgevollmacht: Vorsorgevollmacht => Vorsorgevollmacht liegt vor|- / Vorsorgevollmacht laut Angaben vorhanden, nicht vorliegend|- / keine Vorsorgevollmacht|- / Status der Vorsorgevollmacht unbekannt|-
+      P betreuungsverfuegung: Betreuungsverfügung => Betreuungsverfügung liegt vor|- / Betreuungsverfügung laut Angaben vorhanden, nicht vorliegend|- / keine Betreuungsverfügung|- / Status der Betreuungsverfügung unbekannt|-
+      P notfallbogen: Ärztlicher Notfallbogen => ärztlicher Notfallbogen liegt vor|- / ärztlicher Notfallbogen laut Angaben vorhanden, nicht vorliegend|- / kein ärztlicher Notfallbogen|- / Status des ärztlichen Notfallbogens unbekannt|-
+
+    G: Vorausplanung besprochen mit
+      P: betroffener Person|-
+      P: Angehörigen|-
+      P: bevollmächtigter Person|-
+      P: rechtlicher Betreuung|-
+      P: behandelnder Ärztin|-
+      P: behandelndem Arzt|-
+      P: weiteren Beteiligten => {:freitext*:}|-
+
+    G: Aktuelle Äußerungen und Teilhabe
+      P: Freude am Leben geäußert|-
+      P: nimmt am Leben in der Umgebung teil|-
+      P: keine Teilnahme an Aktivitäten|a
+      P: Lebensüberdruss geäußert|a
+      P: keine Nahrungsaufnahme mehr|a
+      P: keine Flüssigkeitsaufnahme mehr|a
+
+    G: Dokumentierte Behandlungsbegrenzungen
+      P: keine Wiederbelebungsmaßnahmen (DNR)|-
+      P: keine invasive Beatmung (DNI)|-
+      P: keine Nierenersatzverfahren|-
+      P: keine Organersatzverfahren|-
+      P: keine Aufnahme auf die Intensivstation|-
+      P: keine antiinfektive Therapie|-
+      P: keine parenterale oder sondengestützte Flüssigkeitsgabe|-
+      P: keine parenterale oder sondengestützte Ernährung|-
+      P: keine lebensverlängernden Maßnahmen|-
+      P: andere Behandlungsbegrenzung => {:freitext*:}|-
+
+    P: Ergänzende Angaben zur Vorausplanung => {:ergaenzung=ergaenzung*:}|-

@@ -70,12 +70,6 @@
   "groups": {
     "ekg": {
       "title": "EKG",
-      "children": [
-        "ekg_gruppe_ekg"
-      ],
-      "phrases": [
-        "ekg_eintrag_ekg_untersuchungen"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -86,25 +80,10 @@
           "id": "ekg_gruppe_ekg"
         }
       ],
-      "reset": true,
-      "collapsed": true
+      "reset": true
     },
     "ekg_gruppe_ekg": {
       "title": "EKG",
-      "kind": "neutral",
-      "children": [
-        "ekg_gruppe_rhythmus_und_frequenz",
-        "ekg_gruppe_elektrische_achse",
-        "ekg_gruppe_brustwandableitungen",
-        "ekg_gruppe_repolarisation",
-        "ekg_gruppe_intervalle",
-        "ekg_gruppe_beurteilung"
-      ],
-      "phrases": [
-        "ekg_eintrag_ekg_ableitung",
-        "ekg_eintrag_zusatzableitungen",
-        "ekg_eintrag_ergaenzung_zum_ekg"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -116,11 +95,7 @@
         },
         {
           "type": "group",
-          "id": "ekg_gruppe_rhythmus_und_frequenz"
-        },
-        {
-          "type": "group",
-          "id": "ekg_gruppe_elektrische_achse"
+          "id": "ekg_gruppe_rhythmus_und_lagetyp"
         },
         {
           "type": "group",
@@ -143,23 +118,16 @@
           "id": "ekg_eintrag_ergaenzung_zum_ekg"
         }
       ],
-      "reset": true,
+      "kind": "neutral",
+      "autoCompact": true,
       "repeatable": {
         "initial": 0,
         "add": "EKG hinzufügen",
         "empty": "ekg_eintrag_ekg_untersuchungen"
       }
     },
-    "ekg_gruppe_rhythmus_und_frequenz": {
-      "title": "Rhythmus und Frequenz",
-      "phrases": [
-        "ekg_eintrag_grundrhythmus",
-        "ekg_eintrag_schrittmacheraktivitaet",
-        "ekg_eintrag_frequenz_und_komplexmuster",
-        "ekg_eintrag_av_dissoziation",
-        "ekg_eintrag_kammerfrequenz",
-        "ekg_eintrag_vorhoffrequenz"
-      ],
+    "ekg_gruppe_rhythmus_und_lagetyp": {
+      "title": "Rhythmus und Lagetyp",
       "items": [
         {
           "type": "phrase",
@@ -167,15 +135,7 @@
         },
         {
           "type": "phrase",
-          "id": "ekg_eintrag_schrittmacheraktivitaet"
-        },
-        {
-          "type": "phrase",
-          "id": "ekg_eintrag_frequenz_und_komplexmuster"
-        },
-        {
-          "type": "phrase",
-          "id": "ekg_eintrag_av_dissoziation"
+          "id": "ekg_eintrag_av_pathologie"
         },
         {
           "type": "phrase",
@@ -184,31 +144,15 @@
         {
           "type": "phrase",
           "id": "ekg_eintrag_vorhoffrequenz"
-        }
-      ],
-      "inline": true
-    },
-    "ekg_gruppe_elektrische_achse": {
-      "title": "Elektrische Achse",
-      "phrases": [
-        "ekg_eintrag_lagetyp"
-      ],
-      "items": [
+        },
         {
           "type": "phrase",
           "id": "ekg_eintrag_lagetyp"
         }
-      ],
-      "collapsed": true
+      ]
     },
     "ekg_gruppe_brustwandableitungen": {
       "title": "Brustwandableitungen",
-      "phrases": [
-        "ekg_eintrag_r_s_umschlag",
-        "ekg_eintrag_rsr_konfiguration_rsr_konfiguration_in_v1_a_rsr_konfiguration_in_v2",
-        "ekg_eintrag_r_progression",
-        "ekg_eintrag_s_persistenz"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -226,16 +170,10 @@
           "type": "phrase",
           "id": "ekg_eintrag_s_persistenz"
         }
-      ],
-      "collapsed": true
+      ]
     },
     "ekg_gruppe_repolarisation": {
       "title": "Repolarisation",
-      "phrases": [
-        "ekg_eintrag_st_strecken",
-        "ekg_eintrag_t_wellen",
-        "ekg_eintrag_modifizierte_sgarbossa_kriterien"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -249,19 +187,10 @@
           "type": "phrase",
           "id": "ekg_eintrag_modifizierte_sgarbossa_kriterien"
         }
-      ],
-      "collapsed": true
+      ]
     },
     "ekg_gruppe_intervalle": {
       "title": "Intervalle",
-      "phrases": [
-        "ekg_eintrag_ueberleitungszeiten",
-        "ekg_eintrag_pq_intervall",
-        "ekg_eintrag_pr_intervall",
-        "ekg_eintrag_qrs_dauer",
-        "ekg_eintrag_qt_intervall",
-        "ekg_eintrag_qtc_intervall"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -287,19 +216,10 @@
           "type": "phrase",
           "id": "ekg_eintrag_qtc_intervall"
         }
-      ],
-      "collapsed": true
+      ]
     },
     "ekg_gruppe_beurteilung": {
       "title": "Beurteilung",
-      "phrases": [
-        "ekg_eintrag_gesamtbeurteilung",
-        "ekg_eintrag_frequenzbeurteilung",
-        "ekg_eintrag_rhythmusbeurteilung",
-        "ekg_eintrag_av_block",
-        "ekg_eintrag_schenkel_und_faszikelblock",
-        "ekg_eintrag_infarktbeurteilung"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -325,8 +245,7 @@
           "type": "phrase",
           "id": "ekg_eintrag_infarktbeurteilung"
         }
-      ],
-      "collapsed": true
+      ]
     }
   },
   "phrases": {
@@ -344,17 +263,17 @@
     "ekg_eintrag_ekg_ableitung": {
       "title": "EKG-Ableitung",
       "kind": "intervention",
-      "default": "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_initial_um",
+      "default": "ekg_eintrag_ekg_ableitung_wert_ekg_initial_um",
       "values": {
-        "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_initial_um": {
+        "ekg_eintrag_ekg_ableitung_wert_ekg_initial_um": {
           "kind": "intervention",
-          "text": "12-Kanal-EKG initial um {:zeitpunkt*:}",
+          "text": "EKG initial um {:zeitpunkt*:}",
           "snomed": "268400002",
           "snomedDisplay": "12 lead ECG"
         },
-        "ekg_eintrag_ekg_ableitung_wert_12_kanal_ekg_im_verlauf_um": {
+        "ekg_eintrag_ekg_ableitung_wert_ekg_im_verlauf_um": {
           "kind": "intervention",
-          "text": "12-Kanal-EKG im Verlauf um {:zeitpunkt*:}",
+          "text": "EKG im Verlauf um {:zeitpunkt*:}",
           "snomed": "268400002",
           "snomedDisplay": "12 lead ECG"
         }
@@ -385,7 +304,7 @@
     "ekg_eintrag_grundrhythmus": {
       "title": "Grundrhythmus",
       "kind": "neutral",
-      "default": "",
+      "default": "ekg_eintrag_grundrhythmus_wert_sinusrhythmus",
       "values": {
         "ekg_eintrag_grundrhythmus_wert_sinusrhythmus": {
           "kind": "normal",
@@ -404,61 +323,59 @@
           "text": "Vorhofflattern",
           "snomed": "164890007",
           "snomedDisplay": "ECG: atrial flutter"
-        }
-      }
-    },
-    "ekg_eintrag_schrittmacheraktivitaet": {
-      "title": "Schrittmacheraktivität",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "ekg_eintrag_schrittmacheraktivitaet_wert_schrittmacherrhythmus": {
+        },
+        "ekg_eintrag_grundrhythmus_wert_schrittmacherrhythmus": {
           "kind": "neutral",
           "text": "Schrittmacherrhythmus",
           "snomed": "426453001",
           "snomedDisplay": "ECG: paced rhythm"
-        }
-      }
-    },
-    "ekg_eintrag_frequenz_und_komplexmuster": {
-      "title": "Frequenz- und Komplexmuster",
-      "kind": "abnormal",
-      "default": "",
-      "values": {
-        "ekg_eintrag_frequenz_und_komplexmuster_wert_regelmaessige_schmalkomplextachykardie": {
+        },
+        "ekg_eintrag_grundrhythmus_wert_regelmaessige_schmalkomplextachykardie": {
           "kind": "abnormal",
           "text": "regelmäßige Schmalkomplextachykardie",
           "snomed": "426761007",
           "snomedDisplay": "ECG: supraventricular tachycardia"
         },
-        "ekg_eintrag_frequenz_und_komplexmuster_wert_unregelmaessige_schmalkomplextachykardie": {
+        "ekg_eintrag_grundrhythmus_wert_unregelmaessige_schmalkomplextachykardie": {
           "kind": "abnormal",
           "text": "unregelmäßige Schmalkomplextachykardie"
         },
-        "ekg_eintrag_frequenz_und_komplexmuster_wert_regelmaessige_breitkomplextachykardie": {
+        "ekg_eintrag_grundrhythmus_wert_regelmaessige_breitkomplextachykardie": {
           "kind": "abnormal",
           "text": "regelmäßige Breitkomplextachykardie"
         },
-        "ekg_eintrag_frequenz_und_komplexmuster_wert_unregelmaessige_breitkomplextachykardie": {
+        "ekg_eintrag_grundrhythmus_wert_unregelmaessige_breitkomplextachykardie": {
           "kind": "abnormal",
           "text": "unregelmäßige Breitkomplextachykardie"
         },
-        "ekg_eintrag_frequenz_und_komplexmuster_wert_schmalkomplexbradykardie": {
+        "ekg_eintrag_grundrhythmus_wert_schmalkomplexbradykardie": {
           "kind": "abnormal",
           "text": "Schmalkomplexbradykardie"
         },
-        "ekg_eintrag_frequenz_und_komplexmuster_wert_breitkomplexbradykardie": {
+        "ekg_eintrag_grundrhythmus_wert_breitkomplexbradykardie": {
           "kind": "abnormal",
           "text": "Breitkomplexbradykardie"
+        },
+        "ekg_eintrag_grundrhythmus_wert_bigeminus": {
+          "kind": "abnormal",
+          "text": "Bigeminus"
         }
       }
     },
-    "ekg_eintrag_av_dissoziation": {
-      "title": "AV-Dissoziation",
+    "ekg_eintrag_av_pathologie": {
+      "title": "AV-Pathologie",
       "kind": "abnormal",
       "default": "",
       "values": {
-        "ekg_eintrag_av_dissoziation_wert_av_dissoziation": {
+        "ekg_eintrag_av_pathologie_wert_laenger_werdende_av_intervalle": {
+          "kind": "abnormal",
+          "text": "länger werdende AV-Intervalle"
+        },
+        "ekg_eintrag_av_pathologie_wert_intermittierender_ausfall_der_av_ueberleitung": {
+          "kind": "abnormal",
+          "text": "intermittierender Ausfall der AV-Überleitung"
+        },
+        "ekg_eintrag_av_pathologie_wert_av_dissoziation": {
           "kind": "abnormal",
           "text": "AV-Dissoziation"
         }
@@ -521,13 +438,13 @@
           "kind": "abnormal",
           "text": "überdrehter Rechtslagetyp"
         },
-        "ekg_eintrag_lagetyp_wert_sagittaltyp_bei_siqiii_konfiguration": {
+        "ekg_eintrag_lagetyp_wert_sagittallagetyp_bei_siqiii_konfiguration": {
           "kind": "abnormal",
-          "text": "Sagittaltyp bei SIQIII-Konfiguration"
+          "text": "Sagittallagetyp bei SIQIII-Konfiguration"
         },
-        "ekg_eintrag_lagetyp_wert_sagittaltyp_bei_sisiisiii_konfiguration": {
+        "ekg_eintrag_lagetyp_wert_sagittallagetyp_bei_sisiisiii_konfiguration": {
           "kind": "abnormal",
-          "text": "Sagittaltyp bei SISIISIII-Konfiguration"
+          "text": "Sagittallagetyp bei SISIISIII-Konfiguration"
         }
       }
     },
@@ -576,7 +493,7 @@
     "ekg_eintrag_r_progression": {
       "title": "R-Progression",
       "kind": "neutral",
-      "default": "",
+      "default": "ekg_eintrag_r_progression_wert_unauffaellige_r_progression_in_den_brustwandableitungen",
       "values": {
         "ekg_eintrag_r_progression_wert_unauffaellige_r_progression_in_den_brustwandableitungen": {
           "kind": "normal",
@@ -599,7 +516,7 @@
     "ekg_eintrag_s_persistenz": {
       "title": "S-Persistenz",
       "kind": "neutral",
-      "default": "",
+      "default": "ekg_eintrag_s_persistenz_wert_keine_s_persistenz_bis_v6",
       "values": {
         "ekg_eintrag_s_persistenz_wert_keine_s_persistenz_bis_v6": {
           "kind": "normal",
@@ -614,7 +531,7 @@
     "ekg_eintrag_st_strecken": {
       "title": "ST-Strecken",
       "kind": "neutral",
-      "default": "",
+      "default": "ekg_eintrag_st_strecken_wert_keine_signifikanten_st_streckenveraenderungen",
       "values": {
         "ekg_eintrag_st_strecken_wert_keine_signifikanten_st_streckenveraenderungen": {
           "kind": "normal",
@@ -649,6 +566,14 @@
         "ekg_eintrag_t_wellen_wert_wellens_zeichen": {
           "kind": "abnormal",
           "text": "Wellens-Zeichen"
+        },
+        "ekg_eintrag_t_wellen_wert_de_winter_zeichen": {
+          "kind": "abnormal",
+          "text": "De-Winter-Zeichen"
+        },
+        "ekg_eintrag_t_wellen_wert_akute_t_wellen_omi_verdaechtig": {
+          "kind": "abnormal",
+          "text": "akute T-Wellen (OMI-verdächtig)"
         }
       },
       "attributes": {
@@ -669,9 +594,13 @@
           "text": "modifizierte Sgarbossa-Kriterien erfüllt"
         }
       },
-      "suggestions": {
-        "ekg_eintrag_schrittmacheraktivitaet_wert_schrittmacherrhythmus": null,
-        "ekg_eintrag_schenkel_und_faszikelblock_wert_linksschenkelblock": null
+      "condition": {
+        "values": [
+          "ekg_eintrag_grundrhythmus_wert_schrittmacherrhythmus",
+          "ekg_eintrag_schenkel_und_faszikelblock_wert_linksschenkelblock"
+        ],
+        "negated": false,
+        "value": null
       }
     },
     "ekg_eintrag_ueberleitungszeiten": {
@@ -758,7 +687,7 @@
     "ekg_eintrag_gesamtbeurteilung": {
       "title": "Gesamtbeurteilung",
       "kind": "normal",
-      "default": "",
+      "default": "ekg_eintrag_gesamtbeurteilung_wert_unauffaelliges_ekg",
       "values": {
         "ekg_eintrag_gesamtbeurteilung_wert_unauffaelliges_ekg": {
           "kind": "normal",
@@ -876,6 +805,10 @@
           "text": "ST-Streckenhebungsinfarkt (STEMI)",
           "snomed": "401303003",
           "snomedDisplay": "Acute ST segment elevation myocardial infarction"
+        },
+        "ekg_eintrag_infarktbeurteilung_wert_omi": {
+          "kind": "abnormal",
+          "text": "OMI"
         }
       }
     },

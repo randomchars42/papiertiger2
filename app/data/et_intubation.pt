@@ -1,0 +1,26 @@
+# Endotracheale Intubation als eigenständiger Maßnahmenblock
+N: et_intubation
+I: gemeinsam
+
+E tubusgroesse: number label="Tubusgröße" prefix="ID " suffix=" mm" min=0 max=9 step=0.5
+E tubustiefe: number label="Tubustiefe ab Zahnreihe" suffix=" cm" min=6 max=35 step=1
+E versuchsanzahl: number label="Intubationsversuche" min=1 step=1 default=1
+E sichtbedingungen: choice label="Cormack-Lehane-Grad" => Grad I|- / Grad II|- / Grad III|- / Grad IV|-
+E ergaenzung: multiline label="Ergänzung zur Intubation" placeholder="Verlauf, Schwierigkeiten oder weitere Lagekontrolle" rows=2 maxrows=10
+
+G @root @reset: Endotracheale Intubation
+  P: Verfahren => Rapid-Sequence-Induktion|i / endotracheale Intubation ohne Rapid-Sequence-Induktion|i
+  P: Laryngoskopie => videolaryngoskopisch gestützt|i / konventionell laryngoskopiert|i
+  P: Intubationshilfe => ohne Intubationshilfe|- / mittels Bougie|i / mittels faltbarem Intubationskatheter|i
+  P: Sichtbedingungen => Sichtbedingungen nach Cormack und Lehane: {:grad=sichtbedingungen*:}|-
+  P: Intubationsversuche => Intubation im {:anzahl=versuchsanzahl*:}. Versuch|-
+  P: Tubusgröße => Endotrachealtubus {:groesse=tubusgroesse*:}|-
+  P: Tubustiefe => Tubustiefe {:tiefe=tubustiefe*:} ab Zahnreihe|-
+
+  G @autocompact @reveal(initial): Lagekontrolle
+    P: Kapnographie => prompt regelrechte Kurve in der Kapnographie|i / keine regelrechte Kapnographiekurve|a
+    P: Kapnometrie => Tubuslage kapnometrisch bestätigt|i / Tubuslage kapnometrisch nicht bestätigt|a
+    P: Auskultation => seitengleich belüftet, kein Geräusch epigastrisch|i / seitendifferente Belüftung|a / Geräusch epigastrisch|a
+
+  P: Zahnstatus => Zahnstatus nach Intubation unverändert|n / Zahnstatus nach Intubation verändert: {:freitext*:}|a
+  P: Ergänzung zur endotrachealen Intubation => {:ergaenzung=ergaenzung*:}|-

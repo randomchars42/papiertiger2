@@ -2,10 +2,109 @@
 N: pocus_abdomen
 I: gemeinsam
 
-G @root @inactive @reset: POCUS Abdomen|-
-  P: Abdomensonographie => Point-of-Care-Ultraschall des Abdomens durchgeführt @sct=870384002[Point of care ultrasound]|i*
-  P: Freie Flüssigkeit => keine freie intraabdominelle Flüssigkeit|n* / freie intraabdominelle Flüssigkeit|a / Aszites @sct=389026000[Ascites]|a
-  P: Gallenblase => keine Gallensteine @sct=413350009:{246090004=235919008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Gallstone; current; subject of record]|n* / Gallensteine @sct=235919008[Gallstone]|a / sonographische Zeichen einer Cholezystitis|a
-  P: Harnstau => kein Harnstau @sct=413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Hydronephrosis; current; subject of record]|n* / Harnstau links @sct=43064006[Hydronephrosis]|a / Harnstau rechts @sct=43064006[Hydronephrosis]|a / Harnstau beidseits @sct=43064006[Hydronephrosis]|a
-  P: Bauchaorta => Bauchaorta ohne Aneurysma @sct=413350009:{246090004=233985008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Abdominal aortic aneurysm; current; subject of record]|n* / Bauchaortenaneurysma @sct=233985008[Abdominal aortic aneurysm]|a
-  P: Ergänzung zum POCUS Abdomen => {:freitext*:}|-
+E millimeter: number label="Millimeter" suffix=" mm" min=0 step=1
+E zentimeter: number label="Zentimeter" suffix=" cm" min=0 step=0.1
+E ausdehnung: text label="Ausdehnung" placeholder="Länge × Breite × Tiefe in cm" prefix=""
+
+G @root @inactive @summary @reset @subgroups(break): Abdomensonographie|-
+
+  S: Normalbefund|n
+    Untersuchung = Abdomensonographie durchgeführt
+    Leberkontur = Leber glatt konturiert
+    Leberparenchym = Leberparenchym homogen
+    Echogenität der Leber = Leberparenchym isoechogen zur Niere
+    Leberrand = Leberrand spitzwinklig
+    Perihepatische Flüssigkeit = keine freie perihepatische Flüssigkeit
+    Lebervenen = orthograder Fluss in den Lebervenen
+    Pfortader = Pfortader regelrecht
+    Füllung der Gallenblase = Gallenblase gefüllt
+    Gallenblaseninhalt = Gallenblase ohne echogene Binnenstrukturen
+    Gallenblasenwand = Gallenblasenwand schlank
+    Ductus hepatocholedochus = Ductus hepatocholedochus schlank
+    Darstellung des Pankreas = Pankreas vollständig einsehbar
+    Pankreasparenchym = Pankreasparenchym homogen
+    Ductus pancreaticus = Ductus pancreaticus schlank
+    Peripankreatische Flüssigkeit = keine peripankreatische Flüssigkeit
+    Milzparenchym = Milzparenchym homogen
+    Milzgröße = Milz normal groß
+    Perisplenische Flüssigkeit = keine freie perisplenische Flüssigkeit
+    Lage der linken Niere = linke Niere orthotop
+    Harnstau links = kein Harnstau links
+    Zyste der linken Niere = keine Zyste der linken Niere
+    Lage der rechten Niere = rechte Niere orthotop
+    Harnstau rechts = kein Harnstau rechts
+    Zyste der rechten Niere = keine Zyste der rechten Niere
+    Füllung der Harnblase = Harnblase gut gefüllt
+    Harnblaseninhalt = Harnblase ohne echogene Binnenstrukturen
+    Freie Flüssigkeit im Unterbauch = keine freie Flüssigkeit im Unterbauch
+    Darmlumen = Darmschlingen nicht dilatiert
+    Darmmotilität = regelrechte Darmmotilität
+    Darmwand = Darmwand nicht verdickt
+    Appendix = Appendix unauffällig
+
+  P: Untersuchung => Abdomensonographie durchgeführt @sct=870384002[Point of care ultrasound]|i
+
+  G @autocompact @reveal(initial): Leber
+    P: Leberkontur => Leber glatt konturiert|n / Leber wellig konturiert|a / Leber knotig konturiert|a
+    P: Leberparenchym => Leberparenchym homogen|n / Leberparenchym inhomogen|a
+    P: Echogenität der Leber => Leberparenchym isoechogen zur Niere|n / Leberparenchym echoreicher als die Niere|a
+    P: Leberrand => Leberrand spitzwinklig|n / Leberrand abgerundet|a
+    P: Perihepatische Flüssigkeit => keine freie perihepatische Flüssigkeit|n / freie perihepatische Flüssigkeit|a
+    P: Lebervenen => orthograder Fluss in den Lebervenen|n / retrograder Fluss in den Lebervenen|a
+    P: Pfortader => Pfortader regelrecht|n / Pfortader auffällig|a
+
+  G @autocompact @reveal(initial): Gallenblase und Gallenwege
+    P: Füllung der Gallenblase => Gallenblase gefüllt|n / Gallenblase gering gefüllt|- / Gallenblase leer|- / Gallenblase prall gefüllt|a / Gallenblasenhydrops|a / Zustand nach Cholezystektomie|-
+    P: Gallenblaseninhalt => Gallenblase ohne echogene Binnenstrukturen @sct=413350009:{246090004=235919008},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Gallstone; current; subject of record]|n / Gallenstein @sct=235919008[Gallstone]|a / mehrere Gallensteine @sct=235919008[Gallstone]|a / Gallengries|a / Gallenblasenpolyp mit {:millimeter=millimeter*:}|a
+    P: Gallenblasenwand => Gallenblasenwand schlank|n / Gallenblasenwand verdickt|a / Gallenblasenwand ödematös|a / pericholezystische Flüssigkeit|a
+    P: Ductus hepatocholedochus => Ductus hepatocholedochus schlank|n / Ductus hepatocholedochus {:millimeter=millimeter*:}|- / Ductus hepatocholedochus erweitert|a / Ductus hepatocholedochus nach Cholezystektomie erweitert|-
+
+  G @autocompact @reveal(initial): Pankreas
+    P: Darstellung des Pankreas => Pankreas vollständig einsehbar|n / Pankreas teilweise einsehbar|- / Pankreas nicht einsehbar|-
+    P: Pankreasparenchym => Pankreasparenchym homogen|n / Pankreasparenchym inhomogen|a
+    P: Ductus pancreaticus => Ductus pancreaticus schlank|n / Ductus pancreaticus {:millimeter=millimeter*:}|- / Ductus pancreaticus erweitert|a
+    P: Peripankreatische Flüssigkeit => keine peripankreatische Flüssigkeit|n / peripankreatische Flüssigkeit|a
+
+  G @autocompact @reveal(initial): Milz
+    P: Milzparenchym => Milzparenchym homogen|n / Milzparenchym inhomogen|a
+    P: Milzgröße => Milz normal groß|n / Milz {:zentimeter=zentimeter*:} lang|- / Splenomegalie|a
+    P: Perisplenische Flüssigkeit => keine freie perisplenische Flüssigkeit|n / freie perisplenische Flüssigkeit|a
+
+  G @autocompact @reveal(initial): Linke Niere
+    P: Lage der linken Niere => linke Niere orthotop|n / linke Niere dystop|a / linke Niere nicht darstellbar|a
+    P: Harnstau links => kein Harnstau links @sct=413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Hydronephrosis; current; subject of record]|n / Harnstau links Grad I @sct=43064006[Hydronephrosis]|a / Harnstau links Grad II @sct=43064006[Hydronephrosis]|a / Harnstau links Grad III @sct=43064006[Hydronephrosis]|a / Harnstau links Grad IV @sct=43064006[Hydronephrosis]|a
+    P: Zyste der linken Niere => keine Zyste der linken Niere|n / blande Zyste der linken Niere|n / komplizierte Zyste der linken Niere|a
+    P: Maße der linken Niere => linke Niere {:ausdehnung=ausdehnung*:}|-
+
+  G @autocompact @reveal(initial): Rechte Niere
+    P: Lage der rechten Niere => rechte Niere orthotop|n / rechte Niere dystop|a / rechte Niere nicht darstellbar|a
+    P: Harnstau rechts => kein Harnstau rechts @sct=413350009:{246090004=43064006},{408729009=410516002},{408731000=410512000},{408732007=410604004}[Known absent: Hydronephrosis; current; subject of record]|n / Harnstau rechts Grad I @sct=43064006[Hydronephrosis]|a / Harnstau rechts Grad II @sct=43064006[Hydronephrosis]|a / Harnstau rechts Grad III @sct=43064006[Hydronephrosis]|a / Harnstau rechts Grad IV @sct=43064006[Hydronephrosis]|a
+    P: Zyste der rechten Niere => keine Zyste der rechten Niere|n / blande Zyste der rechten Niere|n / komplizierte Zyste der rechten Niere|a
+    P: Maße der rechten Niere => rechte Niere {:ausdehnung=ausdehnung*:}|-
+
+  G @autocompact @reveal(initial): Harnblase
+    P: Füllung der Harnblase => Harnblase gut gefüllt|n / Harnblase mäßig gefüllt|- / Harnblase gering gefüllt|- / Harnblase leer|-
+    P: Harnblaseninhalt => Harnblase ohne echogene Binnenstrukturen|n / echogene Binnenstrukturen in der Harnblase|a
+
+  G @autocompact @reveal(initial): Unterbauch
+    P: Freie Flüssigkeit im Unterbauch => keine freie Flüssigkeit im Unterbauch|n / freie Flüssigkeit im Unterbauch|a / Aszites @sct=389026000[Ascites]|a
+
+  G @autocompact @reveal(initial): Darm
+    P: Darmlumen => Darmschlingen nicht dilatiert|n / dilatierte Darmschlingen|a / maximaler Darmdurchmesser {:millimeter=millimeter*:}|-
+    P: Darmmotilität => regelrechte Darmmotilität|n / aufgehobene Darmmotilität|a / gesteigerte Darmmotilität|a / Pendelperistaltik|a
+    P: Darmwand => Darmwand nicht verdickt|n / Darmwand verdickt|a
+    P: Appendix => Appendix unauffällig|n / Appendix verdickt und flüssigkeitsgefüllt|a / Appendix nicht darstellbar|-
+
+  G @autocompact @reveal(initial): Beurteilung
+    P: Unauffälliger Abdomenbefund => sonographisch unauffälliger Abdomenbefund|n
+    P: Cholezystolithiasis => sonographischer Befund einer Cholezystolithiasis|a
+    P: Cholezystitis => sonographischer Befund einer Cholezystitis|a
+    P: Cholestase => sonographischer Befund einer Cholestase|a
+    P: Choledocholithiasis => sonographischer Befund einer Choledocholithiasis|a
+    P: Mechanischer Ileus => sonographischer Befund eines mechanischen Ileus|a
+    P: Paralytischer Ileus => sonographischer Befund eines paralytischen Ileus|a
+    P: Terminale Ileitis => sonographischer Befund einer terminalen Ileitis|a
+    P: Sigmadivertikulitis => sonographischer Befund einer Sigmadivertikulitis|a
+    P: Appendizitis => sonographischer Befund einer Appendizitis|a
+
+  P: Ergänzung zur Abdomensonographie => {:freitext*:}|-

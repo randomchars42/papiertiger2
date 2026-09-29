@@ -5,56 +5,6 @@
   ],
   "catalogs": {
     "symptome": {
-      "lenses": [
-        {
-          "id": "rettungsdienst",
-          "label": "Rettungsdienst"
-        },
-        {
-          "id": "kernteam",
-          "label": "Kernteam"
-        },
-        {
-          "id": "trauma_orthopaedie",
-          "label": "Trauma & Orthopädie"
-        },
-        {
-          "id": "allgemeinchirurgie",
-          "label": "Allgemeinchirurgie"
-        },
-        {
-          "id": "thorax_gefaesschirurgie",
-          "label": "Thorax- & Gefäßchirurgie"
-        },
-        {
-          "id": "neurochirurgie",
-          "label": "Neurochirurgie"
-        },
-        {
-          "id": "hno",
-          "label": "HNO"
-        },
-        {
-          "id": "auge",
-          "label": "Auge"
-        },
-        {
-          "id": "gynaekologie_geburtshilfe",
-          "label": "Gynäkologie / Geburtshilfe"
-        },
-        {
-          "id": "paediatrie",
-          "label": "Pädiatrie"
-        },
-        {
-          "id": "psychiatrie",
-          "label": "Psychiatrie"
-        },
-        {
-          "id": "wiedervorstellung_kontrolle",
-          "label": "Wiedervorstellung & Kontrolle"
-        }
-      ],
       "values": {
         "symptome_wert_atemnot": {
           "kind": "abnormal",
@@ -70,6 +20,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "atemnot luftnot dyspnoe kurzatmigkeit",
           "snomed": "267036007",
           "snomedDisplay": "Dyspnoea",
@@ -92,6 +43,11 @@
             "rettungsdienst",
             "kernteam",
             "thorax_gefaesschirurgie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "lok_thorax"
           ],
           "search": "brustschmerz thoraxschmerz brustenge",
           "snomed": "29857009",
@@ -123,6 +79,11 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "lok_abdomen"
+          ],
           "search": "bauchschmerz abdominalschmerz akutes abdomen",
           "snomed": "21522001",
           "snomedDisplay": "Abdominal pain",
@@ -148,6 +109,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "schwaeche allgemeine schwaeche kraftlosigkeit abgeschlagenheit az minderung",
           "snomed": "13791008",
           "snomedDisplay": "Asthenia",
@@ -172,6 +134,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fieber erhoehte temperatur febril",
           "snomed": "386661006",
           "snomedDisplay": "Fever",
@@ -195,6 +158,9 @@
             "kernteam",
             "neurochirurgie",
             "paediatrie"
+          ],
+          "tags": [
+            "schmerz"
           ],
           "search": "kopfschmerz cephalgie migraene",
           "snomed": "25064002",
@@ -220,6 +186,9 @@
             "kernteam",
             "hno"
           ],
+          "tags": [
+            "neuro_schwindel"
+          ],
           "search": "schwindel drehschwindel vertigo benommenheit",
           "snomed": "404640003",
           "snomedDisplay": "Dizziness",
@@ -244,6 +213,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "uebelkeit nausea",
           "snomed": "422587007",
           "snomedDisplay": "Nausea",
@@ -268,6 +238,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "erbrechen emesis",
           "snomed": "422400008",
           "snomedDisplay": "Vomiting",
@@ -293,6 +264,7 @@
             "kernteam",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "synkope praesynkope ohnmacht kollaps kreislaufkollaps",
           "snomed": "271594007",
           "snomedDisplay": "Syncope",
@@ -317,6 +289,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "husten verschleimung produktiver husten",
           "snomed": "49727002",
           "snomedDisplay": "Cough",
@@ -342,6 +315,11 @@
             "trauma_orthopaedie",
             "neurochirurgie"
           ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "lok_wirbelsaeule"
+          ],
           "search": "rueckenschmerz rueckenschmerzen kreuzschmerz lumbago",
           "cedis": [
             {
@@ -359,12 +337,59 @@
             "Herzstolpern",
             "Palpitationen"
           ],
+          "lenses": [],
+          "tags": [],
+          "search": "herzklopfen herzrasen herzstolpern palpitationen",
+          "snomed": "80313002",
+          "snomedDisplay": "Palpitations",
+          "cedis": [
+            {
+              "code": "005",
+              "display": "Palpitationen/unregelmäßiger Herzschlag",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_herzrasen": {
+          "kind": "abnormal",
+          "text": "Herzrasen",
+          "aliases": [
+            "Herzrasen",
+            "Herzstolpern",
+            "Palpitationen"
+          ],
           "lenses": [
             "rettungsdienst",
             "kernteam",
             "thorax_gefaesschirurgie"
           ],
-          "search": "herzklopfen herzrasen herzstolpern palpitationen",
+          "tags": [],
+          "search": "herzrasen herzrasen herzstolpern palpitationen",
+          "snomed": "80313002",
+          "snomedDisplay": "Palpitations",
+          "cedis": [
+            {
+              "code": "005",
+              "display": "Palpitationen/unregelmäßiger Herzschlag",
+              "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_herzstolpern": {
+          "kind": "abnormal",
+          "text": "Herzstolpern",
+          "aliases": [
+            "Herzrasen",
+            "Herzstolpern",
+            "Palpitationen"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "thorax_gefaesschirurgie"
+          ],
+          "tags": [],
+          "search": "herzstolpern herzrasen herzstolpern palpitationen",
           "snomed": "80313002",
           "snomedDisplay": "Palpitations",
           "cedis": [
@@ -386,6 +411,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "durchfall diarrhoe",
           "cedis": [
             {
@@ -406,6 +432,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "verstopfung obstipation",
           "cedis": [
             {
@@ -427,6 +454,9 @@
             "kernteam",
             "neurochirurgie",
             "paediatrie"
+          ],
+          "tags": [
+            "neuro_anfall"
           ],
           "search": "krampfanfall epileptischer anfall konvulsion",
           "snomed": "91175000",
@@ -454,6 +484,9 @@
             "neurochirurgie",
             "paediatrie"
           ],
+          "tags": [
+            "neuro_bewusstsein"
+          ],
           "search": "bewusstseinsstoerung bewusstseinstruebung somnolenz sopor koma",
           "cedis": [
             {
@@ -475,6 +508,9 @@
             "kernteam",
             "psychiatrie",
             "paediatrie"
+          ],
+          "tags": [
+            "neuro_bewusstsein"
           ],
           "search": "verwirrtheit desorientierung delir",
           "cedis": [
@@ -499,6 +535,9 @@
             "kernteam",
             "neurochirurgie"
           ],
+          "tags": [
+            "neuro_fokal"
+          ],
           "search": "extremitaetenschwaeche parese laehmung fast positiv schlaganfallsymptom",
           "cedis": [
             {
@@ -522,6 +561,9 @@
             "kernteam",
             "neurochirurgie"
           ],
+          "tags": [
+            "neuro_fokal"
+          ],
           "search": "sensibilitaetsstoerung paraesthesie taubheit kribbeln hypaesthesie",
           "cedis": [
             {
@@ -541,6 +583,11 @@
             "rettungsdienst",
             "kernteam",
             "allgemeinchirurgie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "lok_flanke"
           ],
           "search": "flankenschmerz nierenschmerz",
           "cedis": [
@@ -565,6 +612,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "algurie dysurie schmerzen beim wasserlassen harnwegsinfekt",
           "cedis": [
             {
@@ -585,6 +633,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "pollakisurie haeufiges wasserlassen harndrang",
           "cedis": [
             {
@@ -605,6 +654,7 @@
             "kernteam",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "harnverhalt ischurie",
           "cedis": [
             {
@@ -624,6 +674,7 @@
             "kernteam",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "haematurie blut im urin",
           "cedis": [
             {
@@ -645,6 +696,7 @@
             "kernteam",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "beinschwellung beinoedem dickes bein",
           "cedis": [
             {
@@ -666,6 +718,7 @@
             "kernteam",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "generalisiertes oedem anasarka wassereinlagerung",
           "cedis": [
             {
@@ -687,6 +740,7 @@
             "kernteam",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "hypertonie bluthochdruck hoher blutdruck",
           "cedis": [
             {
@@ -708,6 +762,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "hypoglykaemie unterzuckerung niedriger blutzucker",
           "cedis": [
             {
@@ -729,6 +784,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "hyperglykaemie ueberzuckerung hoher blutzucker",
           "cedis": [
             {
@@ -751,6 +807,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "allergische reaktion allergie anaphylaxie nesselsucht",
           "cedis": [
             {
@@ -771,6 +828,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "hautausschlag exanthem ausschlag",
           "cedis": [
             {
@@ -790,6 +848,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "juckreiz pruritus",
           "cedis": [
             {
@@ -811,6 +870,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "halsschmerz wunder rachen pharyngitis",
           "cedis": [
             {
@@ -833,6 +893,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "infekt der oberen luftwege erkaeltung schnupfen grippaler infekt",
           "cedis": [
             {
@@ -855,6 +916,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "grippeaehnliche erkrankung influenza gliederschmerzen grippal",
           "cedis": [
             {
@@ -876,6 +938,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "halsschwellung oder nackenschmerz halsschwellung nackenschmerz",
           "cedis": [
             {
@@ -898,6 +961,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "schluckbeschwerden dysphagie schluckstoerung",
           "cedis": [
             {
@@ -918,6 +982,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "ohrenschmerz otalgie",
           "cedis": [
             {
@@ -939,6 +1004,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "nasenbluten epistaxis",
           "cedis": [
             {
@@ -959,6 +1025,7 @@
             "auge",
             "paediatrie"
           ],
+          "tags": [],
           "search": "augenschmerz okulaerer schmerz",
           "cedis": [
             {
@@ -982,6 +1049,7 @@
             "auge",
             "paediatrie"
           ],
+          "tags": [],
           "search": "sehstoerung sehverlust verschwommenes sehen",
           "cedis": [
             {
@@ -1003,6 +1071,7 @@
             "auge",
             "paediatrie"
           ],
+          "tags": [],
           "search": "rotes auge augenroetung augenausfluss",
           "cedis": [
             {
@@ -1024,6 +1093,7 @@
             "trauma_orthopaedie",
             "neurochirurgie"
           ],
+          "tags": [],
           "search": "ruecken oder wirbelsaeulenverletzung wirbelsaeulentrauma rueckenunfall",
           "cedis": [
             {
@@ -1046,6 +1116,7 @@
             "neurochirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "kopfverletzung schaedel hirn trauma sht",
           "cedis": [
             {
@@ -1059,8 +1130,7 @@
           "kind": "abnormal",
           "text": "Schulter- oder Armschmerz",
           "aliases": [
-            "Schulterschmerz",
-            "Armschmerz",
+            "unspezifischer Armschmerz",
             "Schmerz obere Extremität"
           ],
           "lenses": [
@@ -1068,7 +1138,13 @@
             "kernteam",
             "trauma_orthopaedie"
           ],
-          "search": "schulter oder armschmerz schulterschmerz armschmerz schmerz obere extremitaet",
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben",
+            "extremitaet_oben_offen"
+          ],
+          "search": "schulter oder armschmerz unspezifischer armschmerz schmerz obere extremitaet",
           "cedis": [
             {
               "code": "554",
@@ -1077,13 +1153,161 @@
             }
           ]
         },
+        "symptome_wert_schulterschmerz": {
+          "kind": "abnormal",
+          "text": "Schulterschmerz",
+          "aliases": [
+            "Schmerzen der Schulter"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben"
+          ],
+          "search": "schulterschmerz schmerzen der schulter",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_oberarmschmerz": {
+          "kind": "abnormal",
+          "text": "Oberarmschmerz",
+          "aliases": [
+            "Schmerzen am Oberarm"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben"
+          ],
+          "search": "oberarmschmerz schmerzen am oberarm",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_ellenbogenschmerz": {
+          "kind": "abnormal",
+          "text": "Ellenbogenschmerz",
+          "aliases": [
+            "Schmerzen am Ellenbogen"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben"
+          ],
+          "search": "ellenbogenschmerz schmerzen am ellenbogen",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_unterarmschmerz": {
+          "kind": "abnormal",
+          "text": "Unterarmschmerz",
+          "aliases": [
+            "Schmerzen am Unterarm"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben"
+          ],
+          "search": "unterarmschmerz schmerzen am unterarm",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_handgelenkschmerz": {
+          "kind": "abnormal",
+          "text": "Handgelenkschmerz",
+          "aliases": [
+            "Schmerzen am Handgelenk"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben"
+          ],
+          "search": "handgelenkschmerz schmerzen am handgelenk",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_handschmerz": {
+          "kind": "abnormal",
+          "text": "Handschmerz",
+          "aliases": [
+            "Schmerzen an der Hand"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_oben"
+          ],
+          "search": "handschmerz schmerzen an der hand",
+          "cedis": [
+            {
+              "code": "554",
+              "display": "Schmerzen obere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
         "symptome_wert_bein_hueft_knieschmerz": {
           "kind": "abnormal",
           "text": "Bein-, Hüft- oder Knieschmerz",
           "aliases": [
-            "Beinschmerz",
-            "Hüftschmerz",
-            "Knieschmerz",
+            "unspezifischer Beinschmerz",
             "Schmerz untere Extremität"
           ],
           "lenses": [
@@ -1091,12 +1315,169 @@
             "kernteam",
             "trauma_orthopaedie"
           ],
-          "search": "bein hueft oder knieschmerz beinschmerz hueftschmerz knieschmerz schmerz untere extremitaet",
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten",
+            "extremitaet_unten_offen"
+          ],
+          "search": "bein hueft oder knieschmerz unspezifischer beinschmerz schmerz untere extremitaet",
           "cedis": [
             {
               "code": "555",
               "display": "Schmerzen untere Extremität",
               "relation": "equivalent"
+            }
+          ]
+        },
+        "symptome_wert_hueftschmerz": {
+          "kind": "abnormal",
+          "text": "Hüftschmerz",
+          "aliases": [
+            "Schmerzen an der Hüfte"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten"
+          ],
+          "search": "hueftschmerz schmerzen an der huefte",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_oberschenkelschmerz": {
+          "kind": "abnormal",
+          "text": "Oberschenkelschmerz",
+          "aliases": [
+            "Schmerzen am Oberschenkel"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten"
+          ],
+          "search": "oberschenkelschmerz schmerzen am oberschenkel",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_knieschmerz": {
+          "kind": "abnormal",
+          "text": "Knieschmerz",
+          "aliases": [
+            "Schmerzen am Knie"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten"
+          ],
+          "search": "knieschmerz schmerzen am knie",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_unterschenkelschmerz": {
+          "kind": "abnormal",
+          "text": "Unterschenkelschmerz",
+          "aliases": [
+            "Schmerzen am Unterschenkel"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten"
+          ],
+          "search": "unterschenkelschmerz schmerzen am unterschenkel",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_sprunggelenkschmerz": {
+          "kind": "abnormal",
+          "text": "Sprunggelenkschmerz",
+          "aliases": [
+            "Knöchelschmerz",
+            "Schmerzen am Sprunggelenk"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten"
+          ],
+          "search": "sprunggelenkschmerz knoechelschmerz schmerzen am sprunggelenk",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "broader"
+            }
+          ]
+        },
+        "symptome_wert_fussschmerz": {
+          "kind": "abnormal",
+          "text": "Fußschmerz",
+          "aliases": [
+            "Schmerzen am Fuß"
+          ],
+          "lenses": [
+            "rettungsdienst",
+            "kernteam",
+            "trauma_orthopaedie"
+          ],
+          "tags": [
+            "schmerz",
+            "lokalisation",
+            "extremitaet_unten"
+          ],
+          "search": "fussschmerz schmerzen am fuss",
+          "cedis": [
+            {
+              "code": "555",
+              "display": "Schmerzen untere Extremität",
+              "relation": "broader"
             }
           ]
         },
@@ -1112,6 +1493,9 @@
             "kernteam",
             "trauma_orthopaedie",
             "paediatrie"
+          ],
+          "tags": [
+            "schmerz"
           ],
           "search": "gelenkschwellung gelenkschmerz arthritis erguss",
           "cedis": [
@@ -1135,6 +1519,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "verletzung der oberen extremitaet armverletzung schulterverletzung handverletzung",
           "cedis": [
             {
@@ -1158,6 +1543,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "verletzung der unteren extremitaet beinverletzung hueftverletzung knieverletzung fussverletzung",
           "cedis": [
             {
@@ -1183,6 +1569,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "wunde risswunde quetschwunde schnittwunde stichwunde",
           "cedis": [
             {
@@ -1204,6 +1591,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "abschuerfung schuerfwunde",
           "cedis": [
             {
@@ -1226,6 +1614,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "verbrennung verbruehung thermische verletzung",
           "cedis": [
             {
@@ -1249,6 +1638,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "bissverletzung tierbiss menschenbiss",
           "cedis": [
             {
@@ -1269,6 +1659,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "insektenstich stichreaktion",
           "cedis": [
             {
@@ -1292,6 +1683,7 @@
             "thorax_gefaesschirurgie",
             "neurochirurgie"
           ],
+          "tags": [],
           "search": "schwere verletzung polytrauma schweres trauma",
           "cedis": [
             {
@@ -1318,6 +1710,7 @@
             "trauma_orthopaedie",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "thoraxverletzung thoraxtrauma brustkorbverletzung",
           "cedis": [
             {
@@ -1343,6 +1736,7 @@
             "trauma_orthopaedie",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "bauchverletzung abdominaltrauma",
           "cedis": [
             {
@@ -1369,6 +1763,7 @@
             "trauma_orthopaedie",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "anale oder rektale verletzung analtrauma rektaltrauma",
           "cedis": [
             {
@@ -1390,6 +1785,7 @@
             "allgemeinchirurgie",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "genitalverletzung genitaltrauma",
           "cedis": [
             {
@@ -1413,6 +1809,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "herzstillstand reanimation kreislaufstillstand",
           "cedis": [
             {
@@ -1440,6 +1837,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "atemstillstand apnoe reanimation",
           "cedis": [
             {
@@ -1460,6 +1858,7 @@
             "kernteam",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "bluthusten haemoptyse",
           "cedis": [
             {
@@ -1482,6 +1881,7 @@
             "psychiatrie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "hyperventilation schnelle atmung panikatmung",
           "cedis": [
             {
@@ -1504,6 +1904,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "stridor pfeifende einatmung inspiratorischer stridor",
           "cedis": [
             {
@@ -1526,6 +1927,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "giemen exspiratorisches giemen wheezing",
           "cedis": [
             {
@@ -1549,6 +1951,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper in den atemwegen aspiration verschlucken",
           "cedis": [
             {
@@ -1571,6 +1974,7 @@
             "trauma_orthopaedie",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "kuehle pulslose extremitaet akuter gefaessverschluss ischaemie",
           "cedis": [
             {
@@ -1594,6 +1998,7 @@
             "trauma_orthopaedie",
             "thorax_gefaesschirurgie"
           ],
+          "tags": [],
           "search": "geroetete ueberwaermte extremitaet thrombose phlebitis erysipel",
           "cedis": [
             {
@@ -1616,6 +2021,7 @@
             "neurochirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "gangstoerung ataxie unsicherer gang",
           "cedis": [
             {
@@ -1637,6 +2043,7 @@
             "neurochirurgie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "zittern tremor schuetteln",
           "cedis": [
             {
@@ -1660,6 +2067,10 @@
             "psychiatrie",
             "paediatrie"
           ],
+          "tags": [
+            "psychiatrisch",
+            "psych_depression"
+          ],
           "search": "depression oder suizidalitaet selbstschaedigung suizidgedanken depressive krise",
           "cedis": [
             {
@@ -1681,6 +2092,10 @@
             "kernteam",
             "psychiatrie",
             "paediatrie"
+          ],
+          "tags": [
+            "psychiatrisch",
+            "psych_angst"
           ],
           "search": "angst oder akute krise panikattacke belastungsreaktion",
           "cedis": [
@@ -1704,6 +2119,10 @@
             "kernteam",
             "psychiatrie"
           ],
+          "tags": [
+            "psychiatrisch",
+            "psych_wahrnehmung"
+          ],
           "search": "halluzination oder wahn psychose stimmenhoeren paranoides erleben",
           "cedis": [
             {
@@ -1724,6 +2143,10 @@
             "rettungsdienst",
             "kernteam",
             "psychiatrie"
+          ],
+          "tags": [
+            "psychiatrisch",
+            "psych_fremdgefahr"
           ],
           "search": "fremdgefaehrdung gewalttaetiges verhalten aggression",
           "cedis": [
@@ -1748,6 +2171,7 @@
             "psychiatrie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "intoxikation substanzmissbrauch vergiftung drogenintoxikation",
           "cedis": [
             {
@@ -1770,6 +2194,7 @@
             "psychiatrie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "ueberdosierung medikamentenueberdosierung tabletteneinnahme",
           "cedis": [
             {
@@ -1791,6 +2216,7 @@
             "kernteam",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "substanzentzug alkoholentzug drogenentzug",
           "cedis": [
             {
@@ -1812,6 +2238,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "vaginale blutung blutung vaginal zwischenblutung",
           "cedis": [
             {
@@ -1833,6 +2260,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "schwangerschaftsproblem bis 20 ssw fruehschwangerschaft blutung in der schwangerschaft",
           "cedis": [
             {
@@ -1855,6 +2283,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "schwangerschaftsproblem nach 20 ssw spaetschwangerschaft wehen fruchtwasserabgang",
           "cedis": [
             {
@@ -1875,6 +2304,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "menstruationsbeschwerden regelschmerz dysmenorrhoe",
           "cedis": [
             {
@@ -1894,6 +2324,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "vaginaler ausfluss fluor vaginalis",
           "cedis": [
             {
@@ -1914,6 +2345,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "vaginale schmerzen dyspareunie schmerzen beim geschlechtsverkehr",
           "cedis": [
             {
@@ -1936,6 +2368,7 @@
             "paediatrie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "sexueller uebergriff sexualisierte gewalt",
           "cedis": [
             {
@@ -1958,6 +2391,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "skrotalschmerz oder schwellung hodenschmerz hodenschwellung",
           "cedis": [
             {
@@ -1979,6 +2413,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "penisschwellung paraphimose phimose",
           "cedis": [
             {
@@ -1999,6 +2434,7 @@
             "kernteam",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "genitaler ausfluss oder laesion genitallaesion urethraler ausfluss",
           "cedis": [
             {
@@ -2019,6 +2455,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "appetitlosigkeit inappetenz",
           "cedis": [
             {
@@ -2039,6 +2476,7 @@
             "kernteam",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "bluterbrechen haematemesis",
           "cedis": [
             {
@@ -2061,6 +2499,7 @@
             "kernteam",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "rektale blutung oder teerstuhl blut im stuhl haematochezie melaena",
           "cedis": [
             {
@@ -2081,6 +2520,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "ikterus gelbsucht",
           "cedis": [
             {
@@ -2103,6 +2543,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "leistenschmerz oder schwellung leistenhernie leistenbruch",
           "cedis": [
             {
@@ -2125,6 +2566,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "abdominelle raumforderung oder gespanntes abdomen abwehrspannung geblaehter bauch",
           "cedis": [
             {
@@ -2146,6 +2588,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "zahn oder zahnfleischproblem zahnschmerz zahnfleischblutung",
           "cedis": [
             {
@@ -2167,6 +2610,7 @@
             "hno",
             "neurochirurgie"
           ],
+          "tags": [],
           "search": "gesichtsschmerz trigeminusschmerz nicht dentaler gesichtsschmerz",
           "cedis": [
             {
@@ -2189,6 +2633,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "gesichtsverletzung gesichtstrauma",
           "cedis": [
             {
@@ -2210,6 +2655,7 @@
             "thorax_gefaesschirurgie",
             "hno"
           ],
+          "tags": [],
           "search": "halsverletzung halstrauma",
           "cedis": [
             {
@@ -2232,6 +2678,7 @@
             "neurochirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "hoerverlust taubheit hoerminderung",
           "cedis": [
             {
@@ -2252,6 +2699,7 @@
             "kernteam",
             "hno"
           ],
+          "tags": [],
           "search": "tinnitus ohrgeraeusch ohrensausen",
           "cedis": [
             {
@@ -2272,6 +2720,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "ausfluss aus dem ohr otorrhoe",
           "cedis": [
             {
@@ -2293,6 +2742,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "ohrverletzung ohrtrauma",
           "cedis": [
             {
@@ -2315,6 +2765,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "verstopfte nase oder heuschnupfen rhinitis nasale obstruktion allergie",
           "cedis": [
             {
@@ -2337,6 +2788,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "nasenverletzung nasentrauma nasenbeinfraktur",
           "cedis": [
             {
@@ -2358,6 +2810,7 @@
             "neurochirurgie",
             "auge"
           ],
+          "tags": [],
           "search": "doppelbilder diplopie",
           "cedis": [
             {
@@ -2379,6 +2832,7 @@
             "auge",
             "paediatrie"
           ],
+          "tags": [],
           "search": "lichtscheu photophobie",
           "cedis": [
             {
@@ -2399,6 +2853,7 @@
             "auge",
             "paediatrie"
           ],
+          "tags": [],
           "search": "periorbitale schwellung schwellung um das auge",
           "cedis": [
             {
@@ -2421,6 +2876,7 @@
             "auge",
             "paediatrie"
           ],
+          "tags": [],
           "search": "augenverletzung augentrauma",
           "cedis": [
             {
@@ -2442,6 +2898,7 @@
             "trauma_orthopaedie",
             "auge"
           ],
+          "tags": [],
           "search": "chemikalienexposition am auge veraetzung des auges chemikalie im auge",
           "cedis": [
             {
@@ -2463,6 +2920,7 @@
             "trauma_orthopaedie",
             "auge"
           ],
+          "tags": [],
           "search": "fremdkoerper im auge fremdkoerpergefuehl metallspan im auge",
           "cedis": [
             {
@@ -2486,6 +2944,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "lokalisierte schwellung oder roetung lokale entzuendung abszess phlegmone",
           "cedis": [
             {
@@ -2508,6 +2967,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "spontane hauteinblutung haematom purpura petechien",
           "cedis": [
             {
@@ -2530,6 +2990,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "zyanose blauverfaerbung lippenzyanose",
           "cedis": [
             {
@@ -2551,6 +3012,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "stromunfall elektrounfall stromschlag",
           "cedis": [
             {
@@ -2573,6 +3035,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "schaedliche inhalation rauchgasinhalation gasexposition",
           "cedis": [
             {
@@ -2595,6 +3058,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "chemikalienexposition veraetzung gefahrstoffkontakt",
           "cedis": [
             {
@@ -2615,6 +3079,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "unterkuehlung hypothermie",
           "cedis": [
             {
@@ -2635,6 +3100,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "kaelteverletzung erfrierung",
           "cedis": [
             {
@@ -2657,6 +3123,7 @@
             "thorax_gefaesschirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "beinahe ertrinken ertrinkungsunfall submersion",
           "cedis": [
             {
@@ -2684,6 +3151,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "postoperative komplikation komplikation nach operation wundheilungsstoerung",
           "cedis": [
             {
@@ -2713,6 +3181,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "problem mit einem medizinprodukt katheterproblem sondenproblem drainagenproblem",
           "cedis": [
             {
@@ -2742,6 +3211,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "auffaellige labor oder bildgebungsbefunde auffaelliger laborwert auffaellige bildgebung befundkontrolle",
           "cedis": [
             {
@@ -2764,6 +3234,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "blaesse oder anaemie blutarmut niedriger haemoglobinwert",
           "cedis": [
             {
@@ -2784,6 +3255,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "unspezifische beschwerden unklare beschwerden allgemeines unwohlsein",
           "cedis": [
             {
@@ -2805,6 +3277,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "unstillbares schreien schreiender saeugling exzessives schreien",
           "cedis": [
             {
@@ -2826,6 +3299,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "schlaffes kind hypotones kind floppy infant",
           "cedis": [
             {
@@ -2848,6 +3322,7 @@
             "kernteam",
             "paediatrie"
           ],
+          "tags": [],
           "search": "apnoe beim saeugling atemaussetzer alte brue",
           "cedis": [
             {
@@ -2869,6 +3344,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "trinkstoerung des neugeborenen trinkschwaeche schlechte nahrungsaufnahme",
           "cedis": [
             {
@@ -2889,6 +3365,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "neugeborenenikterus gelbsucht beim neugeborenen",
           "cedis": [
             {
@@ -2910,6 +3387,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "angeborenes problem beim kind kongenitale fehlbildung angeborene erkrankung",
           "cedis": [
             {
@@ -2930,6 +3408,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "vorstellung eines neugeborenen neugeborenenvorstellung",
           "cedis": [
             {
@@ -2951,6 +3430,7 @@
             "trauma_orthopaedie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "kindliche gangstoerung oder schmerzen beim gehen kind hinkt lahmheit",
           "cedis": [
             {
@@ -2971,6 +3451,7 @@
             "paediatrie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "kindliche verhaltensauffaelligkeit verhaltensproblem beim kind",
           "cedis": [
             {
@@ -2992,6 +3473,7 @@
             "paediatrie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "schlafstoerung insomnie schlaflosigkeit",
           "cedis": [
             {
@@ -3014,6 +3496,7 @@
             "paediatrie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "auffaelliges verhalten sonderbares verhalten wesensveraenderung",
           "cedis": [
             {
@@ -3036,6 +3519,7 @@
             "paediatrie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "soziales problem wohnungslosigkeit versorgungskrise haeusliche krise",
           "cedis": [
             {
@@ -3058,6 +3542,7 @@
             "paediatrie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "sorge um das wohlergehen fuersorgeproblem selbstvernachlaessigung kindeswohl",
           "cedis": [
             {
@@ -3079,6 +3564,7 @@
             "allgemeinchirurgie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "verbandswechsel wundverband verbandkontrolle",
           "cedis": [
             {
@@ -3101,6 +3587,7 @@
             "allgemeinchirurgie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "entfernung von klammern oder naehten fadenzug klammerentfernung nahtentfernung",
           "cedis": [
             {
@@ -3121,6 +3608,7 @@
             "trauma_orthopaedie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "gipskontrolle gipsproblem cast kontrolle",
           "cedis": [
             {
@@ -3151,6 +3639,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "bildgebung oder laborkontrolle bildgebung blutuntersuchung laborkontrolle roentgenkontrolle",
           "cedis": [
             {
@@ -3172,6 +3661,7 @@
             "allgemeinchirurgie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "wundkontrolle wiedervorstellung wunde wundheilungskontrolle",
           "cedis": [
             {
@@ -3192,6 +3682,7 @@
             "auge",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "augenkontrolle kontrolluntersuchung auge wiedervorstellung auge",
           "cedis": [
             {
@@ -3215,6 +3706,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "medikamentenbedarf oder verschreibung rezept medikation medikament fehlt",
           "cedis": [
             {
@@ -3244,6 +3736,7 @@
             "psychiatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "direkte weiterleitung oder ueberweisung zuweisung direkte ueberweisung",
           "cedis": [
             {
@@ -3263,6 +3756,7 @@
           "lenses": [
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "vor ersteinschaetzung gegangen vor triage gegangen nicht mehr anwesend",
           "cedis": [
             {
@@ -3284,6 +3778,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "intravenoese therapie infusion intravenoese medikation",
           "cedis": [
             {
@@ -3306,6 +3801,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "kontakt mit uebertragbarer krankheit infektionskontakt exposition ansteckung",
           "cedis": [
             {
@@ -3328,6 +3824,7 @@
             "trauma_orthopaedie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "kontakt mit blut oder koerperfluessigkeiten nadelstichverletzung blutkontakt",
           "cedis": [
             {
@@ -3345,6 +3842,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper im ohr",
           "cedis": [
             {
@@ -3362,6 +3860,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper in der nase",
           "cedis": [
             {
@@ -3379,6 +3878,7 @@
             "allgemeinchirurgie",
             "psychiatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper im rektum",
           "cedis": [
             {
@@ -3402,6 +3902,7 @@
             "hno",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper oral oder oesophageal verschluckter fremdkoerper fremdkoerper in speiseroehre",
           "cedis": [
             {
@@ -3419,6 +3920,7 @@
             "gynaekologie_geburtshilfe",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper in der vagina",
           "cedis": [
             {
@@ -3440,6 +3942,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "fremdkoerper in der haut splitter eingedrungener fremdkoerper",
           "cedis": [
             {
@@ -3460,6 +3963,7 @@
             "trauma_orthopaedie",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "amputation abgetrennte gliedmasse",
           "cedis": [
             {
@@ -3481,6 +3985,7 @@
             "trauma_orthopaedie",
             "allgemeinchirurgie"
           ],
+          "tags": [],
           "search": "nagelproblem eingewachsener nagel nagelverletzung",
           "cedis": [
             {
@@ -3503,6 +4008,7 @@
             "paediatrie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "parasitenverdacht laeuse kraetze milben",
           "cedis": [
             {
@@ -3524,6 +4030,7 @@
             "allgemeinchirurgie",
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "roetung oder spannungsgefuehl der brust mastitis brustentzuendung",
           "cedis": [
             {
@@ -3540,6 +4047,7 @@
           "lenses": [
             "gynaekologie_geburtshilfe"
           ],
+          "tags": [],
           "search": "schamlippenschwellung",
           "cedis": [
             {
@@ -3559,6 +4067,7 @@
             "rettungsdienst",
             "kernteam"
           ],
+          "tags": [],
           "search": "oligurie verminderte urinmenge",
           "cedis": [
             {
@@ -3577,6 +4086,7 @@
           "lenses": [
             "kernteam"
           ],
+          "tags": [],
           "search": "polyurie vermehrte urinmenge",
           "cedis": [
             {
@@ -3591,14 +4101,15 @@
           "text": "Rektaler oder perinealer Schmerz",
           "aliases": [
             "Analschmerz",
-            "Dammschmerz"
+            "Dammschmerstolpern"
           ],
           "lenses": [
             "kernteam",
             "allgemeinchirurgie",
             "gynaekologie_geburtshilfe"
           ],
-          "search": "rektaler oder perinealer schmerz analschmerz dammschmerz",
+          "tags": [],
+          "search": "rektaler oder perinealer schmerz analschmerz dammschmerstolpern",
           "cedis": [
             {
               "code": "258",
@@ -3616,6 +4127,7 @@
           "lenses": [
             "kernteam"
           ],
+          "tags": [],
           "search": "schluckauf singultus",
           "cedis": [
             {
@@ -3634,6 +4146,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "sonstiges hautproblem",
           "cedis": [
             {
@@ -3653,6 +4166,7 @@
             "allgemeinchirurgie",
             "paediatrie"
           ],
+          "tags": [],
           "search": "schwellung beule oder schwiele",
           "cedis": [
             {
@@ -3675,6 +4189,7 @@
             "allgemeinchirurgie",
             "wiedervorstellung_kontrolle"
           ],
+          "tags": [],
           "search": "entfernung eines rings ring klemmt ringschnitt",
           "cedis": [
             {
@@ -3689,6 +4204,7 @@
           "text": "{:freitext*:}",
           "aliases": [],
           "lenses": [],
+          "tags": [],
           "search": "freitext gemeinsam freitext",
           "cedis": [
             {

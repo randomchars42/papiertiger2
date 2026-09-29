@@ -1,0 +1,839 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "groups": {
+    "kommunikation": {
+      "title": "Kommunikation",
+      "items": [
+        {
+          "type": "group",
+          "id": "kommunikation_gruppe_verstaendigung"
+        },
+        {
+          "type": "group",
+          "id": "kommunikation_gruppe_begleitung"
+        },
+        {
+          "type": "group",
+          "id": "kommunikation_gruppe_uebersetzung_durch"
+        },
+        {
+          "type": "group",
+          "id": "kommunikation_gruppe_informationsquelle"
+        }
+      ],
+      "activeLenses": [
+        "kernteam",
+        "trauma_orthopaedie",
+        "allgemeinchirurgie",
+        "thorax_gefaesschirurgie",
+        "neurochirurgie",
+        "hno",
+        "auge",
+        "gynaekologie_geburtshilfe",
+        "paediatrie",
+        "psychiatrie",
+        "wiedervorstellung_kontrolle"
+      ],
+      "subgroups": "break",
+      "autoCompact": true,
+      "reset": true
+    },
+    "kommunikation_gruppe_verstaendigung": {
+      "title": "Verständigung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_uneingeschraenkt_moeglich"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_eingeschraenkt_bei_demenz"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_eingeschraenkt_bei_vigilanzstoerung"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_eingeschraenkt_bei_sprachstoerung"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_eingeschraenkt_bei_sprachbarriere"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_nicht_moeglich_bei_fortgeschrittener_demenz"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_nicht_moeglich_bei_sprachstoerung"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_nicht_moeglich_bei_vigilanzminderung"
+        }
+      ],
+      "reveal": "initial"
+    },
+    "kommunikation_gruppe_begleitung": {
+      "title": "Begleitung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_keine"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_partnerin"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_partner"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_mutter"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_vater"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_tochter"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_sohn"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_enkelin"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_enkel"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_zugehoerige"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_zugehoeriger"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_betreuerin"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_betreuer"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_bevollmaechtigte"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_bevollmaechtigter"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_begleitperson_der_einrichtung"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_weitere_anwesende_personen"
+        }
+      ],
+      "reveal": "initial"
+    },
+    "kommunikation_gruppe_uebersetzung_durch": {
+      "title": "Übersetzung durch",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_uebersetzung_anwesende"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_personal"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefonische_professionelle_uebersetzung"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefonisch_durch_angehoerige"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_mittels_technischer_hilfsmittel"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_uebersetzung_durch"
+        }
+      ],
+      "condition": {
+        "values": [
+          "kommunikation_eintrag_eingeschraenkt_bei_sprachbarriere_wert_eingeschraenkt_bei_sprachbarriere"
+        ],
+        "negated": false
+      }
+    },
+    "kommunikation_gruppe_informationsquelle": {
+      "title": "Informationsquelle",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_informationsquelle_anwesende"
+        },
+        {
+          "type": "group",
+          "id": "kommunikation_gruppe_telefonisch"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_weitere_informationsquelle"
+        }
+      ],
+      "condition": {
+        "values": [
+          "kommunikation_eintrag_eingeschraenkt_bei_demenz_wert_eingeschraenkt_bei_demenz",
+          "kommunikation_eintrag_eingeschraenkt_bei_vigilanzstoerung_wert_eingeschraenkt_bei_vigilanzstoerung",
+          "kommunikation_eintrag_eingeschraenkt_bei_sprachstoerung_wert_eingeschraenkt_bei_sprachstoerung",
+          "kommunikation_eintrag_nicht_moeglich_bei_fortgeschrittener_demenz_wert_nicht_moeglich_bei_fortgeschrittener_demenz",
+          "kommunikation_eintrag_nicht_moeglich_bei_sprachstoerung_wert_nicht_moeglich_bei_sprachstoerung",
+          "kommunikation_eintrag_nicht_moeglich_bei_vigilanzminderung_wert_nicht_moeglich_bei_vigilanzminderung"
+        ],
+        "negated": false
+      }
+    },
+    "kommunikation_gruppe_telefonisch": {
+      "title": "telefonisch",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_partnerin"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_partner"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_mutter"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_vater"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_tochter"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_sohn"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_enkelin"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_enkel"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_zugehoerige"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_zugehoeriger"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_betreuerin"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_betreuer"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_bevollmaechtigte"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_telefon_bevollmaechtigter"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_entsendende_einrichtung_nicht_erreichbar"
+        },
+        {
+          "type": "phrase",
+          "id": "kommunikation_eintrag_gesetzl_betreuer_in_nicht_erreichbar"
+        }
+      ]
+    }
+  },
+  "phrases": {
+    "kommunikation_eintrag_uneingeschraenkt_moeglich": {
+      "title": "uneingeschränkt möglich",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_uneingeschraenkt_moeglich_wert_uneingeschraenkt_moeglich": {
+          "kind": "normal",
+          "text": "uneingeschränkt möglich"
+        }
+      }
+    },
+    "kommunikation_eintrag_eingeschraenkt_bei_demenz": {
+      "title": "eingeschränkt bei Demenz",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_eingeschraenkt_bei_demenz_wert_eingeschraenkt_bei_demenz": {
+          "kind": "abnormal",
+          "text": "eingeschränkt bei Demenz"
+        }
+      }
+    },
+    "kommunikation_eintrag_eingeschraenkt_bei_vigilanzstoerung": {
+      "title": "eingeschränkt bei Vigilanzstörung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_eingeschraenkt_bei_vigilanzstoerung_wert_eingeschraenkt_bei_vigilanzstoerung": {
+          "kind": "abnormal",
+          "text": "eingeschränkt bei Vigilanzstörung"
+        }
+      }
+    },
+    "kommunikation_eintrag_eingeschraenkt_bei_sprachstoerung": {
+      "title": "eingeschränkt bei Sprachstörung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_eingeschraenkt_bei_sprachstoerung_wert_eingeschraenkt_bei_sprachstoerung": {
+          "kind": "abnormal",
+          "text": "eingeschränkt bei Sprachstörung"
+        }
+      }
+    },
+    "kommunikation_eintrag_eingeschraenkt_bei_sprachbarriere": {
+      "title": "eingeschränkt bei Sprachbarriere",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_eingeschraenkt_bei_sprachbarriere_wert_eingeschraenkt_bei_sprachbarriere": {
+          "kind": "abnormal",
+          "text": "eingeschränkt bei Sprachbarriere"
+        }
+      }
+    },
+    "kommunikation_eintrag_nicht_moeglich_bei_fortgeschrittener_demenz": {
+      "title": "nicht möglich bei fortgeschrittener Demenz",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_nicht_moeglich_bei_fortgeschrittener_demenz_wert_nicht_moeglich_bei_fortgeschrittener_demenz": {
+          "kind": "abnormal",
+          "text": "nicht möglich bei fortgeschrittener Demenz"
+        }
+      }
+    },
+    "kommunikation_eintrag_nicht_moeglich_bei_sprachstoerung": {
+      "title": "nicht möglich bei Sprachstörung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_nicht_moeglich_bei_sprachstoerung_wert_nicht_moeglich_bei_sprachstoerung": {
+          "kind": "abnormal",
+          "text": "nicht möglich bei Sprachstörung"
+        }
+      }
+    },
+    "kommunikation_eintrag_nicht_moeglich_bei_vigilanzminderung": {
+      "title": "nicht möglich bei Vigilanzminderung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_nicht_moeglich_bei_vigilanzminderung_wert_nicht_moeglich_bei_vigilanzminderung": {
+          "kind": "abnormal",
+          "text": "nicht möglich bei Vigilanzminderung"
+        }
+      }
+    },
+    "kommunikation_eintrag_keine": {
+      "title": "keine",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_keine_wert_keine": {
+          "kind": "neutral",
+          "text": "keine"
+        }
+      }
+    },
+    "kommunikation_eintrag_partnerin": {
+      "title": "Partnerin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_partnerin_wert_partnerin": {
+          "kind": "neutral",
+          "text": "Partnerin"
+        }
+      }
+    },
+    "kommunikation_eintrag_partner": {
+      "title": "Partner",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_partner_wert_partner": {
+          "kind": "neutral",
+          "text": "Partner"
+        }
+      }
+    },
+    "kommunikation_eintrag_mutter": {
+      "title": "Mutter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_mutter_wert_mutter": {
+          "kind": "neutral",
+          "text": "Mutter"
+        }
+      }
+    },
+    "kommunikation_eintrag_vater": {
+      "title": "Vater",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_vater_wert_vater": {
+          "kind": "neutral",
+          "text": "Vater"
+        }
+      }
+    },
+    "kommunikation_eintrag_tochter": {
+      "title": "Tochter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_tochter_wert_tochter": {
+          "kind": "neutral",
+          "text": "Tochter"
+        }
+      }
+    },
+    "kommunikation_eintrag_sohn": {
+      "title": "Sohn",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_sohn_wert_sohn": {
+          "kind": "neutral",
+          "text": "Sohn"
+        }
+      }
+    },
+    "kommunikation_eintrag_enkelin": {
+      "title": "Enkelin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_enkelin_wert_enkelin": {
+          "kind": "neutral",
+          "text": "Enkelin"
+        }
+      }
+    },
+    "kommunikation_eintrag_enkel": {
+      "title": "Enkel",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_enkel_wert_enkel": {
+          "kind": "neutral",
+          "text": "Enkel"
+        }
+      }
+    },
+    "kommunikation_eintrag_zugehoerige": {
+      "title": "Zugehörige",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_zugehoerige_wert_zugehoerige": {
+          "kind": "neutral",
+          "text": "Zugehörige"
+        }
+      }
+    },
+    "kommunikation_eintrag_zugehoeriger": {
+      "title": "Zugehöriger",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_zugehoeriger_wert_zugehoeriger": {
+          "kind": "neutral",
+          "text": "Zugehöriger"
+        }
+      }
+    },
+    "kommunikation_eintrag_betreuerin": {
+      "title": "Betreuerin",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_betreuerin_wert_betreuerin": {
+          "kind": "normal",
+          "text": "Betreuerin"
+        }
+      }
+    },
+    "kommunikation_eintrag_betreuer": {
+      "title": "Betreuer",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_betreuer_wert_betreuer": {
+          "kind": "normal",
+          "text": "Betreuer"
+        }
+      }
+    },
+    "kommunikation_eintrag_bevollmaechtigte": {
+      "title": "Bevollmächtigte",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_bevollmaechtigte_wert_bevollmaechtigte": {
+          "kind": "normal",
+          "text": "Bevollmächtigte"
+        }
+      }
+    },
+    "kommunikation_eintrag_bevollmaechtigter": {
+      "title": "Bevollmächtigter",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_bevollmaechtigter_wert_bevollmaechtigter": {
+          "kind": "normal",
+          "text": "Bevollmächtigter"
+        }
+      }
+    },
+    "kommunikation_eintrag_begleitperson_der_einrichtung": {
+      "title": "Begleitperson der Einrichtung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_begleitperson_der_einrichtung_wert_begleitperson_der_einrichtung": {
+          "kind": "neutral",
+          "text": "Begleitperson der Einrichtung"
+        }
+      }
+    },
+    "kommunikation_eintrag_weitere_anwesende_personen": {
+      "title": "Weitere anwesende Personen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_weitere_anwesende_personen_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "kommunikation_eintrag_uebersetzung_anwesende": {
+      "title": "Anwesende",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_uebersetzung_anwesende_wert_anwesende": {
+          "kind": "neutral",
+          "text": "Anwesende"
+        }
+      }
+    },
+    "kommunikation_eintrag_personal": {
+      "title": "Personal",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_personal_wert_personal": {
+          "kind": "neutral",
+          "text": "Personal"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefonische_professionelle_uebersetzung": {
+      "title": "telefonische, professionelle Übersetzung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefonische_professionelle_uebersetzung_wert_telefonische_professionelle_uebersetzung": {
+          "kind": "neutral",
+          "text": "telefonische, professionelle Übersetzung"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefonisch_durch_angehoerige": {
+      "title": "telefonisch durch Angehörige",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefonisch_durch_angehoerige_wert_telefonisch_durch_angehoerige": {
+          "kind": "neutral",
+          "text": "telefonisch durch Angehörige"
+        }
+      }
+    },
+    "kommunikation_eintrag_mittels_technischer_hilfsmittel": {
+      "title": "mittels technischer Hilfsmittel",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_mittels_technischer_hilfsmittel_wert_mittels_technischer_hilfsmittel": {
+          "kind": "neutral",
+          "text": "mittels technischer Hilfsmittel"
+        }
+      }
+    },
+    "kommunikation_eintrag_uebersetzung_durch": {
+      "title": "Übersetzung durch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_uebersetzung_durch_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "kommunikation_eintrag_informationsquelle_anwesende": {
+      "title": "Anwesende",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_informationsquelle_anwesende_wert_anwesende": {
+          "kind": "neutral",
+          "text": "Anwesende"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_partnerin": {
+      "title": "Partnerin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_partnerin_wert_partnerin": {
+          "kind": "neutral",
+          "text": "Partnerin"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_partner": {
+      "title": "Partner",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_partner_wert_partner": {
+          "kind": "neutral",
+          "text": "Partner"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_mutter": {
+      "title": "Mutter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_mutter_wert_mutter": {
+          "kind": "neutral",
+          "text": "Mutter"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_vater": {
+      "title": "Vater",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_vater_wert_vater": {
+          "kind": "neutral",
+          "text": "Vater"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_tochter": {
+      "title": "Tochter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_tochter_wert_tochter": {
+          "kind": "neutral",
+          "text": "Tochter"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_sohn": {
+      "title": "Sohn",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_sohn_wert_sohn": {
+          "kind": "neutral",
+          "text": "Sohn"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_enkelin": {
+      "title": "Enkelin",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_enkelin_wert_enkelin": {
+          "kind": "neutral",
+          "text": "Enkelin"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_enkel": {
+      "title": "Enkel",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_enkel_wert_enkel": {
+          "kind": "neutral",
+          "text": "Enkel"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_zugehoerige": {
+      "title": "Zugehörige",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_zugehoerige_wert_angehoerige": {
+          "kind": "neutral",
+          "text": "Angehörige"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_zugehoeriger": {
+      "title": "Zugehöriger",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_zugehoeriger_wert_angehoeriger": {
+          "kind": "neutral",
+          "text": "Angehöriger"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_betreuerin": {
+      "title": "Betreuerin",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_betreuerin_wert_betreuerin": {
+          "kind": "normal",
+          "text": "Betreuerin"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_betreuer": {
+      "title": "Betreuer",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_betreuer_wert_betreuer": {
+          "kind": "normal",
+          "text": "Betreuer"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_bevollmaechtigte": {
+      "title": "Bevollmächtigte",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_bevollmaechtigte_wert_bevollmaechtigte": {
+          "kind": "normal",
+          "text": "Bevollmächtigte"
+        }
+      }
+    },
+    "kommunikation_eintrag_telefon_bevollmaechtigter": {
+      "title": "Bevollmächtigter",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_telefon_bevollmaechtigter_wert_bevollmaechtigter": {
+          "kind": "normal",
+          "text": "Bevollmächtigter"
+        }
+      }
+    },
+    "kommunikation_eintrag_entsendende_einrichtung_nicht_erreichbar": {
+      "title": "entsendende Einrichtung nicht erreichbar",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_entsendende_einrichtung_nicht_erreichbar_wert_entsendende_einrichtung_nicht_erreichbar": {
+          "kind": "abnormal",
+          "text": "entsendende Einrichtung nicht erreichbar"
+        }
+      }
+    },
+    "kommunikation_eintrag_gesetzl_betreuer_in_nicht_erreichbar": {
+      "title": "gesetzl. Betreuer:in nicht erreichbar",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_gesetzl_betreuer_in_nicht_erreichbar_wert_gesetzl_betreuer_in_nicht_erreichbar": {
+          "kind": "abnormal",
+          "text": "gesetzl. Betreuer:in nicht erreichbar"
+        }
+      }
+    },
+    "kommunikation_eintrag_weitere_informationsquelle": {
+      "title": "Weitere Informationsquelle",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "kommunikation_eintrag_weitere_informationsquelle_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

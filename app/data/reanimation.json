@@ -4,13 +4,51 @@
     "gemeinsam"
   ],
   "editors": {
-    "reanimation_eingabe_energie": {
+    "reanimation_eingabe_schockenergie": {
       "type": "number",
-      "label": "Energie",
+      "label": "Schockenergie",
       "suffix": " J",
       "min": 1,
       "max": 500,
-      "step": 1
+      "step": 10
+    },
+    "reanimation_eingabe_schocks_konventionell": {
+      "type": "number",
+      "label": "Konventionelle Schocks kumulativ",
+      "min": 0,
+      "step": 1,
+      "default": 0
+    },
+    "reanimation_eingabe_schocks_dsed": {
+      "type": "number",
+      "label": "DSED-Schocks kumulativ",
+      "min": 0,
+      "step": 1,
+      "default": 0
+    },
+    "reanimation_eingabe_epinephrin_kumulativ": {
+      "type": "number",
+      "label": "Epinephrin kumulativ",
+      "suffix": " mg",
+      "min": 0,
+      "step": 1,
+      "default": 0
+    },
+    "reanimation_eingabe_amiodaron_kumulativ": {
+      "type": "number",
+      "label": "Amiodaron kumulativ",
+      "suffix": " mg",
+      "min": 0,
+      "step": 150,
+      "default": 300
+    },
+    "reanimation_eingabe_lidocain_kumulativ": {
+      "type": "number",
+      "label": "Lidocain kumulativ",
+      "suffix": " mg",
+      "min": 0,
+      "step": 50,
+      "default": 100
     },
     "reanimation_eingabe_rosc_dauer": {
       "type": "number",
@@ -19,21 +57,25 @@
       "min": 0,
       "max": 300,
       "step": 1
+    },
+    "reanimation_eingabe_abbruchbegruendung": {
+      "type": "multiline",
+      "maxRows": 8,
+      "label": "Begründung des Reanimationsabbruchs",
+      "placeholder": "Begründung",
+      "rows": 2
+    },
+    "reanimation_eingabe_ergaenzung": {
+      "type": "multiline",
+      "maxRows": 12,
+      "label": "Ergänzung zur Reanimation",
+      "placeholder": "Freier Reanimationsverlauf",
+      "rows": 2
     }
   },
   "groups": {
     "reanimation": {
-      "title": "Reanimation",
-      "children": [
-        "reanimation_gruppe_rhythmusanalyse"
-      ],
-      "phrases": [
-        "reanimation_eintrag_reanimationsbeginn",
-        "reanimation_eintrag_rhythmusanalysen",
-        "reanimation_eintrag_rosc",
-        "reanimation_eintrag_erneuter_kreislaufstillstand",
-        "reanimation_eintrag_ergaenzung_zur_reanimation"
-      ],
+      "title": "CPR / Reanimation",
       "items": [
         {
           "type": "phrase",
@@ -41,15 +83,92 @@
         },
         {
           "type": "phrase",
-          "id": "reanimation_eintrag_rhythmusanalysen"
+          "id": "reanimation_eintrag_initialrhythmus"
         },
         {
           "type": "group",
-          "id": "reanimation_gruppe_rhythmusanalyse"
+          "id": "reanimation_gruppe_reanimationszyklus"
+        },
+        {
+          "type": "group",
+          "id": "reanimation_gruppe_reanimationsende"
+        }
+      ],
+      "reset": true
+    },
+    "reanimation_gruppe_reanimationszyklus": {
+      "title": "Reanimationszyklus",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_rhythmusanalyse"
         },
         {
           "type": "phrase",
-          "id": "reanimation_eintrag_rosc"
+          "id": "reanimation_eintrag_zyklusrhythmus"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_schock_in_diesem_zyklus"
+        },
+        {
+          "type": "group",
+          "id": "reanimation_gruppe_kumulative_massnahmen"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_ergaenzung_zum_reanimationszyklus"
+        }
+      ],
+      "kind": "intervention",
+      "autoCompact": true,
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Reanimationszyklus hinzufügen"
+      }
+    },
+    "reanimation_gruppe_kumulative_massnahmen": {
+      "title": "Kumulative Maßnahmen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_konventionelle_schocks"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_dsed_schocks"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_epinephrin"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_amiodaron"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_lidocain"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "reanimation_gruppe_reanimationsende": {
+      "title": "Reanimationsende",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_ergebnis"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_dauer_bis_rosc"
+        },
+        {
+          "type": "phrase",
+          "id": "reanimation_eintrag_begruendung_des_reanimationsabbruchs"
         },
         {
           "type": "phrase",
@@ -60,42 +179,7 @@
           "id": "reanimation_eintrag_ergaenzung_zur_reanimation"
         }
       ],
-      "reset": true,
-      "collapsed": true
-    },
-    "reanimation_gruppe_rhythmusanalyse": {
-      "title": "Rhythmusanalyse",
-      "kind": "neutral",
-      "phrases": [
-        "reanimation_eintrag_rhythmusanalyse",
-        "reanimation_eintrag_rhythmus",
-        "reanimation_eintrag_defibrillation",
-        "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "reanimation_eintrag_rhythmusanalyse"
-        },
-        {
-          "type": "phrase",
-          "id": "reanimation_eintrag_rhythmus"
-        },
-        {
-          "type": "phrase",
-          "id": "reanimation_eintrag_defibrillation"
-        },
-        {
-          "type": "phrase",
-          "id": "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse"
-        }
-      ],
-      "reset": true,
-      "repeatable": {
-        "initial": 0,
-        "add": "Rhythmusanalyse hinzufügen",
-        "empty": "reanimation_eintrag_rhythmusanalysen"
-      }
+      "autoCompact": true
     }
   },
   "phrases": {
@@ -130,15 +214,54 @@
         }
       }
     },
-    "reanimation_eintrag_rhythmusanalysen": {
-      "title": "Rhythmusanalysen",
+    "reanimation_eintrag_initialrhythmus": {
+      "title": "Initialer Rhythmus",
       "kind": "neutral",
       "default": "",
       "values": {
-        "reanimation_eintrag_rhythmusanalysen_wert_keine_rhythmusanalyse_dokumentiert": {
+        "reanimation_eintrag_initialrhythmus_wert_asystolie": {
+          "kind": "abnormal",
+          "text": "Asystolie",
+          "snomed": "427485008",
+          "snomedDisplay": "ECG: asystole"
+        },
+        "reanimation_eintrag_initialrhythmus_wert_pulslose_elektrische_aktivitaet": {
+          "kind": "abnormal",
+          "text": "pulslose elektrische Aktivität",
+          "snomed": "426975008",
+          "snomedDisplay": "ECG: pulseless electrical activity"
+        },
+        "reanimation_eintrag_initialrhythmus_wert_kammerflimmern": {
+          "kind": "abnormal",
+          "text": "Kammerflimmern",
+          "snomed": "164896001",
+          "snomedDisplay": "ECG: ventricular fibrillation"
+        },
+        "reanimation_eintrag_initialrhythmus_wert_pulslose_ventrikulaere_tachykardie": {
+          "kind": "abnormal",
+          "text": "pulslose ventrikuläre Tachykardie",
+          "snomed": "164895002",
+          "snomedDisplay": "ECG: ventricular tachycardia"
+        },
+        "reanimation_eintrag_initialrhythmus_wert_torsade_de_pointes_tachykardie": {
+          "kind": "abnormal",
+          "text": "Torsade-de-pointes-Tachykardie"
+        },
+        "reanimation_eintrag_initialrhythmus_wert_initialer_rhythmus_nicht_sicher_beurteilbar": {
           "kind": "neutral",
-          "text": "keine Rhythmusanalyse dokumentiert"
+          "text": "initialer Rhythmus nicht sicher beurteilbar"
         }
+      },
+      "attention": {
+        "values": [
+          "reanimation_eintrag_reanimationsbeginn_wert_laufende_laienreanimation_uebernommen",
+          "reanimation_eintrag_reanimationsbeginn_wert_laufende_reanimation_durch_ersthelfende_uebernommen",
+          "reanimation_eintrag_reanimationsbeginn_wert_kreislaufstillstand_bei_eintreffen_reanimation_begonnen",
+          "reanimation_eintrag_reanimationsbeginn_wert_kreislaufstillstand_im_verlauf_reanimation_begonnen"
+        ],
+        "negated": false,
+        "level": "required",
+        "value": null
       }
     },
     "reanimation_eintrag_rhythmusanalyse": {
@@ -155,66 +278,153 @@
         "zeitpunkt": "gemeinsam_eingabe_ereigniszeitpunkt"
       }
     },
-    "reanimation_eintrag_rhythmus": {
+    "reanimation_eintrag_zyklusrhythmus": {
       "title": "Rhythmus",
       "kind": "abnormal",
       "default": null,
       "values": {
-        "reanimation_eintrag_rhythmus_wert_asystolie": {
+        "reanimation_eintrag_zyklusrhythmus_wert_asystolie": {
           "kind": "abnormal",
           "text": "Asystolie",
           "snomed": "427485008",
           "snomedDisplay": "ECG: asystole"
         },
-        "reanimation_eintrag_rhythmus_wert_pulslose_elektrische_aktivitaet": {
+        "reanimation_eintrag_zyklusrhythmus_wert_pulslose_elektrische_aktivitaet": {
           "kind": "abnormal",
           "text": "pulslose elektrische Aktivität",
           "snomed": "426975008",
           "snomedDisplay": "ECG: pulseless electrical activity"
         },
-        "reanimation_eintrag_rhythmus_wert_kammerflimmern": {
+        "reanimation_eintrag_zyklusrhythmus_wert_kammerflimmern": {
           "kind": "abnormal",
           "text": "Kammerflimmern",
           "snomed": "164896001",
           "snomedDisplay": "ECG: ventricular fibrillation"
         },
-        "reanimation_eintrag_rhythmus_wert_pulslose_ventrikulaere_tachykardie": {
+        "reanimation_eintrag_zyklusrhythmus_wert_pulslose_ventrikulaere_tachykardie": {
           "kind": "abnormal",
           "text": "pulslose ventrikuläre Tachykardie",
           "snomed": "164895002",
           "snomedDisplay": "ECG: ventricular tachycardia"
+        },
+        "reanimation_eintrag_zyklusrhythmus_wert_torsade_de_pointes_tachykardie": {
+          "kind": "abnormal",
+          "text": "Torsade-de-pointes-Tachykardie"
         }
       },
-      "suggestions": {
-        "reanimation_eintrag_rhythmusanalyse_wert_rhythmusanalyse_um": null
+      "prompt": true,
+      "condition": {
+        "values": [
+          "reanimation_eintrag_rhythmusanalyse_wert_rhythmusanalyse_um"
+        ],
+        "negated": false,
+        "value": null
       }
     },
-    "reanimation_eintrag_defibrillation": {
-      "title": "Defibrillation",
+    "reanimation_eintrag_schock_in_diesem_zyklus": {
+      "title": "Schock in diesem Zyklus",
       "kind": "intervention",
       "default": null,
       "values": {
-        "reanimation_eintrag_defibrillation_wert_defibrillation_mit": {
+        "reanimation_eintrag_schock_in_diesem_zyklus_wert_konventionelle_defibrillation_mit": {
           "kind": "intervention",
-          "text": "Defibrillation mit {:energie*:}",
+          "text": "konventionelle Defibrillation mit {:energie*:}",
           "snomed": "428909008",
           "snomedDisplay": "Biphasic defibrillation procedure"
+        },
+        "reanimation_eintrag_schock_in_diesem_zyklus_wert_dsed": {
+          "kind": "intervention",
+          "text": "DSED"
         }
       },
       "attributes": {
-        "energie": "reanimation_eingabe_energie"
+        "energie": "reanimation_eingabe_schockenergie"
       },
-      "suggestions": {
-        "reanimation_eintrag_rhythmus_wert_kammerflimmern": "reanimation_eintrag_defibrillation_wert_defibrillation_mit",
-        "reanimation_eintrag_rhythmus_wert_pulslose_ventrikulaere_tachykardie": "reanimation_eintrag_defibrillation_wert_defibrillation_mit"
+      "condition": {
+        "values": [
+          "reanimation_eintrag_zyklusrhythmus_wert_kammerflimmern",
+          "reanimation_eintrag_zyklusrhythmus_wert_pulslose_ventrikulaere_tachykardie"
+        ],
+        "negated": false,
+        "value": null
       }
     },
-    "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse": {
-      "title": "Ergänzung zur Rhythmusanalyse",
+    "reanimation_eintrag_konventionelle_schocks": {
+      "title": "Konventionelle Schocks",
       "kind": "neutral",
       "default": "",
       "values": {
-        "reanimation_eintrag_ergaenzung_zur_rhythmusanalyse_wert_value": {
+        "reanimation_eintrag_konventionelle_schocks_wert_konventionelle_schocks_kumulativ": {
+          "kind": "neutral",
+          "text": "konventionelle Schocks kumulativ: {:anzahl*:}"
+        }
+      },
+      "attributes": {
+        "anzahl": "reanimation_eingabe_schocks_konventionell"
+      }
+    },
+    "reanimation_eintrag_dsed_schocks": {
+      "title": "DSED-Schocks",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_dsed_schocks_wert_dsed_schocks_kumulativ": {
+          "kind": "neutral",
+          "text": "DSED-Schocks kumulativ: {:anzahl*:}"
+        }
+      },
+      "attributes": {
+        "anzahl": "reanimation_eingabe_schocks_dsed"
+      }
+    },
+    "reanimation_eintrag_epinephrin": {
+      "title": "Epinephrin",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_epinephrin_wert_epinephrin_kumulativ": {
+          "kind": "intervention",
+          "text": "Epinephrin kumulativ: {:dosis*:}"
+        }
+      },
+      "attributes": {
+        "dosis": "reanimation_eingabe_epinephrin_kumulativ"
+      }
+    },
+    "reanimation_eintrag_amiodaron": {
+      "title": "Amiodaron",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_amiodaron_wert_amiodaron_kumulativ": {
+          "kind": "intervention",
+          "text": "Amiodaron kumulativ: {:dosis*:}"
+        }
+      },
+      "attributes": {
+        "dosis": "reanimation_eingabe_amiodaron_kumulativ"
+      }
+    },
+    "reanimation_eintrag_lidocain": {
+      "title": "Lidocain",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_lidocain_wert_lidocain_kumulativ": {
+          "kind": "intervention",
+          "text": "Lidocain kumulativ: {:dosis*:}"
+        }
+      },
+      "attributes": {
+        "dosis": "reanimation_eingabe_lidocain_kumulativ"
+      }
+    },
+    "reanimation_eintrag_ergaenzung_zum_reanimationszyklus": {
+      "title": "Ergänzung zum Reanimationszyklus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "reanimation_eintrag_ergaenzung_zum_reanimationszyklus_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }
@@ -223,26 +433,82 @@
         "freitext": "gemeinsam_eingabe_freitext"
       }
     },
-    "reanimation_eintrag_rosc": {
-      "title": "ROSC",
+    "reanimation_eintrag_ergebnis": {
+      "title": "Ergebnis",
       "kind": "intervention",
       "default": "",
       "values": {
-        "reanimation_eintrag_rosc_wert_rosc_nach": {
+        "reanimation_eintrag_ergebnis_wert_rosc": {
           "kind": "intervention",
-          "text": "ROSC nach {:dauer*:}",
+          "text": "ROSC",
           "snomed": "711410007",
           "snomedDisplay": "Signs of return of spontaneous circulation"
+        },
+        "reanimation_eintrag_ergebnis_wert_reanimation_beendet": {
+          "kind": "intervention",
+          "text": "Reanimation beendet"
+        }
+      },
+      "attention": {
+        "values": [
+          "reanimation_eintrag_initialrhythmus_wert_asystolie",
+          "reanimation_eintrag_initialrhythmus_wert_pulslose_elektrische_aktivitaet",
+          "reanimation_eintrag_initialrhythmus_wert_kammerflimmern",
+          "reanimation_eintrag_initialrhythmus_wert_pulslose_ventrikulaere_tachykardie",
+          "reanimation_eintrag_initialrhythmus_wert_torsade_de_pointes_tachykardie",
+          "reanimation_eintrag_initialrhythmus_wert_initialer_rhythmus_nicht_sicher_beurteilbar"
+        ],
+        "negated": false,
+        "level": "required",
+        "value": null
+      }
+    },
+    "reanimation_eintrag_dauer_bis_rosc": {
+      "title": "Dauer bis ROSC",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "reanimation_eintrag_dauer_bis_rosc_wert_rosc_nach": {
+          "kind": "intervention",
+          "text": "ROSC nach {:dauer*:}"
         }
       },
       "attributes": {
         "dauer": "reanimation_eingabe_rosc_dauer"
+      },
+      "condition": {
+        "values": [
+          "reanimation_eintrag_ergebnis_wert_rosc"
+        ],
+        "negated": false,
+        "value": "reanimation_eintrag_dauer_bis_rosc_wert_rosc_nach"
+      }
+    },
+    "reanimation_eintrag_begruendung_des_reanimationsabbruchs": {
+      "title": "Begründung des Reanimationsabbruchs",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "reanimation_eintrag_begruendung_des_reanimationsabbruchs_wert_value": {
+          "kind": "neutral",
+          "text": "{:begruendung*:}"
+        }
+      },
+      "attributes": {
+        "begruendung": "reanimation_eingabe_abbruchbegruendung"
+      },
+      "condition": {
+        "values": [
+          "reanimation_eintrag_ergebnis_wert_reanimation_beendet"
+        ],
+        "negated": false,
+        "value": "reanimation_eintrag_begruendung_des_reanimationsabbruchs_wert_value"
       }
     },
     "reanimation_eintrag_erneuter_kreislaufstillstand": {
       "title": "Erneuter Kreislaufstillstand",
       "kind": "abnormal",
-      "default": "",
+      "default": null,
       "values": {
         "reanimation_eintrag_erneuter_kreislaufstillstand_wert_erneuter_kreislaufstillstand": {
           "kind": "abnormal",
@@ -250,6 +516,13 @@
           "snomed": "410429000",
           "snomedDisplay": "Cardiac arrest"
         }
+      },
+      "condition": {
+        "values": [
+          "reanimation_eintrag_ergebnis_wert_rosc"
+        ],
+        "negated": false,
+        "value": "reanimation_eintrag_erneuter_kreislaufstillstand_wert_erneuter_kreislaufstillstand"
       }
     },
     "reanimation_eintrag_ergaenzung_zur_reanimation": {
@@ -259,11 +532,11 @@
       "values": {
         "reanimation_eintrag_ergaenzung_zur_reanimation_wert_value": {
           "kind": "neutral",
-          "text": "{:freitext*:}"
+          "text": "{:ergaenzung*:}"
         }
       },
       "attributes": {
-        "freitext": "gemeinsam_eingabe_freitext"
+        "ergaenzung": "reanimation_eingabe_ergaenzung"
       }
     }
   }

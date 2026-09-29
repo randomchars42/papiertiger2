@@ -1,0 +1,316 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "et_intubation_eingabe_tubusgroesse": {
+      "type": "number",
+      "label": "Tubusgröße",
+      "prefix": "ID ",
+      "suffix": " mm",
+      "min": 0,
+      "max": 9,
+      "step": 0.5
+    },
+    "et_intubation_eingabe_tubustiefe": {
+      "type": "number",
+      "label": "Tubustiefe ab Zahnreihe",
+      "suffix": " cm",
+      "min": 6,
+      "max": 35,
+      "step": 1
+    },
+    "et_intubation_eingabe_versuchsanzahl": {
+      "type": "number",
+      "label": "Intubationsversuche",
+      "min": 1,
+      "step": 1,
+      "default": 1
+    },
+    "et_intubation_eingabe_sichtbedingungen": {
+      "type": "choice",
+      "options": {
+        "grad_i": {
+          "kind": "neutral",
+          "text": "Grad I"
+        },
+        "grad_ii": {
+          "kind": "neutral",
+          "text": "Grad II"
+        },
+        "grad_iii": {
+          "kind": "neutral",
+          "text": "Grad III"
+        },
+        "grad_iv": {
+          "kind": "neutral",
+          "text": "Grad IV"
+        }
+      },
+      "label": "Cormack-Lehane-Grad"
+    },
+    "et_intubation_eingabe_ergaenzung": {
+      "type": "multiline",
+      "maxRows": 10,
+      "label": "Ergänzung zur Intubation",
+      "placeholder": "Verlauf, Schwierigkeiten oder weitere Lagekontrolle",
+      "rows": 2
+    }
+  },
+  "groups": {
+    "et_intubation": {
+      "title": "Endotracheale Intubation",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_verfahren"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_laryngoskopie"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_intubationshilfe"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_sichtbedingungen"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_intubationsversuche"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_tubusgroesse"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_tubustiefe"
+        },
+        {
+          "type": "group",
+          "id": "et_intubation_gruppe_lagekontrolle"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_zahnstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_ergaenzung_zur_endotrachealen_intubation"
+        }
+      ],
+      "reset": true
+    },
+    "et_intubation_gruppe_lagekontrolle": {
+      "title": "Lagekontrolle",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_kapnographie"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_kapnometrie"
+        },
+        {
+          "type": "phrase",
+          "id": "et_intubation_eintrag_auskultation"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    }
+  },
+  "phrases": {
+    "et_intubation_eintrag_verfahren": {
+      "title": "Verfahren",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_verfahren_wert_rapid_sequence_induktion": {
+          "kind": "intervention",
+          "text": "Rapid-Sequence-Induktion"
+        },
+        "et_intubation_eintrag_verfahren_wert_endotracheale_intubation_ohne_rapid_sequence_induktion": {
+          "kind": "intervention",
+          "text": "endotracheale Intubation ohne Rapid-Sequence-Induktion"
+        }
+      }
+    },
+    "et_intubation_eintrag_laryngoskopie": {
+      "title": "Laryngoskopie",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_laryngoskopie_wert_videolaryngoskopisch_gestuetzt": {
+          "kind": "intervention",
+          "text": "videolaryngoskopisch gestützt"
+        },
+        "et_intubation_eintrag_laryngoskopie_wert_konventionell_laryngoskopiert": {
+          "kind": "intervention",
+          "text": "konventionell laryngoskopiert"
+        }
+      }
+    },
+    "et_intubation_eintrag_intubationshilfe": {
+      "title": "Intubationshilfe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_intubationshilfe_wert_ohne_intubationshilfe": {
+          "kind": "neutral",
+          "text": "ohne Intubationshilfe"
+        },
+        "et_intubation_eintrag_intubationshilfe_wert_mittels_bougie": {
+          "kind": "intervention",
+          "text": "mittels Bougie"
+        },
+        "et_intubation_eintrag_intubationshilfe_wert_mittels_faltbarem_intubationskatheter": {
+          "kind": "intervention",
+          "text": "mittels faltbarem Intubationskatheter"
+        }
+      }
+    },
+    "et_intubation_eintrag_sichtbedingungen": {
+      "title": "Sichtbedingungen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_sichtbedingungen_wert_sichtbedingungen_nach_cormack_und_lehane": {
+          "kind": "neutral",
+          "text": "Sichtbedingungen nach Cormack und Lehane: {:grad*:}"
+        }
+      },
+      "attributes": {
+        "grad": "et_intubation_eingabe_sichtbedingungen"
+      }
+    },
+    "et_intubation_eintrag_intubationsversuche": {
+      "title": "Intubationsversuche",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_intubationsversuche_wert_intubation_im_versuch": {
+          "kind": "neutral",
+          "text": "Intubation im {:anzahl*:}. Versuch"
+        }
+      },
+      "attributes": {
+        "anzahl": "et_intubation_eingabe_versuchsanzahl"
+      }
+    },
+    "et_intubation_eintrag_tubusgroesse": {
+      "title": "Tubusgröße",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_tubusgroesse_wert_endotrachealtubus": {
+          "kind": "neutral",
+          "text": "Endotrachealtubus {:groesse*:}"
+        }
+      },
+      "attributes": {
+        "groesse": "et_intubation_eingabe_tubusgroesse"
+      }
+    },
+    "et_intubation_eintrag_tubustiefe": {
+      "title": "Tubustiefe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_tubustiefe_wert_tubustiefe_ab_zahnreihe": {
+          "kind": "neutral",
+          "text": "Tubustiefe {:tiefe*:} ab Zahnreihe"
+        }
+      },
+      "attributes": {
+        "tiefe": "et_intubation_eingabe_tubustiefe"
+      }
+    },
+    "et_intubation_eintrag_kapnographie": {
+      "title": "Kapnographie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_kapnographie_wert_prompt_regelrechte_kurve_in_der_kapnographie": {
+          "kind": "intervention",
+          "text": "prompt regelrechte Kurve in der Kapnographie"
+        },
+        "et_intubation_eintrag_kapnographie_wert_keine_regelrechte_kapnographiekurve": {
+          "kind": "abnormal",
+          "text": "keine regelrechte Kapnographiekurve"
+        }
+      }
+    },
+    "et_intubation_eintrag_kapnometrie": {
+      "title": "Kapnometrie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_kapnometrie_wert_tubuslage_kapnometrisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "Tubuslage kapnometrisch bestätigt"
+        },
+        "et_intubation_eintrag_kapnometrie_wert_tubuslage_kapnometrisch_nicht_bestaetigt": {
+          "kind": "abnormal",
+          "text": "Tubuslage kapnometrisch nicht bestätigt"
+        }
+      }
+    },
+    "et_intubation_eintrag_auskultation": {
+      "title": "Auskultation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_auskultation_wert_seitengleich_belueftet_kein_geraeusch_epigastrisch": {
+          "kind": "intervention",
+          "text": "seitengleich belüftet, kein Geräusch epigastrisch"
+        },
+        "et_intubation_eintrag_auskultation_wert_seitendifferente_belueftung": {
+          "kind": "abnormal",
+          "text": "seitendifferente Belüftung"
+        },
+        "et_intubation_eintrag_auskultation_wert_geraeusch_epigastrisch": {
+          "kind": "abnormal",
+          "text": "Geräusch epigastrisch"
+        }
+      }
+    },
+    "et_intubation_eintrag_zahnstatus": {
+      "title": "Zahnstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_zahnstatus_wert_zahnstatus_nach_intubation_unveraendert": {
+          "kind": "normal",
+          "text": "Zahnstatus nach Intubation unverändert"
+        },
+        "et_intubation_eintrag_zahnstatus_wert_zahnstatus_nach_intubation_veraendert": {
+          "kind": "abnormal",
+          "text": "Zahnstatus nach Intubation verändert: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "et_intubation_eintrag_ergaenzung_zur_endotrachealen_intubation": {
+      "title": "Ergänzung zur endotrachealen Intubation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "et_intubation_eintrag_ergaenzung_zur_endotrachealen_intubation_wert_value": {
+          "kind": "neutral",
+          "text": "{:ergaenzung*:}"
+        }
+      },
+      "attributes": {
+        "ergaenzung": "et_intubation_eingabe_ergaenzung"
+      }
+    }
+  }
+}

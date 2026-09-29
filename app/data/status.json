@@ -1,33 +1,1602 @@
 {
   "version": 2,
   "imports": [
-    "status_allgemein",
-    "status_abdomen",
-    "status_extremitaeten"
+    "gemeinsam"
   ],
+  "editors": {
+    "status_eingabe_koerpergroesse": {
+      "type": "number",
+      "label": "Körpergröße",
+      "suffix": " cm",
+      "min": 30,
+      "max": 250,
+      "step": 1
+    },
+    "status_eingabe_koerpergewicht": {
+      "type": "number",
+      "label": "Körpergewicht",
+      "suffix": " kg",
+      "min": 1,
+      "max": 400,
+      "step": 0.1
+    }
+  },
+  "sets": {
+    "status_vorgabe_normalbefund": {
+      "title": "Normalbefund",
+      "values": {
+        "status_eintrag_allgemeinzustand": "status_eintrag_allgemeinzustand_wert_allgemeinzustand_gut",
+        "status_eintrag_pflegezustand": "status_eintrag_pflegezustand_wert_pflegezustand_unauffaellig",
+        "status_eintrag_ernaehrungszustand": "status_eintrag_ernaehrungszustand_wert_ernaehrungszustand_unauffaellig",
+        "status_eintrag_schleimhaeute": "status_eintrag_schleimhaeute_wert_schleimhaeute_feucht",
+        "status_eintrag_zunge": "status_eintrag_zunge_wert_kein_zungenbiss",
+        "status_eintrag_rachen": "status_eintrag_rachen_wert_rachen_reizlos",
+        "status_eintrag_zervikale_lymphknoten": "status_eintrag_zervikale_lymphknoten_wert_keine_vergroesserten_zervikalen_lymphknoten_tastbar",
+        "status_eintrag_schilddruese": "status_eintrag_schilddruese_wert_schilddruese_nicht_vergroessert_und_schluckverschieblich",
+        "status_eintrag_hautturgor": "status_eintrag_hautturgor_wert_hautturgor_unauffaellig",
+        "status_eintrag_hautzustand": "status_eintrag_hautzustand_wert_haut_warm_und_trocken",
+        "status_eintrag_hautbefund": "status_eintrag_hautbefund_wert_kein_exanthem",
+        "status_eintrag_herztoene": "status_eintrag_herztoene_wert_herztoene_rein",
+        "status_eintrag_herzrhythmus": "status_eintrag_herzrhythmus_wert_herzrhythmus_regelmaessig",
+        "status_eintrag_herzgeraeusche": "status_eintrag_herzgeraeusche_wert_kein_herzgeraeusch_auskultierbar",
+        "status_eintrag_thoraxexkursion": "status_eintrag_thoraxexkursion_wert_thoraxexkursion_seitengleich",
+        "status_eintrag_klopfschall": "status_eintrag_klopfschall_wert_klopfschall_sonor",
+        "status_eintrag_atemgeraeusch": "status_eintrag_atemgeraeusch_wert_vesikulaeres_atemgeraeusch_seitengleich",
+        "status_eintrag_rasselgeraeusche": "status_eintrag_rasselgeraeusche_wert_keine_rasselgeraeusche",
+        "status_eintrag_giemen": "status_eintrag_giemen_wert_kein_giemen",
+        "status_eintrag_brummen": "status_eintrag_brummen_wert_kein_brummen",
+        "status_eintrag_bauchdecke": "status_eintrag_bauchdecke_wert_bauchdecke_weich",
+        "status_eintrag_druckschmerz": "status_eintrag_druckschmerz_wert_kein_abdomineller_druckschmerz",
+        "status_eintrag_peritonealreizung": "status_eintrag_peritonealreizung_wert_kein_hinweis_auf_peritonealreizung",
+        "status_eintrag_darmgeraeusche": "status_eintrag_darmgeraeusche_wert_darmgeraeusche_regelrecht",
+        "status_eintrag_leber": "status_eintrag_leber_wert_leber_nicht_vergroessert_tastbar",
+        "status_eintrag_milz": "status_eintrag_milz_wert_milz_nicht_tastbar",
+        "status_eintrag_nierenlager": "status_eintrag_nierenlager_wert_kein_nierenlagerklopfschmerz",
+        "status_eintrag_harnblase": "status_eintrag_harnblase_wert_harnblase_nicht_vergroessert_tastbar",
+        "status_eintrag_sphinktertonus": "status_eintrag_sphinktertonus_wert_sphinktertonus_regelrecht",
+        "status_eintrag_rektumampulle": "status_eintrag_rektumampulle_wert_keine_rektale_resistenz_tastbar",
+        "status_eintrag_blutbeimengung": "status_eintrag_blutbeimengung_wert_kein_blut_am_untersuchungshandschuh",
+        "status_eintrag_stuhlbefund": "status_eintrag_stuhlbefund_wert_stuhl_unauffaellig",
+        "status_eintrag_perianalbefund": "status_eintrag_perianalbefund_wert_perianalregion_unauffaellig",
+        "status_eintrag_oedeme": "status_eintrag_oedeme_wert_keine_peripheren_oedeme",
+        "status_eintrag_durchblutung": "status_eintrag_durchblutung_wert_durchblutung_der_extremitaeten_intakt",
+        "status_eintrag_periphere_pulse": "status_eintrag_periphere_pulse_wert_periphere_pulse_seitengleich_tastbar",
+        "status_eintrag_wunden": "status_eintrag_wunden_wert_keine_chronischen_wunden",
+        "status_eintrag_bewusstseinslage": "status_eintrag_bewusstseinslage_wert_wach_und_adaequat",
+        "status_eintrag_pupillen": "status_eintrag_pupillen_wert_pupillen_isokor_und_beidseits_lichtreagibel",
+        "status_eintrag_sprache": "status_eintrag_sprache_wert_sprache_unauffaellig",
+        "status_eintrag_kraft": "status_eintrag_kraft_wert_kraft_seitengleich",
+        "status_eintrag_sensibilitaet": "status_eintrag_sensibilitaet_wert_sensibilitaet_seitengleich",
+        "status_eintrag_meningismus": "status_eintrag_meningismus_wert_kein_meningismus"
+      },
+      "kind": "normal"
+    }
+  },
   "groups": {
     "status": {
       "title": "Status",
-      "children": [
-        "status_allgemein",
-        "status_abdomen",
-        "status_extremitaeten"
-      ],
       "items": [
         {
           "type": "group",
-          "id": "status_allgemein"
+          "id": "status_gruppe_allgemeinzustand"
         },
         {
           "type": "group",
-          "id": "status_abdomen"
+          "id": "status_gruppe_kopf_und_hals"
         },
         {
           "type": "group",
-          "id": "status_extremitaeten"
+          "id": "status_gruppe_haut"
+        },
+        {
+          "type": "group",
+          "id": "status_gruppe_cor"
+        },
+        {
+          "type": "group",
+          "id": "status_gruppe_pulmo"
+        },
+        {
+          "type": "group",
+          "id": "status_gruppe_abdomen"
+        },
+        {
+          "type": "group",
+          "id": "status_gruppe_digital_rektale_untersuchung"
+        },
+        {
+          "type": "group",
+          "id": "status_gruppe_extremitaeten"
+        },
+        {
+          "type": "group",
+          "id": "status_gruppe_neurologie"
         }
-      ]
+      ],
+      "sets": [
+        "status_vorgabe_normalbefund"
+      ],
+      "subgroups": "break",
+      "summary": true,
+      "reset": true
+    },
+    "status_gruppe_allgemeinzustand": {
+      "title": "Allgemeinzustand",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_allgemeinzustand"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_pflegezustand"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ernaehrungszustand"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_koerpergroesse"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_koerpergewicht"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zum_allgemeinzustand"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_kopf_und_hals": {
+      "title": "Kopf und Hals",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_schleimhaeute"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_zunge"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_rachen"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_zervikale_lymphknoten"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_schilddruese"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zu_kopf_und_hals"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_haut": {
+      "title": "Haut",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_hautturgor"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_hautzustand"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_hautbefund"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zur_haut"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_cor": {
+      "title": "Cor",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_herztoene"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_herzrhythmus"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_herzgeraeusche"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zu_cor"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_pulmo": {
+      "title": "Pulmo",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_thoraxexkursion"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_klopfschall"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_atemgeraeusch"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_rasselgeraeusche"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_giemen"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_brummen"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zu_pulmo"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_abdomen": {
+      "title": "Abdomen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_bauchdecke"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_druckschmerz"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_peritonealreizung"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_darmgeraeusche"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_leber"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_milz"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_nierenlager"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_harnblase"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zum_abdomen"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_digital_rektale_untersuchung": {
+      "title": "Digital-rektale Untersuchung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_sphinktertonus"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_rektumampulle"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_blutbeimengung"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_stuhlbefund"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_perianalbefund"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zur_digital_rektalen_untersuchung"
+        }
+      ],
+      "kind": "neutral",
+      "default": false,
+      "autoCompact": true
+    },
+    "status_gruppe_extremitaeten": {
+      "title": "Extremitäten",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_oedeme"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_durchblutung"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_periphere_pulse"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_wunden"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zu_den_extremitaeten"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "status_gruppe_neurologie": {
+      "title": "Neurologie",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "status_eintrag_bewusstseinslage"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_pupillen"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_sprache"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_kraft"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_sensibilitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_meningismus"
+        },
+        {
+          "type": "phrase",
+          "id": "status_eintrag_ergaenzung_zur_neurologie"
+        }
+      ],
+      "kind": "neutral",
+      "autoCompact": true,
+      "reveal": "initial"
     }
   },
-  "phrases": {}
+  "phrases": {
+    "status_eintrag_allgemeinzustand": {
+      "title": "Allgemeinzustand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_allgemeinzustand_wert_allgemeinzustand_gut": {
+          "kind": "normal",
+          "text": "Allgemeinzustand gut"
+        },
+        "status_eintrag_allgemeinzustand_wert_allgemeinzustand_leicht_reduziert": {
+          "kind": "abnormal",
+          "text": "Allgemeinzustand leicht reduziert"
+        },
+        "status_eintrag_allgemeinzustand_wert_allgemeinzustand_deutlich_reduziert": {
+          "kind": "abnormal",
+          "text": "Allgemeinzustand deutlich reduziert"
+        },
+        "status_eintrag_allgemeinzustand_wert_allgemeinzustand_kritisch": {
+          "kind": "abnormal",
+          "text": "Allgemeinzustand kritisch"
+        }
+      }
+    },
+    "status_eintrag_pflegezustand": {
+      "title": "Pflegezustand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_pflegezustand_wert_pflegezustand_unauffaellig": {
+          "kind": "normal",
+          "text": "Pflegezustand unauffällig"
+        },
+        "status_eintrag_pflegezustand_wert_pflegezustand_reduziert": {
+          "kind": "abnormal",
+          "text": "Pflegezustand reduziert"
+        },
+        "status_eintrag_pflegezustand_wert_pflegezustand_deutlich_reduziert": {
+          "kind": "abnormal",
+          "text": "Pflegezustand deutlich reduziert"
+        }
+      }
+    },
+    "status_eintrag_ernaehrungszustand": {
+      "title": "Ernährungszustand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ernaehrungszustand_wert_ernaehrungszustand_unauffaellig": {
+          "kind": "normal",
+          "text": "Ernährungszustand unauffällig"
+        },
+        "status_eintrag_ernaehrungszustand_wert_kachektischer_ernaehrungszustand": {
+          "kind": "abnormal",
+          "text": "kachektischer Ernährungszustand",
+          "snomed": "238108007",
+          "snomedDisplay": "Cachexia"
+        },
+        "status_eintrag_ernaehrungszustand_wert_uebergewichtiger_ernaehrungszustand": {
+          "kind": "abnormal",
+          "text": "übergewichtiger Ernährungszustand",
+          "snomed": "238131007",
+          "snomedDisplay": "Overweight"
+        },
+        "status_eintrag_ernaehrungszustand_wert_adipoeser_ernaehrungszustand": {
+          "kind": "abnormal",
+          "text": "adipöser Ernährungszustand",
+          "snomed": "414916001",
+          "snomedDisplay": "Obesity"
+        }
+      }
+    },
+    "status_eintrag_koerpergroesse": {
+      "title": "Körpergröße",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_koerpergroesse_wert_koerpergroesse": {
+          "kind": "neutral",
+          "text": "Körpergröße {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "status_eingabe_koerpergroesse"
+      }
+    },
+    "status_eintrag_koerpergewicht": {
+      "title": "Körpergewicht",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_koerpergewicht_wert_koerpergewicht": {
+          "kind": "neutral",
+          "text": "Körpergewicht {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "status_eingabe_koerpergewicht"
+      }
+    },
+    "status_eintrag_ergaenzung_zum_allgemeinzustand": {
+      "title": "Ergänzung zum Allgemeinzustand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zum_allgemeinzustand_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_schleimhaeute": {
+      "title": "Schleimhäute",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_schleimhaeute_wert_schleimhaeute_feucht": {
+          "kind": "normal",
+          "text": "Schleimhäute feucht"
+        },
+        "status_eintrag_schleimhaeute_wert_schleimhaeute_trocken": {
+          "kind": "abnormal",
+          "text": "Schleimhäute trocken",
+          "snomed": "123640000",
+          "snomedDisplay": "Mucous membrane dryness"
+        }
+      }
+    },
+    "status_eintrag_zunge": {
+      "title": "Zunge",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_zunge_wert_kein_zungenbiss": {
+          "kind": "normal",
+          "text": "kein Zungenbiss"
+        },
+        "status_eintrag_zunge_wert_zungenbiss": {
+          "kind": "abnormal",
+          "text": "Zungenbiss"
+        }
+      }
+    },
+    "status_eintrag_rachen": {
+      "title": "Rachen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_rachen_wert_rachen_reizlos": {
+          "kind": "normal",
+          "text": "Rachen reizlos"
+        },
+        "status_eintrag_rachen_wert_rachen_geroetet": {
+          "kind": "abnormal",
+          "text": "Rachen gerötet"
+        },
+        "status_eintrag_rachen_wert_tonsillen_vergroessert": {
+          "kind": "abnormal",
+          "text": "Tonsillen vergrößert"
+        },
+        "status_eintrag_rachen_wert_eitrige_tonsillenbelaege": {
+          "kind": "abnormal",
+          "text": "eitrige Tonsillenbeläge"
+        }
+      }
+    },
+    "status_eintrag_zervikale_lymphknoten": {
+      "title": "Zervikale Lymphknoten",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_zervikale_lymphknoten_wert_keine_vergroesserten_zervikalen_lymphknoten_tastbar": {
+          "kind": "normal",
+          "text": "keine vergrößerten zervikalen Lymphknoten tastbar"
+        },
+        "status_eintrag_zervikale_lymphknoten_wert_zervikale_lymphknoten_links_vergroessert_tastbar": {
+          "kind": "abnormal",
+          "text": "zervikale Lymphknoten links vergrößert tastbar"
+        },
+        "status_eintrag_zervikale_lymphknoten_wert_zervikale_lymphknoten_rechts_vergroessert_tastbar": {
+          "kind": "abnormal",
+          "text": "zervikale Lymphknoten rechts vergrößert tastbar"
+        },
+        "status_eintrag_zervikale_lymphknoten_wert_zervikale_lymphknoten_beidseits_vergroessert_tastbar": {
+          "kind": "abnormal",
+          "text": "zervikale Lymphknoten beidseits vergrößert tastbar"
+        }
+      }
+    },
+    "status_eintrag_schilddruese": {
+      "title": "Schilddrüse",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_schilddruese_wert_schilddruese_nicht_vergroessert_und_schluckverschieblich": {
+          "kind": "normal",
+          "text": "Schilddrüse nicht vergrößert und schluckverschieblich"
+        },
+        "status_eintrag_schilddruese_wert_schilddruese_vergroessert_tastbar": {
+          "kind": "abnormal",
+          "text": "Schilddrüse vergrößert tastbar"
+        },
+        "status_eintrag_schilddruese_wert_schilddruese_knotig_tastbar": {
+          "kind": "abnormal",
+          "text": "Schilddrüse knotig tastbar"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zu_kopf_und_hals": {
+      "title": "Ergänzung zu Kopf und Hals",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zu_kopf_und_hals_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_hautturgor": {
+      "title": "Hautturgor",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_hautturgor_wert_hautturgor_unauffaellig": {
+          "kind": "normal",
+          "text": "Hautturgor unauffällig"
+        },
+        "status_eintrag_hautturgor_wert_hautturgor_vermindert": {
+          "kind": "abnormal",
+          "text": "Hautturgor vermindert",
+          "snomed": "425244000",
+          "snomedDisplay": "Decreased skin turgor"
+        }
+      }
+    },
+    "status_eintrag_hautzustand": {
+      "title": "Hautzustand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_hautzustand_wert_haut_warm_und_trocken": {
+          "kind": "normal",
+          "text": "Haut warm und trocken"
+        },
+        "status_eintrag_hautzustand_wert_haut_kuehl_und_trocken": {
+          "kind": "abnormal",
+          "text": "Haut kühl und trocken"
+        },
+        "status_eintrag_hautzustand_wert_haut_heiss_und_trocken": {
+          "kind": "abnormal",
+          "text": "Haut heiß und trocken"
+        },
+        "status_eintrag_hautzustand_wert_haut_kaltschweissig": {
+          "kind": "abnormal",
+          "text": "Haut kaltschweißig",
+          "snomed": "83547004",
+          "snomedDisplay": "Cold sweat"
+        }
+      }
+    },
+    "status_eintrag_hautbefund": {
+      "title": "Hautbefund",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_hautbefund_wert_kein_exanthem": {
+          "kind": "normal",
+          "text": "kein Exanthem"
+        },
+        "status_eintrag_hautbefund_wert_exanthem": {
+          "kind": "abnormal",
+          "text": "Exanthem",
+          "snomed": "271807003",
+          "snomedDisplay": "Rash"
+        },
+        "status_eintrag_hautbefund_wert_urtikaria": {
+          "kind": "abnormal",
+          "text": "Urtikaria",
+          "snomed": "126485001",
+          "snomedDisplay": "Urticaria"
+        },
+        "status_eintrag_hautbefund_wert_petechien": {
+          "kind": "abnormal",
+          "text": "Petechien",
+          "snomed": "271813007",
+          "snomedDisplay": "Petechiae"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zur_haut": {
+      "title": "Ergänzung zur Haut",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zur_haut_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_herztoene": {
+      "title": "Herztöne",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_herztoene_wert_herztoene_rein": {
+          "kind": "normal",
+          "text": "Herztöne rein"
+        },
+        "status_eintrag_herztoene_wert_herztoene_leise": {
+          "kind": "abnormal",
+          "text": "Herztöne leise"
+        },
+        "status_eintrag_herztoene_wert_herztoene_kaum_beurteilbar": {
+          "kind": "neutral",
+          "text": "Herztöne kaum beurteilbar"
+        }
+      }
+    },
+    "status_eintrag_herzrhythmus": {
+      "title": "Herzrhythmus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_herzrhythmus_wert_herzrhythmus_regelmaessig": {
+          "kind": "normal",
+          "text": "Herzrhythmus regelmäßig"
+        },
+        "status_eintrag_herzrhythmus_wert_herzrhythmus_unregelmaessig": {
+          "kind": "abnormal",
+          "text": "Herzrhythmus unregelmäßig"
+        }
+      }
+    },
+    "status_eintrag_herzgeraeusche": {
+      "title": "Herzgeräusche",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_herzgeraeusche_wert_kein_herzgeraeusch_auskultierbar": {
+          "kind": "normal",
+          "text": "kein Herzgeräusch auskultierbar"
+        },
+        "status_eintrag_herzgeraeusche_wert_systolikum": {
+          "kind": "abnormal",
+          "text": "Systolikum"
+        },
+        "status_eintrag_herzgeraeusche_wert_diastolikum": {
+          "kind": "abnormal",
+          "text": "Diastolikum"
+        },
+        "status_eintrag_herzgeraeusche_wert_herzgeraeusch": {
+          "kind": "abnormal",
+          "text": "Herzgeräusch: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_ergaenzung_zu_cor": {
+      "title": "Ergänzung zu Cor",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zu_cor_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_thoraxexkursion": {
+      "title": "Thoraxexkursion",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_thoraxexkursion_wert_thoraxexkursion_seitengleich": {
+          "kind": "normal",
+          "text": "Thoraxexkursion seitengleich"
+        },
+        "status_eintrag_thoraxexkursion_wert_thoraxexkursion_links_vermindert": {
+          "kind": "abnormal",
+          "text": "Thoraxexkursion links vermindert"
+        },
+        "status_eintrag_thoraxexkursion_wert_thoraxexkursion_rechts_vermindert": {
+          "kind": "abnormal",
+          "text": "Thoraxexkursion rechts vermindert"
+        }
+      }
+    },
+    "status_eintrag_klopfschall": {
+      "title": "Klopfschall",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_klopfschall_wert_klopfschall_sonor": {
+          "kind": "normal",
+          "text": "Klopfschall sonor"
+        },
+        "status_eintrag_klopfschall_wert_klopfschall_links_gedaempft": {
+          "kind": "abnormal",
+          "text": "Klopfschall links gedämpft"
+        },
+        "status_eintrag_klopfschall_wert_klopfschall_rechts_gedaempft": {
+          "kind": "abnormal",
+          "text": "Klopfschall rechts gedämpft"
+        },
+        "status_eintrag_klopfschall_wert_klopfschall_links_hypersonor": {
+          "kind": "abnormal",
+          "text": "Klopfschall links hypersonor"
+        },
+        "status_eintrag_klopfschall_wert_klopfschall_rechts_hypersonor": {
+          "kind": "abnormal",
+          "text": "Klopfschall rechts hypersonor"
+        }
+      }
+    },
+    "status_eintrag_atemgeraeusch": {
+      "title": "Atemgeräusch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_atemgeraeusch_wert_vesikulaeres_atemgeraeusch_seitengleich": {
+          "kind": "normal",
+          "text": "vesikuläres Atemgeräusch seitengleich"
+        },
+        "status_eintrag_atemgeraeusch_wert_atemgeraeusch_links_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "Atemgeräusch links abgeschwächt"
+        },
+        "status_eintrag_atemgeraeusch_wert_atemgeraeusch_rechts_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "Atemgeräusch rechts abgeschwächt"
+        },
+        "status_eintrag_atemgeraeusch_wert_atemgeraeusch_beidseits_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "Atemgeräusch beidseits abgeschwächt"
+        },
+        "status_eintrag_atemgeraeusch_wert_atemgeraeusch_links_aufgehoben": {
+          "kind": "abnormal",
+          "text": "Atemgeräusch links aufgehoben"
+        },
+        "status_eintrag_atemgeraeusch_wert_atemgeraeusch_rechts_aufgehoben": {
+          "kind": "abnormal",
+          "text": "Atemgeräusch rechts aufgehoben"
+        }
+      }
+    },
+    "status_eintrag_rasselgeraeusche": {
+      "title": "Rasselgeräusche",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_rasselgeraeusche_wert_keine_rasselgeraeusche": {
+          "kind": "normal",
+          "text": "keine Rasselgeräusche"
+        },
+        "status_eintrag_rasselgeraeusche_wert_feinblasige_rasselgeraeusche_links": {
+          "kind": "abnormal",
+          "text": "feinblasige Rasselgeräusche links"
+        },
+        "status_eintrag_rasselgeraeusche_wert_feinblasige_rasselgeraeusche_rechts": {
+          "kind": "abnormal",
+          "text": "feinblasige Rasselgeräusche rechts"
+        },
+        "status_eintrag_rasselgeraeusche_wert_feinblasige_rasselgeraeusche_beidseits": {
+          "kind": "abnormal",
+          "text": "feinblasige Rasselgeräusche beidseits"
+        },
+        "status_eintrag_rasselgeraeusche_wert_grobblasige_rasselgeraeusche_links": {
+          "kind": "abnormal",
+          "text": "grobblasige Rasselgeräusche links"
+        },
+        "status_eintrag_rasselgeraeusche_wert_grobblasige_rasselgeraeusche_rechts": {
+          "kind": "abnormal",
+          "text": "grobblasige Rasselgeräusche rechts"
+        },
+        "status_eintrag_rasselgeraeusche_wert_grobblasige_rasselgeraeusche_beidseits": {
+          "kind": "abnormal",
+          "text": "grobblasige Rasselgeräusche beidseits"
+        }
+      }
+    },
+    "status_eintrag_giemen": {
+      "title": "Giemen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_giemen_wert_kein_giemen": {
+          "kind": "normal",
+          "text": "kein Giemen"
+        },
+        "status_eintrag_giemen_wert_giemen": {
+          "kind": "abnormal",
+          "text": "Giemen",
+          "snomed": "56018004",
+          "snomedDisplay": "Wheezing"
+        }
+      }
+    },
+    "status_eintrag_brummen": {
+      "title": "Brummen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_brummen_wert_kein_brummen": {
+          "kind": "normal",
+          "text": "kein Brummen"
+        },
+        "status_eintrag_brummen_wert_brummen": {
+          "kind": "abnormal",
+          "text": "Brummen"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zu_pulmo": {
+      "title": "Ergänzung zu Pulmo",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zu_pulmo_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_bauchdecke": {
+      "title": "Bauchdecke",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_bauchdecke_wert_bauchdecke_weich": {
+          "kind": "normal",
+          "text": "Bauchdecke weich",
+          "snomed": "249543005",
+          "snomedDisplay": "Abdomen soft"
+        },
+        "status_eintrag_bauchdecke_wert_bauchdecke_angespannt": {
+          "kind": "abnormal",
+          "text": "Bauchdecke angespannt"
+        },
+        "status_eintrag_bauchdecke_wert_bauchdecke_meteoristisch_gespannt": {
+          "kind": "abnormal",
+          "text": "Bauchdecke meteoristisch gespannt"
+        },
+        "status_eintrag_bauchdecke_wert_bauchdecke_aszitisch_gespannt": {
+          "kind": "abnormal",
+          "text": "Bauchdecke aszitisch gespannt",
+          "snomed": "389026000",
+          "snomedDisplay": "Ascites"
+        }
+      }
+    },
+    "status_eintrag_druckschmerz": {
+      "title": "Druckschmerz",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_druckschmerz_wert_kein_abdomineller_druckschmerz": {
+          "kind": "normal",
+          "text": "kein abdomineller Druckschmerz",
+          "snomed": "297125009",
+          "snomedDisplay": "Abdominal tenderness absent"
+        },
+        "status_eintrag_druckschmerz_wert_diffuser_abdomineller_druckschmerz": {
+          "kind": "abnormal",
+          "text": "diffuser abdomineller Druckschmerz",
+          "snomed": "440220007",
+          "snomedDisplay": "Generalised abdominal tenderness"
+        },
+        "status_eintrag_druckschmerz_wert_druckschmerz_im_rechten_oberbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im rechten Oberbauch",
+          "snomed": "448265002",
+          "snomedDisplay": "Tenderness of right upper quadrant of abdomen"
+        },
+        "status_eintrag_druckschmerz_wert_druckschmerz_im_linken_oberbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im linken Oberbauch",
+          "snomed": "448660000",
+          "snomedDisplay": "Tenderness of left upper quadrant of abdomen"
+        },
+        "status_eintrag_druckschmerz_wert_druckschmerz_im_epigastrium": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im Epigastrium",
+          "snomed": "301403003",
+          "snomedDisplay": "Tenderness of epigastric region"
+        },
+        "status_eintrag_druckschmerz_wert_druckschmerz_im_rechten_unterbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im rechten Unterbauch",
+          "snomed": "448661001",
+          "snomedDisplay": "Tenderness of right lower quadrant of abdomen"
+        },
+        "status_eintrag_druckschmerz_wert_druckschmerz_im_linken_unterbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im linken Unterbauch",
+          "snomed": "439774009",
+          "snomedDisplay": "Abdominal tenderness of left lower quadrant"
+        },
+        "status_eintrag_druckschmerz_wert_druckschmerz_im_mittelbauch": {
+          "kind": "abnormal",
+          "text": "Druckschmerz im Mittelbauch",
+          "snomed": "43478001",
+          "snomedDisplay": "Abdominal tenderness"
+        }
+      }
+    },
+    "status_eintrag_peritonealreizung": {
+      "title": "Peritonealreizung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_peritonealreizung_wert_kein_hinweis_auf_peritonealreizung": {
+          "kind": "normal",
+          "text": "kein Hinweis auf Peritonealreizung"
+        },
+        "status_eintrag_peritonealreizung_wert_abwehrspannung": {
+          "kind": "abnormal",
+          "text": "Abwehrspannung",
+          "snomed": "249545003",
+          "snomedDisplay": "Abdominal guarding"
+        },
+        "status_eintrag_peritonealreizung_wert_loslassschmerz": {
+          "kind": "abnormal",
+          "text": "Loslassschmerz",
+          "snomed": "35611005",
+          "snomedDisplay": "Rebound tenderness"
+        },
+        "status_eintrag_peritonealreizung_wert_peritonismus": {
+          "kind": "abnormal",
+          "text": "Peritonismus"
+        }
+      }
+    },
+    "status_eintrag_darmgeraeusche": {
+      "title": "Darmgeräusche",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_darmgeraeusche_wert_darmgeraeusche_regelrecht": {
+          "kind": "normal",
+          "text": "Darmgeräusche regelrecht",
+          "snomed": "61539000",
+          "snomedDisplay": "Normal bowel sounds"
+        },
+        "status_eintrag_darmgeraeusche_wert_darmgeraeusche_traege": {
+          "kind": "abnormal",
+          "text": "Darmgeräusche träge"
+        },
+        "status_eintrag_darmgeraeusche_wert_darmgeraeusche_hochgestellt": {
+          "kind": "abnormal",
+          "text": "Darmgeräusche hochgestellt",
+          "snomed": "18101008",
+          "snomedDisplay": "Hyperactive bowel sounds"
+        },
+        "status_eintrag_darmgeraeusche_wert_keine_darmgeraeusche": {
+          "kind": "abnormal",
+          "text": "keine Darmgeräusche",
+          "snomed": "16268000",
+          "snomedDisplay": "Bowel sounds absent"
+        }
+      }
+    },
+    "status_eintrag_leber": {
+      "title": "Leber",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_leber_wert_leber_nicht_vergroessert_tastbar": {
+          "kind": "normal",
+          "text": "Leber nicht vergrößert tastbar"
+        },
+        "status_eintrag_leber_wert_hepatomegalie": {
+          "kind": "abnormal",
+          "text": "Hepatomegalie"
+        }
+      }
+    },
+    "status_eintrag_milz": {
+      "title": "Milz",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_milz_wert_milz_nicht_tastbar": {
+          "kind": "normal",
+          "text": "Milz nicht tastbar"
+        },
+        "status_eintrag_milz_wert_splenomegalie": {
+          "kind": "abnormal",
+          "text": "Splenomegalie"
+        }
+      }
+    },
+    "status_eintrag_nierenlager": {
+      "title": "Nierenlager",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_nierenlager_wert_kein_nierenlagerklopfschmerz": {
+          "kind": "normal",
+          "text": "kein Nierenlagerklopfschmerz",
+          "snomed": "413350009:{246090004=102830001},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Renal angle tenderness; current; subject of record"
+        },
+        "status_eintrag_nierenlager_wert_nierenlagerklopfschmerz_links": {
+          "kind": "abnormal",
+          "text": "Nierenlagerklopfschmerz links",
+          "snomed": "796104681000119101",
+          "snomedDisplay": "Left renal angle tenderness"
+        },
+        "status_eintrag_nierenlager_wert_nierenlagerklopfschmerz_rechts": {
+          "kind": "abnormal",
+          "text": "Nierenlagerklopfschmerz rechts",
+          "snomed": "173789951000119107",
+          "snomedDisplay": "Right renal angle tenderness"
+        },
+        "status_eintrag_nierenlager_wert_nierenlagerklopfschmerz_beidseits": {
+          "kind": "abnormal",
+          "text": "Nierenlagerklopfschmerz beidseits",
+          "snomed": "102830001",
+          "snomedDisplay": "Renal angle tenderness"
+        }
+      }
+    },
+    "status_eintrag_harnblase": {
+      "title": "Harnblase",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_harnblase_wert_harnblase_nicht_vergroessert_tastbar": {
+          "kind": "normal",
+          "text": "Harnblase nicht vergrößert tastbar"
+        },
+        "status_eintrag_harnblase_wert_harnblase_vergroessert_tastbar": {
+          "kind": "abnormal",
+          "text": "Harnblase vergrößert tastbar"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zum_abdomen": {
+      "title": "Ergänzung zum Abdomen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zum_abdomen_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_sphinktertonus": {
+      "title": "Sphinktertonus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_sphinktertonus_wert_sphinktertonus_regelrecht": {
+          "kind": "normal",
+          "text": "Sphinktertonus regelrecht"
+        },
+        "status_eintrag_sphinktertonus_wert_sphinktertonus_erhoeht": {
+          "kind": "abnormal",
+          "text": "Sphinktertonus erhöht"
+        },
+        "status_eintrag_sphinktertonus_wert_sphinktertonus_vermindert": {
+          "kind": "abnormal",
+          "text": "Sphinktertonus vermindert"
+        }
+      }
+    },
+    "status_eintrag_rektumampulle": {
+      "title": "Rektumampulle",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_rektumampulle_wert_keine_rektale_resistenz_tastbar": {
+          "kind": "normal",
+          "text": "keine rektale Resistenz tastbar"
+        },
+        "status_eintrag_rektumampulle_wert_rektale_resistenz_tastbar": {
+          "kind": "abnormal",
+          "text": "rektale Resistenz tastbar"
+        },
+        "status_eintrag_rektumampulle_wert_kotsteine_tastbar": {
+          "kind": "abnormal",
+          "text": "Kotsteine tastbar"
+        }
+      }
+    },
+    "status_eintrag_blutbeimengung": {
+      "title": "Blutbeimengung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_blutbeimengung_wert_kein_blut_am_untersuchungshandschuh": {
+          "kind": "normal",
+          "text": "kein Blut am Untersuchungshandschuh"
+        },
+        "status_eintrag_blutbeimengung_wert_frischblut_am_untersuchungshandschuh": {
+          "kind": "abnormal",
+          "text": "Frischblut am Untersuchungshandschuh"
+        },
+        "status_eintrag_blutbeimengung_wert_teerstuhl_am_untersuchungshandschuh": {
+          "kind": "abnormal",
+          "text": "Teerstuhl am Untersuchungshandschuh"
+        }
+      }
+    },
+    "status_eintrag_stuhlbefund": {
+      "title": "Stuhlbefund",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_stuhlbefund_wert_stuhl_unauffaellig": {
+          "kind": "normal",
+          "text": "Stuhl unauffällig"
+        },
+        "status_eintrag_stuhlbefund_wert_stuhl_mit_blut_durchmischt": {
+          "kind": "abnormal",
+          "text": "Stuhl mit Blut durchmischt"
+        },
+        "status_eintrag_stuhlbefund_wert_teerstuhl": {
+          "kind": "abnormal",
+          "text": "Teerstuhl"
+        }
+      }
+    },
+    "status_eintrag_perianalbefund": {
+      "title": "Perianalbefund",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_perianalbefund_wert_perianalregion_unauffaellig": {
+          "kind": "normal",
+          "text": "Perianalregion unauffällig"
+        },
+        "status_eintrag_perianalbefund_wert_haemorrhoiden": {
+          "kind": "abnormal",
+          "text": "Hämorrhoiden"
+        },
+        "status_eintrag_perianalbefund_wert_marisken": {
+          "kind": "abnormal",
+          "text": "Marisken"
+        },
+        "status_eintrag_perianalbefund_wert_schmerzhafte_perianale_schwellung": {
+          "kind": "abnormal",
+          "text": "schmerzhafte perianale Schwellung"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zur_digital_rektalen_untersuchung": {
+      "title": "Ergänzung zur digital-rektalen Untersuchung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zur_digital_rektalen_untersuchung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_oedeme": {
+      "title": "Ödeme",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_oedeme_wert_keine_peripheren_oedeme": {
+          "kind": "normal",
+          "text": "keine peripheren Ödeme",
+          "snomed": "1141974008",
+          "snomedDisplay": "No peripheral oedema present"
+        },
+        "status_eintrag_oedeme_wert_symmetrische_unterschenkeloedeme": {
+          "kind": "abnormal",
+          "text": "symmetrische Unterschenkelödeme",
+          "snomed": "271809000",
+          "snomedDisplay": "Peripheral oedema"
+        },
+        "status_eintrag_oedeme_wert_generalisierte_extremitaetenoedeme": {
+          "kind": "abnormal",
+          "text": "generalisierte Extremitätenödeme",
+          "snomed": "271809000",
+          "snomedDisplay": "Peripheral oedema"
+        },
+        "status_eintrag_oedeme_wert_unterschenkelschwellung_links": {
+          "kind": "abnormal",
+          "text": "Unterschenkelschwellung links",
+          "snomed": "442672001",
+          "snomedDisplay": "Swelling"
+        },
+        "status_eintrag_oedeme_wert_unterschenkelschwellung_rechts": {
+          "kind": "abnormal",
+          "text": "Unterschenkelschwellung rechts",
+          "snomed": "442672001",
+          "snomedDisplay": "Swelling"
+        }
+      }
+    },
+    "status_eintrag_durchblutung": {
+      "title": "Durchblutung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_durchblutung_wert_durchblutung_der_extremitaeten_intakt": {
+          "kind": "normal",
+          "text": "Durchblutung der Extremitäten intakt"
+        },
+        "status_eintrag_durchblutung_wert_durchblutung_links_vermindert": {
+          "kind": "abnormal",
+          "text": "Durchblutung links vermindert"
+        },
+        "status_eintrag_durchblutung_wert_durchblutung_rechts_vermindert": {
+          "kind": "abnormal",
+          "text": "Durchblutung rechts vermindert"
+        },
+        "status_eintrag_durchblutung_wert_durchblutung_beidseits_vermindert": {
+          "kind": "abnormal",
+          "text": "Durchblutung beidseits vermindert"
+        }
+      }
+    },
+    "status_eintrag_periphere_pulse": {
+      "title": "Periphere Pulse",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_periphere_pulse_wert_periphere_pulse_seitengleich_tastbar": {
+          "kind": "normal",
+          "text": "periphere Pulse seitengleich tastbar"
+        },
+        "status_eintrag_periphere_pulse_wert_periphere_pulse_links_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "periphere Pulse links abgeschwächt"
+        },
+        "status_eintrag_periphere_pulse_wert_periphere_pulse_rechts_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "periphere Pulse rechts abgeschwächt"
+        },
+        "status_eintrag_periphere_pulse_wert_periphere_pulse_beidseits_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "periphere Pulse beidseits abgeschwächt"
+        }
+      }
+    },
+    "status_eintrag_wunden": {
+      "title": "Wunden",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_wunden_wert_keine_chronischen_wunden": {
+          "kind": "normal",
+          "text": "keine chronischen Wunden",
+          "snomed": "413350009:{246090004=92161000112103},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Chronic wound; current; subject of record"
+        },
+        "status_eintrag_wunden_wert_chronische_wunde_links": {
+          "kind": "abnormal",
+          "text": "chronische Wunde links",
+          "snomed": "92161000112103",
+          "snomedDisplay": "Chronic wound"
+        },
+        "status_eintrag_wunden_wert_chronische_wunde_rechts": {
+          "kind": "abnormal",
+          "text": "chronische Wunde rechts",
+          "snomed": "92161000112103",
+          "snomedDisplay": "Chronic wound"
+        },
+        "status_eintrag_wunden_wert_chronische_wunden_beidseits": {
+          "kind": "abnormal",
+          "text": "chronische Wunden beidseits",
+          "snomed": "92161000112103",
+          "snomedDisplay": "Chronic wound"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zu_den_extremitaeten": {
+      "title": "Ergänzung zu den Extremitäten",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zu_den_extremitaeten_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "status_eintrag_bewusstseinslage": {
+      "title": "Bewusstseinslage",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_bewusstseinslage_wert_wach_und_adaequat": {
+          "kind": "normal",
+          "text": "wach und adäquat"
+        },
+        "status_eintrag_bewusstseinslage_wert_schlaefrig": {
+          "kind": "abnormal",
+          "text": "schläfrig",
+          "snomed": "79519003",
+          "snomedDisplay": "Drowsiness"
+        },
+        "status_eintrag_bewusstseinslage_wert_verwirrt": {
+          "kind": "abnormal",
+          "text": "verwirrt",
+          "snomed": "40917007",
+          "snomedDisplay": "Confusion"
+        },
+        "status_eintrag_bewusstseinslage_wert_bewusstlos": {
+          "kind": "abnormal",
+          "text": "bewusstlos",
+          "snomed": "418107008",
+          "snomedDisplay": "Unconscious"
+        }
+      }
+    },
+    "status_eintrag_pupillen": {
+      "title": "Pupillen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_pupillen_wert_pupillen_isokor_und_beidseits_lichtreagibel": {
+          "kind": "normal",
+          "text": "Pupillen isokor und beidseits lichtreagibel"
+        },
+        "status_eintrag_pupillen_wert_pupillen_anisokor": {
+          "kind": "abnormal",
+          "text": "Pupillen anisokor",
+          "snomed": "13045009",
+          "snomedDisplay": "Anisocoria"
+        },
+        "status_eintrag_pupillen_wert_pupillenreaktion_verzoegert": {
+          "kind": "abnormal",
+          "text": "Pupillenreaktion verzögert"
+        },
+        "status_eintrag_pupillen_wert_pupillen_lichtstarr": {
+          "kind": "abnormal",
+          "text": "Pupillen lichtstarr",
+          "snomed": "301944006",
+          "snomedDisplay": "No pupillary reaction to light"
+        }
+      }
+    },
+    "status_eintrag_sprache": {
+      "title": "Sprache",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_sprache_wert_sprache_unauffaellig": {
+          "kind": "normal",
+          "text": "Sprache unauffällig",
+          "snomed": "162293002",
+          "snomedDisplay": "No speech problem"
+        },
+        "status_eintrag_sprache_wert_dysarthrie": {
+          "kind": "abnormal",
+          "text": "Dysarthrie",
+          "snomed": "8011004",
+          "snomedDisplay": "Dysarthria"
+        },
+        "status_eintrag_sprache_wert_aphasie": {
+          "kind": "abnormal",
+          "text": "Aphasie",
+          "snomed": "87486003",
+          "snomedDisplay": "Aphasia"
+        },
+        "status_eintrag_sprache_wert_mutismus": {
+          "kind": "abnormal",
+          "text": "Mutismus",
+          "snomed": "88052002",
+          "snomedDisplay": "Mutism"
+        }
+      }
+    },
+    "status_eintrag_kraft": {
+      "title": "Kraft",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_kraft_wert_kraft_seitengleich": {
+          "kind": "normal",
+          "text": "Kraft seitengleich"
+        },
+        "status_eintrag_kraft_wert_hemiparese_links": {
+          "kind": "abnormal",
+          "text": "Hemiparese links",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "status_eintrag_kraft_wert_hemiparese_rechts": {
+          "kind": "abnormal",
+          "text": "Hemiparese rechts",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "status_eintrag_kraft_wert_paraparese": {
+          "kind": "abnormal",
+          "text": "Paraparese",
+          "snomed": "1845001",
+          "snomedDisplay": "Paraparesis"
+        }
+      }
+    },
+    "status_eintrag_sensibilitaet": {
+      "title": "Sensibilität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_sensibilitaet_wert_sensibilitaet_seitengleich": {
+          "kind": "normal",
+          "text": "Sensibilität seitengleich"
+        },
+        "status_eintrag_sensibilitaet_wert_hypaesthesie_links": {
+          "kind": "abnormal",
+          "text": "Hypästhesie links",
+          "snomed": "397974008",
+          "snomedDisplay": "Hypoaesthesia"
+        },
+        "status_eintrag_sensibilitaet_wert_hypaesthesie_rechts": {
+          "kind": "abnormal",
+          "text": "Hypästhesie rechts",
+          "snomed": "397974008",
+          "snomedDisplay": "Hypoaesthesia"
+        },
+        "status_eintrag_sensibilitaet_wert_hypaesthesie_beidseits": {
+          "kind": "abnormal",
+          "text": "Hypästhesie beidseits",
+          "snomed": "397974008",
+          "snomedDisplay": "Hypoaesthesia"
+        }
+      }
+    },
+    "status_eintrag_meningismus": {
+      "title": "Meningismus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_meningismus_wert_kein_meningismus": {
+          "kind": "normal",
+          "text": "kein Meningismus",
+          "snomed": "274829000",
+          "snomedDisplay": "Meningism absent"
+        },
+        "status_eintrag_meningismus_wert_meningismus": {
+          "kind": "abnormal",
+          "text": "Meningismus",
+          "snomed": "274830005",
+          "snomedDisplay": "Meningism present"
+        }
+      }
+    },
+    "status_eintrag_ergaenzung_zur_neurologie": {
+      "title": "Ergänzung zur Neurologie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "status_eintrag_ergaenzung_zur_neurologie_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
 }

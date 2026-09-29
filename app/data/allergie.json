@@ -19,7 +19,6 @@
   },
   "catalogs": {
     "allergie": {
-      "lenses": [],
       "values": {
         "allergie_wert_penicillin": {
           "kind": "abnormal",
@@ -30,6 +29,9 @@
             "Beta-Laktam"
           ],
           "lenses": [],
+          "tags": [
+            "antibiotikum"
+          ],
           "search": "allergie gegen penicillin penicillinallergie betalaktam beta laktam",
           "snomed": "91936005",
           "snomedDisplay": "Allergy to penicillin"
@@ -42,6 +44,9 @@
             "Aminopenicillin"
           ],
           "lenses": [],
+          "tags": [
+            "antibiotikum"
+          ],
           "search": "allergie gegen amoxicillin amoxi aminopenicillin",
           "snomed": "294505008",
           "snomedDisplay": "Amoxicillin allergy"
@@ -56,6 +61,9 @@
             "Cefazolin"
           ],
           "lenses": [],
+          "tags": [
+            "antibiotikum"
+          ],
           "search": "allergie gegen cephalosporine cefalosporin cefuroxim ceftriaxon cefazolin",
           "snomed": "294532003",
           "snomedDisplay": "Cephalosporin allergy"
@@ -70,6 +78,9 @@
             "Sulfamethoxazol"
           ],
           "lenses": [],
+          "tags": [
+            "antibiotikum"
+          ],
           "search": "allergie gegen sulfonamide sulfonamidallergie sulfa cotrimoxazol sulfamethoxazol",
           "snomed": "91939003",
           "snomedDisplay": "Sulfonamide allergy"
@@ -84,6 +95,9 @@
             "Erythromycin"
           ],
           "lenses": [],
+          "tags": [
+            "antibiotikum"
+          ],
           "search": "allergie gegen makrolide makrolidantibiotikum azithromycin clarithromycin erythromycin",
           "snomed": "860907004",
           "snomedDisplay": "Allergy to macrolide"
@@ -97,6 +111,7 @@
             "Dipyrone"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen metamizol novalgin novaminsulfon dipyrone",
           "snomed": "830172001",
           "snomedDisplay": "Allergy to metamizole"
@@ -113,6 +128,7 @@
             "Coxib"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen nsar nsaid nichtsteroidales antirheumatikum ibuprofen diclofenac naproxen coxib",
           "snomed": "293610009",
           "snomedDisplay": "Non-steroidal anti-inflammatory drug allergy"
@@ -125,6 +141,7 @@
             "Aspirin"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen acetylsalicylsaeure ass aspirin",
           "snomed": "293586001",
           "snomedDisplay": "Aspirin allergy"
@@ -139,6 +156,7 @@
             "Iodallergie"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen kontrastmittel roentgenkontrastmittel iodhaltiges kontrastmittel km iodallergie",
           "snomed": "293637006",
           "snomedDisplay": "Contrast media allergy"
@@ -153,6 +171,7 @@
             "Gummi"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen naturlatex latex latexallergie naturkautschuk gummi",
           "snomed": "1003755004",
           "snomedDisplay": "Hevea brasiliensis latex protein allergy"
@@ -166,6 +185,7 @@
             "Schleimhautantiseptikum"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen chlorhexidin chx hautdesinfektionsmittel schleimhautantiseptikum",
           "snomed": "294431008",
           "snomedDisplay": "Chlorhexidine allergy"
@@ -181,6 +201,7 @@
             "Articain"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen lokalanaesthetika lokalanaesthesie lidocain xylocain mepivacain articain",
           "snomed": "293718005",
           "snomedDisplay": "Local anaesthetic drug allergy"
@@ -194,6 +215,7 @@
             "Opioid"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen morphin morphium morphinallergie opioid",
           "snomed": "293601001",
           "snomedDisplay": "Morphine allergy"
@@ -206,6 +228,7 @@
             "Opioid"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen fentanyl fentanylallergie opioid",
           "snomed": "293605005",
           "snomedDisplay": "Fentanyl allergy"
@@ -217,6 +240,7 @@
             "Protaminallergie"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen protamin protaminallergie",
           "snomed": "294278007",
           "snomedDisplay": "Protamine allergy"
@@ -229,6 +253,7 @@
             "Peanut"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen erdnuss erdnussallergie peanut",
           "snomed": "91935009",
           "snomedDisplay": "Peanut allergy"
@@ -246,6 +271,7 @@
             "Pistazie"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen nuesse nussallergie baumnuss haselnuss walnuss cashew mandel pistazie",
           "snomed": "91934008",
           "snomedDisplay": "Allergy to nut"
@@ -260,6 +286,7 @@
             "Casein"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen kuhmilchprotein milcheiweiss milcheiweiss kuhmilch casein",
           "snomed": "782555009",
           "snomedDisplay": "Cow's milk protein allergy"
@@ -274,6 +301,7 @@
             "Eiallergie"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen huehnereiprotein huehnerei huehnereiweiss eiweiss eiallergie",
           "snomed": "213020009",
           "snomedDisplay": "Allergy to egg protein"
@@ -285,6 +313,7 @@
             "Fischallergie"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen fisch fischallergie",
           "snomed": "417532002",
           "snomedDisplay": "Allergy to fish"
@@ -301,6 +330,7 @@
             "Muschel"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen schalentiere krustentiere garnele shrimp krabbe hummer muschel",
           "snomed": "300913006",
           "snomedDisplay": "Shellfish allergy"
@@ -313,6 +343,7 @@
             "Weizenprotein"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen weizen weizenallergie weizenprotein",
           "snomed": "420174000",
           "snomedDisplay": "Allergy to wheat"
@@ -326,6 +357,7 @@
             "Insektengift"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen bienengift biene bienenstich insektengift",
           "snomed": "424213003",
           "snomedDisplay": "Allergy to bee venom"
@@ -339,6 +371,7 @@
             "Insektengift"
           ],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen wespengift wespe wespenstich insektengift",
           "snomed": "423058007",
           "snomedDisplay": "Allergy to wasp venom"
@@ -348,6 +381,7 @@
           "text": "Allergie gegen {:ausloeser*:}",
           "aliases": [],
           "lenses": [],
+          "tags": [],
           "search": "allergie gegen ausloeser ausloeser",
           "snomed": "609328004",
           "snomedDisplay": "Allergic disposition",
@@ -359,193 +393,6 @@
       }
     }
   },
-  "groups": {
-    "allergie": {
-      "title": "Allergien",
-      "children": [
-        "allergie_gruppe_allergie"
-      ],
-      "phrases": [
-        "allergie_eintrag_allergiestatus"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "allergie_eintrag_allergiestatus"
-        },
-        {
-          "type": "group",
-          "id": "allergie_gruppe_allergie"
-        }
-      ],
-      "reset": true,
-      "collapsed": true
-    },
-    "allergie_gruppe_allergie": {
-      "title": "Allergie",
-      "kind": "abnormal",
-      "phrases": [
-        "allergie_eintrag_allergie",
-        "allergie_eintrag_allergische_reaktion",
-        "allergie_eintrag_schweregrad_der_allergie",
-        "allergie_eintrag_ergaenzung_zur_allergie"
-      ],
-      "items": [
-        {
-          "type": "phrase",
-          "id": "allergie_eintrag_allergie"
-        },
-        {
-          "type": "phrase",
-          "id": "allergie_eintrag_allergische_reaktion"
-        },
-        {
-          "type": "phrase",
-          "id": "allergie_eintrag_schweregrad_der_allergie"
-        },
-        {
-          "type": "phrase",
-          "id": "allergie_eintrag_ergaenzung_zur_allergie"
-        }
-      ],
-      "reset": true,
-      "repeatable": {
-        "initial": 0,
-        "add": "Allergie hinzufügen",
-        "empty": "allergie_eintrag_allergiestatus"
-      }
-    }
-  },
-  "phrases": {
-    "allergie_eintrag_allergiestatus": {
-      "title": "Allergiestatus",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "allergie_eintrag_allergiestatus_wert_keine_bekannten_allergien": {
-          "kind": "normal",
-          "text": "keine bekannten Allergien",
-          "snomed": "716186003",
-          "snomedDisplay": "No known allergy"
-        },
-        "allergie_eintrag_allergiestatus_wert_allergiestatus_unbekannt": {
-          "kind": "neutral",
-          "text": "Allergiestatus unbekannt"
-        }
-      }
-    },
-    "allergie_eintrag_allergie": {
-      "title": "Allergie",
-      "kind": "neutral",
-      "default": "",
-      "values": {},
-      "catalog": "allergie",
-      "prompt": true
-    },
-    "allergie_eintrag_allergische_reaktion": {
-      "title": "Allergische Reaktion",
-      "kind": "abnormal",
-      "default": null,
-      "values": {
-        "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "allergische Reaktion: {:reaktion*:}"
-        }
-      },
-      "attributes": {
-        "reaktion": "allergie_eingabe_reaktion"
-      },
-      "suggestions": {
-        "allergie_wert_penicillin": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_amoxicillin": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_cephalosporin": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_sulfonamid": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_makrolid": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_metamizol": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_nsar": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_acetylsalicylsaeure": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_kontrastmittel": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_latex": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_chlorhexidin": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_lokalanaesthetikum": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_morphin": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_fentanyl": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_protamin": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_erdnuss": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_nuss": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_kuhmilchprotein": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_eiprotein": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_fisch": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_schalentiere": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_weizen": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_bienengift": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_wespengift": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion",
-        "allergie_wert_freitext": "allergie_eintrag_allergische_reaktion_wert_allergische_reaktion"
-      }
-    },
-    "allergie_eintrag_schweregrad_der_allergie": {
-      "title": "Schweregrad der Allergie",
-      "kind": "abnormal",
-      "default": null,
-      "values": {
-        "allergie_eintrag_schweregrad_der_allergie_wert_leichte_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "leichte allergische Reaktion"
-        },
-        "allergie_eintrag_schweregrad_der_allergie_wert_mittelschwere_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "mittelschwere allergische Reaktion"
-        },
-        "allergie_eintrag_schweregrad_der_allergie_wert_schwere_allergische_reaktion": {
-          "kind": "abnormal",
-          "text": "schwere allergische Reaktion"
-        },
-        "allergie_eintrag_schweregrad_der_allergie_wert_anaphylaxie": {
-          "kind": "abnormal",
-          "text": "Anaphylaxie"
-        }
-      },
-      "suggestions": {
-        "allergie_wert_penicillin": null,
-        "allergie_wert_amoxicillin": null,
-        "allergie_wert_cephalosporin": null,
-        "allergie_wert_sulfonamid": null,
-        "allergie_wert_makrolid": null,
-        "allergie_wert_metamizol": null,
-        "allergie_wert_nsar": null,
-        "allergie_wert_acetylsalicylsaeure": null,
-        "allergie_wert_kontrastmittel": null,
-        "allergie_wert_latex": null,
-        "allergie_wert_chlorhexidin": null,
-        "allergie_wert_lokalanaesthetikum": null,
-        "allergie_wert_morphin": null,
-        "allergie_wert_fentanyl": null,
-        "allergie_wert_protamin": null,
-        "allergie_wert_erdnuss": null,
-        "allergie_wert_nuss": null,
-        "allergie_wert_kuhmilchprotein": null,
-        "allergie_wert_eiprotein": null,
-        "allergie_wert_fisch": null,
-        "allergie_wert_schalentiere": null,
-        "allergie_wert_weizen": null,
-        "allergie_wert_bienengift": null,
-        "allergie_wert_wespengift": null,
-        "allergie_wert_freitext": null
-      }
-    },
-    "allergie_eintrag_ergaenzung_zur_allergie": {
-      "title": "Ergänzung zur Allergie",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "allergie_eintrag_ergaenzung_zur_allergie_wert_value": {
-          "kind": "neutral",
-          "text": "{:freitext*:}"
-        }
-      },
-      "attributes": {
-        "freitext": "gemeinsam_eingabe_freitext"
-      }
-    }
-  }
+  "groups": {},
+  "phrases": {}
 }

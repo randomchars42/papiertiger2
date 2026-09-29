@@ -1,0 +1,31 @@
+# Katheter und weitere Zugänge
+N: katheter
+I: gemeinsam, zugang
+
+E arterienort: choice label="Lokalisation" => an der linken A. radialis|- / an der rechten A. radialis|- / an der linken A. brachialis|- / an der rechten A. brachialis|- / an der linken A. femoralis|- / an der rechten A. femoralis|-
+E dialyseort: choice label="Lokalisation" => an der linken V. jugularis interna|- / an der rechten V. jugularis interna|- / an der linken V. subclavia|- / an der rechten V. subclavia|- / an der linken V. femoralis|- / an der rechten V. femoralis|-
+
+G @root @reset @subgroups(break): Katheter
+  U: zugang
+
+  P: Arterielle Katheter => kein arterieller Katheter dokumentiert|-
+  G @repeat(initial=0,add="Arteriellen Katheter hinzufügen",empty="Arterielle Katheter") @reset: Arterieller Katheter|i
+    P: Arterieller Katheter => arterieller Katheter {:ort=arterienort*:}|i* / PiCCO-Katheter {:ort=arterienort*:}|i
+    P: Funktion des arteriellen Katheters => arterieller Katheter durchgängig|n* / arterieller Katheter nicht durchgängig|a
+    P: Einstichstelle des arteriellen Katheters => Einstichstelle reizfrei|n* / Einstichstelle gerötet|a / Einstichstelle geschwollen|a / Sekretion an der Einstichstelle|a
+    P: Ergänzung zum arteriellen Katheter => {:freitext*:}|-
+
+  P: Dialysezugänge => kein Dialysezugang dokumentiert|-
+  G @repeat(initial=0,add="Dialysezugang hinzufügen",empty="Dialysezugänge") @reset: Dialysezugang|i
+    P: Dialysezugang => Shaldon-Katheter {:ort=dialyseort*:}|i* / Demers-Katheter {:ort=dialyseort*:}|i / Dialysefistel links|i / Dialysefistel rechts|i
+    P: Funktion des Dialysezugangs => Dialysezugang durchgängig|n* / Dialysezugang nicht durchgängig|a
+    P: Zustand des Dialysezugangs => Dialysezugang reizfrei|n* / Dialysezugang gerötet|a / Dialysezugang geschwollen|a / Sekretion am Dialysezugang|a
+    P: Ergänzung zum Dialysezugang => {:freitext*:}|-
+
+  P: Harnableitungen => keine Harnableitung dokumentiert|-
+  G @repeat(initial=0,add="Harnableitung hinzufügen",empty="Harnableitungen") @reset: Harnableitung|i
+    P: Harnableitung => transurethraler Blasendauerkatheter|i* / suprapubischer Blasenkatheter|i
+    P: Funktion der Harnableitung => Harnableitung durchgängig|n* / Harnableitung nicht durchgängig|a
+    P: Zustand der Harnableitung => Harnableitung reizfrei|n* / Harnableitung gerötet|a / Sekretion an der Harnableitung|a
+    P: Urinbefund => Urin klar|n* / Urin trüb|a / Makrohämaturie|a
+    P: Ergänzung zur Harnableitung => {:freitext*:}|-

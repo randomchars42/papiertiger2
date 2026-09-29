@@ -1,53 +1,2572 @@
 {
   "version": 2,
   "imports": [
-    "x",
-    "a",
-    "b",
-    "c",
-    "d",
-    "e"
+    "gemeinsam",
+    "orientierung",
+    "nihss"
   ],
+  "editors": {
+    "abcde_eingabe_blutungslokalisation": {
+      "type": "choice",
+      "options": {
+        "am_kopf": {
+          "kind": "neutral",
+          "text": "am Kopf"
+        },
+        "am_hals": {
+          "kind": "neutral",
+          "text": "am Hals"
+        },
+        "am_torso": {
+          "kind": "neutral",
+          "text": "am Torso"
+        },
+        "an_der_schulter": {
+          "kind": "neutral",
+          "text": "an der Schulter"
+        },
+        "am_oberarm": {
+          "kind": "neutral",
+          "text": "am Oberarm"
+        },
+        "am_ellenbogen": {
+          "kind": "neutral",
+          "text": "am Ellenbogen"
+        },
+        "am_unterarm": {
+          "kind": "neutral",
+          "text": "am Unterarm"
+        },
+        "an_der_hand": {
+          "kind": "neutral",
+          "text": "an der Hand"
+        },
+        "an_der_huefte": {
+          "kind": "neutral",
+          "text": "an der Hüfte"
+        },
+        "am_oberschenkel": {
+          "kind": "neutral",
+          "text": "am Oberschenkel"
+        },
+        "am_unterschenkel": {
+          "kind": "neutral",
+          "text": "am Unterschenkel"
+        },
+        "am_fuss": {
+          "kind": "neutral",
+          "text": "am Fuß"
+        }
+      },
+      "label": "Lokalisation"
+    },
+    "abcde_eingabe_tubusgroesse": {
+      "type": "number",
+      "label": "Tubusgröße",
+      "prefix": "ID ",
+      "suffix": " mm",
+      "min": 0,
+      "max": 9,
+      "step": 0.5
+    },
+    "abcde_eingabe_atemfrequenz": {
+      "type": "number",
+      "label": "Atemfrequenz",
+      "suffix": " / min",
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    "abcde_eingabe_seite": {
+      "type": "choice",
+      "options": {
+        "links": {
+          "kind": "neutral",
+          "text": "links"
+        },
+        "rechts": {
+          "kind": "neutral",
+          "text": "rechts"
+        },
+        "bilateral": {
+          "kind": "neutral",
+          "text": "bilateral"
+        }
+      },
+      "label": "Seite"
+    },
+    "abcde_eingabe_lokalisation": {
+      "type": "choice",
+      "options": {
+        "ubiquitaer": {
+          "kind": "neutral",
+          "text": "ubiquitär"
+        },
+        "basal": {
+          "kind": "neutral",
+          "text": "basal"
+        },
+        "ueber_dem_oberfeld": {
+          "kind": "neutral",
+          "text": "über dem Oberfeld"
+        },
+        "ueber_dem_mittelfeld": {
+          "kind": "neutral",
+          "text": "über dem Mittelfeld"
+        },
+        "ueber_dem_unterfeld": {
+          "kind": "neutral",
+          "text": "über dem Unterfeld"
+        }
+      },
+      "label": "Lokalisation"
+    },
+    "abcde_eingabe_charakter": {
+      "type": "choice",
+      "options": {
+        "von_zentral_fortgeleitete": {
+          "kind": "neutral",
+          "text": "von zentral fortgeleitete"
+        },
+        "feinblasige": {
+          "kind": "neutral",
+          "text": "feinblasige"
+        },
+        "knisternde": {
+          "kind": "neutral",
+          "text": "knisternde"
+        },
+        "grobblasige": {
+          "kind": "neutral",
+          "text": "grobblasige"
+        }
+      },
+      "label": "Charakter"
+    },
+    "abcde_eingabe_rekapillarisierungszeit": {
+      "type": "number",
+      "label": "Rekapillarisierungszeit",
+      "suffix": " s",
+      "min": 0,
+      "max": 30,
+      "step": 1
+    },
+    "abcde_eingabe_pulsfrequenz": {
+      "type": "number",
+      "label": "Pulsfrequenz",
+      "suffix": " / min",
+      "min": 0,
+      "max": 300,
+      "step": 1
+    },
+    "abcde_eingabe_blutzucker": {
+      "type": "number",
+      "label": "Blutzucker",
+      "suffix": " mg/dl",
+      "min": 0,
+      "max": 1000,
+      "step": 1
+    },
+    "abcde_eingabe_gcs_summe": {
+      "type": "number",
+      "label": "GCS-Summe",
+      "min": 3,
+      "max": 15,
+      "step": 1
+    },
+    "abcde_eingabe_temperatur": {
+      "type": "number",
+      "label": "Körpertemperatur",
+      "suffix": " °C",
+      "min": 20,
+      "max": 45,
+      "step": 0.1
+    },
+    "abcde_eingabe_verletzungsort": {
+      "type": "choice",
+      "options": {
+        "am_kopf": {
+          "kind": "neutral",
+          "text": "am Kopf"
+        },
+        "am_hals": {
+          "kind": "neutral",
+          "text": "am Hals"
+        },
+        "am_thorax": {
+          "kind": "neutral",
+          "text": "am Thorax"
+        },
+        "am_abdomen": {
+          "kind": "neutral",
+          "text": "am Abdomen"
+        },
+        "am_becken": {
+          "kind": "neutral",
+          "text": "am Becken"
+        },
+        "am_linken_arm": {
+          "kind": "neutral",
+          "text": "am linken Arm"
+        },
+        "am_rechten_arm": {
+          "kind": "neutral",
+          "text": "am rechten Arm"
+        },
+        "an_der_linken_hand": {
+          "kind": "neutral",
+          "text": "an der linken Hand"
+        },
+        "an_der_rechten_hand": {
+          "kind": "neutral",
+          "text": "an der rechten Hand"
+        },
+        "am_linken_bein": {
+          "kind": "neutral",
+          "text": "am linken Bein"
+        },
+        "am_rechten_bein": {
+          "kind": "neutral",
+          "text": "am rechten Bein"
+        },
+        "am_linken_fuss": {
+          "kind": "neutral",
+          "text": "am linken Fuß"
+        },
+        "am_rechten_fuss": {
+          "kind": "neutral",
+          "text": "am rechten Fuß"
+        }
+      },
+      "label": "Verletzungsort"
+    }
+  },
+  "sets": {
+    "abcde_vorgabe_normalbefund": {
+      "title": "Normalbefund",
+      "values": {
+        "abcde_eintrag_blutung": "abcde_eintrag_blutung_wert_keine_relevante_blutung",
+        "abcde_eintrag_zustand_des_atemwegs": "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_frei",
+        "abcde_eintrag_freihalten_des_atemwegs": "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_effektiv_freigehalten",
+        "abcde_eintrag_atmung": "abcde_eintrag_atmung_wert_eupnoe",
+        "abcde_eintrag_zyanose": "abcde_eintrag_zyanose_wert_keine_zyanose",
+        "abcde_eintrag_atemexkursion": "abcde_eintrag_atemexkursion_wert_atemexkursion_seitengleich",
+        "abcde_eintrag_stabilitaet": "abcde_eintrag_stabilitaet_wert_thorax_stabil",
+        "abcde_eintrag_atemgeraeusch": "abcde_eintrag_atemgeraeusch_wert_atemgeraeusch_seitengleich",
+        "abcde_eintrag_rasselgeraeusche": "abcde_eintrag_rasselgeraeusche_wert_keine_rasselgeraeusche",
+        "abcde_eintrag_giemen": "abcde_eintrag_giemen_wert_kein_giemen",
+        "abcde_eintrag_brummen": "abcde_eintrag_brummen_wert_kein_brummen",
+        "abcde_eintrag_rekapillarisierung": "abcde_eintrag_rekapillarisierung_wert_rekapillarisierung_regelrecht",
+        "abcde_eintrag_hautkolorit": "abcde_eintrag_hautkolorit_wert_haut_rosig",
+        "abcde_eintrag_hauttemperatur": "abcde_eintrag_hauttemperatur_wert_haut_warm",
+        "abcde_eintrag_pulsqualitaet": "abcde_eintrag_pulsqualitaet_wert_puls_kraeftig",
+        "abcde_eintrag_pulsrhythmus": "abcde_eintrag_pulsrhythmus_wert_puls_rhythmisch",
+        "abcde_eintrag_pulsdefizit": "abcde_eintrag_pulsdefizit_wert_kein_pulsdefizit",
+        "abcde_eintrag_halsvenen": "abcde_eintrag_halsvenen_wert_halsvenen_nicht_gestaut",
+        "abcde_eintrag_bauchdecke": "abcde_eintrag_bauchdecke_wert_bauchdecke_weich",
+        "abcde_eintrag_blutungsraeume": "abcde_eintrag_blutungsraeume_wert_grosse_blutungsraeume_unauffaellig",
+        "abcde_eintrag_becken": "abcde_eintrag_becken_wert_becken_in_vorsichtiger_palpation_stabil",
+        "abcde_eintrag_bewusstseinslage": "abcde_eintrag_bewusstseinslage_wert_wach",
+        "abcde_eintrag_pupillenvergleich": "abcde_eintrag_pupillenvergleich_wert_pupillen_isokor",
+        "abcde_eintrag_pupillenweite": "abcde_eintrag_pupillenweite_wert_pupillen_mittelweit",
+        "abcde_eintrag_pupillenreaktion": "abcde_eintrag_pupillenreaktion_wert_pupillen_beidseits_lichtreagibel",
+        "abcde_eintrag_augenoeffnen": "abcde_eintrag_augenoeffnen_wert_augen_spontan_geoeffnet_gcs_e4",
+        "abcde_eintrag_verbale_reaktion": "abcde_eintrag_verbale_reaktion_wert_verbal_orientiert_gcs_v5",
+        "abcde_eintrag_motorische_reaktion": "abcde_eintrag_motorische_reaktion_wert_befolgt_aufforderungen_gcs_m6",
+        "abcde_eintrag_mimik": "abcde_eintrag_mimik_wert_mimik_symmetrisch",
+        "abcde_eintrag_sprache": "abcde_eintrag_sprache_wert_sprache_unauffaellig",
+        "abcde_eintrag_motorik": "abcde_eintrag_motorik_wert_motorik_seitengleich",
+        "abcde_eintrag_armhalteversuch": "abcde_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig",
+        "abcde_eintrag_temperaturzustand": "abcde_eintrag_temperaturzustand_wert_normotherm",
+        "abcde_eintrag_hautbefund": "abcde_eintrag_hautbefund_wert_haut_ohne_richtungsweisenden_befund",
+        "abcde_eintrag_verletzungen": "abcde_eintrag_verletzungen_wert_keine_offensichtliche_verletzung"
+      },
+      "kind": "normal"
+    }
+  },
   "groups": {
     "abcde": {
       "title": "ABCDE",
-      "children": [
-        "x",
-        "a",
-        "b",
-        "c",
-        "d",
-        "e"
-      ],
       "items": [
         {
           "type": "group",
-          "id": "x"
+          "id": "abcde_gruppe_x"
         },
         {
           "type": "group",
-          "id": "a"
+          "id": "abcde_gruppe_a"
         },
         {
           "type": "group",
-          "id": "b"
+          "id": "abcde_gruppe_b"
         },
         {
           "type": "group",
-          "id": "c"
+          "id": "abcde_gruppe_c"
         },
         {
           "type": "group",
-          "id": "d"
+          "id": "abcde_gruppe_d"
         },
         {
           "type": "group",
-          "id": "e"
+          "id": "abcde_gruppe_e"
         }
       ],
+      "sets": [
+        "abcde_vorgabe_normalbefund"
+      ],
+      "subgroups": "break",
       "summary": true,
       "reset": true
+    },
+    "abcde_gruppe_x": {
+      "title": "x",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_blutung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_weitere_x_auffaelligkeit"
+        },
+        {
+          "type": "group",
+          "id": "abcde_gruppe_blutung"
+        }
+      ],
+      "default": false,
+      "reset": true
+    },
+    "abcde_gruppe_blutung": {
+      "title": "Blutung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_blutungslokalisation"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_kompression"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergebnis_der_kompression"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_tourniquet"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergebnis_des_tourniquets"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergaenzung_zur_blutung"
+        }
+      ],
+      "kind": "abnormal",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Blutung hinzufügen",
+        "empty": "abcde_eintrag_blutung"
+      }
+    },
+    "abcde_gruppe_a": {
+      "title": "A",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_zustand_des_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_freihalten_des_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_schwellung_der_uvula"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_schwellung_der_zunge"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_guedeltubus"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergebnis_der_guedeltubus_anlage"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_wendeltubus"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergebnis_der_wendeltubus_anlage"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_supraglottische_atemwegshilfe"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergebnis_der_supraglottischen_atemwegshilfe"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_endotracheale_intubation"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_chirurgischer_atemweg"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_tubusgroesse_des_chirurgischen_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_bestaetigung_des_chirurgischen_atemwegs"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergaenzung_zum_chirurgischen_atemweg"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_weitere_a_auffaelligkeit"
+        }
+      ]
+    },
+    "abcde_gruppe_b": {
+      "title": "B",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_atmung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_atemfrequenz"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_zyanose"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_atemexkursion"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_stabilitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_atemgeraeusch"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_punktion"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_effekt_der_punktion"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_thorakostomie"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_effekt_der_thorakostomie"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_anlage_einer_thoraxdrainage"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_effekt_der_drainagenanlage"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_rasselgeraeusche"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_giemen"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_brummen"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_weitere_b_auffaelligkeit"
+        }
+      ]
+    },
+    "abcde_gruppe_c": {
+      "title": "C",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_rekapillarisierung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_rekapillarisierungszeit"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_hautkolorit"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_marmorierung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_kaltschweissigkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_hauttemperatur"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pulsqualitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pulsrhythmus"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pulsfrequenz"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pulsdefizit"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_halsvenen"
+        },
+        {
+          "type": "group",
+          "id": "abcde_gruppe_trauma"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_weitere_c_auffaelligkeit"
+        }
+      ]
+    },
+    "abcde_gruppe_trauma": {
+      "title": "Trauma",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_bauchdecke"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_blutungsraeume"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_becken"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_beckenschlinge"
+        }
+      ],
+      "default": false
+    },
+    "abcde_gruppe_d": {
+      "title": "D",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_bewusstseinslage"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_blutzucker"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pupillenvergleich"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_groessere_pupille"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pupillenweite"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_pupillenreaktion"
+        },
+        {
+          "type": "group",
+          "id": "abcde_gruppe_glasgow_coma_scale"
+        },
+        {
+          "type": "group",
+          "id": "nihss"
+        },
+        {
+          "type": "group",
+          "id": "abcde_gruppe_fokalneurologie"
+        },
+        {
+          "type": "group",
+          "id": "orientierung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_weitere_d_auffaelligkeit"
+        }
+      ]
+    },
+    "abcde_gruppe_glasgow_coma_scale": {
+      "title": "Glasgow Coma Scale",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_augenoeffnen"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_verbale_reaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_motorische_reaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_gcs_summe"
+        }
+      ],
+      "kind": "neutral",
+      "default": false,
+      "score": {
+        "id": "gcs",
+        "label": "GCS berechnen",
+        "minimum": 3,
+        "maximum": 15,
+        "criteria": [
+          {
+            "phraseId": "abcde_eintrag_augenoeffnen",
+            "title": "Augenöffnen",
+            "options": [
+              {
+                "valueId": "abcde_eintrag_augenoeffnen_wert_augen_spontan_geoeffnet_gcs_e4",
+                "text": "Augen spontan geöffnet, GCS E4",
+                "kind": "normal",
+                "points": 4
+              },
+              {
+                "valueId": "abcde_eintrag_augenoeffnen_wert_augenoeffnen_auf_ansprache_gcs_e3",
+                "text": "Augenöffnen auf Ansprache, GCS E3",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "abcde_eintrag_augenoeffnen_wert_augenoeffnen_auf_schmerzreiz_gcs_e2",
+                "text": "Augenöffnen auf Schmerzreiz, GCS E2",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "abcde_eintrag_augenoeffnen_wert_kein_augenoeffnen_gcs_e1",
+                "text": "kein Augenöffnen, GCS E1",
+                "kind": "abnormal",
+                "points": 1
+              }
+            ]
+          },
+          {
+            "phraseId": "abcde_eintrag_verbale_reaktion",
+            "title": "Verbale Reaktion",
+            "options": [
+              {
+                "valueId": "abcde_eintrag_verbale_reaktion_wert_verbal_orientiert_gcs_v5",
+                "text": "verbal orientiert, GCS V5",
+                "kind": "normal",
+                "points": 5
+              },
+              {
+                "valueId": "abcde_eintrag_verbale_reaktion_wert_verbal_verwirrt_gcs_v4",
+                "text": "verbal verwirrt, GCS V4",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "abcde_eintrag_verbale_reaktion_wert_unzusammenhaengende_woerter_gcs_v3",
+                "text": "unzusammenhängende Wörter, GCS V3",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "abcde_eintrag_verbale_reaktion_wert_unverstaendliche_laute_gcs_v2",
+                "text": "unverständliche Laute, GCS V2",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "abcde_eintrag_verbale_reaktion_wert_keine_verbale_reaktion_gcs_v1",
+                "text": "keine verbale Reaktion, GCS V1",
+                "kind": "abnormal",
+                "points": 1
+              }
+            ]
+          },
+          {
+            "phraseId": "abcde_eintrag_motorische_reaktion",
+            "title": "Motorische Reaktion",
+            "options": [
+              {
+                "valueId": "abcde_eintrag_motorische_reaktion_wert_befolgt_aufforderungen_gcs_m6",
+                "text": "befolgt Aufforderungen, GCS M6",
+                "kind": "normal",
+                "points": 6
+              },
+              {
+                "valueId": "abcde_eintrag_motorische_reaktion_wert_gezielte_schmerzabwehr_gcs_m5",
+                "text": "gezielte Schmerzabwehr, GCS M5",
+                "kind": "abnormal",
+                "points": 5
+              },
+              {
+                "valueId": "abcde_eintrag_motorische_reaktion_wert_ungezielte_schmerzabwehr_gcs_m4",
+                "text": "ungezielte Schmerzabwehr, GCS M4",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "abcde_eintrag_motorische_reaktion_wert_beugesynergismen_gcs_m3",
+                "text": "Beugesynergismen, GCS M3",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "abcde_eintrag_motorische_reaktion_wert_strecksynergismen_gcs_m2",
+                "text": "Strecksynergismen, GCS M2",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "abcde_eintrag_motorische_reaktion_wert_keine_motorische_reaktion_gcs_m1",
+                "text": "keine motorische Reaktion, GCS M1",
+                "kind": "abnormal",
+                "points": 1
+              }
+            ]
+          }
+        ],
+        "target": {
+          "phraseId": "abcde_eintrag_gcs_summe",
+          "valueId": "abcde_eintrag_gcs_summe_wert_gcs",
+          "attributeId": "summe"
+        }
+      }
+    },
+    "abcde_gruppe_fokalneurologie": {
+      "title": "Fokalneurologie",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_mimik"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_sprache"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_motorik"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_armhalteversuch"
+        }
+      ],
+      "kind": "neutral",
+      "default": false
+    },
+    "abcde_gruppe_e": {
+      "title": "E",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_temperaturzustand"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_koerpertemperatur"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_waermeerhalt"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_hautbefund"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_verletzungen"
+        },
+        {
+          "type": "group",
+          "id": "abcde_gruppe_verletzung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_weitere_e_auffaelligkeit"
+        }
+      ]
+    },
+    "abcde_gruppe_verletzung": {
+      "title": "Verletzung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_verletzungslokalisation"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_verletzungsart"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_versorgung_der_verletzung"
+        },
+        {
+          "type": "phrase",
+          "id": "abcde_eintrag_ergaenzung_zur_verletzung"
+        }
+      ],
+      "kind": "abnormal",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Verletzung hinzufügen",
+        "empty": "abcde_eintrag_verletzungen"
+      }
     }
   },
-  "phrases": {}
+  "phrases": {
+    "abcde_eintrag_blutung": {
+      "title": "Blutung",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_blutung_wert_keine_relevante_blutung": {
+          "kind": "normal",
+          "text": "keine relevante Blutung"
+        }
+      }
+    },
+    "abcde_eintrag_weitere_x_auffaelligkeit": {
+      "title": "Weitere x-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_weitere_x_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_blutungslokalisation": {
+      "title": "Blutungslokalisation",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_blutungslokalisation_wert_blutung": {
+          "kind": "abnormal",
+          "text": "Blutung {:ort*:} {:seite*:}"
+        }
+      },
+      "attributes": {
+        "ort": "abcde_eingabe_blutungslokalisation",
+        "seite": "gemeinsam_eingabe_seite"
+      }
+    },
+    "abcde_eintrag_kompression": {
+      "title": "Kompression",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_kompression_wert_kompression": {
+          "kind": "intervention",
+          "text": "Kompression"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_blutungslokalisation_wert_blutung"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_kompression_wert_kompression"
+      }
+    },
+    "abcde_eintrag_ergebnis_der_kompression": {
+      "title": "Ergebnis der Kompression",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_ergebnis_der_kompression_wert_blutung_sistiert_durch_kompression": {
+          "kind": "intervention",
+          "text": "Blutung sistiert durch Kompression"
+        },
+        "abcde_eintrag_ergebnis_der_kompression_wert_blutung_sistiert_nicht_durch_kompression": {
+          "kind": "abnormal",
+          "text": "Blutung sistiert nicht durch Kompression"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_kompression_wert_kompression"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_tourniquet": {
+      "title": "Tourniquet",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_tourniquet_wert_anlage_eines_tourniquets_um": {
+          "kind": "intervention",
+          "text": "Anlage eines Tourniquets um {:zeitpunkt*:}"
+        }
+      },
+      "attributes": {
+        "zeitpunkt": "gemeinsam_eingabe_ereigniszeitpunkt"
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_ergebnis_der_kompression_wert_blutung_sistiert_nicht_durch_kompression"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_tourniquet_wert_anlage_eines_tourniquets_um"
+      }
+    },
+    "abcde_eintrag_ergebnis_des_tourniquets": {
+      "title": "Ergebnis des Tourniquets",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_ergebnis_des_tourniquets_wert_blutung_sistiert_durch_tourniquet": {
+          "kind": "intervention",
+          "text": "Blutung sistiert durch Tourniquet"
+        },
+        "abcde_eintrag_ergebnis_des_tourniquets_wert_blutung_sistiert_nicht_durch_tourniquet": {
+          "kind": "abnormal",
+          "text": "Blutung sistiert nicht durch Tourniquet"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_tourniquet_wert_anlage_eines_tourniquets_um"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_ergaenzung_zur_blutung": {
+      "title": "Ergänzung zur Blutung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_ergaenzung_zur_blutung_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_zustand_des_atemwegs": {
+      "title": "Zustand des Atemwegs",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_frei": {
+          "kind": "normal",
+          "text": "Atemweg frei",
+          "snomed": "248553004",
+          "snomedDisplay": "No obstruction of airway"
+        },
+        "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt": {
+          "kind": "abnormal",
+          "text": "Atemweg durch Zunge verlegt",
+          "snomed": "425227004",
+          "snomedDisplay": "Obstruction of airway caused by tongue"
+        },
+        "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen": {
+          "kind": "abnormal",
+          "text": "Atemweg zugeschwollen"
+        },
+        "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt": {
+          "kind": "abnormal",
+          "text": "Atemweg durch Blutung verlegt",
+          "snomed": "427480003",
+          "snomedDisplay": "Obstruction of airway caused by blood"
+        },
+        "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt": {
+          "kind": "abnormal",
+          "text": "Atemweg vollständig verlegt",
+          "snomed": "248555006",
+          "snomedDisplay": "Total airway obstruction"
+        }
+      }
+    },
+    "abcde_eintrag_freihalten_des_atemwegs": {
+      "title": "Freihalten des Atemwegs",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_effektiv_freigehalten": {
+          "kind": "normal",
+          "text": "Atemweg wird effektiv freigehalten",
+          "snomed": "1145305006",
+          "snomedDisplay": "Able to clear airway effectively"
+        },
+        "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten": {
+          "kind": "abnormal",
+          "text": "Atemweg wird nicht effektiv freigehalten",
+          "snomed": "67750007",
+          "snomedDisplay": "Ineffective airway clearance"
+        }
+      },
+      "attention": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt"
+        ],
+        "negated": false,
+        "level": "suggested",
+        "value": null
+      }
+    },
+    "abcde_eintrag_schwellung_der_uvula": {
+      "title": "Schwellung der Uvula",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "abcde_eintrag_schwellung_der_uvula_wert_schwellung_der_uvula": {
+          "kind": "abnormal",
+          "text": "Schwellung der Uvula"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_schwellung_der_uvula_wert_schwellung_der_uvula"
+      }
+    },
+    "abcde_eintrag_schwellung_der_zunge": {
+      "title": "Schwellung der Zunge",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "abcde_eintrag_schwellung_der_zunge_wert_schwellung_der_zunge": {
+          "kind": "abnormal",
+          "text": "Schwellung der Zunge"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_schwellung_der_zunge_wert_schwellung_der_zunge"
+      }
+    },
+    "abcde_eintrag_guedeltubus": {
+      "title": "Güdeltubus",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus": {
+          "kind": "intervention",
+          "text": "Atemwegsschienung: Güdeltubus"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
+          "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus"
+      }
+    },
+    "abcde_eintrag_ergebnis_der_guedeltubus_anlage": {
+      "title": "Ergebnis der Güdeltubus-Anlage",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_ergebnis_der_guedeltubus_anlage_wert_schienung_suffizient": {
+          "kind": "intervention",
+          "text": "Schienung suffizient"
+        },
+        "abcde_eintrag_ergebnis_der_guedeltubus_anlage_wert_schienung_nicht_suffizient": {
+          "kind": "abnormal",
+          "text": "Schienung nicht suffizient"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_guedeltubus_wert_atemwegsschienung_guedeltubus"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_wendeltubus": {
+      "title": "Wendeltubus",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus": {
+          "kind": "intervention",
+          "text": "Atemwegsschienung: Wendeltubus"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
+          "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus"
+      }
+    },
+    "abcde_eintrag_ergebnis_der_wendeltubus_anlage": {
+      "title": "Ergebnis der Wendeltubus-Anlage",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_ergebnis_der_wendeltubus_anlage_wert_schienung_suffizient": {
+          "kind": "intervention",
+          "text": "Schienung suffizient"
+        },
+        "abcde_eintrag_ergebnis_der_wendeltubus_anlage_wert_schienung_nicht_suffizient": {
+          "kind": "abnormal",
+          "text": "Schienung nicht suffizient"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_wendeltubus_wert_atemwegsschienung_wendeltubus"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_supraglottische_atemwegshilfe": {
+      "title": "Supraglottische Atemwegshilfe",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_igel": {
+          "kind": "intervention",
+          "text": "supraglottische Atemwegshilfe: iGel"
+        },
+        "abcde_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxmaske": {
+          "kind": "intervention",
+          "text": "supraglottische Atemwegshilfe: Larynxmaske"
+        },
+        "abcde_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxtubus": {
+          "kind": "intervention",
+          "text": "supraglottische Atemwegshilfe: Larynxtubus"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
+          "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_ergebnis_der_supraglottischen_atemwegshilfe": {
+      "title": "Ergebnis der supraglottischen Atemwegshilfe",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_ergebnis_der_supraglottischen_atemwegshilfe_wert_schienung_suffizient": {
+          "kind": "intervention",
+          "text": "Schienung suffizient"
+        },
+        "abcde_eintrag_ergebnis_der_supraglottischen_atemwegshilfe_wert_schienung_nicht_suffizient": {
+          "kind": "abnormal",
+          "text": "Schienung nicht suffizient"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_igel",
+          "abcde_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxmaske",
+          "abcde_eintrag_supraglottische_atemwegshilfe_wert_supraglottische_atemwegshilfe_larynxtubus"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_endotracheale_intubation": {
+      "title": "Endotracheale Intubation",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_endotracheale_intubation_wert_endotracheale_intubation": {
+          "kind": "intervention",
+          "text": "Endotracheale Intubation"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
+          "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_endotracheale_intubation_wert_endotracheale_intubation"
+      }
+    },
+    "abcde_eintrag_chirurgischer_atemweg": {
+      "title": "Chirurgischer Atemweg",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch": {
+          "kind": "intervention",
+          "text": "chirurgischer Atemweg: chirurgisch"
+        },
+        "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach": {
+          "kind": "intervention",
+          "text": "chirurgischer Atemweg: Quick-Trach"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_zunge_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_zugeschwollen",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_durch_blutung_verlegt",
+          "abcde_eintrag_zustand_des_atemwegs_wert_atemweg_vollstaendig_verlegt",
+          "abcde_eintrag_freihalten_des_atemwegs_wert_atemweg_wird_nicht_effektiv_freigehalten"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_tubusgroesse_des_chirurgischen_atemwegs": {
+      "title": "Tubusgröße des chirurgischen Atemwegs",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_tubusgroesse_des_chirurgischen_atemwegs_wert_tubusgroesse": {
+          "kind": "neutral",
+          "text": "Tubusgröße: {:groesse*:}"
+        }
+      },
+      "attributes": {
+        "groesse": "abcde_eingabe_tubusgroesse"
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch",
+          "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_tubusgroesse_des_chirurgischen_atemwegs_wert_tubusgroesse"
+      }
+    },
+    "abcde_eintrag_bestaetigung_des_chirurgischen_atemwegs": {
+      "title": "Bestätigung des chirurgischen Atemwegs",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_bestaetigung_des_chirurgischen_atemwegs_wert_kapnographisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "kapnographisch bestätigt"
+        },
+        "abcde_eintrag_bestaetigung_des_chirurgischen_atemwegs_wert_kapnometrisch_bestaetigt": {
+          "kind": "intervention",
+          "text": "kapnometrisch bestätigt"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch",
+          "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_ergaenzung_zum_chirurgischen_atemweg": {
+      "title": "Ergänzung zum chirurgischen Atemweg",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_ergaenzung_zum_chirurgischen_atemweg_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_chirurgisch",
+          "abcde_eintrag_chirurgischer_atemweg_wert_chirurgischer_atemweg_quick_trach"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_ergaenzung_zum_chirurgischen_atemweg_wert_value"
+      }
+    },
+    "abcde_eintrag_weitere_a_auffaelligkeit": {
+      "title": "Weitere A-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_weitere_a_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_atmung": {
+      "title": "Atmung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_atmung_wert_eupnoe": {
+          "kind": "normal",
+          "text": "Eupnoe",
+          "snomed": "20716004",
+          "snomedDisplay": "Respiratory rate normal"
+        },
+        "abcde_eintrag_atmung_wert_apnoe": {
+          "kind": "abnormal",
+          "text": "Apnoe",
+          "snomed": "1023001",
+          "snomedDisplay": "Apnoea"
+        },
+        "abcde_eintrag_atmung_wert_bradypnoe": {
+          "kind": "abnormal",
+          "text": "Bradypnoe",
+          "snomed": "86684002",
+          "snomedDisplay": "Bradypnoea"
+        },
+        "abcde_eintrag_atmung_wert_tachypnoe": {
+          "kind": "abnormal",
+          "text": "Tachypnoe",
+          "snomed": "271823003",
+          "snomedDisplay": "Tachypnoea"
+        },
+        "abcde_eintrag_atmung_wert_agonale_atmung": {
+          "kind": "abnormal",
+          "text": "agonale Atmung",
+          "snomed": "430546009",
+          "snomedDisplay": "Agonal respiration"
+        },
+        "abcde_eintrag_atmung_wert_beatmet": {
+          "kind": "intervention",
+          "text": "beatmet",
+          "snomed": "1303532003",
+          "snomedDisplay": "On artificial ventilation"
+        }
+      }
+    },
+    "abcde_eintrag_atemfrequenz": {
+      "title": "Atemfrequenz",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_atemfrequenz_wert_atemfrequenz": {
+          "kind": "neutral",
+          "text": "Atemfrequenz {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "abcde_eingabe_atemfrequenz"
+      }
+    },
+    "abcde_eintrag_zyanose": {
+      "title": "Zyanose",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_zyanose_wert_keine_zyanose": {
+          "kind": "normal",
+          "text": "keine Zyanose"
+        },
+        "abcde_eintrag_zyanose_wert_lippenzyanose": {
+          "kind": "abnormal",
+          "text": "Lippenzyanose"
+        },
+        "abcde_eintrag_zyanose_wert_akrale_zyanose": {
+          "kind": "abnormal",
+          "text": "akrale Zyanose"
+        },
+        "abcde_eintrag_zyanose_wert_generalisierte_zyanose": {
+          "kind": "abnormal",
+          "text": "generalisierte Zyanose"
+        }
+      }
+    },
+    "abcde_eintrag_atemexkursion": {
+      "title": "Atemexkursion",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_atemexkursion_wert_atemexkursion_seitengleich": {
+          "kind": "normal",
+          "text": "Atemexkursion seitengleich",
+          "snomed": "248559000",
+          "snomedDisplay": "Chest movement equal"
+        },
+        "abcde_eintrag_atemexkursion_wert_atemexkursion_links_vermindert": {
+          "kind": "abnormal",
+          "text": "Atemexkursion links vermindert"
+        },
+        "abcde_eintrag_atemexkursion_wert_atemexkursion_rechts_vermindert": {
+          "kind": "abnormal",
+          "text": "Atemexkursion rechts vermindert"
+        }
+      }
+    },
+    "abcde_eintrag_stabilitaet": {
+      "title": "Stabilität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_stabilitaet_wert_thorax_stabil": {
+          "kind": "normal",
+          "text": "Thorax stabil"
+        },
+        "abcde_eintrag_stabilitaet_wert_thorax_instabil": {
+          "kind": "abnormal",
+          "text": "Thorax instabil"
+        }
+      }
+    },
+    "abcde_eintrag_atemgeraeusch": {
+      "title": "Atemgeräusch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_atemgeraeusch_wert_atemgeraeusch_seitengleich": {
+          "kind": "normal",
+          "text": "Atemgeräusch seitengleich"
+        },
+        "abcde_eintrag_atemgeraeusch_wert_atemgeraeusch_abgeschwaecht": {
+          "kind": "abnormal",
+          "text": "Atemgeräusch {:seite*:} {:lokalisation:} abgeschwächt"
+        }
+      },
+      "attributes": {
+        "seite": "abcde_eingabe_seite",
+        "lokalisation": "abcde_eingabe_lokalisation"
+      }
+    },
+    "abcde_eintrag_punktion": {
+      "title": "Punktion",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_punktion_wert_entlastungspunktion": {
+          "kind": "intervention",
+          "text": "Entlastungspunktion"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_atemexkursion_wert_atemexkursion_links_vermindert",
+          "abcde_eintrag_atemexkursion_wert_atemexkursion_rechts_vermindert",
+          "abcde_eintrag_atemgeraeusch_wert_atemgeraeusch_abgeschwaecht",
+          "abcde_eintrag_stabilitaet_wert_thorax_instabil"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_punktion_wert_entlastungspunktion"
+      }
+    },
+    "abcde_eintrag_effekt_der_punktion": {
+      "title": "Effekt der Punktion",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_effekt_der_punktion_wert_es_entweicht_luft": {
+          "kind": "intervention",
+          "text": "es entweicht Luft"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_punktion_wert_entlastungspunktion"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_effekt_der_punktion_wert_es_entweicht_luft"
+      }
+    },
+    "abcde_eintrag_thorakostomie": {
+      "title": "Thorakostomie",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_thorakostomie_wert_thorakostomie": {
+          "kind": "intervention",
+          "text": "Thorakostomie"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_atemexkursion_wert_atemexkursion_links_vermindert",
+          "abcde_eintrag_atemexkursion_wert_atemexkursion_rechts_vermindert",
+          "abcde_eintrag_atemgeraeusch_wert_atemgeraeusch_abgeschwaecht",
+          "abcde_eintrag_stabilitaet_wert_thorax_instabil"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_thorakostomie_wert_thorakostomie"
+      }
+    },
+    "abcde_eintrag_effekt_der_thorakostomie": {
+      "title": "Effekt der Thorakostomie",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_effekt_der_thorakostomie_wert_es_entweicht_luft": {
+          "kind": "intervention",
+          "text": "es entweicht Luft"
+        },
+        "abcde_eintrag_effekt_der_thorakostomie_wert_es_entleert_sich_blut": {
+          "kind": "intervention",
+          "text": "es entleert sich Blut"
+        },
+        "abcde_eintrag_effekt_der_thorakostomie_wert_es_entleert_sich_fluessigkeit": {
+          "kind": "intervention",
+          "text": "es entleert sich Flüssigkeit"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_thorakostomie_wert_thorakostomie"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_anlage_einer_thoraxdrainage": {
+      "title": "Anlage einer Thoraxdrainage",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_anlage_einer_thoraxdrainage_wert_anlage_einer_thoraxdrainage_nach_buelow": {
+          "kind": "intervention",
+          "text": "Anlage einer Thoraxdrainage nach Bülow"
+        },
+        "abcde_eintrag_anlage_einer_thoraxdrainage_wert_anlage_einer_thoraxdrainage_in_seldinger_technik": {
+          "kind": "intervention",
+          "text": "Anlage einer Thoraxdrainage in Seldinger-Technik"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_atemexkursion_wert_atemexkursion_links_vermindert",
+          "abcde_eintrag_atemexkursion_wert_atemexkursion_rechts_vermindert",
+          "abcde_eintrag_atemgeraeusch_wert_atemgeraeusch_abgeschwaecht",
+          "abcde_eintrag_stabilitaet_wert_thorax_instabil"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_effekt_der_drainagenanlage": {
+      "title": "Effekt der Drainagenanlage",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_effekt_der_drainagenanlage_wert_es_entweicht_luft": {
+          "kind": "intervention",
+          "text": "es entweicht Luft"
+        },
+        "abcde_eintrag_effekt_der_drainagenanlage_wert_es_entleert_sich_blut": {
+          "kind": "intervention",
+          "text": "es entleert sich Blut"
+        },
+        "abcde_eintrag_effekt_der_drainagenanlage_wert_es_entleert_sich_fluessigkeit": {
+          "kind": "intervention",
+          "text": "es entleert sich Flüssigkeit"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_anlage_einer_thoraxdrainage_wert_anlage_einer_thoraxdrainage_nach_buelow",
+          "abcde_eintrag_anlage_einer_thoraxdrainage_wert_anlage_einer_thoraxdrainage_in_seldinger_technik"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_rasselgeraeusche": {
+      "title": "Rasselgeräusche",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_rasselgeraeusche_wert_keine_rasselgeraeusche": {
+          "kind": "normal",
+          "text": "keine Rasselgeräusche"
+        },
+        "abcde_eintrag_rasselgeraeusche_wert_rasselgeraeusche": {
+          "kind": "abnormal",
+          "text": "{:charakter:} Rasselgeräusche {:seite*:} {:lokalisation*:}"
+        }
+      },
+      "attributes": {
+        "charakter": "abcde_eingabe_charakter",
+        "seite": "abcde_eingabe_seite",
+        "lokalisation": "abcde_eingabe_lokalisation"
+      }
+    },
+    "abcde_eintrag_giemen": {
+      "title": "Giemen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_giemen_wert_kein_giemen": {
+          "kind": "normal",
+          "text": "kein Giemen"
+        },
+        "abcde_eintrag_giemen_wert_giemen": {
+          "kind": "abnormal",
+          "text": "Giemen",
+          "snomed": "56018004",
+          "snomedDisplay": "Wheezing"
+        }
+      }
+    },
+    "abcde_eintrag_brummen": {
+      "title": "Brummen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_brummen_wert_kein_brummen": {
+          "kind": "normal",
+          "text": "kein Brummen"
+        },
+        "abcde_eintrag_brummen_wert_brummen": {
+          "kind": "abnormal",
+          "text": "Brummen"
+        }
+      }
+    },
+    "abcde_eintrag_weitere_b_auffaelligkeit": {
+      "title": "Weitere B-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_weitere_b_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_rekapillarisierung": {
+      "title": "Rekapillarisierung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_rekapillarisierung_wert_rekapillarisierung_regelrecht": {
+          "kind": "normal",
+          "text": "Rekapillarisierung regelrecht",
+          "snomed": "45332005",
+          "snomedDisplay": "Normal capillary filling"
+        },
+        "abcde_eintrag_rekapillarisierung_wert_rekapillarisierung_verlaengert": {
+          "kind": "abnormal",
+          "text": "Rekapillarisierung verlängert",
+          "snomed": "50427001",
+          "snomedDisplay": "Increased capillary filling time"
+        }
+      }
+    },
+    "abcde_eintrag_rekapillarisierungszeit": {
+      "title": "Rekapillarisierungszeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_rekapillarisierungszeit_wert_rekapillarisierungszeit": {
+          "kind": "neutral",
+          "text": "Rekapillarisierungszeit {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "abcde_eingabe_rekapillarisierungszeit"
+      }
+    },
+    "abcde_eintrag_hautkolorit": {
+      "title": "Hautkolorit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_hautkolorit_wert_haut_rosig": {
+          "kind": "normal",
+          "text": "Haut rosig"
+        },
+        "abcde_eintrag_hautkolorit_wert_haut_blass": {
+          "kind": "abnormal",
+          "text": "Haut blass"
+        },
+        "abcde_eintrag_hautkolorit_wert_haut_zyanotisch": {
+          "kind": "abnormal",
+          "text": "Haut zyanotisch",
+          "snomed": "3415004",
+          "snomedDisplay": "Cyanosis"
+        }
+      }
+    },
+    "abcde_eintrag_marmorierung": {
+      "title": "Marmorierung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_marmorierung_wert_haut_marmoriert": {
+          "kind": "abnormal",
+          "text": "Haut marmoriert",
+          "snomed": "406128001",
+          "snomedDisplay": "Mottling of skin"
+        }
+      }
+    },
+    "abcde_eintrag_kaltschweissigkeit": {
+      "title": "Kaltschweißigkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_kaltschweissigkeit_wert_haut_kaltschweissig": {
+          "kind": "abnormal",
+          "text": "Haut kaltschweißig",
+          "snomed": "83547004",
+          "snomedDisplay": "Cold sweat"
+        }
+      }
+    },
+    "abcde_eintrag_hauttemperatur": {
+      "title": "Hauttemperatur",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_hauttemperatur_wert_haut_warm": {
+          "kind": "normal",
+          "text": "Haut warm",
+          "snomed": "102599008",
+          "snomedDisplay": "Warm skin"
+        },
+        "abcde_eintrag_hauttemperatur_wert_haut_kuehl": {
+          "kind": "abnormal",
+          "text": "Haut kühl",
+          "snomed": "427733005",
+          "snomedDisplay": "Cool skin"
+        }
+      }
+    },
+    "abcde_eintrag_pulsqualitaet": {
+      "title": "Pulsqualität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pulsqualitaet_wert_puls_kraeftig": {
+          "kind": "normal",
+          "text": "Puls kräftig",
+          "snomed": "12146004",
+          "snomedDisplay": "Normal pulse"
+        },
+        "abcde_eintrag_pulsqualitaet_wert_puls_schwach": {
+          "kind": "abnormal",
+          "text": "Puls schwach",
+          "snomed": "315225007",
+          "snomedDisplay": "Weak arterial pulse"
+        },
+        "abcde_eintrag_pulsqualitaet_wert_kein_zentraler_puls_tastbar": {
+          "kind": "abnormal",
+          "text": "kein zentraler Puls tastbar"
+        }
+      }
+    },
+    "abcde_eintrag_pulsrhythmus": {
+      "title": "Pulsrhythmus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pulsrhythmus_wert_puls_rhythmisch": {
+          "kind": "normal",
+          "text": "Puls rhythmisch"
+        },
+        "abcde_eintrag_pulsrhythmus_wert_puls_arrhythmisch": {
+          "kind": "abnormal",
+          "text": "Puls arrhythmisch",
+          "snomed": "698247007",
+          "snomedDisplay": "Cardiac arrhythmia"
+        }
+      }
+    },
+    "abcde_eintrag_pulsfrequenz": {
+      "title": "Pulsfrequenz",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pulsfrequenz_wert_pulsfrequenz": {
+          "kind": "neutral",
+          "text": "Pulsfrequenz {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "abcde_eingabe_pulsfrequenz"
+      }
+    },
+    "abcde_eintrag_pulsdefizit": {
+      "title": "Pulsdefizit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pulsdefizit_wert_kein_pulsdefizit": {
+          "kind": "normal",
+          "text": "kein Pulsdefizit"
+        },
+        "abcde_eintrag_pulsdefizit_wert_pulsdefizit": {
+          "kind": "abnormal",
+          "text": "Pulsdefizit"
+        }
+      }
+    },
+    "abcde_eintrag_halsvenen": {
+      "title": "Halsvenen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_halsvenen_wert_halsvenen_nicht_gestaut": {
+          "kind": "normal",
+          "text": "Halsvenen nicht gestaut",
+          "snomed": "413350009:{246090004=271653008},{408729009=410516002},{408731000=410512000},{408732007=410604004}",
+          "snomedDisplay": "Known absent: Jugular venous engorgement; current; subject of record"
+        },
+        "abcde_eintrag_halsvenen_wert_halsvenen_gestaut": {
+          "kind": "abnormal",
+          "text": "Halsvenen gestaut",
+          "snomed": "271653008",
+          "snomedDisplay": "Jugular venous engorgement"
+        }
+      }
+    },
+    "abcde_eintrag_bauchdecke": {
+      "title": "Bauchdecke",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_bauchdecke_wert_bauchdecke_weich": {
+          "kind": "normal",
+          "text": "Bauchdecke weich"
+        },
+        "abcde_eintrag_bauchdecke_wert_abwehrspannung": {
+          "kind": "abnormal",
+          "text": "Abwehrspannung"
+        }
+      }
+    },
+    "abcde_eintrag_blutungsraeume": {
+      "title": "Blutungsräume",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_blutungsraeume_wert_grosse_blutungsraeume_unauffaellig": {
+          "kind": "normal",
+          "text": "große Blutungsräume unauffällig"
+        },
+        "abcde_eintrag_blutungsraeume_wert_einblutung_in": {
+          "kind": "abnormal",
+          "text": "Einblutung in {:freitext:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_becken": {
+      "title": "Becken",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_becken_wert_becken_in_vorsichtiger_palpation_stabil": {
+          "kind": "normal",
+          "text": "Becken in vorsichtiger Palpation stabil"
+        },
+        "abcde_eintrag_becken_wert_becken_instabil": {
+          "kind": "abnormal",
+          "text": "Becken instabil"
+        }
+      }
+    },
+    "abcde_eintrag_beckenschlinge": {
+      "title": "Beckenschlinge",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_beckenschlinge_wert_kompression_mittels_beckenschlinge_angelegt": {
+          "kind": "intervention",
+          "text": "Kompression mittels Beckenschlinge angelegt"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_becken_wert_becken_instabil"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_beckenschlinge_wert_kompression_mittels_beckenschlinge_angelegt"
+      }
+    },
+    "abcde_eintrag_weitere_c_auffaelligkeit": {
+      "title": "Weitere C-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_weitere_c_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_bewusstseinslage": {
+      "title": "Bewusstseinslage",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_bewusstseinslage_wert_wach": {
+          "kind": "normal",
+          "text": "wach"
+        },
+        "abcde_eintrag_bewusstseinslage_wert_verwirrt": {
+          "kind": "abnormal",
+          "text": "verwirrt",
+          "snomed": "40917007",
+          "snomedDisplay": "Confusion"
+        },
+        "abcde_eintrag_bewusstseinslage_wert_reagiert_auf_ansprache": {
+          "kind": "abnormal",
+          "text": "reagiert auf Ansprache"
+        },
+        "abcde_eintrag_bewusstseinslage_wert_reagiert_auf_schmerzreiz": {
+          "kind": "abnormal",
+          "text": "reagiert auf Schmerzreiz"
+        },
+        "abcde_eintrag_bewusstseinslage_wert_reagiert_nicht": {
+          "kind": "abnormal",
+          "text": "reagiert nicht",
+          "snomed": "418107008",
+          "snomedDisplay": "Unconscious"
+        }
+      }
+    },
+    "abcde_eintrag_blutzucker": {
+      "title": "Blutzucker",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "abcde_eintrag_blutzucker_wert_blutzucker": {
+          "kind": "neutral",
+          "text": "Blutzucker {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "abcde_eingabe_blutzucker"
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_bewusstseinslage_wert_verwirrt",
+          "abcde_eintrag_bewusstseinslage_wert_reagiert_auf_ansprache",
+          "abcde_eintrag_bewusstseinslage_wert_reagiert_auf_schmerzreiz",
+          "abcde_eintrag_bewusstseinslage_wert_reagiert_nicht"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_blutzucker_wert_blutzucker"
+      }
+    },
+    "abcde_eintrag_pupillenvergleich": {
+      "title": "Pupillenvergleich",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pupillenvergleich_wert_pupillen_isokor": {
+          "kind": "normal",
+          "text": "Pupillen isokor",
+          "snomed": "301943000",
+          "snomedDisplay": "Pupils equal"
+        },
+        "abcde_eintrag_pupillenvergleich_wert_pupillen_anisokor": {
+          "kind": "abnormal",
+          "text": "Pupillen anisokor",
+          "snomed": "13045009",
+          "snomedDisplay": "Anisocoria"
+        }
+      }
+    },
+    "abcde_eintrag_groessere_pupille": {
+      "title": "Größere Pupille",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "abcde_eintrag_groessere_pupille_wert_rechte_pupille_weiter_als_linke": {
+          "kind": "abnormal",
+          "text": "rechte Pupille weiter als linke"
+        },
+        "abcde_eintrag_groessere_pupille_wert_linke_pupille_weiter_als_rechte": {
+          "kind": "abnormal",
+          "text": "linke Pupille weiter als rechte"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_pupillenvergleich_wert_pupillen_anisokor"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_pupillenweite": {
+      "title": "Pupillenweite",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pupillenweite_wert_pupillen_mittelweit": {
+          "kind": "normal",
+          "text": "Pupillen mittelweit"
+        },
+        "abcde_eintrag_pupillenweite_wert_pupillen_eng": {
+          "kind": "abnormal",
+          "text": "Pupillen eng"
+        },
+        "abcde_eintrag_pupillenweite_wert_pupillen_weit": {
+          "kind": "abnormal",
+          "text": "Pupillen weit"
+        }
+      }
+    },
+    "abcde_eintrag_pupillenreaktion": {
+      "title": "Pupillenreaktion",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_pupillenreaktion_wert_pupillen_beidseits_lichtreagibel": {
+          "kind": "normal",
+          "text": "Pupillen beidseits lichtreagibel",
+          "snomed": "386666001",
+          "snomedDisplay": "Pupils equal and reacting to light"
+        },
+        "abcde_eintrag_pupillenreaktion_wert_pupillenreaktion_verzoegert": {
+          "kind": "abnormal",
+          "text": "Pupillenreaktion verzögert"
+        },
+        "abcde_eintrag_pupillenreaktion_wert_pupillen_lichtstarr": {
+          "kind": "abnormal",
+          "text": "Pupillen lichtstarr",
+          "snomed": "301944006",
+          "snomedDisplay": "No pupillary reaction to light"
+        }
+      }
+    },
+    "abcde_eintrag_augenoeffnen": {
+      "title": "Augenöffnen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_augenoeffnen_wert_augen_spontan_geoeffnet_gcs_e4": {
+          "kind": "normal",
+          "text": "Augen spontan geöffnet, GCS E4",
+          "points": 4
+        },
+        "abcde_eintrag_augenoeffnen_wert_augenoeffnen_auf_ansprache_gcs_e3": {
+          "kind": "abnormal",
+          "text": "Augenöffnen auf Ansprache, GCS E3",
+          "points": 3
+        },
+        "abcde_eintrag_augenoeffnen_wert_augenoeffnen_auf_schmerzreiz_gcs_e2": {
+          "kind": "abnormal",
+          "text": "Augenöffnen auf Schmerzreiz, GCS E2",
+          "points": 2
+        },
+        "abcde_eintrag_augenoeffnen_wert_kein_augenoeffnen_gcs_e1": {
+          "kind": "abnormal",
+          "text": "kein Augenöffnen, GCS E1",
+          "points": 1
+        }
+      }
+    },
+    "abcde_eintrag_verbale_reaktion": {
+      "title": "Verbale Reaktion",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_verbale_reaktion_wert_verbal_orientiert_gcs_v5": {
+          "kind": "normal",
+          "text": "verbal orientiert, GCS V5",
+          "points": 5
+        },
+        "abcde_eintrag_verbale_reaktion_wert_verbal_verwirrt_gcs_v4": {
+          "kind": "abnormal",
+          "text": "verbal verwirrt, GCS V4",
+          "points": 4
+        },
+        "abcde_eintrag_verbale_reaktion_wert_unzusammenhaengende_woerter_gcs_v3": {
+          "kind": "abnormal",
+          "text": "unzusammenhängende Wörter, GCS V3",
+          "points": 3
+        },
+        "abcde_eintrag_verbale_reaktion_wert_unverstaendliche_laute_gcs_v2": {
+          "kind": "abnormal",
+          "text": "unverständliche Laute, GCS V2",
+          "points": 2
+        },
+        "abcde_eintrag_verbale_reaktion_wert_keine_verbale_reaktion_gcs_v1": {
+          "kind": "abnormal",
+          "text": "keine verbale Reaktion, GCS V1",
+          "points": 1
+        }
+      }
+    },
+    "abcde_eintrag_motorische_reaktion": {
+      "title": "Motorische Reaktion",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_motorische_reaktion_wert_befolgt_aufforderungen_gcs_m6": {
+          "kind": "normal",
+          "text": "befolgt Aufforderungen, GCS M6",
+          "points": 6
+        },
+        "abcde_eintrag_motorische_reaktion_wert_gezielte_schmerzabwehr_gcs_m5": {
+          "kind": "abnormal",
+          "text": "gezielte Schmerzabwehr, GCS M5",
+          "points": 5
+        },
+        "abcde_eintrag_motorische_reaktion_wert_ungezielte_schmerzabwehr_gcs_m4": {
+          "kind": "abnormal",
+          "text": "ungezielte Schmerzabwehr, GCS M4",
+          "points": 4
+        },
+        "abcde_eintrag_motorische_reaktion_wert_beugesynergismen_gcs_m3": {
+          "kind": "abnormal",
+          "text": "Beugesynergismen, GCS M3",
+          "points": 3
+        },
+        "abcde_eintrag_motorische_reaktion_wert_strecksynergismen_gcs_m2": {
+          "kind": "abnormal",
+          "text": "Strecksynergismen, GCS M2",
+          "points": 2
+        },
+        "abcde_eintrag_motorische_reaktion_wert_keine_motorische_reaktion_gcs_m1": {
+          "kind": "abnormal",
+          "text": "keine motorische Reaktion, GCS M1",
+          "points": 1
+        }
+      }
+    },
+    "abcde_eintrag_gcs_summe": {
+      "title": "GCS-Summe",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_gcs_summe_wert_gcs": {
+          "kind": "neutral",
+          "text": "GCS {:summe*:}"
+        }
+      },
+      "attributes": {
+        "summe": "abcde_eingabe_gcs_summe"
+      }
+    },
+    "abcde_eintrag_mimik": {
+      "title": "Mimik",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_mimik_wert_mimik_symmetrisch": {
+          "kind": "normal",
+          "text": "Mimik symmetrisch"
+        },
+        "abcde_eintrag_mimik_wert_facialisparese_links": {
+          "kind": "abnormal",
+          "text": "Facialisparese links",
+          "snomed": "280816001",
+          "snomedDisplay": "Facial palsy"
+        },
+        "abcde_eintrag_mimik_wert_facialisparese_rechts": {
+          "kind": "abnormal",
+          "text": "Facialisparese rechts",
+          "snomed": "280816001",
+          "snomedDisplay": "Facial palsy"
+        }
+      }
+    },
+    "abcde_eintrag_sprache": {
+      "title": "Sprache",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_sprache_wert_sprache_unauffaellig": {
+          "kind": "normal",
+          "text": "Sprache unauffällig",
+          "snomed": "162293002",
+          "snomedDisplay": "No speech problem"
+        },
+        "abcde_eintrag_sprache_wert_dysarthrie": {
+          "kind": "abnormal",
+          "text": "Dysarthrie",
+          "snomed": "8011004",
+          "snomedDisplay": "Dysarthria"
+        },
+        "abcde_eintrag_sprache_wert_aphasie": {
+          "kind": "abnormal",
+          "text": "Aphasie",
+          "snomed": "87486003",
+          "snomedDisplay": "Aphasia"
+        },
+        "abcde_eintrag_sprache_wert_mutismus": {
+          "kind": "abnormal",
+          "text": "Mutismus",
+          "snomed": "88052002",
+          "snomedDisplay": "Mutism"
+        }
+      }
+    },
+    "abcde_eintrag_motorik": {
+      "title": "Motorik",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_motorik_wert_motorik_seitengleich": {
+          "kind": "normal",
+          "text": "Motorik seitengleich"
+        },
+        "abcde_eintrag_motorik_wert_hemiparese_links": {
+          "kind": "abnormal",
+          "text": "Hemiparese links",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "abcde_eintrag_motorik_wert_hemiparese_rechts": {
+          "kind": "abnormal",
+          "text": "Hemiparese rechts",
+          "snomed": "20022000",
+          "snomedDisplay": "Hemiparesis"
+        },
+        "abcde_eintrag_motorik_wert_paraparese": {
+          "kind": "abnormal",
+          "text": "Paraparese",
+          "snomed": "1845001",
+          "snomedDisplay": "Paraparesis"
+        }
+      }
+    },
+    "abcde_eintrag_armhalteversuch": {
+      "title": "Armhalteversuch",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_armhalteversuch_wert_armhalteversuch_beidseits_unauffaellig": {
+          "kind": "normal",
+          "text": "Armhalteversuch beidseits unauffällig"
+        },
+        "abcde_eintrag_armhalteversuch_wert_absinken_des_linken_arms": {
+          "kind": "abnormal",
+          "text": "Absinken des linken Arms",
+          "snomed": "428334004",
+          "snomedDisplay": "Pronator drift"
+        },
+        "abcde_eintrag_armhalteversuch_wert_absinken_des_rechten_arms": {
+          "kind": "abnormal",
+          "text": "Absinken des rechten Arms",
+          "snomed": "428334004",
+          "snomedDisplay": "Pronator drift"
+        }
+      }
+    },
+    "abcde_eintrag_weitere_d_auffaelligkeit": {
+      "title": "Weitere D-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_weitere_d_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_temperaturzustand": {
+      "title": "Temperaturzustand",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_temperaturzustand_wert_normotherm": {
+          "kind": "normal",
+          "text": "normotherm"
+        },
+        "abcde_eintrag_temperaturzustand_wert_hypotherm": {
+          "kind": "abnormal",
+          "text": "hypotherm"
+        },
+        "abcde_eintrag_temperaturzustand_wert_hypertherm": {
+          "kind": "abnormal",
+          "text": "hypertherm"
+        }
+      }
+    },
+    "abcde_eintrag_koerpertemperatur": {
+      "title": "Körpertemperatur",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_koerpertemperatur_wert_koerpertemperatur": {
+          "kind": "neutral",
+          "text": "Körpertemperatur {:wert*:}"
+        }
+      },
+      "attributes": {
+        "wert": "abcde_eingabe_temperatur"
+      }
+    },
+    "abcde_eintrag_waermeerhalt": {
+      "title": "Wärmeerhalt",
+      "kind": "intervention",
+      "default": null,
+      "values": {
+        "abcde_eintrag_waermeerhalt_wert_waermeerhalt_durchgefuehrt": {
+          "kind": "intervention",
+          "text": "Wärmeerhalt durchgeführt"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_temperaturzustand_wert_hypotherm"
+        ],
+        "negated": false,
+        "value": "abcde_eintrag_waermeerhalt_wert_waermeerhalt_durchgefuehrt"
+      }
+    },
+    "abcde_eintrag_hautbefund": {
+      "title": "Hautbefund",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_hautbefund_wert_haut_ohne_richtungsweisenden_befund": {
+          "kind": "normal",
+          "text": "Haut ohne richtungsweisenden Befund"
+        },
+        "abcde_eintrag_hautbefund_wert_exanthem": {
+          "kind": "abnormal",
+          "text": "Exanthem",
+          "snomed": "271807003",
+          "snomedDisplay": "Rash"
+        },
+        "abcde_eintrag_hautbefund_wert_urtikaria": {
+          "kind": "abnormal",
+          "text": "Urtikaria",
+          "snomed": "126485001",
+          "snomedDisplay": "Urticaria"
+        },
+        "abcde_eintrag_hautbefund_wert_petechien": {
+          "kind": "abnormal",
+          "text": "Petechien",
+          "snomed": "271813007",
+          "snomedDisplay": "Petechiae"
+        }
+      }
+    },
+    "abcde_eintrag_verletzungen": {
+      "title": "Verletzungen",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_verletzungen_wert_keine_offensichtliche_verletzung": {
+          "kind": "normal",
+          "text": "keine offensichtliche Verletzung"
+        }
+      }
+    },
+    "abcde_eintrag_verletzungslokalisation": {
+      "title": "Verletzungslokalisation",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_verletzungslokalisation_wert_verletzung": {
+          "kind": "abnormal",
+          "text": "Verletzung {:ort*:}"
+        }
+      },
+      "attributes": {
+        "ort": "abcde_eingabe_verletzungsort"
+      }
+    },
+    "abcde_eintrag_verletzungsart": {
+      "title": "Verletzungsart",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "abcde_eintrag_verletzungsart_wert_schuerfwunde": {
+          "kind": "abnormal",
+          "text": "Schürfwunde",
+          "snomed": "399963005",
+          "snomedDisplay": "Abrasion"
+        },
+        "abcde_eintrag_verletzungsart_wert_schnittwunde": {
+          "kind": "abnormal",
+          "text": "Schnittwunde",
+          "snomed": "35933005",
+          "snomedDisplay": "Laceration"
+        },
+        "abcde_eintrag_verletzungsart_wert_platzwunde": {
+          "kind": "abnormal",
+          "text": "Platzwunde",
+          "snomed": "35933005",
+          "snomedDisplay": "Laceration"
+        },
+        "abcde_eintrag_verletzungsart_wert_stichverletzung": {
+          "kind": "abnormal",
+          "text": "Stichverletzung",
+          "snomed": "425322008",
+          "snomedDisplay": "Stab wound"
+        },
+        "abcde_eintrag_verletzungsart_wert_haematom": {
+          "kind": "abnormal",
+          "text": "Hämatom",
+          "snomed": "385494008",
+          "snomedDisplay": "Haematoma"
+        },
+        "abcde_eintrag_verletzungsart_wert_schwellung": {
+          "kind": "abnormal",
+          "text": "Schwellung",
+          "snomed": "442672001",
+          "snomedDisplay": "Swelling"
+        },
+        "abcde_eintrag_verletzungsart_wert_fehlstellung": {
+          "kind": "abnormal",
+          "text": "Fehlstellung",
+          "snomed": "250087009",
+          "snomedDisplay": "Joint deformity"
+        },
+        "abcde_eintrag_verletzungsart_wert_verbrennung": {
+          "kind": "abnormal",
+          "text": "Verbrennung",
+          "snomed": "125666000",
+          "snomedDisplay": "Burn"
+        }
+      },
+      "condition": {
+        "values": [
+          "abcde_eintrag_verletzungslokalisation_wert_verletzung"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "abcde_eintrag_versorgung_der_verletzung": {
+      "title": "Versorgung der Verletzung",
+      "kind": "intervention",
+      "default": "",
+      "values": {
+        "abcde_eintrag_versorgung_der_verletzung_wert_sterile_abdeckung": {
+          "kind": "intervention",
+          "text": "sterile Abdeckung"
+        },
+        "abcde_eintrag_versorgung_der_verletzung_wert_kuehlung": {
+          "kind": "intervention",
+          "text": "Kühlung"
+        },
+        "abcde_eintrag_versorgung_der_verletzung_wert_immobilisation": {
+          "kind": "intervention",
+          "text": "Immobilisation"
+        }
+      }
+    },
+    "abcde_eintrag_ergaenzung_zur_verletzung": {
+      "title": "Ergänzung zur Verletzung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "abcde_eintrag_ergaenzung_zur_verletzung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "abcde_eintrag_weitere_e_auffaelligkeit": {
+      "title": "Weitere E-Auffälligkeit",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "abcde_eintrag_weitere_e_auffaelligkeit_wert_value": {
+          "kind": "abnormal",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
 }

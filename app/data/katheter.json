@@ -1,0 +1,459 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam",
+    "zugang"
+  ],
+  "editors": {
+    "katheter_eingabe_arterienort": {
+      "type": "choice",
+      "options": {
+        "an_der_linken_a_radialis": {
+          "kind": "neutral",
+          "text": "an der linken A. radialis"
+        },
+        "an_der_rechten_a_radialis": {
+          "kind": "neutral",
+          "text": "an der rechten A. radialis"
+        },
+        "an_der_linken_a_brachialis": {
+          "kind": "neutral",
+          "text": "an der linken A. brachialis"
+        },
+        "an_der_rechten_a_brachialis": {
+          "kind": "neutral",
+          "text": "an der rechten A. brachialis"
+        },
+        "an_der_linken_a_femoralis": {
+          "kind": "neutral",
+          "text": "an der linken A. femoralis"
+        },
+        "an_der_rechten_a_femoralis": {
+          "kind": "neutral",
+          "text": "an der rechten A. femoralis"
+        }
+      },
+      "label": "Lokalisation"
+    },
+    "katheter_eingabe_dialyseort": {
+      "type": "choice",
+      "options": {
+        "an_der_linken_v_jugularis_interna": {
+          "kind": "neutral",
+          "text": "an der linken V. jugularis interna"
+        },
+        "an_der_rechten_v_jugularis_interna": {
+          "kind": "neutral",
+          "text": "an der rechten V. jugularis interna"
+        },
+        "an_der_linken_v_subclavia": {
+          "kind": "neutral",
+          "text": "an der linken V. subclavia"
+        },
+        "an_der_rechten_v_subclavia": {
+          "kind": "neutral",
+          "text": "an der rechten V. subclavia"
+        },
+        "an_der_linken_v_femoralis": {
+          "kind": "neutral",
+          "text": "an der linken V. femoralis"
+        },
+        "an_der_rechten_v_femoralis": {
+          "kind": "neutral",
+          "text": "an der rechten V. femoralis"
+        }
+      },
+      "label": "Lokalisation"
+    }
+  },
+  "groups": {
+    "katheter": {
+      "title": "Katheter",
+      "items": [
+        {
+          "type": "group",
+          "id": "zugang"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_arterielle_katheter"
+        },
+        {
+          "type": "group",
+          "id": "katheter_gruppe_arterieller_katheter"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_dialysezugaenge"
+        },
+        {
+          "type": "group",
+          "id": "katheter_gruppe_dialysezugang"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_harnableitungen"
+        },
+        {
+          "type": "group",
+          "id": "katheter_gruppe_harnableitung"
+        }
+      ],
+      "subgroups": "break",
+      "reset": true
+    },
+    "katheter_gruppe_arterieller_katheter": {
+      "title": "Arterieller Katheter",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_arterieller_katheter"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_funktion_des_arteriellen_katheters"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_einstichstelle_des_arteriellen_katheters"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_ergaenzung_zum_arteriellen_katheter"
+        }
+      ],
+      "kind": "intervention",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Arteriellen Katheter hinzufügen",
+        "empty": "katheter_eintrag_arterielle_katheter"
+      }
+    },
+    "katheter_gruppe_dialysezugang": {
+      "title": "Dialysezugang",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_dialysezugang"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_funktion_des_dialysezugangs"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_zustand_des_dialysezugangs"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_ergaenzung_zum_dialysezugang"
+        }
+      ],
+      "kind": "intervention",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Dialysezugang hinzufügen",
+        "empty": "katheter_eintrag_dialysezugaenge"
+      }
+    },
+    "katheter_gruppe_harnableitung": {
+      "title": "Harnableitung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_harnableitung"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_funktion_der_harnableitung"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_zustand_der_harnableitung"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_urinbefund"
+        },
+        {
+          "type": "phrase",
+          "id": "katheter_eintrag_ergaenzung_zur_harnableitung"
+        }
+      ],
+      "kind": "intervention",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Harnableitung hinzufügen",
+        "empty": "katheter_eintrag_harnableitungen"
+      }
+    }
+  },
+  "phrases": {
+    "katheter_eintrag_arterielle_katheter": {
+      "title": "Arterielle Katheter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "katheter_eintrag_arterielle_katheter_wert_kein_arterieller_katheter_dokumentiert": {
+          "kind": "neutral",
+          "text": "kein arterieller Katheter dokumentiert"
+        }
+      }
+    },
+    "katheter_eintrag_arterieller_katheter": {
+      "title": "Arterieller Katheter",
+      "kind": "intervention",
+      "default": "katheter_eintrag_arterieller_katheter_wert_arterieller_katheter",
+      "values": {
+        "katheter_eintrag_arterieller_katheter_wert_arterieller_katheter": {
+          "kind": "intervention",
+          "text": "arterieller Katheter {:ort*:}"
+        },
+        "katheter_eintrag_arterieller_katheter_wert_picco_katheter": {
+          "kind": "intervention",
+          "text": "PiCCO-Katheter {:ort*:}"
+        }
+      },
+      "attributes": {
+        "ort": "katheter_eingabe_arterienort"
+      }
+    },
+    "katheter_eintrag_funktion_des_arteriellen_katheters": {
+      "title": "Funktion des arteriellen Katheters",
+      "kind": "neutral",
+      "default": "katheter_eintrag_funktion_des_arteriellen_katheters_wert_arterieller_katheter_durchgaengig",
+      "values": {
+        "katheter_eintrag_funktion_des_arteriellen_katheters_wert_arterieller_katheter_durchgaengig": {
+          "kind": "normal",
+          "text": "arterieller Katheter durchgängig"
+        },
+        "katheter_eintrag_funktion_des_arteriellen_katheters_wert_arterieller_katheter_nicht_durchgaengig": {
+          "kind": "abnormal",
+          "text": "arterieller Katheter nicht durchgängig"
+        }
+      }
+    },
+    "katheter_eintrag_einstichstelle_des_arteriellen_katheters": {
+      "title": "Einstichstelle des arteriellen Katheters",
+      "kind": "neutral",
+      "default": "katheter_eintrag_einstichstelle_des_arteriellen_katheters_wert_einstichstelle_reizfrei",
+      "values": {
+        "katheter_eintrag_einstichstelle_des_arteriellen_katheters_wert_einstichstelle_reizfrei": {
+          "kind": "normal",
+          "text": "Einstichstelle reizfrei"
+        },
+        "katheter_eintrag_einstichstelle_des_arteriellen_katheters_wert_einstichstelle_geroetet": {
+          "kind": "abnormal",
+          "text": "Einstichstelle gerötet"
+        },
+        "katheter_eintrag_einstichstelle_des_arteriellen_katheters_wert_einstichstelle_geschwollen": {
+          "kind": "abnormal",
+          "text": "Einstichstelle geschwollen"
+        },
+        "katheter_eintrag_einstichstelle_des_arteriellen_katheters_wert_sekretion_an_der_einstichstelle": {
+          "kind": "abnormal",
+          "text": "Sekretion an der Einstichstelle"
+        }
+      }
+    },
+    "katheter_eintrag_ergaenzung_zum_arteriellen_katheter": {
+      "title": "Ergänzung zum arteriellen Katheter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "katheter_eintrag_ergaenzung_zum_arteriellen_katheter_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "katheter_eintrag_dialysezugaenge": {
+      "title": "Dialysezugänge",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "katheter_eintrag_dialysezugaenge_wert_kein_dialysezugang_dokumentiert": {
+          "kind": "neutral",
+          "text": "kein Dialysezugang dokumentiert"
+        }
+      }
+    },
+    "katheter_eintrag_dialysezugang": {
+      "title": "Dialysezugang",
+      "kind": "intervention",
+      "default": "katheter_eintrag_dialysezugang_wert_shaldon_katheter",
+      "values": {
+        "katheter_eintrag_dialysezugang_wert_shaldon_katheter": {
+          "kind": "intervention",
+          "text": "Shaldon-Katheter {:ort*:}"
+        },
+        "katheter_eintrag_dialysezugang_wert_demers_katheter": {
+          "kind": "intervention",
+          "text": "Demers-Katheter {:ort*:}"
+        },
+        "katheter_eintrag_dialysezugang_wert_dialysefistel_links": {
+          "kind": "intervention",
+          "text": "Dialysefistel links"
+        },
+        "katheter_eintrag_dialysezugang_wert_dialysefistel_rechts": {
+          "kind": "intervention",
+          "text": "Dialysefistel rechts"
+        }
+      },
+      "attributes": {
+        "ort": "katheter_eingabe_dialyseort"
+      }
+    },
+    "katheter_eintrag_funktion_des_dialysezugangs": {
+      "title": "Funktion des Dialysezugangs",
+      "kind": "neutral",
+      "default": "katheter_eintrag_funktion_des_dialysezugangs_wert_dialysezugang_durchgaengig",
+      "values": {
+        "katheter_eintrag_funktion_des_dialysezugangs_wert_dialysezugang_durchgaengig": {
+          "kind": "normal",
+          "text": "Dialysezugang durchgängig"
+        },
+        "katheter_eintrag_funktion_des_dialysezugangs_wert_dialysezugang_nicht_durchgaengig": {
+          "kind": "abnormal",
+          "text": "Dialysezugang nicht durchgängig"
+        }
+      }
+    },
+    "katheter_eintrag_zustand_des_dialysezugangs": {
+      "title": "Zustand des Dialysezugangs",
+      "kind": "neutral",
+      "default": "katheter_eintrag_zustand_des_dialysezugangs_wert_dialysezugang_reizfrei",
+      "values": {
+        "katheter_eintrag_zustand_des_dialysezugangs_wert_dialysezugang_reizfrei": {
+          "kind": "normal",
+          "text": "Dialysezugang reizfrei"
+        },
+        "katheter_eintrag_zustand_des_dialysezugangs_wert_dialysezugang_geroetet": {
+          "kind": "abnormal",
+          "text": "Dialysezugang gerötet"
+        },
+        "katheter_eintrag_zustand_des_dialysezugangs_wert_dialysezugang_geschwollen": {
+          "kind": "abnormal",
+          "text": "Dialysezugang geschwollen"
+        },
+        "katheter_eintrag_zustand_des_dialysezugangs_wert_sekretion_am_dialysezugang": {
+          "kind": "abnormal",
+          "text": "Sekretion am Dialysezugang"
+        }
+      }
+    },
+    "katheter_eintrag_ergaenzung_zum_dialysezugang": {
+      "title": "Ergänzung zum Dialysezugang",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "katheter_eintrag_ergaenzung_zum_dialysezugang_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "katheter_eintrag_harnableitungen": {
+      "title": "Harnableitungen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "katheter_eintrag_harnableitungen_wert_keine_harnableitung_dokumentiert": {
+          "kind": "neutral",
+          "text": "keine Harnableitung dokumentiert"
+        }
+      }
+    },
+    "katheter_eintrag_harnableitung": {
+      "title": "Harnableitung",
+      "kind": "intervention",
+      "default": "katheter_eintrag_harnableitung_wert_transurethraler_blasendauerkatheter",
+      "values": {
+        "katheter_eintrag_harnableitung_wert_transurethraler_blasendauerkatheter": {
+          "kind": "intervention",
+          "text": "transurethraler Blasendauerkatheter"
+        },
+        "katheter_eintrag_harnableitung_wert_suprapubischer_blasenkatheter": {
+          "kind": "intervention",
+          "text": "suprapubischer Blasenkatheter"
+        }
+      }
+    },
+    "katheter_eintrag_funktion_der_harnableitung": {
+      "title": "Funktion der Harnableitung",
+      "kind": "neutral",
+      "default": "katheter_eintrag_funktion_der_harnableitung_wert_harnableitung_durchgaengig",
+      "values": {
+        "katheter_eintrag_funktion_der_harnableitung_wert_harnableitung_durchgaengig": {
+          "kind": "normal",
+          "text": "Harnableitung durchgängig"
+        },
+        "katheter_eintrag_funktion_der_harnableitung_wert_harnableitung_nicht_durchgaengig": {
+          "kind": "abnormal",
+          "text": "Harnableitung nicht durchgängig"
+        }
+      }
+    },
+    "katheter_eintrag_zustand_der_harnableitung": {
+      "title": "Zustand der Harnableitung",
+      "kind": "neutral",
+      "default": "katheter_eintrag_zustand_der_harnableitung_wert_harnableitung_reizfrei",
+      "values": {
+        "katheter_eintrag_zustand_der_harnableitung_wert_harnableitung_reizfrei": {
+          "kind": "normal",
+          "text": "Harnableitung reizfrei"
+        },
+        "katheter_eintrag_zustand_der_harnableitung_wert_harnableitung_geroetet": {
+          "kind": "abnormal",
+          "text": "Harnableitung gerötet"
+        },
+        "katheter_eintrag_zustand_der_harnableitung_wert_sekretion_an_der_harnableitung": {
+          "kind": "abnormal",
+          "text": "Sekretion an der Harnableitung"
+        }
+      }
+    },
+    "katheter_eintrag_urinbefund": {
+      "title": "Urinbefund",
+      "kind": "neutral",
+      "default": "katheter_eintrag_urinbefund_wert_urin_klar",
+      "values": {
+        "katheter_eintrag_urinbefund_wert_urin_klar": {
+          "kind": "normal",
+          "text": "Urin klar"
+        },
+        "katheter_eintrag_urinbefund_wert_urin_trueb": {
+          "kind": "abnormal",
+          "text": "Urin trüb"
+        },
+        "katheter_eintrag_urinbefund_wert_makrohaematurie": {
+          "kind": "abnormal",
+          "text": "Makrohämaturie"
+        }
+      }
+    },
+    "katheter_eintrag_ergaenzung_zur_harnableitung": {
+      "title": "Ergänzung zur Harnableitung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "katheter_eintrag_ergaenzung_zur_harnableitung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

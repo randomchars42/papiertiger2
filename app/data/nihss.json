@@ -1,0 +1,1044 @@
+{
+  "version": 2,
+  "imports": [
+    "gemeinsam"
+  ],
+  "editors": {
+    "nihss_eingabe_gesamt": {
+      "type": "number",
+      "label": "NIHSS-Gesamtwert",
+      "min": 0,
+      "max": 42,
+      "step": 1
+    }
+  },
+  "groups": {
+    "nihss": {
+      "title": "NIHSS",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_1a_bewusstseinslage"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_1b_fragen_zu_monat_und_alter"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_1c_aufforderungen"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_2_blickbewegung"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_3_gesichtsfeld"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_4_fazialisparese"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_7_extremitaetenataxie"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_8_sensibilitaet"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_9_sprache"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_10_dysarthrie"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_11_extinktion_und_neglect"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_nihss_gesamtwert"
+        },
+        {
+          "type": "phrase",
+          "id": "nihss_eintrag_ergaenzung_zum_nihss"
+        }
+      ],
+      "kind": "neutral",
+      "default": false,
+      "reset": true,
+      "score": {
+        "id": "nihss",
+        "label": "NIHSS berechnen",
+        "minimum": 0,
+        "maximum": 42,
+        "criteria": [
+          {
+            "phraseId": "nihss_eintrag_1a_bewusstseinslage",
+            "title": "1a Bewusstseinslage",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_wach_und_unmittelbar_reagierend",
+                "text": "NIHSS 1a: wach und unmittelbar reagierend",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_nicht_voll_wach_durch_geringe_stimulation_ansprechbar",
+                "text": "NIHSS 1a: nicht voll wach, durch geringe Stimulation ansprechbar",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_nur_durch_wiederholte_oder_starke_stimulation_aufmerksam",
+                "text": "NIHSS 1a: nur durch wiederholte oder starke Stimulation aufmerksam",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_keine_reaktion_ausser_reflexbewegungen_koma",
+                "text": "NIHSS 1a: keine Reaktion außer Reflexbewegungen (Koma)",
+                "kind": "abnormal",
+                "points": 3
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_1b_fragen_zu_monat_und_alter",
+            "title": "1b Fragen zu Monat und Alter",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_1b_fragen_zu_monat_und_alter_wert_nihss_1b_monat_und_alter_korrekt_beantwortet",
+                "text": "NIHSS 1b: Monat und Alter korrekt beantwortet",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_1b_fragen_zu_monat_und_alter_wert_nihss_1b_eine_frage_korrekt_beantwortet",
+                "text": "NIHSS 1b: eine Frage korrekt beantwortet",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_1b_fragen_zu_monat_und_alter_wert_nihss_1b_keine_frage_korrekt_beantwortet",
+                "text": "NIHSS 1b: keine Frage korrekt beantwortet",
+                "kind": "abnormal",
+                "points": 2
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_1c_aufforderungen",
+            "title": "1c Aufforderungen",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_1c_aufforderungen_wert_nihss_1c_beide_aufforderungen_korrekt_ausgefuehrt",
+                "text": "NIHSS 1c: beide Aufforderungen korrekt ausgeführt",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_1c_aufforderungen_wert_nihss_1c_eine_aufforderung_korrekt_ausgefuehrt",
+                "text": "NIHSS 1c: eine Aufforderung korrekt ausgeführt",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_1c_aufforderungen_wert_nihss_1c_keine_aufforderung_korrekt_ausgefuehrt",
+                "text": "NIHSS 1c: keine Aufforderung korrekt ausgeführt",
+                "kind": "abnormal",
+                "points": 2
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_2_blickbewegung",
+            "title": "2 Blickbewegung",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_2_blickbewegung_wert_nihss_2_normale_blickbewegung",
+                "text": "NIHSS 2: normale Blickbewegung",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_2_blickbewegung_wert_nihss_2_partielle_blickparese",
+                "text": "NIHSS 2: partielle Blickparese",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_2_blickbewegung_wert_nihss_2_forcierte_blickdeviation_oder_totale_blickparese",
+                "text": "NIHSS 2: forcierte Blickdeviation oder totale Blickparese",
+                "kind": "abnormal",
+                "points": 2
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_3_gesichtsfeld",
+            "title": "3 Gesichtsfeld",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_kein_gesichtsfeldausfall",
+                "text": "NIHSS 3: kein Gesichtsfeldausfall",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_partielle_hemianopsie",
+                "text": "NIHSS 3: partielle Hemianopsie",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_komplette_hemianopsie",
+                "text": "NIHSS 3: komplette Hemianopsie",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_bilaterale_hemianopsie_oder_kortikale_blindheit",
+                "text": "NIHSS 3: bilaterale Hemianopsie oder kortikale Blindheit",
+                "kind": "abnormal",
+                "points": 3
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_4_fazialisparese",
+            "title": "4 Fazialisparese",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_4_fazialisparese_wert_nihss_4_normale_symmetrische_gesichtsbewegung",
+                "text": "NIHSS 4: normale symmetrische Gesichtsbewegung",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_4_fazialisparese_wert_nihss_4_geringe_fazialisparese",
+                "text": "NIHSS 4: geringe Fazialisparese",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_4_fazialisparese_wert_nihss_4_partielle_fazialisparese_besonders_der_unteren_gesichtshaelfte",
+                "text": "NIHSS 4: partielle Fazialisparese, besonders der unteren Gesichtshälfte",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_4_fazialisparese_wert_nihss_4_vollstaendige_ein_oder_beidseitige_fazialisparese",
+                "text": "NIHSS 4: vollständige ein- oder beidseitige Fazialisparese",
+                "kind": "abnormal",
+                "points": 3
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden",
+            "title": "5a Motorik linker Arm (10 Sekunden)",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_ohne_absinken",
+                "text": "NIHSS 5a: linker Arm ohne Absinken",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_sinkt_ab_erreicht_die_unterlage_nicht",
+                "text": "NIHSS 5a: linker Arm sinkt ab, erreicht die Unterlage nicht",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage",
+                "text": "NIHSS 5a: linker Arm mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_ohne_schwerkraftueberwindung",
+                "text": "NIHSS 5a: linker Arm ohne Schwerkraftüberwindung",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_keine_bewegung_des_linken_arms",
+                "text": "NIHSS 5a: keine Bewegung des linken Arms",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_wegen_amputation_oder_schulterversteifung_nicht_pruefbar",
+                "text": "NIHSS 5a: linker Arm wegen Amputation oder Schulterversteifung nicht prüfbar",
+                "kind": "neutral",
+                "points": "UN"
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden",
+            "title": "5b Motorik rechter Arm (10 Sekunden)",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_ohne_absinken",
+                "text": "NIHSS 5b: rechter Arm ohne Absinken",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_sinkt_ab_erreicht_die_unterlage_nicht",
+                "text": "NIHSS 5b: rechter Arm sinkt ab, erreicht die Unterlage nicht",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage",
+                "text": "NIHSS 5b: rechter Arm mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_ohne_schwerkraftueberwindung",
+                "text": "NIHSS 5b: rechter Arm ohne Schwerkraftüberwindung",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_keine_bewegung_des_rechten_arms",
+                "text": "NIHSS 5b: keine Bewegung des rechten Arms",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_wegen_amputation_oder_schulterversteifung_nicht_pruefbar",
+                "text": "NIHSS 5b: rechter Arm wegen Amputation oder Schulterversteifung nicht prüfbar",
+                "kind": "neutral",
+                "points": "UN"
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden",
+            "title": "6a Motorik linkes Bein (5 Sekunden)",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_ohne_absinken",
+                "text": "NIHSS 6a: linkes Bein ohne Absinken",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_sinkt_ab_erreicht_die_unterlage_nicht",
+                "text": "NIHSS 6a: linkes Bein sinkt ab, erreicht die Unterlage nicht",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage",
+                "text": "NIHSS 6a: linkes Bein mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_ohne_schwerkraftueberwindung",
+                "text": "NIHSS 6a: linkes Bein ohne Schwerkraftüberwindung",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_keine_bewegung_des_linken_beins",
+                "text": "NIHSS 6a: keine Bewegung des linken Beins",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_wegen_amputation_oder_hueftversteifung_nicht_pruefbar",
+                "text": "NIHSS 6a: linkes Bein wegen Amputation oder Hüftversteifung nicht prüfbar",
+                "kind": "neutral",
+                "points": "UN"
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden",
+            "title": "6b Motorik rechtes Bein (5 Sekunden)",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_ohne_absinken",
+                "text": "NIHSS 6b: rechtes Bein ohne Absinken",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_sinkt_ab_erreicht_die_unterlage_nicht",
+                "text": "NIHSS 6b: rechtes Bein sinkt ab, erreicht die Unterlage nicht",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage",
+                "text": "NIHSS 6b: rechtes Bein mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_ohne_schwerkraftueberwindung",
+                "text": "NIHSS 6b: rechtes Bein ohne Schwerkraftüberwindung",
+                "kind": "abnormal",
+                "points": 3
+              },
+              {
+                "valueId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_keine_bewegung_des_rechten_beins",
+                "text": "NIHSS 6b: keine Bewegung des rechten Beins",
+                "kind": "abnormal",
+                "points": 4
+              },
+              {
+                "valueId": "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_wegen_amputation_oder_hueftversteifung_nicht_pruefbar",
+                "text": "NIHSS 6b: rechtes Bein wegen Amputation oder Hüftversteifung nicht prüfbar",
+                "kind": "neutral",
+                "points": "UN"
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_7_extremitaetenataxie",
+            "title": "7 Extremitätenataxie",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_keine_extremitaetenataxie",
+                "text": "NIHSS 7: keine Extremitätenataxie",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_ataxie_in_einer_extremitaet",
+                "text": "NIHSS 7: Ataxie in einer Extremität",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_ataxie_in_zwei_extremitaeten",
+                "text": "NIHSS 7: Ataxie in zwei Extremitäten",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_wegen_amputation_oder_gelenkversteifung_nicht_pruefbar",
+                "text": "NIHSS 7: wegen Amputation oder Gelenkversteifung nicht prüfbar",
+                "kind": "neutral",
+                "points": "UN"
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_8_sensibilitaet",
+            "title": "8 Sensibilität",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_8_sensibilitaet_wert_nihss_8_keine_sensibilitaetsstoerung",
+                "text": "NIHSS 8: keine Sensibilitätsstörung",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_8_sensibilitaet_wert_nihss_8_leichte_bis_mittelschwere_sensibilitaetsstoerung",
+                "text": "NIHSS 8: leichte bis mittelschwere Sensibilitätsstörung",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_8_sensibilitaet_wert_nihss_8_schwere_oder_vollstaendige_sensibilitaetsstoerung",
+                "text": "NIHSS 8: schwere oder vollständige Sensibilitätsstörung",
+                "kind": "abnormal",
+                "points": 2
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_9_sprache",
+            "title": "9 Sprache",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_9_sprache_wert_nihss_9_keine_aphasie",
+                "text": "NIHSS 9: keine Aphasie",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_9_sprache_wert_nihss_9_leichte_bis_mittelschwere_aphasie",
+                "text": "NIHSS 9: leichte bis mittelschwere Aphasie",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_9_sprache_wert_nihss_9_schwere_aphasie",
+                "text": "NIHSS 9: schwere Aphasie",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_9_sprache_wert_nihss_9_stumm_oder_globale_aphasie",
+                "text": "NIHSS 9: stumm oder globale Aphasie",
+                "kind": "abnormal",
+                "points": 3
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_10_dysarthrie",
+            "title": "10 Dysarthrie",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_10_dysarthrie_wert_nihss_10_keine_dysarthrie",
+                "text": "NIHSS 10: keine Dysarthrie",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_10_dysarthrie_wert_nihss_10_leichte_bis_mittelschwere_dysarthrie",
+                "text": "NIHSS 10: leichte bis mittelschwere Dysarthrie",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_10_dysarthrie_wert_nihss_10_schwere_dysarthrie_oder_anarthrie",
+                "text": "NIHSS 10: schwere Dysarthrie oder Anarthrie",
+                "kind": "abnormal",
+                "points": 2
+              },
+              {
+                "valueId": "nihss_eintrag_10_dysarthrie_wert_nihss_10_wegen_intubation_oder_anderer_mechanischer_sprechbarriere_nicht_pruefbar",
+                "text": "NIHSS 10: wegen Intubation oder anderer mechanischer Sprechbarriere nicht prüfbar",
+                "kind": "neutral",
+                "points": "UN"
+              }
+            ]
+          },
+          {
+            "phraseId": "nihss_eintrag_11_extinktion_und_neglect",
+            "title": "11 Extinktion und Neglect",
+            "options": [
+              {
+                "valueId": "nihss_eintrag_11_extinktion_und_neglect_wert_nihss_11_keine_extinktion_und_kein_neglect",
+                "text": "NIHSS 11: keine Extinktion und kein Neglect",
+                "kind": "normal",
+                "points": 0
+              },
+              {
+                "valueId": "nihss_eintrag_11_extinktion_und_neglect_wert_nihss_11_extinktion_oder_neglect_in_einer_modalitaet",
+                "text": "NIHSS 11: Extinktion oder Neglect in einer Modalität",
+                "kind": "abnormal",
+                "points": 1
+              },
+              {
+                "valueId": "nihss_eintrag_11_extinktion_und_neglect_wert_nihss_11_ausgepraegter_neglect_in_mehr_als_einer_modalitaet",
+                "text": "NIHSS 11: ausgeprägter Neglect in mehr als einer Modalität",
+                "kind": "abnormal",
+                "points": 2
+              }
+            ]
+          }
+        ],
+        "target": {
+          "phraseId": "nihss_eintrag_nihss_gesamtwert",
+          "valueId": "nihss_eintrag_nihss_gesamtwert_wert_nihss",
+          "attributeId": "wert"
+        },
+        "rules": [
+          {
+            "when": {
+              "phraseId": "nihss_eintrag_1a_bewusstseinslage",
+              "valueId": "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_keine_reaktion_ausser_reflexbewegungen_koma"
+            },
+            "set": [
+              {
+                "phraseId": "nihss_eintrag_8_sensibilitaet",
+                "valueId": "nihss_eintrag_8_sensibilitaet_wert_nihss_8_schwere_oder_vollstaendige_sensibilitaetsstoerung"
+              },
+              {
+                "phraseId": "nihss_eintrag_9_sprache",
+                "valueId": "nihss_eintrag_9_sprache_wert_nihss_9_stumm_oder_globale_aphasie"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "phrases": {
+    "nihss_eintrag_1a_bewusstseinslage": {
+      "title": "1a Bewusstseinslage",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_wach_und_unmittelbar_reagierend": {
+          "kind": "normal",
+          "text": "NIHSS 1a: wach und unmittelbar reagierend",
+          "points": 0
+        },
+        "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_nicht_voll_wach_durch_geringe_stimulation_ansprechbar": {
+          "kind": "abnormal",
+          "text": "NIHSS 1a: nicht voll wach, durch geringe Stimulation ansprechbar",
+          "points": 1
+        },
+        "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_nur_durch_wiederholte_oder_starke_stimulation_aufmerksam": {
+          "kind": "abnormal",
+          "text": "NIHSS 1a: nur durch wiederholte oder starke Stimulation aufmerksam",
+          "points": 2
+        },
+        "nihss_eintrag_1a_bewusstseinslage_wert_nihss_1a_keine_reaktion_ausser_reflexbewegungen_koma": {
+          "kind": "abnormal",
+          "text": "NIHSS 1a: keine Reaktion außer Reflexbewegungen (Koma)",
+          "points": 3
+        }
+      }
+    },
+    "nihss_eintrag_1b_fragen_zu_monat_und_alter": {
+      "title": "1b Fragen zu Monat und Alter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_1b_fragen_zu_monat_und_alter_wert_nihss_1b_monat_und_alter_korrekt_beantwortet": {
+          "kind": "normal",
+          "text": "NIHSS 1b: Monat und Alter korrekt beantwortet",
+          "points": 0
+        },
+        "nihss_eintrag_1b_fragen_zu_monat_und_alter_wert_nihss_1b_eine_frage_korrekt_beantwortet": {
+          "kind": "abnormal",
+          "text": "NIHSS 1b: eine Frage korrekt beantwortet",
+          "points": 1
+        },
+        "nihss_eintrag_1b_fragen_zu_monat_und_alter_wert_nihss_1b_keine_frage_korrekt_beantwortet": {
+          "kind": "abnormal",
+          "text": "NIHSS 1b: keine Frage korrekt beantwortet",
+          "points": 2
+        }
+      }
+    },
+    "nihss_eintrag_1c_aufforderungen": {
+      "title": "1c Aufforderungen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_1c_aufforderungen_wert_nihss_1c_beide_aufforderungen_korrekt_ausgefuehrt": {
+          "kind": "normal",
+          "text": "NIHSS 1c: beide Aufforderungen korrekt ausgeführt",
+          "points": 0
+        },
+        "nihss_eintrag_1c_aufforderungen_wert_nihss_1c_eine_aufforderung_korrekt_ausgefuehrt": {
+          "kind": "abnormal",
+          "text": "NIHSS 1c: eine Aufforderung korrekt ausgeführt",
+          "points": 1
+        },
+        "nihss_eintrag_1c_aufforderungen_wert_nihss_1c_keine_aufforderung_korrekt_ausgefuehrt": {
+          "kind": "abnormal",
+          "text": "NIHSS 1c: keine Aufforderung korrekt ausgeführt",
+          "points": 2
+        }
+      }
+    },
+    "nihss_eintrag_2_blickbewegung": {
+      "title": "2 Blickbewegung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_2_blickbewegung_wert_nihss_2_normale_blickbewegung": {
+          "kind": "normal",
+          "text": "NIHSS 2: normale Blickbewegung",
+          "points": 0
+        },
+        "nihss_eintrag_2_blickbewegung_wert_nihss_2_partielle_blickparese": {
+          "kind": "abnormal",
+          "text": "NIHSS 2: partielle Blickparese",
+          "points": 1
+        },
+        "nihss_eintrag_2_blickbewegung_wert_nihss_2_forcierte_blickdeviation_oder_totale_blickparese": {
+          "kind": "abnormal",
+          "text": "NIHSS 2: forcierte Blickdeviation oder totale Blickparese",
+          "points": 2
+        }
+      }
+    },
+    "nihss_eintrag_3_gesichtsfeld": {
+      "title": "3 Gesichtsfeld",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_kein_gesichtsfeldausfall": {
+          "kind": "normal",
+          "text": "NIHSS 3: kein Gesichtsfeldausfall",
+          "points": 0
+        },
+        "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_partielle_hemianopsie": {
+          "kind": "abnormal",
+          "text": "NIHSS 3: partielle Hemianopsie",
+          "points": 1
+        },
+        "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_komplette_hemianopsie": {
+          "kind": "abnormal",
+          "text": "NIHSS 3: komplette Hemianopsie",
+          "points": 2
+        },
+        "nihss_eintrag_3_gesichtsfeld_wert_nihss_3_bilaterale_hemianopsie_oder_kortikale_blindheit": {
+          "kind": "abnormal",
+          "text": "NIHSS 3: bilaterale Hemianopsie oder kortikale Blindheit",
+          "points": 3
+        }
+      }
+    },
+    "nihss_eintrag_4_fazialisparese": {
+      "title": "4 Fazialisparese",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_4_fazialisparese_wert_nihss_4_normale_symmetrische_gesichtsbewegung": {
+          "kind": "normal",
+          "text": "NIHSS 4: normale symmetrische Gesichtsbewegung",
+          "points": 0
+        },
+        "nihss_eintrag_4_fazialisparese_wert_nihss_4_geringe_fazialisparese": {
+          "kind": "abnormal",
+          "text": "NIHSS 4: geringe Fazialisparese",
+          "points": 1
+        },
+        "nihss_eintrag_4_fazialisparese_wert_nihss_4_partielle_fazialisparese_besonders_der_unteren_gesichtshaelfte": {
+          "kind": "abnormal",
+          "text": "NIHSS 4: partielle Fazialisparese, besonders der unteren Gesichtshälfte",
+          "points": 2
+        },
+        "nihss_eintrag_4_fazialisparese_wert_nihss_4_vollstaendige_ein_oder_beidseitige_fazialisparese": {
+          "kind": "abnormal",
+          "text": "NIHSS 4: vollständige ein- oder beidseitige Fazialisparese",
+          "points": 3
+        }
+      }
+    },
+    "nihss_eintrag_5a_motorik_linker_arm_10_sekunden": {
+      "title": "5a Motorik linker Arm (10 Sekunden)",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_ohne_absinken": {
+          "kind": "normal",
+          "text": "NIHSS 5a: linker Arm ohne Absinken",
+          "points": 0
+        },
+        "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_sinkt_ab_erreicht_die_unterlage_nicht": {
+          "kind": "abnormal",
+          "text": "NIHSS 5a: linker Arm sinkt ab, erreicht die Unterlage nicht",
+          "points": 1
+        },
+        "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage": {
+          "kind": "abnormal",
+          "text": "NIHSS 5a: linker Arm mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+          "points": 2
+        },
+        "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_ohne_schwerkraftueberwindung": {
+          "kind": "abnormal",
+          "text": "NIHSS 5a: linker Arm ohne Schwerkraftüberwindung",
+          "points": 3
+        },
+        "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_keine_bewegung_des_linken_arms": {
+          "kind": "abnormal",
+          "text": "NIHSS 5a: keine Bewegung des linken Arms",
+          "points": 4
+        },
+        "nihss_eintrag_5a_motorik_linker_arm_10_sekunden_wert_nihss_5a_linker_arm_wegen_amputation_oder_schulterversteifung_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "NIHSS 5a: linker Arm wegen Amputation oder Schulterversteifung nicht prüfbar",
+          "points": "UN"
+        }
+      }
+    },
+    "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden": {
+      "title": "5b Motorik rechter Arm (10 Sekunden)",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_ohne_absinken": {
+          "kind": "normal",
+          "text": "NIHSS 5b: rechter Arm ohne Absinken",
+          "points": 0
+        },
+        "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_sinkt_ab_erreicht_die_unterlage_nicht": {
+          "kind": "abnormal",
+          "text": "NIHSS 5b: rechter Arm sinkt ab, erreicht die Unterlage nicht",
+          "points": 1
+        },
+        "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage": {
+          "kind": "abnormal",
+          "text": "NIHSS 5b: rechter Arm mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+          "points": 2
+        },
+        "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_ohne_schwerkraftueberwindung": {
+          "kind": "abnormal",
+          "text": "NIHSS 5b: rechter Arm ohne Schwerkraftüberwindung",
+          "points": 3
+        },
+        "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_keine_bewegung_des_rechten_arms": {
+          "kind": "abnormal",
+          "text": "NIHSS 5b: keine Bewegung des rechten Arms",
+          "points": 4
+        },
+        "nihss_eintrag_5b_motorik_rechter_arm_10_sekunden_wert_nihss_5b_rechter_arm_wegen_amputation_oder_schulterversteifung_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "NIHSS 5b: rechter Arm wegen Amputation oder Schulterversteifung nicht prüfbar",
+          "points": "UN"
+        }
+      }
+    },
+    "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden": {
+      "title": "6a Motorik linkes Bein (5 Sekunden)",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_ohne_absinken": {
+          "kind": "normal",
+          "text": "NIHSS 6a: linkes Bein ohne Absinken",
+          "points": 0
+        },
+        "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_sinkt_ab_erreicht_die_unterlage_nicht": {
+          "kind": "abnormal",
+          "text": "NIHSS 6a: linkes Bein sinkt ab, erreicht die Unterlage nicht",
+          "points": 1
+        },
+        "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage": {
+          "kind": "abnormal",
+          "text": "NIHSS 6a: linkes Bein mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+          "points": 2
+        },
+        "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_ohne_schwerkraftueberwindung": {
+          "kind": "abnormal",
+          "text": "NIHSS 6a: linkes Bein ohne Schwerkraftüberwindung",
+          "points": 3
+        },
+        "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_keine_bewegung_des_linken_beins": {
+          "kind": "abnormal",
+          "text": "NIHSS 6a: keine Bewegung des linken Beins",
+          "points": 4
+        },
+        "nihss_eintrag_6a_motorik_linkes_bein_5_sekunden_wert_nihss_6a_linkes_bein_wegen_amputation_oder_hueftversteifung_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "NIHSS 6a: linkes Bein wegen Amputation oder Hüftversteifung nicht prüfbar",
+          "points": "UN"
+        }
+      }
+    },
+    "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden": {
+      "title": "6b Motorik rechtes Bein (5 Sekunden)",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_ohne_absinken": {
+          "kind": "normal",
+          "text": "NIHSS 6b: rechtes Bein ohne Absinken",
+          "points": 0
+        },
+        "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_sinkt_ab_erreicht_die_unterlage_nicht": {
+          "kind": "abnormal",
+          "text": "NIHSS 6b: rechtes Bein sinkt ab, erreicht die Unterlage nicht",
+          "points": 1
+        },
+        "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_mit_schwerkraftueberwindung_sinkt_auf_die_unterlage": {
+          "kind": "abnormal",
+          "text": "NIHSS 6b: rechtes Bein mit Schwerkraftüberwindung, sinkt auf die Unterlage",
+          "points": 2
+        },
+        "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_ohne_schwerkraftueberwindung": {
+          "kind": "abnormal",
+          "text": "NIHSS 6b: rechtes Bein ohne Schwerkraftüberwindung",
+          "points": 3
+        },
+        "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_keine_bewegung_des_rechten_beins": {
+          "kind": "abnormal",
+          "text": "NIHSS 6b: keine Bewegung des rechten Beins",
+          "points": 4
+        },
+        "nihss_eintrag_6b_motorik_rechtes_bein_5_sekunden_wert_nihss_6b_rechtes_bein_wegen_amputation_oder_hueftversteifung_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "NIHSS 6b: rechtes Bein wegen Amputation oder Hüftversteifung nicht prüfbar",
+          "points": "UN"
+        }
+      }
+    },
+    "nihss_eintrag_7_extremitaetenataxie": {
+      "title": "7 Extremitätenataxie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_keine_extremitaetenataxie": {
+          "kind": "normal",
+          "text": "NIHSS 7: keine Extremitätenataxie",
+          "points": 0
+        },
+        "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_ataxie_in_einer_extremitaet": {
+          "kind": "abnormal",
+          "text": "NIHSS 7: Ataxie in einer Extremität",
+          "points": 1
+        },
+        "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_ataxie_in_zwei_extremitaeten": {
+          "kind": "abnormal",
+          "text": "NIHSS 7: Ataxie in zwei Extremitäten",
+          "points": 2
+        },
+        "nihss_eintrag_7_extremitaetenataxie_wert_nihss_7_wegen_amputation_oder_gelenkversteifung_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "NIHSS 7: wegen Amputation oder Gelenkversteifung nicht prüfbar",
+          "points": "UN"
+        }
+      }
+    },
+    "nihss_eintrag_8_sensibilitaet": {
+      "title": "8 Sensibilität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_8_sensibilitaet_wert_nihss_8_keine_sensibilitaetsstoerung": {
+          "kind": "normal",
+          "text": "NIHSS 8: keine Sensibilitätsstörung",
+          "points": 0
+        },
+        "nihss_eintrag_8_sensibilitaet_wert_nihss_8_leichte_bis_mittelschwere_sensibilitaetsstoerung": {
+          "kind": "abnormal",
+          "text": "NIHSS 8: leichte bis mittelschwere Sensibilitätsstörung",
+          "points": 1
+        },
+        "nihss_eintrag_8_sensibilitaet_wert_nihss_8_schwere_oder_vollstaendige_sensibilitaetsstoerung": {
+          "kind": "abnormal",
+          "text": "NIHSS 8: schwere oder vollständige Sensibilitätsstörung",
+          "points": 2
+        }
+      }
+    },
+    "nihss_eintrag_9_sprache": {
+      "title": "9 Sprache",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_9_sprache_wert_nihss_9_keine_aphasie": {
+          "kind": "normal",
+          "text": "NIHSS 9: keine Aphasie",
+          "points": 0
+        },
+        "nihss_eintrag_9_sprache_wert_nihss_9_leichte_bis_mittelschwere_aphasie": {
+          "kind": "abnormal",
+          "text": "NIHSS 9: leichte bis mittelschwere Aphasie",
+          "points": 1
+        },
+        "nihss_eintrag_9_sprache_wert_nihss_9_schwere_aphasie": {
+          "kind": "abnormal",
+          "text": "NIHSS 9: schwere Aphasie",
+          "points": 2
+        },
+        "nihss_eintrag_9_sprache_wert_nihss_9_stumm_oder_globale_aphasie": {
+          "kind": "abnormal",
+          "text": "NIHSS 9: stumm oder globale Aphasie",
+          "points": 3
+        }
+      }
+    },
+    "nihss_eintrag_10_dysarthrie": {
+      "title": "10 Dysarthrie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_10_dysarthrie_wert_nihss_10_keine_dysarthrie": {
+          "kind": "normal",
+          "text": "NIHSS 10: keine Dysarthrie",
+          "points": 0
+        },
+        "nihss_eintrag_10_dysarthrie_wert_nihss_10_leichte_bis_mittelschwere_dysarthrie": {
+          "kind": "abnormal",
+          "text": "NIHSS 10: leichte bis mittelschwere Dysarthrie",
+          "points": 1
+        },
+        "nihss_eintrag_10_dysarthrie_wert_nihss_10_schwere_dysarthrie_oder_anarthrie": {
+          "kind": "abnormal",
+          "text": "NIHSS 10: schwere Dysarthrie oder Anarthrie",
+          "points": 2
+        },
+        "nihss_eintrag_10_dysarthrie_wert_nihss_10_wegen_intubation_oder_anderer_mechanischer_sprechbarriere_nicht_pruefbar": {
+          "kind": "neutral",
+          "text": "NIHSS 10: wegen Intubation oder anderer mechanischer Sprechbarriere nicht prüfbar",
+          "points": "UN"
+        }
+      }
+    },
+    "nihss_eintrag_11_extinktion_und_neglect": {
+      "title": "11 Extinktion und Neglect",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_11_extinktion_und_neglect_wert_nihss_11_keine_extinktion_und_kein_neglect": {
+          "kind": "normal",
+          "text": "NIHSS 11: keine Extinktion und kein Neglect",
+          "points": 0
+        },
+        "nihss_eintrag_11_extinktion_und_neglect_wert_nihss_11_extinktion_oder_neglect_in_einer_modalitaet": {
+          "kind": "abnormal",
+          "text": "NIHSS 11: Extinktion oder Neglect in einer Modalität",
+          "points": 1
+        },
+        "nihss_eintrag_11_extinktion_und_neglect_wert_nihss_11_ausgepraegter_neglect_in_mehr_als_einer_modalitaet": {
+          "kind": "abnormal",
+          "text": "NIHSS 11: ausgeprägter Neglect in mehr als einer Modalität",
+          "points": 2
+        }
+      }
+    },
+    "nihss_eintrag_nihss_gesamtwert": {
+      "title": "NIHSS-Gesamtwert",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_nihss_gesamtwert_wert_nihss": {
+          "kind": "neutral",
+          "text": "NIHSS {:wert*:}",
+          "snomed": "450743008",
+          "snomedDisplay": "National Institutes of Health stroke scale score"
+        }
+      },
+      "attributes": {
+        "wert": "nihss_eingabe_gesamt"
+      }
+    },
+    "nihss_eintrag_ergaenzung_zum_nihss": {
+      "title": "Ergänzung zum NIHSS",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "nihss_eintrag_ergaenzung_zum_nihss_wert_nihss_ergaenzung": {
+          "kind": "neutral",
+          "text": "NIHSS-Ergänzung: {:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    }
+  }
+}

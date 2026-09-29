@@ -2,51 +2,10 @@
   "version": 2,
   "imports": [
     "gemeinsam",
-    "schmerz",
     "allergie",
-    "dauermedikation",
-    "vorerkrankungen",
     "symptome"
   ],
   "editors": {
-    "sampler_eingabe_ort": {
-      "type": "choice",
-      "options": {
-        "im_thorax": {
-          "kind": "neutral",
-          "text": "im Thorax"
-        },
-        "im_oberbauch": {
-          "kind": "neutral",
-          "text": "im Oberbauch"
-        },
-        "im_unterbauch": {
-          "kind": "neutral",
-          "text": "im Unterbauch"
-        },
-        "im_ruecken": {
-          "kind": "neutral",
-          "text": "im Rücken"
-        },
-        "im_kopf": {
-          "kind": "neutral",
-          "text": "im Kopf"
-        },
-        "im_arm": {
-          "kind": "neutral",
-          "text": "im Arm"
-        },
-        "im_bein": {
-          "kind": "neutral",
-          "text": "im Bein"
-        },
-        "diffus": {
-          "kind": "neutral",
-          "text": "diffus"
-        }
-      },
-      "label": "Lokalisation"
-    },
     "sampler_eingabe_nrs": {
       "type": "number",
       "label": "NRS",
@@ -54,7 +13,7 @@
       "max": 10,
       "step": 1
     },
-    "sampler_eingabe_seit": {
+    "sampler_eingabe_vor": {
       "type": "duration",
       "units": [
         "minute",
@@ -66,7 +25,7 @@
       ],
       "defaultUnit": "hour",
       "label": "Beginn",
-      "prefix": " seit "
+      "prefix": " vor "
     },
     "sampler_eingabe_dauer": {
       "type": "duration",
@@ -81,36 +40,6 @@
       "defaultUnit": "hour",
       "label": "Dauer",
       "prefix": " für "
-    },
-    "sampler_eingabe_qualitaet": {
-      "type": "choice",
-      "options": {
-        "drueckend": {
-          "kind": "neutral",
-          "text": "drückend"
-        },
-        "stechend": {
-          "kind": "neutral",
-          "text": "stechend"
-        },
-        "brennend": {
-          "kind": "neutral",
-          "text": "brennend"
-        },
-        "ziehend": {
-          "kind": "neutral",
-          "text": "ziehend"
-        },
-        "kolikartig": {
-          "kind": "neutral",
-          "text": "kolikartig"
-        },
-        "dumpf": {
-          "kind": "neutral",
-          "text": "dumpf"
-        }
-      },
-      "label": "Qualität"
     },
     "sampler_eingabe_symptom_seit": {
       "type": "duration",
@@ -139,35 +68,248 @@
         }
       },
       "label": "Seite"
+    },
+    "sampler_eingabe_symptomseite": {
+      "type": "choice",
+      "options": {
+        "linksseitig": {
+          "kind": "neutral",
+          "text": "linksseitig"
+        },
+        "rechtsseitig": {
+          "kind": "neutral",
+          "text": "rechtsseitig"
+        },
+        "beidseits": {
+          "kind": "neutral",
+          "text": "beidseits"
+        }
+      },
+      "label": "Seite"
+    },
+    "sampler_eingabe_obere_extremitaet": {
+      "type": "choice",
+      "options": {
+        "schulter": {
+          "kind": "neutral",
+          "text": "Schulter"
+        },
+        "oberarm": {
+          "kind": "neutral",
+          "text": "Oberarm"
+        },
+        "ellenbogen": {
+          "kind": "neutral",
+          "text": "Ellenbogen"
+        },
+        "unterarm": {
+          "kind": "neutral",
+          "text": "Unterarm"
+        },
+        "handgelenk": {
+          "kind": "neutral",
+          "text": "Handgelenk"
+        },
+        "hand": {
+          "kind": "neutral",
+          "text": "Hand"
+        }
+      },
+      "label": "Abschnitt"
+    },
+    "sampler_eingabe_untere_extremitaet": {
+      "type": "choice",
+      "options": {
+        "huefte": {
+          "kind": "neutral",
+          "text": "Hüfte"
+        },
+        "oberschenkel": {
+          "kind": "neutral",
+          "text": "Oberschenkel"
+        },
+        "knie": {
+          "kind": "neutral",
+          "text": "Knie"
+        },
+        "unterschenkel": {
+          "kind": "neutral",
+          "text": "Unterschenkel"
+        },
+        "sprunggelenk": {
+          "kind": "neutral",
+          "text": "Sprunggelenk"
+        },
+        "fuss": {
+          "kind": "neutral",
+          "text": "Fuß"
+        }
+      },
+      "label": "Abschnitt"
+    },
+    "sampler_eingabe_thoraxregion": {
+      "type": "choice",
+      "options": {
+        "links": {
+          "kind": "neutral",
+          "text": "links"
+        },
+        "rechts": {
+          "kind": "neutral",
+          "text": "rechts"
+        },
+        "zentral": {
+          "kind": "neutral",
+          "text": "zentral"
+        },
+        "diffus": {
+          "kind": "neutral",
+          "text": "diffus"
+        }
+      },
+      "label": "Thoraxregion"
+    },
+    "sampler_eingabe_abdomenregion": {
+      "type": "choice",
+      "options": {
+        "rechter_oberbauch": {
+          "kind": "neutral",
+          "text": "rechter Oberbauch"
+        },
+        "linker_oberbauch": {
+          "kind": "neutral",
+          "text": "linker Oberbauch"
+        },
+        "epigastrium": {
+          "kind": "neutral",
+          "text": "Epigastrium"
+        },
+        "periumbilikal": {
+          "kind": "neutral",
+          "text": "periumbilikal"
+        },
+        "rechter_unterbauch": {
+          "kind": "neutral",
+          "text": "rechter Unterbauch"
+        },
+        "linker_unterbauch": {
+          "kind": "neutral",
+          "text": "linker Unterbauch"
+        },
+        "diffus": {
+          "kind": "neutral",
+          "text": "diffus"
+        }
+      },
+      "label": "Bauchregion"
+    },
+    "sampler_eingabe_wirbelsaeulenregion": {
+      "type": "choice",
+      "options": {
+        "hws": {
+          "kind": "neutral",
+          "text": "HWS"
+        },
+        "bws": {
+          "kind": "neutral",
+          "text": "BWS"
+        },
+        "lws": {
+          "kind": "neutral",
+          "text": "LWS"
+        },
+        "sakralregion": {
+          "kind": "neutral",
+          "text": "Sakralregion"
+        }
+      },
+      "label": "Wirbelsäulenabschnitt"
+    },
+    "sampler_eingabe_symptomtext": {
+      "type": "multiline",
+      "maxRows": 12,
+      "label": "Ergänzende Beschreibung",
+      "placeholder": "Freie ergänzende Beschreibung",
+      "rows": 3
+    },
+    "sampler_eingabe_arzneimittel": {
+      "type": "text",
+      "label": "Arzneimittel",
+      "placeholder": "Wirkstoff oder Präparat",
+      "prefix": ""
+    },
+    "sampler_eingabe_vorerkrankung": {
+      "type": "text",
+      "label": "Vorerkrankung",
+      "placeholder": "Diagnose oder Zustand",
+      "prefix": ""
+    },
+    "sampler_eingabe_packyears": {
+      "type": "number",
+      "label": "packyears",
+      "min": 0,
+      "max": 300,
+      "step": 1,
+      "suffix": " py"
+    },
+    "sampler_eingabe_haeufigkeittag": {
+      "type": "number",
+      "label": "Häufigkeit",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "suffix": " x / Tag"
+    },
+    "sampler_eingabe_haeufigkeitwoche": {
+      "type": "number",
+      "label": "Häufigkeit",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "suffix": " x / Woche"
+    },
+    "sampler_eingabe_substanzform": {
+      "type": "choice",
+      "options": {
+        "nasal": {
+          "kind": "neutral",
+          "text": "nasal"
+        },
+        "inhalativ": {
+          "kind": "neutral",
+          "text": "inhalativ"
+        },
+        "oral": {
+          "kind": "neutral",
+          "text": "oral"
+        },
+        "i_v": {
+          "kind": "neutral",
+          "text": "i.v."
+        }
+      },
+      "label": "Form"
     }
   },
   "groups": {
     "sampler": {
       "title": "SAMPLER",
-      "children": [
-        "sampler_gruppe_symptom",
-        "sampler_gruppe_letzte",
-        "sampler_gruppe_ereignisvorgeschichte",
-        "allergie",
-        "dauermedikation",
-        "vorerkrankungen"
-      ],
       "items": [
         {
           "type": "group",
-          "id": "sampler_gruppe_symptom"
+          "id": "sampler_gruppe_symptom_e"
         },
         {
           "type": "group",
-          "id": "allergie"
+          "id": "sampler_gruppe_allergien"
         },
         {
           "type": "group",
-          "id": "dauermedikation"
+          "id": "sampler_gruppe_vorbestehende_medikation"
         },
         {
           "type": "group",
-          "id": "vorerkrankungen"
+          "id": "sampler_gruppe_vorbestehende_erkrankungen"
         },
         {
           "type": "group",
@@ -176,28 +318,28 @@
         {
           "type": "group",
           "id": "sampler_gruppe_ereignisvorgeschichte"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_risikofaktoren"
         }
-      ]
+      ],
+      "subgroups": "break",
+      "reset": true
+    },
+    "sampler_gruppe_symptom_e": {
+      "title": "Symptom(e)",
+      "items": [
+        {
+          "type": "group",
+          "id": "sampler_gruppe_symptom"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
     },
     "sampler_gruppe_symptom": {
       "title": "Symptom",
-      "kind": "abnormal",
-      "children": [
-        "sampler_gruppe_provokation",
-        "sampler_gruppe_linderung",
-        "sampler_gruppe_ausstrahlung"
-      ],
-      "phrases": [
-        "sampler_eintrag_symptom",
-        "sampler_eintrag_beginn",
-        "sampler_eintrag_trauma",
-        "sampler_eintrag_schmerzqualitaet",
-        "sampler_eintrag_schmerzlokalisation",
-        "sampler_eintrag_schmerzstaerke",
-        "sampler_eintrag_dauer",
-        "sampler_eintrag_verlauf",
-        "sampler_eintrag_freitext"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -208,24 +350,28 @@
           "id": "sampler_eintrag_beginn"
         },
         {
-          "type": "group",
-          "id": "sampler_gruppe_provokation"
+          "type": "phrase",
+          "id": "sampler_eintrag_dauer"
         },
         {
-          "type": "phrase",
-          "id": "sampler_eintrag_trauma"
+          "type": "group",
+          "id": "sampler_gruppe_verlauf"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_lokalisation"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_provokation"
         },
         {
           "type": "group",
           "id": "sampler_gruppe_linderung"
         },
         {
-          "type": "phrase",
-          "id": "sampler_eintrag_schmerzqualitaet"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_schmerzlokalisation"
+          "type": "group",
+          "id": "sampler_gruppe_schmerzqualitaet"
         },
         {
           "type": "group",
@@ -236,36 +382,142 @@
           "id": "sampler_eintrag_schmerzstaerke"
         },
         {
-          "type": "phrase",
-          "id": "sampler_eintrag_dauer"
+          "type": "group",
+          "id": "sampler_gruppe_fokal_neurologische_beschreibung"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_anfallsbeschreibung"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_bewusstseinsbeschreibung"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_schwindelbeschreibung"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_psychiatrische_beschreibung"
         },
         {
           "type": "phrase",
-          "id": "sampler_eintrag_verlauf"
-        },
-        {
-          "type": "phrase",
-          "id": "sampler_eintrag_freitext"
+          "id": "sampler_eintrag_ergaenzende_beschreibung"
         }
       ],
-      "reset": true,
-      "inline": true,
+      "kind": "abnormal",
+      "subgroups": "break",
+      "autoCompact": true,
       "repeatable": {
         "initial": 0,
         "add": "Symptom hinzufügen"
       }
     },
+    "sampler_gruppe_verlauf": {
+      "title": "Verlauf",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_zunehmend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_gleichbleibend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ruecklaeufig"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_intermittierend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_wellenfoermig"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_spontanes_sistieren"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_sistieren_unter_therapie"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_verlauf"
+        }
+      ]
+    },
+    "sampler_gruppe_lokalisation": {
+      "title": "Lokalisation",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_obere_extremitaetenregion"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_untere_extremitaetenregion"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_extremitaetenseite"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_thoraxlokalisation"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_abdomenlokalisation"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_wirbelsaeulenlokalisation"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_wirbelsaeulenseite"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_flankenseite"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_sonstige_lokalisation"
+        }
+      ],
+      "subgroups": "flow",
+      "condition": {
+        "values": [
+          "symptome_wert_brustschmerz",
+          "symptome_wert_bauchschmerz",
+          "symptome_wert_rueckenschmerz",
+          "symptome_wert_flanken_schmerz",
+          "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
+          "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz"
+        ],
+        "negated": false
+      }
+    },
     "sampler_gruppe_provokation": {
       "title": "Provokation",
-      "phrases": [
-        "sampler_eintrag_durch_belastung",
-        "sampler_eintrag_durch_bewegung",
-        "sampler_eintrag_durch_rotation",
-        "sampler_eintrag_durch_trauma",
-        "sampler_eintrag_durch_atembewegung",
-        "sampler_eintrag_sonstige_provokation",
-        "sampler_eintrag_nicht_provozierbar"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -285,6 +537,10 @@
         },
         {
           "type": "phrase",
+          "id": "sampler_eintrag_trauma"
+        },
+        {
+          "type": "phrase",
           "id": "sampler_eintrag_durch_atembewegung"
         },
         {
@@ -296,32 +552,34 @@
           "id": "sampler_eintrag_nicht_provozierbar"
         }
       ],
-      "autoCollapse": true,
       "condition": {
         "values": [
           "symptome_wert_brustschmerz",
           "symptome_wert_bauchschmerz",
           "symptome_wert_kopfschmerz",
           "symptome_wert_rueckenschmerz",
+          "symptome_wert_flanken_schmerz",
           "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
           "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz",
           "symptome_wert_gelenkschwellung"
         ],
         "negated": false
-      },
-      "collapsed": true,
-      "inline": true
+      }
     },
     "sampler_gruppe_linderung": {
       "title": "Linderung",
-      "phrases": [
-        "sampler_eintrag_durch_ruhe",
-        "sampler_eintrag_durch_dunkelheit",
-        "sampler_eintrag_durch_waerme",
-        "sampler_eintrag_durch_kaelte",
-        "sampler_eintrag_sonstige_linderung",
-        "sampler_eintrag_keine"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -348,35 +606,92 @@
           "id": "sampler_eintrag_keine"
         }
       ],
-      "autoCollapse": true,
       "condition": {
         "values": [
           "symptome_wert_brustschmerz",
           "symptome_wert_bauchschmerz",
           "symptome_wert_kopfschmerz",
           "symptome_wert_rueckenschmerz",
+          "symptome_wert_flanken_schmerz",
           "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
           "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz",
           "symptome_wert_gelenkschwellung"
         ],
         "negated": false
-      },
-      "collapsed": true,
-      "inline": true
+      }
+    },
+    "sampler_gruppe_schmerzqualitaet": {
+      "title": "Schmerzqualität",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_dumpf"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_drueckend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_stechend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_brennend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ziehend"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_kolikartig"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_qualitaet"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_brustschmerz",
+          "symptome_wert_bauchschmerz",
+          "symptome_wert_kopfschmerz",
+          "symptome_wert_rueckenschmerz",
+          "symptome_wert_flanken_schmerz",
+          "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
+          "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz",
+          "symptome_wert_gelenkschwellung"
+        ],
+        "negated": false
+      }
     },
     "sampler_gruppe_ausstrahlung": {
       "title": "Ausstrahlung",
-      "phrases": [
-        "sampler_eintrag_in_den_ruecken",
-        "sampler_eintrag_zwischen_die_schulterblaetter",
-        "sampler_eintrag_in_den_seite_arm",
-        "sampler_eintrag_in_den_hals",
-        "sampler_eintrag_in_den_kiefer",
-        "sampler_eintrag_in_den_unterbauch",
-        "sampler_eintrag_in_die_flanke",
-        "sampler_eintrag_ins_genital",
-        "sampler_eintrag_sonstiges"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -415,51 +730,498 @@
           "id": "sampler_eintrag_sonstiges"
         }
       ],
-      "autoCollapse": true,
       "condition": {
         "values": [
           "symptome_wert_brustschmerz",
           "symptome_wert_bauchschmerz",
           "symptome_wert_kopfschmerz",
           "symptome_wert_rueckenschmerz",
+          "symptome_wert_flanken_schmerz",
           "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
           "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz",
           "symptome_wert_gelenkschwellung"
         ],
         "negated": false
-      },
-      "collapsed": true,
-      "inline": true
+      }
+    },
+    "sampler_gruppe_fokal_neurologische_beschreibung": {
+      "title": "Fokal-neurologische Beschreibung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_neurologische_seite"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_verteilung"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_auspraegung"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_extremitaetenschwaeche",
+          "symptome_wert_sensibilitaetsstoerung"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_anfallsbeschreibung": {
+      "title": "Anfallsbeschreibung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_beobachtung"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_anfallsbild"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_bewusstseinslage_im_ereignis"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_erholung"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_krampfanfall"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_bewusstseinsbeschreibung": {
+      "title": "Bewusstseinsbeschreibung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_verlauf_der_bewusstseinsstoerung"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ausgangszustand"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_bewusstseinsstoerung",
+          "symptome_wert_verwirrtheit"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_schwindelbeschreibung": {
+      "title": "Schwindelbeschreibung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_charakter"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_muster"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ausloeser"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_schwindel"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_psychiatrische_beschreibung": {
+      "title": "Psychiatrische Beschreibung",
+      "items": [
+        {
+          "type": "group",
+          "id": "sampler_gruppe_stimmung_und_eigengefaehrdung"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_angst_und_krise"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_wahrnehmung_und_denken"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_fremdgefaehrdung"
+        }
+      ],
+      "subgroups": "break",
+      "condition": {
+        "values": [
+          "symptome_wert_depression_suizidalitaet",
+          "symptome_wert_angst_krise",
+          "symptome_wert_halluzination_wahn",
+          "symptome_wert_fremdgefaehrdung"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_stimmung_und_eigengefaehrdung": {
+      "title": "Stimmung und Eigengefährdung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_stimmung"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_eigengefaehrdung"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_depression_suizidalitaet"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_angst_und_krise": {
+      "title": "Angst und Krise",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_erscheinungsbild"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_angst_krise"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_wahrnehmung_und_denken": {
+      "title": "Wahrnehmung und Denken",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_wahrnehmung"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_denkinhalt"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_imperative_stimmen"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_halluzination_wahn"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_fremdgefaehrdung": {
+      "title": "Fremdgefährdung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_gefaehrdungseinschaetzung"
+        }
+      ],
+      "condition": {
+        "values": [
+          "symptome_wert_fremdgefaehrdung"
+        ],
+        "negated": false
+      }
+    },
+    "sampler_gruppe_allergien": {
+      "title": "Allergien",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_allergiestatus"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_allergie"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_allergie": {
+      "title": "Allergie",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_allergie"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_allergische_reaktion"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_schweregrad_der_allergie"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ergaenzung_zur_allergie"
+        }
+      ],
+      "kind": "abnormal",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Allergie hinzufügen",
+        "empty": "sampler_eintrag_allergiestatus"
+      }
+    },
+    "sampler_gruppe_vorbestehende_medikation": {
+      "title": "Vorbestehende Medikation",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_medikationsstatus"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_medikationsquellen_praeklinik"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_medikationsquellen_klinik"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_relevantes_arzneimittel"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_medikationsquellen_praeklinik": {
+      "title": "Quelle",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_med_praeklinik_pflege"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_med_praeklinik_arztbrief"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_med_praeklinik_plan"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_med_praeklinik_bild"
+        }
+      ],
+      "lenses": [
+        "rettungsdienst"
+      ],
+      "reveal": "initial"
+    },
+    "sampler_gruppe_medikationsquellen_klinik": {
+      "title": "Quelle",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_s_id_medics"
+        }
+      ],
+      "lenses": [
+        "kernteam",
+        "trauma_orthopaedie",
+        "allgemeinchirurgie",
+        "thorax_gefaesschirurgie",
+        "neurochirurgie",
+        "hno",
+        "auge",
+        "gynaekologie_geburtshilfe",
+        "paediatrie",
+        "psychiatrie",
+        "wiedervorstellung_kontrolle"
+      ],
+      "reveal": "initial"
+    },
+    "sampler_gruppe_relevantes_arzneimittel": {
+      "title": "relevantes Arzneimittel",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_arzneimittel"
+        }
+      ],
+      "kind": "neutral",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "relevantes Arzneimittel hinzufügen",
+        "empty": "sampler_eintrag_medikationsstatus"
+      }
+    },
+    "sampler_gruppe_vorbestehende_erkrankungen": {
+      "title": "Vorbestehende Erkrankungen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vorerkrankungsstatus"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_vorerkrankungsquellen_praeklinik"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_vorerkrankungsquellen_klinik"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_vorerkrankung"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_vorerkrankungsquellen_praeklinik": {
+      "title": "siehe",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_praeklinik_pflege"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_praeklinik_arztbrief"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_praeklinik_plan"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_praeklinik_bild"
+        }
+      ],
+      "lenses": [
+        "rettungsdienst"
+      ]
+    },
+    "sampler_gruppe_vorerkrankungsquellen_klinik": {
+      "title": "siehe",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_system"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_klinik_pflege"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_klinik_arztbrief"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vor_klinik_system"
+        }
+      ],
+      "lenses": [
+        "kernteam",
+        "trauma_orthopaedie",
+        "allgemeinchirurgie",
+        "thorax_gefaesschirurgie",
+        "neurochirurgie",
+        "hno",
+        "auge",
+        "gynaekologie_geburtshilfe",
+        "paediatrie",
+        "psychiatrie",
+        "wiedervorstellung_kontrolle"
+      ]
+    },
+    "sampler_gruppe_vorerkrankung": {
+      "title": "Vorerkrankung",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vorerkrankung"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_demenzschweregrad"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_ergaenzung_zur_erkrankung"
+        }
+      ],
+      "kind": "abnormal",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Vorerkrankung hinzufügen",
+        "empty": "sampler_eintrag_vorerkrankungsstatus"
+      }
     },
     "sampler_gruppe_letzte": {
       "title": "Letzte",
-      "phrases": [
-        "sampler_eintrag_letzte_koronarangiographie"
-      ],
       "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_letzte_mahlzeit"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_letzte_fluessigkeitsaufnahme"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_letzter_krankenhausaufenthalt"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_letzter_stuhlgang"
+        },
         {
           "type": "phrase",
           "id": "sampler_eintrag_letzte_koronarangiographie"
         }
-      ]
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
     },
     "sampler_gruppe_ereignisvorgeschichte": {
       "title": "Ereignisvorgeschichte",
-      "phrases": [
-        "sampler_eintrag_keine_atemnot",
-        "sampler_eintrag_keine_synkope",
-        "sampler_eintrag_kein_herzklopfen",
-        "sampler_eintrag_kein_fieber",
-        "sampler_eintrag_kein_husten",
-        "sampler_eintrag_keine_uebelkeit",
-        "sampler_eintrag_kein_erbrechen",
-        "sampler_eintrag_keine_algurie",
-        "sampler_eintrag_keine_pollakisurie",
-        "sampler_eintrag_kein_schwindel",
-        "sampler_eintrag_kein_krampfanfall",
-        "sampler_eintrag_keine_schwaeche"
-      ],
       "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vorgeschichte"
+        },
         {
           "type": "phrase",
           "id": "sampler_eintrag_keine_atemnot"
@@ -508,7 +1270,158 @@
           "type": "phrase",
           "id": "sampler_eintrag_keine_schwaeche"
         }
-      ]
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_risikofaktoren": {
+      "title": "Risikofaktoren",
+      "items": [
+        {
+          "type": "group",
+          "id": "sampler_gruppe_nikotinkonsum"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_vaping_oder_dampfen"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_alkoholkonsum"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_thc_konsum"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_sonstiger_substanzkonsum"
+        }
+      ],
+      "subgroups": "break"
+    },
+    "sampler_gruppe_nikotinkonsum": {
+      "title": "Nikotinkonsum",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_nikotinstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_nikotinart"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_nikotinhaeufigkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_packyears_packyears_packyears"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_weitere_angaben_zum_nikotinkonsum"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_vaping_oder_dampfen": {
+      "title": "Vaping oder Dampfen",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vapingdampfenstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_vapingdampfenhaeufigkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_weitere_angaben_zum_vaping_oder_dampfen"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_alkoholkonsum": {
+      "title": "Alkoholkonsum",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_alkoholstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_haeufigkeit_alkoholhaeufigkeit_haeufigkeitwoche"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_weitere_angaben_zum_alkoholkonsum"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_thc_konsum": {
+      "title": "THC-Konsum",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_thcstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_thchaeufigkeit"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_weitere_angaben_zum_thc_konsumkonsum"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_sonstiger_substanzkonsum": {
+      "title": "sonstiger Substanzkonsum",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_sonstigesubstanzenstatus"
+        },
+        {
+          "type": "group",
+          "id": "sampler_gruppe_substanz"
+        }
+      ],
+      "autoCompact": true,
+      "reveal": "initial"
+    },
+    "sampler_gruppe_substanz": {
+      "title": "Substanz",
+      "items": [
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_substanz"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_konsumstatus"
+        },
+        {
+          "type": "phrase",
+          "id": "sampler_eintrag_haeufigkeit"
+        }
+      ],
+      "kind": "neutral",
+      "reset": true,
+      "repeatable": {
+        "initial": 0,
+        "add": "Substanz hinzufügen",
+        "empty": "sampler_eintrag_sonstigesubstanzenstatus"
+      }
     }
   },
   "phrases": {
@@ -531,7 +1444,307 @@
         }
       },
       "attributes": {
-        "beginn": "sampler_eingabe_seit"
+        "beginn": "sampler_eingabe_vor"
+      }
+    },
+    "sampler_eintrag_dauer": {
+      "title": "Dauer",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_dauer_wert_dauer": {
+          "kind": "neutral",
+          "text": "Dauer {:dauer*:}"
+        }
+      },
+      "attributes": {
+        "dauer": "sampler_eingabe_dauer"
+      }
+    },
+    "sampler_eintrag_zunehmend": {
+      "title": "zunehmend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_zunehmend_wert_zunehmend": {
+          "kind": "neutral",
+          "text": "zunehmend"
+        }
+      }
+    },
+    "sampler_eintrag_gleichbleibend": {
+      "title": "gleichbleibend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_gleichbleibend_wert_gleichbleibend": {
+          "kind": "neutral",
+          "text": "gleichbleibend"
+        }
+      }
+    },
+    "sampler_eintrag_ruecklaeufig": {
+      "title": "rückläufig",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ruecklaeufig_wert_ruecklaeufig": {
+          "kind": "neutral",
+          "text": "rückläufig"
+        }
+      }
+    },
+    "sampler_eintrag_intermittierend": {
+      "title": "intermittierend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_intermittierend_wert_intermittierend": {
+          "kind": "neutral",
+          "text": "intermittierend"
+        }
+      }
+    },
+    "sampler_eintrag_wellenfoermig": {
+      "title": "wellenförmig",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_wellenfoermig_wert_wellenfoermig": {
+          "kind": "neutral",
+          "text": "wellenförmig"
+        }
+      }
+    },
+    "sampler_eintrag_spontanes_sistieren": {
+      "title": "spontanes Sistieren",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_spontanes_sistieren_wert_spontanes_sistieren": {
+          "kind": "neutral",
+          "text": "spontanes Sistieren"
+        }
+      }
+    },
+    "sampler_eintrag_sistieren_unter_therapie": {
+      "title": "Sistieren unter Therapie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_sistieren_unter_therapie_wert_sistieren_unter_therapie": {
+          "kind": "neutral",
+          "text": "Sistieren unter Therapie"
+        }
+      }
+    },
+    "sampler_eintrag_verlauf": {
+      "title": "Verlauf",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_verlauf_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_obere_extremitaetenregion": {
+      "title": "Abschnitt",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_obere_extremitaetenregion_wert_value": {
+          "kind": "neutral",
+          "text": "{:obere_extremitaetenregion*:}"
+        }
+      },
+      "attributes": {
+        "obere_extremitaetenregion": "sampler_eingabe_obere_extremitaet"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_schulter_arm_schmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_obere_extremitaetenregion_wert_value"
+      }
+    },
+    "sampler_eintrag_untere_extremitaetenregion": {
+      "title": "Abschnitt",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_untere_extremitaetenregion_wert_value": {
+          "kind": "neutral",
+          "text": "{:untere_extremitaetenregion*:}"
+        }
+      },
+      "attributes": {
+        "untere_extremitaetenregion": "sampler_eingabe_untere_extremitaet"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_bein_hueft_knieschmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_untere_extremitaetenregion_wert_value"
+      }
+    },
+    "sampler_eintrag_extremitaetenseite": {
+      "title": "Seite",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_extremitaetenseite_wert_value": {
+          "kind": "neutral",
+          "text": "{:extremitaetenseite*:}"
+        }
+      },
+      "attributes": {
+        "extremitaetenseite": "sampler_eingabe_symptomseite"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
+          "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_extremitaetenseite_wert_value"
+      }
+    },
+    "sampler_eintrag_thoraxlokalisation": {
+      "title": "Thoraxregion",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_thoraxlokalisation_wert_value": {
+          "kind": "neutral",
+          "text": "{:thoraxlokalisation*:}"
+        }
+      },
+      "attributes": {
+        "thoraxlokalisation": "sampler_eingabe_thoraxregion"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_brustschmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_thoraxlokalisation_wert_value"
+      }
+    },
+    "sampler_eintrag_abdomenlokalisation": {
+      "title": "Bauchregion",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_abdomenlokalisation_wert_value": {
+          "kind": "neutral",
+          "text": "{:abdomenlokalisation*:}"
+        }
+      },
+      "attributes": {
+        "abdomenlokalisation": "sampler_eingabe_abdomenregion"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_bauchschmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_abdomenlokalisation_wert_value"
+      }
+    },
+    "sampler_eintrag_wirbelsaeulenlokalisation": {
+      "title": "Wirbelsäulenabschnitt",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_wirbelsaeulenlokalisation_wert_value": {
+          "kind": "neutral",
+          "text": "{:wirbelsaeulenlokalisation*:}"
+        }
+      },
+      "attributes": {
+        "wirbelsaeulenlokalisation": "sampler_eingabe_wirbelsaeulenregion"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_rueckenschmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_wirbelsaeulenlokalisation_wert_value"
+      }
+    },
+    "sampler_eintrag_wirbelsaeulenseite": {
+      "title": "Seite",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_wirbelsaeulenseite_wert_value": {
+          "kind": "neutral",
+          "text": "{:wirbelsaeulenseite*:}"
+        }
+      },
+      "attributes": {
+        "wirbelsaeulenseite": "sampler_eingabe_symptomseite"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_rueckenschmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_wirbelsaeulenseite_wert_value"
+      }
+    },
+    "sampler_eintrag_flankenseite": {
+      "title": "Seite",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_flankenseite_wert_value": {
+          "kind": "neutral",
+          "text": "{:flankenseite*:}"
+        }
+      },
+      "attributes": {
+        "flankenseite": "sampler_eingabe_symptomseite"
+      },
+      "condition": {
+        "values": [
+          "symptome_wert_flanken_schmerz"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_flankenseite_wert_value"
+      }
+    },
+    "sampler_eintrag_sonstige_lokalisation": {
+      "title": "sonstige Lokalisation",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_sonstige_lokalisation_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
       }
     },
     "sampler_eintrag_durch_belastung": {
@@ -578,6 +1791,27 @@
         }
       }
     },
+    "sampler_eintrag_trauma": {
+      "title": "Trauma",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_trauma_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_durch_trauma_wert_durch_trauma"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_trauma_wert_value"
+      }
+    },
     "sampler_eintrag_durch_atembewegung": {
       "title": "durch Atembewegung",
       "kind": "neutral",
@@ -596,7 +1830,7 @@
       "values": {
         "sampler_eintrag_sonstige_provokation_wert_durch": {
           "kind": "neutral",
-          "text": "durch {:freitext:}"
+          "text": "durch {:freitext*:}"
         }
       },
       "attributes": {
@@ -612,23 +1846,6 @@
           "kind": "neutral",
           "text": "nicht provozierbar"
         }
-      }
-    },
-    "sampler_eintrag_trauma": {
-      "title": "Trauma",
-      "kind": "neutral",
-      "default": null,
-      "values": {
-        "sampler_eintrag_trauma_wert_value": {
-          "kind": "neutral",
-          "text": "{:freitext:}"
-        }
-      },
-      "attributes": {
-        "freitext": "gemeinsam_eingabe_freitext"
-      },
-      "suggestions": {
-        "sampler_eintrag_durch_trauma_wert_durch_trauma": "sampler_eintrag_trauma_wert_value"
       }
     },
     "sampler_eintrag_durch_ruhe": {
@@ -682,7 +1899,7 @@
       "values": {
         "sampler_eintrag_sonstige_linderung_wert_durch": {
           "kind": "neutral",
-          "text": "durch {:freitext:}"
+          "text": "durch {:freitext*:}"
         }
       },
       "attributes": {
@@ -700,50 +1917,84 @@
         }
       }
     },
-    "sampler_eintrag_schmerzqualitaet": {
-      "title": "Schmerzqualität",
+    "sampler_eintrag_dumpf": {
+      "title": "dumpf",
       "kind": "neutral",
-      "default": null,
+      "default": "",
       "values": {
-        "sampler_eintrag_schmerzqualitaet_wert_qualitaet": {
+        "sampler_eintrag_dumpf_wert_dumpf": {
           "kind": "neutral",
-          "text": "Qualität: {:qualitaet*:}"
+          "text": "dumpf"
         }
-      },
-      "attributes": {
-        "qualitaet": "sampler_eingabe_qualitaet"
-      },
-      "suggestions": {
-        "symptome_wert_brustschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "symptome_wert_bauchschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "symptome_wert_kopfschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "symptome_wert_rueckenschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "symptome_wert_schulter_arm_schmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "symptome_wert_bein_hueft_knieschmerz": "sampler_eintrag_schmerzqualitaet_wert_qualitaet",
-        "symptome_wert_gelenkschwellung": "sampler_eintrag_schmerzqualitaet_wert_qualitaet"
       }
     },
-    "sampler_eintrag_schmerzlokalisation": {
-      "title": "Schmerzlokalisation",
+    "sampler_eintrag_drueckend": {
+      "title": "drückend",
       "kind": "neutral",
-      "default": null,
+      "default": "",
       "values": {
-        "sampler_eintrag_schmerzlokalisation_wert_lokalisation": {
+        "sampler_eintrag_drueckend_wert_drueckend": {
           "kind": "neutral",
-          "text": "Lokalisation: {:ort*:}"
+          "text": "drückend"
+        }
+      }
+    },
+    "sampler_eintrag_stechend": {
+      "title": "stechend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_stechend_wert_stechend": {
+          "kind": "neutral",
+          "text": "stechend"
+        }
+      }
+    },
+    "sampler_eintrag_brennend": {
+      "title": "brennend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_brennend_wert_brennend": {
+          "kind": "neutral",
+          "text": "brennend"
+        }
+      }
+    },
+    "sampler_eintrag_ziehend": {
+      "title": "ziehend",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ziehend_wert_ziehend": {
+          "kind": "neutral",
+          "text": "ziehend"
+        }
+      }
+    },
+    "sampler_eintrag_kolikartig": {
+      "title": "kolikartig",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_kolikartig_wert_kolikartig": {
+          "kind": "neutral",
+          "text": "kolikartig"
+        }
+      }
+    },
+    "sampler_eintrag_qualitaet": {
+      "title": "Qualität",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_qualitaet_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
         }
       },
       "attributes": {
-        "ort": "sampler_eingabe_ort"
-      },
-      "suggestions": {
-        "symptome_wert_brustschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "symptome_wert_bauchschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "symptome_wert_kopfschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "symptome_wert_rueckenschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "symptome_wert_schulter_arm_schmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "symptome_wert_bein_hueft_knieschmerz": "sampler_eintrag_schmerzlokalisation_wert_lokalisation",
-        "symptome_wert_gelenkschwellung": "sampler_eintrag_schmerzlokalisation_wert_lokalisation"
+        "freitext": "gemeinsam_eingabe_freitext"
       }
     },
     "sampler_eintrag_in_den_ruecken": {
@@ -844,7 +2095,7 @@
       "values": {
         "sampler_eintrag_sonstiges_wert_value": {
           "kind": "neutral",
-          "text": "{:freitext:}"
+          "text": "{:freitext*:}"
         }
       },
       "attributes": {
@@ -864,70 +2115,634 @@
       "attributes": {
         "wert": "sampler_eingabe_nrs"
       },
-      "suggestions": {
-        "symptome_wert_brustschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "symptome_wert_bauchschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "symptome_wert_kopfschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "symptome_wert_rueckenschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "symptome_wert_schulter_arm_schmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "symptome_wert_bein_hueft_knieschmerz": "sampler_eintrag_schmerzstaerke_wert_nrs",
-        "symptome_wert_gelenkschwellung": "sampler_eintrag_schmerzstaerke_wert_nrs"
+      "condition": {
+        "values": [
+          "symptome_wert_brustschmerz",
+          "symptome_wert_bauchschmerz",
+          "symptome_wert_kopfschmerz",
+          "symptome_wert_rueckenschmerz",
+          "symptome_wert_flanken_schmerz",
+          "symptome_wert_schulter_arm_schmerz",
+          "symptome_wert_schulterschmerz",
+          "symptome_wert_oberarmschmerz",
+          "symptome_wert_ellenbogenschmerz",
+          "symptome_wert_unterarmschmerz",
+          "symptome_wert_handgelenkschmerz",
+          "symptome_wert_handschmerz",
+          "symptome_wert_bein_hueft_knieschmerz",
+          "symptome_wert_hueftschmerz",
+          "symptome_wert_oberschenkelschmerz",
+          "symptome_wert_knieschmerz",
+          "symptome_wert_unterschenkelschmerz",
+          "symptome_wert_sprunggelenkschmerz",
+          "symptome_wert_fussschmerz",
+          "symptome_wert_gelenkschwellung"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_schmerzstaerke_wert_nrs"
       }
     },
-    "sampler_eintrag_dauer": {
-      "title": "Dauer",
+    "sampler_eintrag_neurologische_seite": {
+      "title": "Betroffene Seite",
       "kind": "neutral",
       "default": "",
       "values": {
-        "sampler_eintrag_dauer_wert_dauer": {
+        "sampler_eintrag_neurologische_seite_wert_links": {
           "kind": "neutral",
-          "text": "Dauer {:dauer*:}"
-        }
-      },
-      "attributes": {
-        "dauer": "sampler_eingabe_dauer"
-      }
-    },
-    "sampler_eintrag_verlauf": {
-      "title": "Verlauf",
-      "kind": "neutral",
-      "default": "",
-      "values": {
-        "sampler_eintrag_verlauf_wert_zunehmend": {
-          "kind": "neutral",
-          "text": "zunehmend"
+          "text": "links"
         },
-        "sampler_eintrag_verlauf_wert_ruecklaeufig": {
+        "sampler_eintrag_neurologische_seite_wert_rechts": {
+          "kind": "neutral",
+          "text": "rechts"
+        },
+        "sampler_eintrag_neurologische_seite_wert_beidseits": {
+          "kind": "neutral",
+          "text": "beidseits"
+        },
+        "sampler_eintrag_neurologische_seite_wert_wechselnd": {
+          "kind": "neutral",
+          "text": "wechselnd"
+        }
+      }
+    },
+    "sampler_eintrag_verteilung": {
+      "title": "Verteilung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_verteilung_wert_gesicht": {
+          "kind": "neutral",
+          "text": "Gesicht"
+        },
+        "sampler_eintrag_verteilung_wert_arm": {
+          "kind": "neutral",
+          "text": "Arm"
+        },
+        "sampler_eintrag_verteilung_wert_bein": {
+          "kind": "neutral",
+          "text": "Bein"
+        },
+        "sampler_eintrag_verteilung_wert_gesicht_und_arm": {
+          "kind": "neutral",
+          "text": "Gesicht und Arm"
+        },
+        "sampler_eintrag_verteilung_wert_arm_und_bein": {
+          "kind": "neutral",
+          "text": "Arm und Bein"
+        },
+        "sampler_eintrag_verteilung_wert_gesicht_arm_und_bein": {
+          "kind": "neutral",
+          "text": "Gesicht, Arm und Bein"
+        }
+      }
+    },
+    "sampler_eintrag_auspraegung": {
+      "title": "Ausprägung",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "sampler_eintrag_auspraegung_wert_vollstaendig": {
+          "kind": "abnormal",
+          "text": "vollständig"
+        },
+        "sampler_eintrag_auspraegung_wert_teilweise": {
+          "kind": "abnormal",
+          "text": "teilweise"
+        },
+        "sampler_eintrag_auspraegung_wert_fluktuierend": {
+          "kind": "abnormal",
+          "text": "fluktuierend"
+        }
+      }
+    },
+    "sampler_eintrag_beobachtung": {
+      "title": "Beobachtung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_beobachtung_wert_fremdbeobachtet": {
+          "kind": "neutral",
+          "text": "fremdbeobachtet"
+        },
+        "sampler_eintrag_beobachtung_wert_eigenberichtet": {
+          "kind": "neutral",
+          "text": "eigenberichtet"
+        },
+        "sampler_eintrag_beobachtung_wert_nicht_beobachtet": {
+          "kind": "neutral",
+          "text": "nicht beobachtet"
+        }
+      }
+    },
+    "sampler_eintrag_anfallsbild": {
+      "title": "Anfallsbild",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_anfallsbild_wert_generalisiert_tonisch_klonisch": {
+          "kind": "abnormal",
+          "text": "generalisiert tonisch-klonisch"
+        },
+        "sampler_eintrag_anfallsbild_wert_fokal_motorisch": {
+          "kind": "abnormal",
+          "text": "fokal motorisch"
+        },
+        "sampler_eintrag_anfallsbild_wert_fokal_nicht_motorisch": {
+          "kind": "abnormal",
+          "text": "fokal nicht motorisch"
+        },
+        "sampler_eintrag_anfallsbild_wert_unklar": {
+          "kind": "neutral",
+          "text": "unklar"
+        }
+      }
+    },
+    "sampler_eintrag_bewusstseinslage_im_ereignis": {
+      "title": "Bewusstseinslage im Ereignis",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_bewusstseinslage_im_ereignis_wert_erhalten": {
+          "kind": "neutral",
+          "text": "erhalten"
+        },
+        "sampler_eintrag_bewusstseinslage_im_ereignis_wert_beeintraechtigt": {
+          "kind": "abnormal",
+          "text": "beeinträchtigt"
+        },
+        "sampler_eintrag_bewusstseinslage_im_ereignis_wert_unklar": {
+          "kind": "neutral",
+          "text": "unklar"
+        }
+      }
+    },
+    "sampler_eintrag_erholung": {
+      "title": "Erholung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_erholung_wert_unmittelbar": {
+          "kind": "neutral",
+          "text": "unmittelbar"
+        },
+        "sampler_eintrag_erholung_wert_verzoegert": {
+          "kind": "abnormal",
+          "text": "verzögert"
+        },
+        "sampler_eintrag_erholung_wert_postiktal": {
+          "kind": "abnormal",
+          "text": "postiktal"
+        },
+        "sampler_eintrag_erholung_wert_keine_rueckkehr_zum_ausgangszustand": {
+          "kind": "abnormal",
+          "text": "keine Rückkehr zum Ausgangszustand"
+        }
+      }
+    },
+    "sampler_eintrag_verlauf_der_bewusstseinsstoerung": {
+      "title": "Verlauf der Bewusstseinsstörung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_verlauf_der_bewusstseinsstoerung_wert_konstant": {
+          "kind": "abnormal",
+          "text": "konstant"
+        },
+        "sampler_eintrag_verlauf_der_bewusstseinsstoerung_wert_fluktuierend": {
+          "kind": "abnormal",
+          "text": "fluktuierend"
+        },
+        "sampler_eintrag_verlauf_der_bewusstseinsstoerung_wert_progredient": {
+          "kind": "abnormal",
+          "text": "progredient"
+        },
+        "sampler_eintrag_verlauf_der_bewusstseinsstoerung_wert_ruecklaeufig": {
           "kind": "neutral",
           "text": "rückläufig"
-        },
-        "sampler_eintrag_verlauf_wert_wellenfoermig": {
-          "kind": "neutral",
-          "text": "wellenförmig"
-        },
-        "sampler_eintrag_verlauf_wert_spontanes_sistieren": {
-          "kind": "neutral",
-          "text": "spontanes Sistieren"
-        },
-        "sampler_eintrag_verlauf_wert_sistieren_unter_analgesie": {
-          "kind": "neutral",
-          "text": "Sistieren unter Analgesie"
-        },
-        "sampler_eintrag_verlauf_wert_value": {
-          "kind": "neutral",
-          "text": "{:freitext:}"
         }
-      },
-      "attributes": {
-        "freitext": "gemeinsam_eingabe_freitext"
       }
     },
-    "sampler_eintrag_freitext": {
-      "title": "Freitext",
+    "sampler_eintrag_ausgangszustand": {
+      "title": "Ausgangszustand",
       "kind": "neutral",
       "default": "",
       "values": {
-        "sampler_eintrag_freitext_wert_value": {
+        "sampler_eintrag_ausgangszustand_wert_wieder_erreicht": {
+          "kind": "neutral",
+          "text": "wieder erreicht"
+        },
+        "sampler_eintrag_ausgangszustand_wert_nicht_wieder_erreicht": {
+          "kind": "abnormal",
+          "text": "nicht wieder erreicht"
+        },
+        "sampler_eintrag_ausgangszustand_wert_unbekannt": {
+          "kind": "neutral",
+          "text": "unbekannt"
+        }
+      }
+    },
+    "sampler_eintrag_charakter": {
+      "title": "Charakter",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_charakter_wert_drehschwindel": {
+          "kind": "abnormal",
+          "text": "Drehschwindel"
+        },
+        "sampler_eintrag_charakter_wert_schwankschwindel": {
+          "kind": "abnormal",
+          "text": "Schwankschwindel"
+        },
+        "sampler_eintrag_charakter_wert_benommenheit": {
+          "kind": "abnormal",
+          "text": "Benommenheit"
+        },
+        "sampler_eintrag_charakter_wert_unklar": {
+          "kind": "neutral",
+          "text": "unklar"
+        }
+      }
+    },
+    "sampler_eintrag_muster": {
+      "title": "Muster",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "sampler_eintrag_muster_wert_anfallsartig": {
+          "kind": "abnormal",
+          "text": "anfallsartig"
+        },
+        "sampler_eintrag_muster_wert_kontinuierlich": {
+          "kind": "abnormal",
+          "text": "kontinuierlich"
+        },
+        "sampler_eintrag_muster_wert_rezidivierend": {
+          "kind": "abnormal",
+          "text": "rezidivierend"
+        }
+      }
+    },
+    "sampler_eintrag_ausloeser": {
+      "title": "Auslöser",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ausloeser_wert_lagewechsel": {
+          "kind": "neutral",
+          "text": "Lagewechsel"
+        },
+        "sampler_eintrag_ausloeser_wert_kopfbewegung": {
+          "kind": "neutral",
+          "text": "Kopfbewegung"
+        },
+        "sampler_eintrag_ausloeser_wert_aufstehen": {
+          "kind": "neutral",
+          "text": "Aufstehen"
+        },
+        "sampler_eintrag_ausloeser_wert_belastung": {
+          "kind": "neutral",
+          "text": "Belastung"
+        },
+        "sampler_eintrag_ausloeser_wert_kein_ausloeser_erinnerlich": {
+          "kind": "neutral",
+          "text": "kein Auslöser erinnerlich"
+        }
+      }
+    },
+    "sampler_eintrag_stimmung": {
+      "title": "Stimmung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_stimmung_wert_gedrueckt": {
+          "kind": "abnormal",
+          "text": "gedrückt"
+        },
+        "sampler_eintrag_stimmung_wert_verzweifelt": {
+          "kind": "abnormal",
+          "text": "verzweifelt"
+        },
+        "sampler_eintrag_stimmung_wert_gereizt": {
+          "kind": "abnormal",
+          "text": "gereizt"
+        },
+        "sampler_eintrag_stimmung_wert_affektarm": {
+          "kind": "abnormal",
+          "text": "affektarm"
+        },
+        "sampler_eintrag_stimmung_wert_situationsangemessen": {
+          "kind": "neutral",
+          "text": "situationsangemessen"
+        }
+      }
+    },
+    "sampler_eintrag_eigengefaehrdung": {
+      "title": "Eigengefährdung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_eigengefaehrdung_wert_verneint": {
+          "kind": "neutral",
+          "text": "verneint"
+        },
+        "sampler_eintrag_eigengefaehrdung_wert_passive_todeswuensche": {
+          "kind": "abnormal",
+          "text": "passive Todeswünsche"
+        },
+        "sampler_eintrag_eigengefaehrdung_wert_suizidgedanken_ohne_handlungsabsicht": {
+          "kind": "abnormal",
+          "text": "Suizidgedanken ohne Handlungsabsicht"
+        },
+        "sampler_eintrag_eigengefaehrdung_wert_handlungsabsicht_oder_plan": {
+          "kind": "abnormal",
+          "text": "Handlungsabsicht oder Plan"
+        },
+        "sampler_eintrag_eigengefaehrdung_wert_nach_selbstschaedigung": {
+          "kind": "abnormal",
+          "text": "nach Selbstschädigung"
+        },
+        "sampler_eintrag_eigengefaehrdung_wert_nicht_beurteilbar": {
+          "kind": "neutral",
+          "text": "nicht beurteilbar"
+        }
+      },
+      "attention": {
+        "values": [
+          "symptome_wert_depression_suizidalitaet"
+        ],
+        "negated": false,
+        "level": "required",
+        "value": null
+      }
+    },
+    "sampler_eintrag_erscheinungsbild": {
+      "title": "Erscheinungsbild",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "sampler_eintrag_erscheinungsbild_wert_akute_angst": {
+          "kind": "abnormal",
+          "text": "akute Angst"
+        },
+        "sampler_eintrag_erscheinungsbild_wert_panik": {
+          "kind": "abnormal",
+          "text": "Panik"
+        },
+        "sampler_eintrag_erscheinungsbild_wert_uebererregung": {
+          "kind": "abnormal",
+          "text": "Übererregung"
+        },
+        "sampler_eintrag_erscheinungsbild_wert_erstarrung": {
+          "kind": "abnormal",
+          "text": "Erstarrung"
+        },
+        "sampler_eintrag_erscheinungsbild_wert_situationsbezogene_krise": {
+          "kind": "abnormal",
+          "text": "situationsbezogene Krise"
+        }
+      }
+    },
+    "sampler_eintrag_wahrnehmung": {
+      "title": "Wahrnehmung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_wahrnehmung_wert_akustische_halluzinationen": {
+          "kind": "abnormal",
+          "text": "akustische Halluzinationen"
+        },
+        "sampler_eintrag_wahrnehmung_wert_optische_halluzinationen": {
+          "kind": "abnormal",
+          "text": "optische Halluzinationen"
+        },
+        "sampler_eintrag_wahrnehmung_wert_andere_halluzinationen": {
+          "kind": "abnormal",
+          "text": "andere Halluzinationen"
+        },
+        "sampler_eintrag_wahrnehmung_wert_keine_halluzinationen_berichtet": {
+          "kind": "neutral",
+          "text": "keine Halluzinationen berichtet"
+        }
+      }
+    },
+    "sampler_eintrag_denkinhalt": {
+      "title": "Denkinhalt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_denkinhalt_wert_wahnhafte_ueberzeugungen": {
+          "kind": "abnormal",
+          "text": "wahnhafte Überzeugungen"
+        },
+        "sampler_eintrag_denkinhalt_wert_paranoides_erleben": {
+          "kind": "abnormal",
+          "text": "paranoides Erleben"
+        },
+        "sampler_eintrag_denkinhalt_wert_keine_wahnhaften_inhalte_berichtet": {
+          "kind": "neutral",
+          "text": "keine wahnhaften Inhalte berichtet"
+        }
+      }
+    },
+    "sampler_eintrag_imperative_stimmen": {
+      "title": "Imperative Stimmen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_imperative_stimmen_wert_bejaht": {
+          "kind": "abnormal",
+          "text": "bejaht"
+        },
+        "sampler_eintrag_imperative_stimmen_wert_verneint": {
+          "kind": "neutral",
+          "text": "verneint"
+        },
+        "sampler_eintrag_imperative_stimmen_wert_nicht_beurteilbar": {
+          "kind": "neutral",
+          "text": "nicht beurteilbar"
+        }
+      }
+    },
+    "sampler_eintrag_gefaehrdungseinschaetzung": {
+      "title": "Gefährdungseinschätzung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_gefaehrdungseinschaetzung_wert_verneint": {
+          "kind": "neutral",
+          "text": "verneint"
+        },
+        "sampler_eintrag_gefaehrdungseinschaetzung_wert_drohung_oder_aggressive_impulse": {
+          "kind": "abnormal",
+          "text": "Drohung oder aggressive Impulse"
+        },
+        "sampler_eintrag_gefaehrdungseinschaetzung_wert_konkrete_absicht_oder_zielperson": {
+          "kind": "abnormal",
+          "text": "konkrete Absicht oder Zielperson"
+        },
+        "sampler_eintrag_gefaehrdungseinschaetzung_wert_taetlicher_uebergriff": {
+          "kind": "abnormal",
+          "text": "tätlicher Übergriff"
+        },
+        "sampler_eintrag_gefaehrdungseinschaetzung_wert_nicht_beurteilbar": {
+          "kind": "neutral",
+          "text": "nicht beurteilbar"
+        }
+      },
+      "attention": {
+        "values": [
+          "symptome_wert_fremdgefaehrdung"
+        ],
+        "negated": false,
+        "level": "required",
+        "value": null
+      }
+    },
+    "sampler_eintrag_ergaenzende_beschreibung": {
+      "title": "Ergänzende Beschreibung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ergaenzende_beschreibung_wert_value": {
+          "kind": "neutral",
+          "text": "{:ergaenzung*:}"
+        }
+      },
+      "attributes": {
+        "ergaenzung": "sampler_eingabe_symptomtext"
+      }
+    },
+    "sampler_eintrag_allergiestatus": {
+      "title": "Allergiestatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_allergiestatus_wert_keine_bekannten_allergien": {
+          "kind": "normal",
+          "text": "keine bekannten Allergien",
+          "snomed": "716186003",
+          "snomedDisplay": "No known allergy"
+        },
+        "sampler_eintrag_allergiestatus_wert_allergiestatus_unbekannt": {
+          "kind": "neutral",
+          "text": "Allergiestatus unbekannt"
+        }
+      }
+    },
+    "sampler_eintrag_allergie": {
+      "title": "Allergie",
+      "kind": "neutral",
+      "default": "",
+      "values": {},
+      "catalog": "allergie",
+      "prompt": true
+    },
+    "sampler_eintrag_allergische_reaktion": {
+      "title": "Allergische Reaktion",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "sampler_eintrag_allergische_reaktion_wert_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "allergische Reaktion: {:reaktion*:}"
+        }
+      },
+      "attributes": {
+        "reaktion": "allergie_eingabe_reaktion"
+      },
+      "condition": {
+        "values": [
+          "allergie_wert_penicillin",
+          "allergie_wert_amoxicillin",
+          "allergie_wert_cephalosporin",
+          "allergie_wert_sulfonamid",
+          "allergie_wert_makrolid",
+          "allergie_wert_metamizol",
+          "allergie_wert_nsar",
+          "allergie_wert_acetylsalicylsaeure",
+          "allergie_wert_kontrastmittel",
+          "allergie_wert_latex",
+          "allergie_wert_chlorhexidin",
+          "allergie_wert_lokalanaesthetikum",
+          "allergie_wert_morphin",
+          "allergie_wert_fentanyl",
+          "allergie_wert_protamin",
+          "allergie_wert_erdnuss",
+          "allergie_wert_nuss",
+          "allergie_wert_kuhmilchprotein",
+          "allergie_wert_eiprotein",
+          "allergie_wert_fisch",
+          "allergie_wert_schalentiere",
+          "allergie_wert_weizen",
+          "allergie_wert_bienengift",
+          "allergie_wert_wespengift",
+          "allergie_wert_freitext"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_allergische_reaktion_wert_allergische_reaktion"
+      }
+    },
+    "sampler_eintrag_schweregrad_der_allergie": {
+      "title": "Schweregrad der Allergie",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "sampler_eintrag_schweregrad_der_allergie_wert_leichte_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "leichte allergische Reaktion"
+        },
+        "sampler_eintrag_schweregrad_der_allergie_wert_mittelschwere_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "mittelschwere allergische Reaktion"
+        },
+        "sampler_eintrag_schweregrad_der_allergie_wert_schwere_allergische_reaktion": {
+          "kind": "abnormal",
+          "text": "schwere allergische Reaktion"
+        },
+        "sampler_eintrag_schweregrad_der_allergie_wert_anaphylaxie": {
+          "kind": "abnormal",
+          "text": "Anaphylaxie"
+        }
+      },
+      "condition": {
+        "values": [
+          "allergie_wert_penicillin",
+          "allergie_wert_amoxicillin",
+          "allergie_wert_cephalosporin",
+          "allergie_wert_sulfonamid",
+          "allergie_wert_makrolid",
+          "allergie_wert_metamizol",
+          "allergie_wert_nsar",
+          "allergie_wert_acetylsalicylsaeure",
+          "allergie_wert_kontrastmittel",
+          "allergie_wert_latex",
+          "allergie_wert_chlorhexidin",
+          "allergie_wert_lokalanaesthetikum",
+          "allergie_wert_morphin",
+          "allergie_wert_fentanyl",
+          "allergie_wert_protamin",
+          "allergie_wert_erdnuss",
+          "allergie_wert_nuss",
+          "allergie_wert_kuhmilchprotein",
+          "allergie_wert_eiprotein",
+          "allergie_wert_fisch",
+          "allergie_wert_schalentiere",
+          "allergie_wert_weizen",
+          "allergie_wert_bienengift",
+          "allergie_wert_wespengift",
+          "allergie_wert_freitext"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "sampler_eintrag_ergaenzung_zur_allergie": {
+      "title": "Ergänzung zur Allergie",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ergaenzung_zur_allergie_wert_value": {
           "kind": "neutral",
           "text": "{:freitext*:}"
         }
@@ -936,21 +2751,438 @@
         "freitext": "gemeinsam_eingabe_freitext"
       }
     },
+    "sampler_eintrag_medikationsstatus": {
+      "title": "Medikationsstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_medikationsstatus_wert_keine_dauermedikation": {
+          "kind": "normal",
+          "text": "keine Dauermedikation"
+        },
+        "sampler_eintrag_medikationsstatus_wert_dauermedikation_unbekannt": {
+          "kind": "neutral",
+          "text": "Dauermedikation unbekannt"
+        }
+      }
+    },
+    "sampler_eintrag_med_praeklinik_pflege": {
+      "title": "s. Pflegeüberleitungsbogen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_med_praeklinik_pflege_wert_s_pflegeueberleitungsbogen": {
+          "kind": "neutral",
+          "text": "s. Pflegeüberleitungsbogen"
+        }
+      }
+    },
+    "sampler_eintrag_med_praeklinik_arztbrief": {
+      "title": "s. Arztbrief",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_med_praeklinik_arztbrief_wert_s_arztbrief": {
+          "kind": "neutral",
+          "text": "s. Arztbrief"
+        }
+      }
+    },
+    "sampler_eintrag_med_praeklinik_plan": {
+      "title": "s. bundeseinheitlichem Medikationsplan",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_med_praeklinik_plan_wert_s_bundeseinheitlichem_medikationsplan": {
+          "kind": "neutral",
+          "text": "s. bundeseinheitlichem Medikationsplan"
+        }
+      }
+    },
+    "sampler_eintrag_med_praeklinik_bild": {
+      "title": "s. Bild",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_med_praeklinik_bild_wert_s_bild": {
+          "kind": "neutral",
+          "text": "s. Bild"
+        }
+      }
+    },
+    "sampler_eintrag_s_id_medics": {
+      "title": "s. ID Medics",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_s_id_medics_wert_s_id_medics": {
+          "kind": "neutral",
+          "text": "s. ID Medics"
+        }
+      }
+    },
+    "sampler_eintrag_arzneimittel": {
+      "title": "Arzneimittel",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_arzneimittel_wert_apixaban": {
+          "kind": "abnormal",
+          "text": "Apixaban"
+        },
+        "sampler_eintrag_arzneimittel_wert_rivaroxaban": {
+          "kind": "abnormal",
+          "text": "Rivaroxaban"
+        },
+        "sampler_eintrag_arzneimittel_wert_edoxaban": {
+          "kind": "abnormal",
+          "text": "Edoxaban"
+        },
+        "sampler_eintrag_arzneimittel_wert_phenprocoumon": {
+          "kind": "abnormal",
+          "text": "Phenprocoumon"
+        },
+        "sampler_eintrag_arzneimittel_wert_niedermolekularem_heparin": {
+          "kind": "abnormal",
+          "text": "niedermolekularem Heparin"
+        },
+        "sampler_eintrag_arzneimittel_wert_acetylsalicylsaeure": {
+          "kind": "abnormal",
+          "text": "Acetylsalicylsäure"
+        },
+        "sampler_eintrag_arzneimittel_wert_clopidogrel": {
+          "kind": "abnormal",
+          "text": "Clopidogrel"
+        },
+        "sampler_eintrag_arzneimittel_wert_metoprolol": {
+          "kind": "neutral",
+          "text": "Metoprolol"
+        },
+        "sampler_eintrag_arzneimittel_wert_bisoprolol": {
+          "kind": "neutral",
+          "text": "Bisoprolol"
+        },
+        "sampler_eintrag_arzneimittel_wert_candesartan": {
+          "kind": "neutral",
+          "text": "Candesartan"
+        },
+        "sampler_eintrag_arzneimittel_wert_ramipril": {
+          "kind": "neutral",
+          "text": "Ramipril"
+        },
+        "sampler_eintrag_arzneimittel_wert_risperidon": {
+          "kind": "neutral",
+          "text": "Risperidon"
+        },
+        "sampler_eintrag_arzneimittel_wert_melperon": {
+          "kind": "neutral",
+          "text": "Melperon"
+        },
+        "sampler_eintrag_arzneimittel_wert_value": {
+          "kind": "neutral",
+          "text": "{:arzneimittel*:}"
+        }
+      },
+      "prompt": true,
+      "attributes": {
+        "arzneimittel": "sampler_eingabe_arzneimittel"
+      }
+    },
+    "sampler_eintrag_vorerkrankungsstatus": {
+      "title": "Vorerkrankungsstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vorerkrankungsstatus_wert_keine_relevanten_vorerkrankungen": {
+          "kind": "normal",
+          "text": "keine relevanten Vorerkrankungen"
+        },
+        "sampler_eintrag_vorerkrankungsstatus_wert_vorerkrankungen_unbekannt": {
+          "kind": "neutral",
+          "text": "Vorerkrankungen unbekannt"
+        }
+      }
+    },
+    "sampler_eintrag_vor_praeklinik_pflege": {
+      "title": "Pflegeüberleitungsbogen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_praeklinik_pflege_wert_pflegeueberleitungsbogen": {
+          "kind": "neutral",
+          "text": "Pflegeüberleitungsbogen"
+        }
+      }
+    },
+    "sampler_eintrag_vor_praeklinik_arztbrief": {
+      "title": "Arztbrief",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_praeklinik_arztbrief_wert_arztbrief": {
+          "kind": "neutral",
+          "text": "Arztbrief"
+        }
+      }
+    },
+    "sampler_eintrag_vor_praeklinik_plan": {
+      "title": "bundeseinheitlichem Medikationsplan",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_praeklinik_plan_wert_bundeseinheitlichem_medikationsplan": {
+          "kind": "neutral",
+          "text": "bundeseinheitlichem Medikationsplan"
+        }
+      }
+    },
+    "sampler_eintrag_vor_praeklinik_bild": {
+      "title": "Bild",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_praeklinik_bild_wert_bild": {
+          "kind": "neutral",
+          "text": "Bild"
+        }
+      }
+    },
+    "sampler_eintrag_system": {
+      "title": "System",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_system_wert_system": {
+          "kind": "neutral",
+          "text": "System"
+        }
+      }
+    },
+    "sampler_eintrag_vor_klinik_pflege": {
+      "title": "Pflegeüberleitungsbogen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_klinik_pflege_wert_pflegeueberleitungsbogen": {
+          "kind": "neutral",
+          "text": "Pflegeüberleitungsbogen"
+        }
+      }
+    },
+    "sampler_eintrag_vor_klinik_arztbrief": {
+      "title": "Arztbrief",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_klinik_arztbrief_wert_arztbrief": {
+          "kind": "neutral",
+          "text": "Arztbrief"
+        }
+      }
+    },
+    "sampler_eintrag_vor_klinik_system": {
+      "title": "System",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vor_klinik_system_wert_system": {
+          "kind": "neutral",
+          "text": "System"
+        }
+      }
+    },
+    "sampler_eintrag_vorerkrankung": {
+      "title": "Vorerkrankung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vorerkrankung_wert_vorhofflimmern": {
+          "kind": "abnormal",
+          "text": "Vorhofflimmern"
+        },
+        "sampler_eintrag_vorerkrankung_wert_koronare_herzerkrankung": {
+          "kind": "abnormal",
+          "text": "Koronare Herzerkrankung"
+        },
+        "sampler_eintrag_vorerkrankung_wert_arterielle_hypertonie": {
+          "kind": "abnormal",
+          "text": "arterielle Hypertonie"
+        },
+        "sampler_eintrag_vorerkrankung_wert_chronisch_obstruktive_lungenerkrankung": {
+          "kind": "abnormal",
+          "text": "chronisch-obstruktive Lungenerkrankung"
+        },
+        "sampler_eintrag_vorerkrankung_wert_chronische_nierenerkrankung": {
+          "kind": "abnormal",
+          "text": "chronische Nierenerkrankung"
+        },
+        "sampler_eintrag_vorerkrankung_wert_zustand_nach_schlaganfall": {
+          "kind": "abnormal",
+          "text": "Zustand nach Schlaganfall"
+        },
+        "sampler_eintrag_vorerkrankung_wert_diabetes_mellitus_typ_1": {
+          "kind": "abnormal",
+          "text": "Diabetes mellitus Typ 1"
+        },
+        "sampler_eintrag_vorerkrankung_wert_diabetes_mellitus_typ_2": {
+          "kind": "abnormal",
+          "text": "Diabetes mellitus Typ 2"
+        },
+        "sampler_eintrag_vorerkrankung_wert_demenz": {
+          "kind": "abnormal",
+          "text": "Demenz"
+        },
+        "sampler_eintrag_vorerkrankung_wert_zustand_nach_appendektomie": {
+          "kind": "neutral",
+          "text": "Zustand nach Appendektomie"
+        },
+        "sampler_eintrag_vorerkrankung_wert_zustand_nach_cholezystektomie": {
+          "kind": "neutral",
+          "text": "Zustand nach Cholezystektomie"
+        },
+        "sampler_eintrag_vorerkrankung_wert_value": {
+          "kind": "abnormal",
+          "text": "{:vorerkrankung*:}"
+        }
+      },
+      "prompt": true,
+      "attributes": {
+        "vorerkrankung": "sampler_eingabe_vorerkrankung"
+      }
+    },
+    "sampler_eintrag_demenzschweregrad": {
+      "title": "Demenzschweregrad",
+      "kind": "abnormal",
+      "default": null,
+      "values": {
+        "sampler_eintrag_demenzschweregrad_wert_milde_demenz": {
+          "kind": "abnormal",
+          "text": "milde Demenz"
+        },
+        "sampler_eintrag_demenzschweregrad_wert_schwere_demenz": {
+          "kind": "abnormal",
+          "text": "schwere Demenz"
+        },
+        "sampler_eintrag_demenzschweregrad_wert_weit_fortgeschrittene_demenz": {
+          "kind": "abnormal",
+          "text": "weit fortgeschrittene Demenz"
+        }
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_vorerkrankung_wert_demenz"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "sampler_eintrag_ergaenzung_zur_erkrankung": {
+      "title": "Ergänzung zur Erkrankung",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_ergaenzung_zur_erkrankung_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_letzte_mahlzeit": {
+      "title": "letzte Mahlzeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_letzte_mahlzeit_wert_letzte_mahlzeit": {
+          "kind": "neutral",
+          "text": "letzte Mahlzeit {:mahlzeit*:}"
+        }
+      },
+      "attributes": {
+        "mahlzeit": "sampler_eingabe_vor"
+      }
+    },
+    "sampler_eintrag_letzte_fluessigkeitsaufnahme": {
+      "title": "letzte Flüssigkeitsaufnahme",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_letzte_fluessigkeitsaufnahme_wert_letzte_fluessigkeitsaufnahme": {
+          "kind": "neutral",
+          "text": "letzte Flüssigkeitsaufnahme {:fluessigkeit*:}"
+        }
+      },
+      "attributes": {
+        "fluessigkeit": "sampler_eingabe_vor"
+      }
+    },
+    "sampler_eintrag_letzter_krankenhausaufenthalt": {
+      "title": "letzter Krankenhausaufenthalt",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_letzter_krankenhausaufenthalt_wert_letzter_krankenhausaufenthalt": {
+          "kind": "neutral",
+          "text": "letzter Krankenhausaufenthalt {:krankenhausaufenthalt*:}"
+        }
+      },
+      "attributes": {
+        "krankenhausaufenthalt": "sampler_eingabe_vor"
+      }
+    },
+    "sampler_eintrag_letzter_stuhlgang": {
+      "title": "letzter Stuhlgang",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_letzter_stuhlgang_wert_letzter_stuhlgang": {
+          "kind": "neutral",
+          "text": "letzter Stuhlgang {:stuhlgang*:}"
+        }
+      },
+      "attributes": {
+        "stuhlgang": "sampler_eingabe_vor"
+      }
+    },
     "sampler_eintrag_letzte_koronarangiographie": {
       "title": "letzte Koronarangiographie",
       "kind": "neutral",
-      "default": null,
+      "default": "",
       "values": {
         "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie": {
           "kind": "neutral",
-          "text": "letzte Koronarangiographie"
+          "text": "letzte Koronarangiographie {:koronarangiographie*:}"
         }
       },
-      "suggestions": {
-        "symptome_wert_brustschmerz": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "symptome_wert_synkope": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "symptome_wert_atemnot": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie",
-        "symptome_wert_herzklopfen": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie"
+      "attributes": {
+        "koronarangiographie": "sampler_eingabe_vor"
+      },
+      "attention": {
+        "values": [
+          "symptome_wert_brustschmerz",
+          "symptome_wert_synkope",
+          "symptome_wert_atemnot",
+          "symptome_wert_herzklopfen"
+        ],
+        "negated": false,
+        "level": "suggested",
+        "value": "sampler_eintrag_letzte_koronarangiographie_wert_letzte_koronarangiographie"
+      }
+    },
+    "sampler_eintrag_vorgeschichte": {
+      "title": "Vorgeschichte",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vorgeschichte_wert_value": {
+          "kind": "neutral",
+          "text": "{:freitext*:}"
+        }
+      },
+      "attributes": {
+        "freitext": "gemeinsam_eingabe_freitext"
       }
     },
     "sampler_eintrag_keine_atemnot": {
@@ -968,7 +3200,7 @@
           "symptome_wert_atemnot"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_keine_atemnot_wert_keine_atemnot"
+        "value": "sampler_eintrag_keine_atemnot_wert_keine_atemnot"
       }
     },
     "sampler_eintrag_keine_synkope": {
@@ -986,7 +3218,7 @@
           "symptome_wert_synkope"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_keine_synkope_wert_keine_synkope"
+        "value": "sampler_eintrag_keine_synkope_wert_keine_synkope"
       }
     },
     "sampler_eintrag_kein_herzklopfen": {
@@ -1004,7 +3236,7 @@
           "symptome_wert_herzklopfen"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_kein_herzklopfen_wert_kein_herzklopfen"
+        "value": "sampler_eintrag_kein_herzklopfen_wert_kein_herzklopfen"
       }
     },
     "sampler_eintrag_kein_fieber": {
@@ -1022,7 +3254,7 @@
           "symptome_wert_fieber"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_kein_fieber_wert_kein_fieber"
+        "value": "sampler_eintrag_kein_fieber_wert_kein_fieber"
       }
     },
     "sampler_eintrag_kein_husten": {
@@ -1040,7 +3272,7 @@
           "symptome_wert_husten"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_kein_husten_wert_kein_husten"
+        "value": "sampler_eintrag_kein_husten_wert_kein_husten"
       }
     },
     "sampler_eintrag_keine_uebelkeit": {
@@ -1058,7 +3290,7 @@
           "symptome_wert_uebelkeit"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_keine_uebelkeit_wert_keine_uebelkeit"
+        "value": "sampler_eintrag_keine_uebelkeit_wert_keine_uebelkeit"
       }
     },
     "sampler_eintrag_kein_erbrechen": {
@@ -1076,7 +3308,7 @@
           "symptome_wert_erbrechen"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_kein_erbrechen_wert_kein_erbrechen"
+        "value": "sampler_eintrag_kein_erbrechen_wert_kein_erbrechen"
       }
     },
     "sampler_eintrag_keine_algurie": {
@@ -1094,7 +3326,7 @@
           "symptome_wert_algurie"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_keine_algurie_wert_keine_algurie"
+        "value": "sampler_eintrag_keine_algurie_wert_keine_algurie"
       }
     },
     "sampler_eintrag_keine_pollakisurie": {
@@ -1112,7 +3344,7 @@
           "symptome_wert_pollakisurie"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_keine_pollakisurie_wert_keine_pollakisurie"
+        "value": "sampler_eintrag_keine_pollakisurie_wert_keine_pollakisurie"
       }
     },
     "sampler_eintrag_kein_schwindel": {
@@ -1130,7 +3362,7 @@
           "symptome_wert_schwindel"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_kein_schwindel_wert_kein_schwindel"
+        "value": "sampler_eintrag_kein_schwindel_wert_kein_schwindel"
       }
     },
     "sampler_eintrag_kein_krampfanfall": {
@@ -1148,7 +3380,7 @@
           "symptome_wert_krampfanfall"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_kein_krampfanfall_wert_kein_krampfanfall"
+        "value": "sampler_eintrag_kein_krampfanfall_wert_kein_krampfanfall"
       }
     },
     "sampler_eintrag_keine_schwaeche": {
@@ -1166,7 +3398,394 @@
           "symptome_wert_schwaeche"
         ],
         "negated": true,
-        "suggestion": "sampler_eintrag_keine_schwaeche_wert_keine_schwaeche"
+        "value": "sampler_eintrag_keine_schwaeche_wert_keine_schwaeche"
+      }
+    },
+    "sampler_eintrag_nikotinstatus": {
+      "title": "Nikotinstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_nikotinstatus_wert_verneint": {
+          "kind": "normal",
+          "text": "verneint"
+        },
+        "sampler_eintrag_nikotinstatus_wert_vormals": {
+          "kind": "abnormal",
+          "text": "vormals"
+        },
+        "sampler_eintrag_nikotinstatus_wert_gelegentlich": {
+          "kind": "abnormal",
+          "text": "gelegentlich"
+        },
+        "sampler_eintrag_nikotinstatus_wert_aktiv": {
+          "kind": "abnormal",
+          "text": "aktiv"
+        },
+        "sampler_eintrag_nikotinstatus_wert_passiv": {
+          "kind": "abnormal",
+          "text": "passiv"
+        }
+      }
+    },
+    "sampler_eintrag_nikotinart": {
+      "title": "Nikotinart",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_nikotinart_wert_zigaretten": {
+          "kind": "neutral",
+          "text": "Zigaretten"
+        },
+        "sampler_eintrag_nikotinart_wert_zigarren": {
+          "kind": "neutral",
+          "text": "Zigarren"
+        },
+        "sampler_eintrag_nikotinart_wert_schnupftaback": {
+          "kind": "neutral",
+          "text": "Schnupftaback"
+        },
+        "sampler_eintrag_nikotinart_wert_kautaback": {
+          "kind": "neutral",
+          "text": "Kautaback"
+        }
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_nikotinstatus_wert_vormals",
+          "sampler_eintrag_nikotinstatus_wert_aktiv"
+        ],
+        "negated": false,
+        "value": null
+      }
+    },
+    "sampler_eintrag_nikotinhaeufigkeit": {
+      "title": "Häufigkeit: {:nikotinhaeufigkeit=haeufigkeittag*:}",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_nikotinhaeufigkeit_wert_haeufigkeit": {
+          "kind": "neutral",
+          "text": "Häufigkeit: {:nikotinhaeufigkeit*:}"
+        }
+      },
+      "attributes": {
+        "nikotinhaeufigkeit": "sampler_eingabe_haeufigkeittag"
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_nikotinstatus_wert_vormals",
+          "sampler_eintrag_nikotinstatus_wert_aktiv"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_nikotinhaeufigkeit_wert_haeufigkeit"
+      }
+    },
+    "sampler_eintrag_packyears_packyears_packyears": {
+      "title": "packyears: {:packyears=packyears*:}",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_packyears_packyears_packyears_wert_packyears": {
+          "kind": "neutral",
+          "text": "packyears: {:packyears*:}"
+        }
+      },
+      "attributes": {
+        "packyears": "sampler_eingabe_packyears"
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_nikotinstatus_wert_vormals",
+          "sampler_eintrag_nikotinstatus_wert_aktiv"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_packyears_packyears_packyears_wert_packyears"
+      }
+    },
+    "sampler_eintrag_weitere_angaben_zum_nikotinkonsum": {
+      "title": "weitere Angaben zum Nikotinkonsum",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_weitere_angaben_zum_nikotinkonsum_wert_value": {
+          "kind": "neutral",
+          "text": "{:nikotinsonstiges*:}"
+        }
+      },
+      "attributes": {
+        "nikotinsonstiges": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_vapingdampfenstatus": {
+      "title": "Vapingstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_vapingdampfenstatus_wert_verneint": {
+          "kind": "normal",
+          "text": "verneint"
+        },
+        "sampler_eintrag_vapingdampfenstatus_wert_vormals": {
+          "kind": "abnormal",
+          "text": "vormals"
+        },
+        "sampler_eintrag_vapingdampfenstatus_wert_aktiv": {
+          "kind": "abnormal",
+          "text": "aktiv"
+        },
+        "sampler_eintrag_vapingdampfenstatus_wert_passiv": {
+          "kind": "abnormal",
+          "text": "passiv"
+        }
+      }
+    },
+    "sampler_eintrag_vapingdampfenhaeufigkeit": {
+      "title": "Häufigkeit: {:vapingdampfenhaeufigkeit=haeufigkeittag*:}",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_vapingdampfenhaeufigkeit_wert_haeufigkeit": {
+          "kind": "neutral",
+          "text": "Häufigkeit: {:vapingdampfenhaeufigkeit*:}"
+        }
+      },
+      "attributes": {
+        "vapingdampfenhaeufigkeit": "sampler_eingabe_haeufigkeittag"
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_vapingdampfenstatus_wert_aktiv"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_vapingdampfenhaeufigkeit_wert_haeufigkeit"
+      }
+    },
+    "sampler_eintrag_weitere_angaben_zum_vaping_oder_dampfen": {
+      "title": "weitere Angaben zum Vaping oder Dampfen",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_weitere_angaben_zum_vaping_oder_dampfen_wert_value": {
+          "kind": "neutral",
+          "text": "{:vapingdampfensonstiges*:}"
+        }
+      },
+      "attributes": {
+        "vapingdampfensonstiges": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_alkoholstatus": {
+      "title": "Alkoholstatus",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_alkoholstatus_wert_verneint": {
+          "kind": "normal",
+          "text": "verneint"
+        },
+        "sampler_eintrag_alkoholstatus_wert_vormals": {
+          "kind": "abnormal",
+          "text": "vormals"
+        },
+        "sampler_eintrag_alkoholstatus_wert_gelegentlich": {
+          "kind": "abnormal",
+          "text": "gelegentlich"
+        },
+        "sampler_eintrag_alkoholstatus_wert_aktiv": {
+          "kind": "abnormal",
+          "text": "aktiv"
+        }
+      }
+    },
+    "sampler_eintrag_haeufigkeit_alkoholhaeufigkeit_haeufigkeitwoche": {
+      "title": "Häufigkeit: {:alkoholhaeufigkeit=haeufigkeitwoche*:}",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_haeufigkeit_alkoholhaeufigkeit_haeufigkeitwoche_wert_haeufigkeit": {
+          "kind": "neutral",
+          "text": "Häufigkeit: {:alkoholhaeufigkeit*:}"
+        }
+      },
+      "attributes": {
+        "alkoholhaeufigkeit": "sampler_eingabe_haeufigkeitwoche"
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_alkoholstatus_wert_vormals",
+          "sampler_eintrag_alkoholstatus_wert_aktiv"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_haeufigkeit_alkoholhaeufigkeit_haeufigkeitwoche_wert_haeufigkeit"
+      }
+    },
+    "sampler_eintrag_weitere_angaben_zum_alkoholkonsum": {
+      "title": "weitere Angaben zum Alkoholkonsum",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_weitere_angaben_zum_alkoholkonsum_wert_value": {
+          "kind": "neutral",
+          "text": "{:alkoholsonstiges*:}"
+        }
+      },
+      "attributes": {
+        "alkoholsonstiges": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_thcstatus": {
+      "title": "THC-Status",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_thcstatus_wert_verneint": {
+          "kind": "normal",
+          "text": "verneint"
+        },
+        "sampler_eintrag_thcstatus_wert_vormals": {
+          "kind": "abnormal",
+          "text": "vormals"
+        },
+        "sampler_eintrag_thcstatus_wert_gelegentlich": {
+          "kind": "abnormal",
+          "text": "gelegentlich"
+        },
+        "sampler_eintrag_thcstatus_wert_aktiv": {
+          "kind": "abnormal",
+          "text": "aktiv"
+        }
+      }
+    },
+    "sampler_eintrag_thchaeufigkeit": {
+      "title": "Häufigkeit: {:thchaeufigkeit=haeufigkeittag*:}",
+      "kind": "neutral",
+      "default": null,
+      "values": {
+        "sampler_eintrag_thchaeufigkeit_wert_haeufigkeit": {
+          "kind": "neutral",
+          "text": "Häufigkeit: {:thchaeufigkeit*:}"
+        }
+      },
+      "attributes": {
+        "thchaeufigkeit": "sampler_eingabe_haeufigkeittag"
+      },
+      "condition": {
+        "values": [
+          "sampler_eintrag_thcstatus_wert_aktiv"
+        ],
+        "negated": false,
+        "value": "sampler_eintrag_thchaeufigkeit_wert_haeufigkeit"
+      }
+    },
+    "sampler_eintrag_weitere_angaben_zum_thc_konsumkonsum": {
+      "title": "weitere Angaben zum THC-Konsumkonsum",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_weitere_angaben_zum_thc_konsumkonsum_wert_value": {
+          "kind": "neutral",
+          "text": "{:thcsonstiges*:}"
+        }
+      },
+      "attributes": {
+        "thcsonstiges": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_sonstigesubstanzenstatus": {
+      "title": "Substanzkonsum",
+      "kind": "normal",
+      "default": "",
+      "values": {
+        "sampler_eintrag_sonstigesubstanzenstatus_wert_verneint": {
+          "kind": "normal",
+          "text": "verneint"
+        }
+      }
+    },
+    "sampler_eintrag_substanz": {
+      "title": "Substanz",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "sampler_eintrag_substanz_wert_kokain_und_crack": {
+          "kind": "abnormal",
+          "text": "Kokain (und Crack) {:kokainform:}"
+        },
+        "sampler_eintrag_substanz_wert_amphetamin_speed": {
+          "kind": "abnormal",
+          "text": "Amphetamin (Speed) {:amphetaminform:}"
+        },
+        "sampler_eintrag_substanz_wert_diamorphin_heroin": {
+          "kind": "abnormal",
+          "text": "Diamorphin (Heroin) {:heroinform:}"
+        },
+        "sampler_eintrag_substanz_wert_methamphetamin_crystal": {
+          "kind": "abnormal",
+          "text": "Methamphetamin (Crystal) {:methamphetaminform:}"
+        },
+        "sampler_eintrag_substanz_wert_mdma_ecstasy": {
+          "kind": "abnormal",
+          "text": "MDMA (Ecstasy) {:methamphetaminform:}"
+        },
+        "sampler_eintrag_substanz_wert_lsd": {
+          "kind": "abnormal",
+          "text": "LSD"
+        },
+        "sampler_eintrag_substanz_wert_mephedron_badesalz": {
+          "kind": "abnormal",
+          "text": "Mephedron (Badesalz) {:mephedronform:}"
+        },
+        "sampler_eintrag_substanz_wert_ghb_oder_gbl": {
+          "kind": "abnormal",
+          "text": "GHB oder GBL"
+        },
+        "sampler_eintrag_substanz_wert_value": {
+          "kind": "abnormal",
+          "text": "{:sonstigesubstanz*:}"
+        }
+      },
+      "prompt": true,
+      "attributes": {
+        "kokainform": "sampler_eingabe_substanzform",
+        "amphetaminform": "sampler_eingabe_substanzform",
+        "heroinform": "sampler_eingabe_substanzform",
+        "methamphetaminform": "sampler_eingabe_substanzform",
+        "mephedronform": "sampler_eingabe_substanzform",
+        "sonstigesubstanz": "gemeinsam_eingabe_freitext"
+      }
+    },
+    "sampler_eintrag_konsumstatus": {
+      "title": "Konsumstatus",
+      "kind": "abnormal",
+      "default": "",
+      "values": {
+        "sampler_eintrag_konsumstatus_wert_vormals": {
+          "kind": "abnormal",
+          "text": "vormals"
+        },
+        "sampler_eintrag_konsumstatus_wert_gelegentlich": {
+          "kind": "abnormal",
+          "text": "gelegentlich"
+        },
+        "sampler_eintrag_konsumstatus_wert_aktiv": {
+          "kind": "abnormal",
+          "text": "aktiv"
+        }
+      }
+    },
+    "sampler_eintrag_haeufigkeit": {
+      "title": "Häufigkeit",
+      "kind": "neutral",
+      "default": "",
+      "values": {
+        "sampler_eintrag_haeufigkeit_wert_value": {
+          "kind": "neutral",
+          "text": "{:haeufigkeit*:}"
+        }
+      },
+      "attributes": {
+        "haeufigkeit": "sampler_eingabe_haeufigkeitwoche"
       }
     }
   }

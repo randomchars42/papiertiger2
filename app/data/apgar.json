@@ -23,12 +23,6 @@
   "groups": {
     "apgar": {
       "title": "APGAR",
-      "children": [
-        "apgar_gruppe_apgar_beurteilung"
-      ],
-      "phrases": [
-        "apgar_eintrag_apgar_beurteilungen"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -43,17 +37,6 @@
     },
     "apgar_gruppe_apgar_beurteilung": {
       "title": "APGAR-Beurteilung",
-      "kind": "neutral",
-      "phrases": [
-        "apgar_eintrag_zeitpunkt_der_apgar_beurteilung",
-        "apgar_eintrag_hautfarbe",
-        "apgar_eintrag_herzfrequenz",
-        "apgar_eintrag_reflexe",
-        "apgar_eintrag_muskeltonus",
-        "apgar_eintrag_atmung",
-        "apgar_eintrag_apgar_gesamtwert",
-        "apgar_eintrag_ergaenzung_zur_apgar_beurteilung"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -88,6 +71,7 @@
           "id": "apgar_eintrag_ergaenzung_zur_apgar_beurteilung"
         }
       ],
+      "kind": "neutral",
       "reset": true,
       "repeatable": {
         "initial": 1,

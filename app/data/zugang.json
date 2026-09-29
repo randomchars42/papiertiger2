@@ -62,12 +62,6 @@
   "groups": {
     "zugang": {
       "title": "Gefäßzugänge",
-      "children": [
-        "zugang_gruppe_gefaesszugang"
-      ],
-      "phrases": [
-        "zugang_eintrag_gefaesszugaenge"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -78,18 +72,10 @@
           "id": "zugang_gruppe_gefaesszugang"
         }
       ],
-      "reset": true,
-      "collapsed": true
+      "reset": true
     },
     "zugang_gruppe_gefaesszugang": {
       "title": "Gefäßzugang",
-      "kind": "intervention",
-      "phrases": [
-        "zugang_eintrag_gefaesszugang",
-        "zugang_eintrag_groesse_des_gefaesszugangs",
-        "zugang_eintrag_funktion_des_gefaesszugangs",
-        "zugang_eintrag_ergaenzung_zum_gefaesszugang"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -108,6 +94,7 @@
           "id": "zugang_eintrag_ergaenzung_zum_gefaesszugang"
         }
       ],
+      "kind": "intervention",
       "reset": true,
       "repeatable": {
         "initial": 0,
@@ -187,10 +174,14 @@
           "text": "Größe 24 G"
         }
       },
-      "suggestions": {
-        "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um": null,
-        "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um": null,
-        "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um": null
+      "condition": {
+        "values": [
+          "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um",
+          "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um",
+          "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um"
+        ],
+        "negated": false,
+        "value": null
       }
     },
     "zugang_eintrag_funktion_des_gefaesszugangs": {
@@ -207,10 +198,14 @@
           "text": "Gefäßzugang nicht durchgängig"
         }
       },
-      "suggestions": {
-        "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um": null,
-        "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um": null,
-        "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um": null
+      "condition": {
+        "values": [
+          "zugang_eintrag_gefaesszugang_wert_peripher_venoeser_zugang_um",
+          "zugang_eintrag_gefaesszugang_wert_intraossaerer_zugang_um",
+          "zugang_eintrag_gefaesszugang_wert_zentralvenoeser_zugang_um"
+        ],
+        "negated": false,
+        "value": null
       }
     },
     "zugang_eintrag_ergaenzung_zum_gefaesszugang": {

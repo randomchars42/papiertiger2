@@ -6,15 +6,6 @@
   "groups": {
     "paed_pat": {
       "title": "Pädiatrisches Beurteilungsdreieck",
-      "children": [
-        "paed_pat_gruppe_erscheinungsbild",
-        "paed_pat_gruppe_atmung",
-        "paed_pat_gruppe_haut_und_kreislauf"
-      ],
-      "phrases": [
-        "paed_pat_eintrag_pat_gesamteindruck",
-        "paed_pat_eintrag_ergaenzung_zum_paediatrischen_beurteilungsdreieck"
-      ],
       "items": [
         {
           "type": "group",
@@ -41,13 +32,6 @@
     },
     "paed_pat_gruppe_erscheinungsbild": {
       "title": "Erscheinungsbild",
-      "phrases": [
-        "paed_pat_eintrag_interaktion",
-        "paed_pat_eintrag_muskeltonus",
-        "paed_pat_eintrag_troestbarkeit",
-        "paed_pat_eintrag_blickkontakt",
-        "paed_pat_eintrag_sprache_oder_schreien"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -73,10 +57,6 @@
     },
     "paed_pat_gruppe_atmung": {
       "title": "Atmung",
-      "phrases": [
-        "paed_pat_eintrag_atemarbeit",
-        "paed_pat_eintrag_atemgeraeusch"
-      ],
       "items": [
         {
           "type": "phrase",
@@ -90,10 +70,6 @@
     },
     "paed_pat_gruppe_haut_und_kreislauf": {
       "title": "Haut und Kreislauf",
-      "phrases": [
-        "paed_pat_eintrag_hautfarbe",
-        "paed_pat_eintrag_offensichtliche_blutung"
-      ],
       "items": [
         {
           "type": "phrase",

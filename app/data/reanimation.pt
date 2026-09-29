@@ -1,22 +1,40 @@
-# Reanimation mit wiederholbaren Rhythmusanalysen
+# Kardiopulmonale Reanimation mit kumulativen Verlaufssnapshots
 N: reanimation
 I: gemeinsam
 
-E energie: number label="Energie" suffix=" J" min=1 max=500 step=1
+E schockenergie: number label="Schockenergie" suffix=" J" min=1 max=500 step=10
+E schocks_konventionell: number label="Konventionelle Schocks kumulativ" min=0 step=1 default=0
+E schocks_dsed: number label="DSED-Schocks kumulativ" min=0 step=1 default=0
+E epinephrin_kumulativ: number label="Epinephrin kumulativ" suffix=" mg" min=0 step=1 default=0
+E amiodaron_kumulativ: number label="Amiodaron kumulativ" suffix=" mg" min=0 step=150 default=300
+E lidocain_kumulativ: number label="Lidocain kumulativ" suffix=" mg" min=0 step=50 default=100
 E rosc_dauer: number label="Dauer bis ROSC" suffix=" min" min=0 max=300 step=1
+E abbruchbegruendung: multiline label="Begründung des Reanimationsabbruchs" placeholder="Begründung" rows=2 maxrows=8
+E ergaenzung: multiline label="Ergänzung zur Reanimation" placeholder="Freier Reanimationsverlauf" rows=2 maxrows=12
 
-C defibrillierbarer_rhythmus: Kammerflimmern / pulslose ventrikuläre Tachykardie
+C defibrillierbarer_rhythmus: zyklusrhythmus=Kammerflimmern; zyklusrhythmus=pulslose ventrikuläre Tachykardie
 
-G @root @collapsed @reset: Reanimation
+G @root @reset: CPR / Reanimation
   P: Reanimationsbeginn => laufende Laienreanimation übernommen @sct=89666000[CPR]|i / laufende Reanimation durch Ersthelfende übernommen @sct=89666000[CPR]|i / Kreislaufstillstand bei Eintreffen, Reanimation begonnen @sct=89666000[CPR]|i / Kreislaufstillstand im Verlauf, Reanimation begonnen @sct=89666000[CPR]|i
-  P: Rhythmusanalysen => keine Rhythmusanalyse dokumentiert|-
+  P require(Reanimationsbeginn) initialrhythmus: Initialer Rhythmus => Asystolie @sct=427485008[ECG: asystole]|a / pulslose elektrische Aktivität @sct=426975008[ECG: pulseless electrical activity]|a / Kammerflimmern @sct=164896001[ECG: ventricular fibrillation]|a / pulslose ventrikuläre Tachykardie @sct=164895002[ECG: ventricular tachycardia]|a / Torsade-de-pointes-Tachykardie|a / initialer Rhythmus nicht sicher beurteilbar|-
 
-  G @repeat(initial=0,add="Rhythmusanalyse hinzufügen",empty="Rhythmusanalysen") @reset: Rhythmusanalyse|-
+  G @repeat(initial=0,add="Reanimationszyklus hinzufügen") @reset @autocompact: Reanimationszyklus|i
     P: Rhythmusanalyse => Rhythmusanalyse um {:zeitpunkt=gemeinsam.ereigniszeitpunkt*:}|i*
-    P<Rhythmusanalyse>: Rhythmus => Asystolie @sct=427485008[ECG: asystole]|a / pulslose elektrische Aktivität @sct=426975008[ECG: pulseless electrical activity]|a / Kammerflimmern @sct=164896001[ECG: ventricular fibrillation]|a / pulslose ventrikuläre Tachykardie @sct=164895002[ECG: ventricular tachycardia]|a
-    P<defibrillierbarer_rhythmus>: Defibrillation => Defibrillation mit {:energie=energie*:} @sct=428909008[Biphasic defibrillation procedure]|i
-    P: Ergänzung zur Rhythmusanalyse => {:freitext*:}|-
+    P condition(Rhythmusanalyse) zyklusrhythmus: Rhythmus* => Asystolie @sct=427485008[ECG: asystole]|a / pulslose elektrische Aktivität @sct=426975008[ECG: pulseless electrical activity]|a / Kammerflimmern @sct=164896001[ECG: ventricular fibrillation]|a / pulslose ventrikuläre Tachykardie @sct=164895002[ECG: ventricular tachycardia]|a / Torsade-de-pointes-Tachykardie|a
+    P condition(defibrillierbarer_rhythmus): Schock in diesem Zyklus => konventionelle Defibrillation mit {:energie=schockenergie*:} @sct=428909008[Biphasic defibrillation procedure]|i / DSED|i
 
-  P: ROSC => ROSC nach {:dauer=rosc_dauer*:} @sct=711410007[Signs of return of spontaneous circulation]|i
-  P: Erneuter Kreislaufstillstand @sct=410429000[Cardiac arrest]|a
-  P: Ergänzung zur Reanimation => {:freitext*:}|-
+    G @autocompact @reveal(initial): Kumulative Maßnahmen
+      P: Konventionelle Schocks => konventionelle Schocks kumulativ: {:anzahl=schocks_konventionell*:}|-
+      P: DSED-Schocks => DSED-Schocks kumulativ: {:anzahl=schocks_dsed*:}|-
+      P: Epinephrin => Epinephrin kumulativ: {:dosis=epinephrin_kumulativ*:}|i
+      P: Amiodaron => Amiodaron kumulativ: {:dosis=amiodaron_kumulativ*:}|i
+      P: Lidocain => Lidocain kumulativ: {:dosis=lidocain_kumulativ*:}|i
+
+    P: Ergänzung zum Reanimationszyklus => {:freitext*:}|-
+
+  G @autocompact: Reanimationsende
+    P require(Initialer Rhythmus): Ergebnis => ROSC @sct=711410007[Signs of return of spontaneous circulation]|i / Reanimation beendet|i
+    P condition(ROSC): Dauer bis ROSC => ROSC nach {:dauer=rosc_dauer*:}|i
+    P condition(Reanimation beendet): Begründung des Reanimationsabbruchs => {:begruendung=abbruchbegruendung*:}|-
+    P condition(ROSC): Erneuter Kreislaufstillstand @sct=410429000[Cardiac arrest]|a
+    P: Ergänzung zur Reanimation => {:ergaenzung=ergaenzung*:}|-
