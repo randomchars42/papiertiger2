@@ -89,17 +89,17 @@
           }
         },
         {
-          "plugin": "cedis",
-          "params": {
-            "id": "cedis",
-            "mode": "summary"
-          }
-        },
-        {
           "plugin": "textblock",
           "params": {
             "id": "sampler",
             "controls": false
+          }
+        },
+        {
+          "plugin": "cedis",
+          "params": {
+            "id": "cedis",
+            "mode": "summary"
           }
         },
         {

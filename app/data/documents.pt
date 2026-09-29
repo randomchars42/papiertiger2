@@ -22,8 +22,8 @@ LG praeklinik: rettungsdienst
 D*: Repo
   B: textblock antreffen controls=false
   B: textblock kommunikation controls=false
-  B: cedis cedis mode=summary
   B: textblock sampler controls=false
+  B: cedis cedis mode=summary
   B: textblock soziales_acp controls=false
   B: textblock paed_pat controls=false
   B: textblock abcde controls=false
